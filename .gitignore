@@ -1,0 +1,58 @@
+# Nuxt dev/build outputs
+.output
+.data
+.nuxt
+.nitro
+.cache
+dist
+
+# Generated files
+app/generated/
+
+# Node dependencies
+node_modules
+
+# Package managers
+# package-lock.json deve ser commitado (não ignorar!)
+package-lock.json.backup
+bun.lock
+
+# Yalc (local package development)
+.yalc
+yalc.lock
+
+# Logs
+logs
+*.log
+
+# Misc
+.DS_Store
+.fleet
+.idea
+
+# Local env files
+.env
+.env.*
+package-lock.json
+!.env.example
+settings.json
+.claude
+.history
+.vite
+
+# FlowForge
+.flowforge/logs/
+.flowforge/cache/
+TASK_REPORT_*.md
+Claude.md
+CLAUDE.md
+*.flowforge.tmp
+.task-times.json
+.flowforge/*
+commands/
+.claude/*
+documentation/ffdocs
+documentation/development/
+run_ff_command.sh
+
+package-lock.json
