@@ -105,16 +105,26 @@ onMounted(() => {
 
         <!-- Botões com efeitos premium -->
         <div class="heroActions animateOnScroll">
-          <button class="btnHeroPrimary">
-            <span class="btnIcon">💜</span>
-            <span>Doe Agora</span>
-            <div class="btnShine"></div>
-          </button>
+          <CBButton
+            label="Doe Agora"
+            size="lg"
+            :bg-color="'linear-gradient(135deg, #9333ea 0%, #c084fc 100%)'"
+            :rounded="14"
+            prepend-icon="luc-heart"
+            shine
+            glow
+            class="btnHero"
+          />
 
-          <button class="btnHeroSecondary">
-            <span>Nossa História</span>
-            <span class="btnIconArrow">→</span>
-          </button>
+          <CBButton
+            label="Nossa História"
+            size="lg"
+            variant="outline"
+            color="#7e22ce"
+            :rounded="14"
+            append-icon="luc-arrow-right"
+            class="btnHeroSecondary"
+          />
         </div>
 
         <!-- Estatísticas com glassmorphism -->
@@ -172,10 +182,14 @@ onMounted(() => {
             ajudamos mulheres a reconstruírem suas vidas e se tornarem agentes de mudança em suas comunidades.
           </p>
 
-          <button class="btnPrimary">
-            <span>Conheça Nossa História</span>
-            <span class="btnIconArrow">→</span>
-          </button>
+          <CBButton
+            label="Conheça Nossa História"
+            size="default"
+            :bg-color="'linear-gradient(135deg, #9333ea 0%, #c084fc 100%)'"
+            :rounded="12"
+            append-icon="luc-arrow-right"
+            class="btnMission"
+          />
         </div>
 
         <div class="missionVisual animateOnScroll">
@@ -415,11 +429,16 @@ onMounted(() => {
                 <textarea class="formInput formTextarea" rows="5" placeholder="Escreva sua mensagem aqui..." required></textarea>
               </div>
 
-              <button type="submit" class="btnFormSubmit">
-                <span>Enviar Mensagem</span>
-                <span class="btnIconArrow">→</span>
-                <div class="btnShine"></div>
-              </button>
+              <CBButton
+                label="Enviar Mensagem"
+                type="submit"
+                size="lg"
+                :bg-color="'linear-gradient(135deg, #9333ea 0%, #c084fc 100%)'"
+                :rounded="12"
+                append-icon="luc-arrow-right"
+                shine
+                class="btnFormSubmit"
+              />
             </form>
           </div>
         </div>
@@ -437,15 +456,27 @@ onMounted(() => {
             Faça parte dessa transformação!
           </p>
           <div class="ctaActions">
-            <button class="btnCtaPrimary">
-              <span class="btnIcon">💜</span>
-              <span>Doar Agora</span>
-              <div class="btnShine"></div>
-            </button>
-            <button class="btnCtaSecondary">
-              <span>Conhecer Projetos</span>
-              <span class="btnIconArrow">→</span>
-            </button>
+            <CBButton
+              label="Doar Agora"
+              size="lg"
+              :bg-color="'linear-gradient(135deg, #9333ea 0%, #c084fc 100%)'"
+              :rounded="14"
+              prepend-icon="luc-heart"
+              shine
+              glow
+              pulse
+              class="btnCtaPrimary"
+            />
+
+            <CBButton
+              label="Conhecer Projetos"
+              size="lg"
+              variant="outline"
+              color="#7e22ce"
+              :rounded="14"
+              append-icon="luc-arrow-right"
+              class="btnCtaSecondary"
+            />
           </div>
         </div>
       </div>
@@ -465,8 +496,8 @@ onMounted(() => {
 
 .pageWrapper {
   min-height: 100vh;
-  background: #0a0a0a;
-  color: #ffffff;
+  background: #ffffff;
+  color: #1a1a1a;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   overflow-x: hidden;
 }
@@ -528,7 +559,7 @@ onMounted(() => {
   justify-content: center;
   padding: 8rem 2rem 4rem;
   overflow: hidden;
-  background: #0a0a0a;
+  background: linear-gradient(180deg, #faf5ff 0%, #ffffff 100%);
 }
 
 /* Gradiente de fundo animado */
@@ -536,24 +567,24 @@ onMounted(() => {
   position: absolute;
   inset: 0;
   background: linear-gradient(135deg,
-    rgba(147, 51, 234, 0.1) 0%,
-    rgba(192, 132, 252, 0.05) 50%,
-    rgba(236, 72, 153, 0.1) 100%
+    rgba(147, 51, 234, 0.05) 0%,
+    rgba(192, 132, 252, 0.03) 50%,
+    rgba(236, 72, 153, 0.05) 100%
   );
   animation: gradientPulse 8s ease-in-out infinite;
 }
 
 @keyframes gradientPulse {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.6; }
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.7; }
 }
 
 /* Orbs de gradiente flutuantes */
 .heroGradientOrb {
   position: absolute;
   border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.3;
+  filter: blur(100px);
+  opacity: 0.2;
   animation: float 20s ease-in-out infinite;
 }
 
@@ -601,10 +632,10 @@ onMounted(() => {
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    linear-gradient(rgba(147, 51, 234, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(147, 51, 234, 0.03) 1px, transparent 1px);
   background-size: 50px 50px;
-  opacity: 0.5;
+  opacity: 0.3;
 }
 
 /* Conteúdo do Hero */
@@ -621,22 +652,22 @@ onMounted(() => {
   align-items: center;
   gap: 0.5rem;
   padding: 0.625rem 1.5rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(147, 51, 234, 0.08);
+  border: 1px solid rgba(147, 51, 234, 0.2);
   border-radius: 100px;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 2px;
-  color: rgba(255, 255, 255, 0.9);
+  color: #7e22ce;
   margin-bottom: 2rem;
   transition: all 0.3s ease;
 }
 
 .heroBadge:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(147, 51, 234, 0.3);
+  background: rgba(147, 51, 234, 0.12);
+  border-color: rgba(147, 51, 234, 0.4);
   transform: translateY(-2px);
 }
 
@@ -651,7 +682,7 @@ onMounted(() => {
   line-height: 0.95;
   letter-spacing: -0.03em;
   margin-bottom: 1.5rem;
-  color: #ffffff;
+  color: #1a1a1a;
   text-transform: uppercase;
 }
 
@@ -675,7 +706,7 @@ onMounted(() => {
 .heroSubtitle {
   font-size: clamp(1.125rem, 2.5vw, 1.375rem);
   line-height: 1.7;
-  color: rgba(255, 255, 255, 0.7);
+  color: #64748b;
   font-weight: 400;
   margin-bottom: 3rem;
   max-width: 800px;
@@ -692,92 +723,27 @@ onMounted(() => {
   margin-bottom: 4rem;
 }
 
-.btnHeroPrimary {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1.125rem 2.5rem;
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: #ffffff;
-  background: linear-gradient(135deg, #9333ea 0%, #c084fc 100%);
-  border: none;
-  border-radius: 14px;
-  cursor: pointer;
-  overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+.btnHero {
+  font-size: 1.125rem !important;
+  padding: 1.125rem 2.5rem !important;
   box-shadow: 0 10px 40px rgba(147, 51, 234, 0.4);
 }
 
-.btnHeroPrimary:hover {
-  transform: translateY(-3px);
+.btnHero:hover {
   box-shadow: 0 20px 60px rgba(147, 51, 234, 0.6);
 }
 
-.btnHeroPrimary:active {
-  transform: translateY(-1px);
-}
-
 .btnHeroSecondary {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1.125rem 2.5rem;
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1.5px solid rgba(255, 255, 255, 0.15);
-  border-radius: 14px;
-  cursor: pointer;
+  background: rgba(147, 51, 234, 0.05) !important;
+  border: 1.5px solid rgba(147, 51, 234, 0.2) !important;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .btnHeroSecondary:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(147, 51, 234, 0.5);
-  transform: translateY(-3px);
-  box-shadow: 0 10px 40px rgba(147, 51, 234, 0.3);
-}
-
-.btnIcon {
-  font-size: 1.25rem;
-  display: inline-flex;
-}
-
-.btnIconArrow {
-  font-size: 1.25rem;
-  display: inline-flex;
-  transition: transform 0.3s ease;
-}
-
-.btnHeroSecondary:hover .btnIconArrow,
-.btnPrimary:hover .btnIconArrow {
-  transform: translateX(4px);
-}
-
-/* Efeito Shine */
-.btnShine {
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.3) 50%,
-    transparent 100%
-  );
-  transition: left 0.6s ease;
-}
-
-.btnHeroPrimary:hover .btnShine,
-.btnCtaPrimary:hover .btnShine,
-.btnFormSubmit:hover .btnShine {
-  left: 100%;
+  background: rgba(147, 51, 234, 0.1) !important;
+  border-color: rgba(147, 51, 234, 0.4) !important;
+  box-shadow: 0 10px 40px rgba(147, 51, 234, 0.2) !important;
 }
 
 /* Estatísticas com glassmorphism */
@@ -792,19 +758,20 @@ onMounted(() => {
 .heroStatCard {
   position: relative;
   padding: 2rem 1.5rem;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(147, 51, 234, 0.15);
   border-radius: 20px;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 20px rgba(147, 51, 234, 0.08);
 }
 
 .heroStatCard:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: #ffffff;
   border-color: rgba(147, 51, 234, 0.3);
   transform: translateY(-5px);
-  box-shadow: 0 20px 60px rgba(147, 51, 234, 0.2);
+  box-shadow: 0 20px 60px rgba(147, 51, 234, 0.15);
 }
 
 .heroStatIcon {
@@ -824,7 +791,7 @@ onMounted(() => {
 
 .heroStatLabel {
   font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: #64748b;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -847,7 +814,7 @@ onMounted(() => {
 .heroScrollMouse {
   width: 28px;
   height: 46px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  border: 2px solid rgba(147, 51, 234, 0.3);
   border-radius: 20px;
   position: relative;
 }
@@ -855,7 +822,7 @@ onMounted(() => {
 .heroScrollWheel {
   width: 3px;
   height: 8px;
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(147, 51, 234, 0.6);
   border-radius: 2px;
   position: absolute;
   top: 8px;
@@ -897,7 +864,7 @@ onMounted(() => {
   font-weight: 800;
   line-height: 1.1;
   letter-spacing: -0.02em;
-  color: #ffffff;
+  color: #1a1a1a;
   margin-bottom: 1.5rem;
 }
 
@@ -913,7 +880,7 @@ onMounted(() => {
    ============================================ */
 .missionSection {
   padding: 8rem 2rem;
-  background: #0a0a0a;
+  background: #f9fafb;
   position: relative;
 }
 
@@ -929,29 +896,12 @@ onMounted(() => {
 .missionText {
   font-size: 1.125rem;
   line-height: 1.8;
-  color: rgba(255, 255, 255, 0.6);
+  color: #64748b;
   margin-bottom: 1.5rem;
 }
 
-.btnPrimary {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1rem 2rem;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #ffffff;
-  background: linear-gradient(135deg, #9333ea 0%, #c084fc 100%);
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.3s ease;
+.btnMission {
   margin-top: 1rem;
-}
-
-.btnPrimary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 15px 40px rgba(147, 51, 234, 0.4);
 }
 
 .missionVisual {
@@ -1004,7 +954,7 @@ onMounted(() => {
    ============================================ */
 .programsSection {
   padding: 8rem 2rem;
-  background: #0a0a0a;
+  background: #ffffff;
 }
 
 .programsContainer {
@@ -1025,21 +975,22 @@ onMounted(() => {
 
 .programCard {
   position: relative;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: #ffffff;
+  border: 1px solid rgba(147, 51, 234, 0.1);
   border-radius: 24px;
   padding: 2.5rem;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
+  box-shadow: 0 4px 20px rgba(147, 51, 234, 0.06);
 }
 
 .programCard:hover {
-  background: rgba(255, 255, 255, 0.04);
+  background: #faf5ff;
   border-color: rgba(147, 51, 234, 0.3);
   transform: translateY(-8px);
-  box-shadow: 0 30px 80px rgba(147, 51, 234, 0.2);
+  box-shadow: 0 30px 80px rgba(147, 51, 234, 0.15);
 }
 
 .programCardGlow {
@@ -1105,14 +1056,14 @@ onMounted(() => {
 .programTitle {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #ffffff;
+  color: #1a1a1a;
   margin-bottom: 1rem;
 }
 
 .programDescription {
   font-size: 1rem;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.6);
+  color: #64748b;
   margin-bottom: 1.5rem;
 }
 
@@ -1138,7 +1089,7 @@ onMounted(() => {
    ============================================ */
 .testimonialSection {
   padding: 8rem 2rem;
-  background: #0a0a0a;
+  background: #f9fafb;
 }
 
 .testimonialContainer {
@@ -1149,12 +1100,13 @@ onMounted(() => {
 .testimonialCard {
   position: relative;
   padding: 4rem 3rem;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #ffffff;
+  border: 1px solid rgba(147, 51, 234, 0.1);
   border-radius: 32px;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   overflow: hidden;
+  box-shadow: 0 4px 20px rgba(147, 51, 234, 0.06);
 }
 
 .testimonialCardGlow {
@@ -1178,7 +1130,7 @@ onMounted(() => {
   font-size: clamp(1.25rem, 3vw, 1.75rem);
   font-style: italic;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.9);
+  color: #1a1a1a;
   margin: 0 0 2.5rem 0;
 }
 
@@ -1204,13 +1156,13 @@ onMounted(() => {
 .testimonialAuthorName {
   font-size: 1.125rem;
   font-weight: 600;
-  color: #ffffff;
+  color: #1a1a1a;
   margin-bottom: 0.25rem;
 }
 
 .testimonialAuthorRole {
   font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: #64748b;
 }
 
 /* ============================================
@@ -1218,7 +1170,7 @@ onMounted(() => {
    ============================================ */
 .supportersSection {
   padding: 8rem 2rem;
-  background: #0a0a0a;
+  background: #ffffff;
 }
 
 .supportersContainer {
@@ -1234,7 +1186,7 @@ onMounted(() => {
 .supportersSubtitle {
   font-size: 1.125rem;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.6);
+  color: #64748b;
   margin-top: 1rem;
 }
 
@@ -1247,18 +1199,18 @@ onMounted(() => {
 .supporterCard {
   position: relative;
   height: 120px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: #f9fafb;
+  border: 1px solid rgba(147, 51, 234, 0.1);
   border-radius: 16px;
   overflow: hidden;
   transition: all 0.3s ease;
 }
 
 .supporterCard:hover {
-  background: rgba(255, 255, 255, 0.04);
+  background: #ffffff;
   border-color: rgba(147, 51, 234, 0.3);
   transform: translateY(-4px);
-  box-shadow: 0 15px 40px rgba(147, 51, 234, 0.15);
+  box-shadow: 0 15px 40px rgba(147, 51, 234, 0.1);
 }
 
 .supporterCardInner {
@@ -1268,7 +1220,7 @@ onMounted(() => {
   height: 100%;
   font-size: 1rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.5);
+  color: #64748b;
 }
 
 /* ============================================
@@ -1276,7 +1228,7 @@ onMounted(() => {
    ============================================ */
 .contactSection {
   padding: 8rem 2rem;
-  background: #0a0a0a;
+  background: #f9fafb;
 }
 
 .contactContainer {
@@ -1291,7 +1243,7 @@ onMounted(() => {
 .contactDescription {
   font-size: 1.125rem;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.6);
+  color: #64748b;
   margin-bottom: 3rem;
 }
 
@@ -1306,16 +1258,18 @@ onMounted(() => {
   align-items: flex-start;
   gap: 1.25rem;
   padding: 1.5rem;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: #ffffff;
+  border: 1px solid rgba(147, 51, 234, 0.1);
   border-radius: 16px;
   transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(147, 51, 234, 0.04);
 }
 
 .contactMethodCard:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: #faf5ff;
   border-color: rgba(147, 51, 234, 0.3);
   transform: translateX(5px);
+  box-shadow: 0 4px 20px rgba(147, 51, 234, 0.1);
 }
 
 .contactMethodIcon {
@@ -1328,24 +1282,25 @@ onMounted(() => {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: rgba(255, 255, 255, 0.5);
+  color: #94a3b8;
   margin-bottom: 0.5rem;
 }
 
 .contactMethodValue {
   font-size: 1.125rem;
   font-weight: 500;
-  color: #ffffff;
+  color: #1a1a1a;
 }
 
 /* Formulário */
 .contactFormCard {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #ffffff;
+  border: 1px solid rgba(147, 51, 234, 0.1);
   border-radius: 24px;
   padding: 3rem;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 4px 20px rgba(147, 51, 234, 0.06);
 }
 
 .contactForm {
@@ -1363,16 +1318,16 @@ onMounted(() => {
 .formLabel {
   font-size: 0.875rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.8);
+  color: #1a1a1a;
 }
 
 .formInput {
   width: 100%;
   padding: 1rem 1.25rem;
   font-size: 1rem;
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  color: #1a1a1a;
+  background: #f9fafb;
+  border: 1.5px solid rgba(147, 51, 234, 0.15);
   border-radius: 12px;
   transition: all 0.3s ease;
   font-family: inherit;
@@ -1380,13 +1335,13 @@ onMounted(() => {
 
 .formInput:focus {
   outline: none;
-  background: rgba(255, 255, 255, 0.08);
+  background: #ffffff;
   border-color: rgba(147, 51, 234, 0.5);
   box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.1);
 }
 
 .formInput::placeholder {
-  color: rgba(255, 255, 255, 0.3);
+  color: #94a3b8;
 }
 
 .formTextarea {
@@ -1395,27 +1350,8 @@ onMounted(() => {
 }
 
 .btnFormSubmit {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  padding: 1.125rem 2rem;
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: #ffffff;
-  background: linear-gradient(135deg, #9333ea 0%, #c084fc 100%);
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  overflow: hidden;
-  transition: all 0.3s ease;
   margin-top: 0.5rem;
-}
-
-.btnFormSubmit:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 15px 40px rgba(147, 51, 234, 0.4);
+  width: 100%;
 }
 
 /* ============================================
@@ -1424,7 +1360,7 @@ onMounted(() => {
 .ctaSection {
   position: relative;
   padding: 8rem 2rem;
-  background: #0a0a0a;
+  background: #ffffff;
   overflow: hidden;
 }
 
@@ -1447,24 +1383,25 @@ onMounted(() => {
 .ctaContent {
   text-align: center;
   padding: 4rem 3rem;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+  border: 1px solid rgba(147, 51, 234, 0.2);
   border-radius: 32px;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 4px 20px rgba(147, 51, 234, 0.08);
 }
 
 .ctaTitle {
   font-size: clamp(2rem, 5vw, 3rem);
   font-weight: 800;
-  color: #ffffff;
+  color: #1a1a1a;
   margin-bottom: 1.5rem;
 }
 
 .ctaSubtitle {
   font-size: 1.25rem;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.7);
+  color: #64748b;
   margin-bottom: 3rem;
 }
 
@@ -1476,48 +1413,26 @@ onMounted(() => {
 }
 
 .btnCtaPrimary {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1.25rem 2.5rem;
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #ffffff;
-  background: linear-gradient(135deg, #9333ea 0%, #c084fc 100%);
-  border: none;
-  border-radius: 14px;
-  cursor: pointer;
-  overflow: hidden;
-  transition: all 0.3s ease;
+  font-size: 1.25rem !important;
+  padding: 1.25rem 2.5rem !important;
   box-shadow: 0 15px 50px rgba(147, 51, 234, 0.4);
 }
 
 .btnCtaPrimary:hover {
-  transform: translateY(-3px);
   box-shadow: 0 20px 60px rgba(147, 51, 234, 0.6);
 }
 
 .btnCtaSecondary {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1.25rem 2.5rem;
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1.5px solid rgba(255, 255, 255, 0.15);
-  border-radius: 14px;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  font-size: 1.25rem !important;
+  padding: 1.25rem 2.5rem !important;
+  background: #ffffff !important;
+  border: 1.5px solid rgba(147, 51, 234, 0.2) !important;
 }
 
 .btnCtaSecondary:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(147, 51, 234, 0.5);
-  transform: translateY(-3px);
-  box-shadow: 0 10px 40px rgba(147, 51, 234, 0.3);
+  background: #faf5ff !important;
+  border-color: rgba(147, 51, 234, 0.4) !important;
+  box-shadow: 0 10px 40px rgba(147, 51, 234, 0.2) !important;
 }
 
 /* ============================================
