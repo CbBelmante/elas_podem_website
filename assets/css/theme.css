@@ -1,0 +1,42 @@
+/**
+ * Elas Podem - Theme Override
+ *
+ * Este arquivo sobrescreve as variáveis CSS da biblioteca @cb/components
+ * Deve ser importado DEPOIS da biblioteca para prevalecer
+ */
+
+:root {
+  /* Primary Color Override - Roxo/Rosa */
+  --cb-primary: #9333ea; /* Roxo vibrante */
+  --cb-primary-foreground: #ffffff;
+  --cb-primary-hover: #7e22ce;
+  --cb-primary-pressed: #6b21a8;
+  --cb-primary-10: #faf5ff;
+  --cb-primary-20: #f3e8ff;
+  --cb-primary-60: #c084fc;
+
+  /* Navbar com tema roxo */
+  --cb-navbar-folder-active-bg: #faf5ff;
+  --cb-navbar-folder-active-text: #9333ea;
+  --cb-navbar-pill-active-bg: #9333ea;
+  --cb-navbar-underline-active-border: #9333ea;
+  --cb-navbar-mobile-active-bg: #faf5ff;
+  --cb-navbar-mobile-active-text: #9333ea;
+
+  /* Button Primary com roxo */
+  --cb-btn-primary: #9333ea;
+  --cb-btn-primary-hover: #7e22ce;
+  --cb-btn-primary-pressed: #6b21a8;
+  --cb-btn-focus-ring: rgba(147, 51, 234, 0.5);
+
+  /* Avatar com roxo */
+  --cb-navbar-avatar-bg: #c084fc;
+  --cb-navbar-avatar-text: #9333ea;
+}
+
+.dark {
+  /* Primary no modo dark - Roxo mais claro */
+  --cb-primary: #a855f7;
+  --cb-primary-hover: #c084fc;
+  --cb-primary-pressed: #7e22ce;
+}
