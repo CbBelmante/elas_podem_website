@@ -45,6 +45,7 @@ const handleLogoClick = () => {
       menu-style="folder"
       placement="fixed"
       :elevation="2"
+      mobile-mode="popover"
       @navigate="handleNavigate"
       @logo-click="handleLogoClick"
       class="customNavbar"

@@ -10,7 +10,6 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@cb/components": "*",
     "lucide-vue-next": "^0.563.0",
     "nuxt": "^4.3.0",
     "reka-ui": "^2.7.0",
