@@ -4,6 +4,14 @@ import { CBButton, CBNavbar, type INavbarMenuItem } from '@cb/components'
 import '@cb/components/style.css'
 import '../assets/css/theme.css'
 
+useHead({
+  link: [
+    { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+    { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
+    { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Lato:wght@400;700&display=swap' }
+  ]
+})
+
 const currentPath = ref('/')
 
 const menuItems: INavbarMenuItem[] = [
@@ -194,10 +202,19 @@ onMounted(() => {
 
         <div class="missionVisual animateOnScroll">
           <div class="missionImageCard">
-            <div class="missionImageOverlay"></div>
+            <!-- SVG Placeholder -->
+            <svg width="100%" height="100%" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg" class="missionImageSvg">
+              <path d="M263.5 400C166.5 373.5 48.5 322 0 206C88 153.5 142.5 15.5 263.5 0.5C384.5 15.5 427 122 400 206C373 290 360.5 426.5 263.5 400Z" fill="url(#paint0_linear_101_2)"/>
+              <defs>
+                <linearGradient id="paint0_linear_101_2" x1="0" y1="0" x2="400" y2="400" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#C084FC" stop-opacity="0.3"/>
+                  <stop offset="1" stop-color="#EC4899" stop-opacity="0.1"/>
+                </linearGradient>
+              </defs>
+            </svg>
             <div class="missionImageContent">
-              <div class="missionImageIcon">🌟</div>
-              <div class="missionImageText">Imagem Inspiradora</div>
+              <div class="missionImageIcon">✨</div>
+              <div class="missionImageText">Empoderando Mulheres</div>
             </div>
           </div>
         </div>
@@ -498,7 +515,7 @@ onMounted(() => {
   min-height: 100vh;
   background: #ffffff;
   color: #1a1a1a;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Lato', sans-serif; /* Aplicando Lato */
   overflow-x: hidden;
 }
 
@@ -677,6 +694,7 @@ onMounted(() => {
 
 /* Título com gradiente animado */
 .heroTitle {
+  font-family: 'Poppins', sans-serif; /* Aplicando Poppins */
   font-size: clamp(3.5rem, 10vw, 7rem);
   font-weight: 900;
   line-height: 0.95;
@@ -733,19 +751,6 @@ onMounted(() => {
   box-shadow: 0 20px 60px rgba(147, 51, 234, 0.6);
 }
 
-.btnHeroSecondary {
-  background: rgba(147, 51, 234, 0.05) !important;
-  border: 1.5px solid rgba(147, 51, 234, 0.2) !important;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-}
-
-.btnHeroSecondary:hover {
-  background: rgba(147, 51, 234, 0.1) !important;
-  border-color: rgba(147, 51, 234, 0.4) !important;
-  box-shadow: 0 10px 40px rgba(147, 51, 234, 0.2) !important;
-}
-
 /* Estatísticas com glassmorphism */
 .heroStats {
   display: grid;
@@ -780,6 +785,7 @@ onMounted(() => {
 }
 
 .heroStatNumber {
+  font-family: 'Poppins', sans-serif; /* Aplicando Poppins */
   font-size: 2.5rem;
   font-weight: 800;
   background: linear-gradient(135deg, #c084fc 0%, #ec4899 100%);
@@ -860,6 +866,7 @@ onMounted(() => {
 }
 
 .sectionTitle {
+  font-family: 'Poppins', sans-serif; /* Aplicando Poppins */
   font-size: clamp(2.5rem, 5vw, 3.5rem);
   font-weight: 800;
   line-height: 1.1;
@@ -917,19 +924,29 @@ onMounted(() => {
     rgba(236, 72, 153, 0.2) 100%
   );
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 24px;
+  border-radius: 24px; /* Mantido o original, ajustando se necessário */
   overflow: hidden;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 }
 
-.missionImageOverlay {
+/* CSS para o placeholder SVG da imagem */
+.missionImageCard .missionImageOverlay {
   position: absolute;
   inset: 0;
   background: radial-gradient(circle at center, transparent 0%, rgba(10, 10, 10, 0.5) 100%);
 }
 
-.missionImageContent {
+.missionImageCard .missionImageSvg {
+  position: absolute;
+  inset: -50%; /* Faz o SVG preencher e vazar para criar o efeito desejado */
+  width: 200%;
+  height: 200%;
+  object-fit: cover;
+  animation: float 30s ease-in-out infinite reverse; /* Reutilizando animação existente */
+}
+
+.missionImageCard .missionImageContent {
   position: absolute;
   inset: 0;
   display: flex;
@@ -937,17 +954,19 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   gap: 1rem;
+  background: rgba(255, 255, 255, 0.1); /* Suave sobreposição */
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  color: white;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+.missionImageCard .missionImageIcon { font-size: 3rem; }
+.missionImageCard .missionImageText { 
+  font-family: 'Poppins', sans-serif; /* Aplicando Poppins */
+  font-size: 1.5rem; 
+  font-weight: 600; 
 }
 
-.missionImageIcon {
-  font-size: 4rem;
-}
-
-.missionImageText {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.8);
-}
 
 /* ============================================
    PROGRAMS SECTION
@@ -1054,6 +1073,7 @@ onMounted(() => {
 }
 
 .programTitle {
+  font-family: 'Poppins', sans-serif; /* Aplicando Poppins */
   font-size: 1.5rem;
   font-weight: 700;
   color: #1a1a1a;
@@ -1126,6 +1146,7 @@ onMounted(() => {
 }
 
 .testimonialQuote {
+  font-family: 'Poppins', sans-serif; /* Aplicando Poppins */
   position: relative;
   font-size: clamp(1.25rem, 3vw, 1.75rem);
   font-style: italic;
@@ -1148,12 +1169,14 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+  font-family: 'Poppins', sans-serif; /* Aplicando Poppins */
   font-size: 1.5rem;
   font-weight: 700;
   color: #ffffff;
 }
 
 .testimonialAuthorName {
+  font-family: 'Poppins', sans-serif; /* Aplicando Poppins */
   font-size: 1.125rem;
   font-weight: 600;
   color: #1a1a1a;
@@ -1316,6 +1339,7 @@ onMounted(() => {
 }
 
 .formLabel {
+  font-family: 'Poppins', sans-serif; /* Aplicando Poppins */
   font-size: 0.875rem;
   font-weight: 600;
   color: #1a1a1a;
@@ -1392,6 +1416,7 @@ onMounted(() => {
 }
 
 .ctaTitle {
+  font-family: 'Poppins', sans-serif; /* Aplicando Poppins */
   font-size: clamp(2rem, 5vw, 3rem);
   font-weight: 800;
   color: #1a1a1a;
@@ -1479,4 +1504,5 @@ onMounted(() => {
     padding: 2rem;
   }
 }
+
 </style>

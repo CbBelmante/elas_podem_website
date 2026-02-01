@@ -44,7 +44,7 @@
 | **Componentes Vue** | `PascalCase` (prefixo Cb para custom) | `CbButton`, `CbModal`, `MessageItem` |
 | **Arquivos TS/JS** | `camelCase` | `useAuth.ts`, `apiService.ts`, `roles.ts` |
 | **Pastas** | `camelCase` | `composables/`, `components/`, `services/` |
-| **Classes CSS customizadas** | `camelCase` (exceto Tailwind/libs) | `.userBubble`, `.messageWrapper`, `.actionsLeft` |
+| **Classes CSS customizadas** | BEM-like com `camelCase` | `.cbButton`, `.cbButton__icon`, `.cbButton--solid` |
 
 ### **Exemplos Práticos**
 
@@ -781,24 +781,33 @@ export const isSuccess = (result: IServiceResult): boolean =>
 
 ### **Nomenclatura de Classes CSS**
 
-**Classes customizadas: SEMPRE camelCase**
+**Padrão: BEM-like com `camelCase` e prefixo `cb`**
+
+Utilizamos uma variação da metodologia BEM (Block, Element, Modifier) para garantir que nossos estilos sejam previsíveis, isolados e fáceis de entender.
+
+1.  **Bloco (O Componente):** `camelCase` com o prefixo `cb`.
+    -   Exemplo: `cbCard`, `cbButton`
+
+2.  **Elemento (Parte do Componente):** Nome do bloco, seguido por `__` (dois underlines) e o nome do elemento.
+    -   Exemplo: `cbCard__header`, `cbButton__icon`
+
+3.  **Modificador (Variação do Componente):** Nome do bloco (ou elemento), seguido por `--` (dois hífens) e o nome do modificador.
+    -   Exemplo: `cbCard--elevated`, `cbButton--solid`
 
 ```css
-/* ✅ CORRETO - Classes customizadas em camelCase */
-.messageContent { }
-.userBubble { }
-.assistantBubble { }
-.messageWrapper { }
-.actionsLeft { }
-.actionsRight { }
-.badgeMedical { }
-.userMessageContainer { }
-.assistantMessageContent { }
+/* ✅ CORRETO - Estrutura BEM com prefixo e camelCase */
+.cbCard { /* Bloco */ }
+.cbCard__header { /* Elemento */ }
+.cbCard--elevated { /* Modificador */ }
 
-/* ❌ ERRADO - kebab-case ou snake_case */
-.message-content { }
-.user-bubble { }
-.message_wrapper { }
+.cbButton { /* Bloco */ }
+.cbButton__icon { /* Elemento */ }
+.cbButton--solid { /* Modificador */ }
+
+/* ❌ ERRADO - kebab-case, sem estrutura ou sem prefixo */
+.card-header { } /* Usa kebab-case e não tem escopo */
+.cardHeader { }  /* Sem o prefixo 'cb', pode colidir com outras libs */
+.card_header { } /* Usa snake_case */
 ```
 
 **Exceções (NÃO use camelCase):**
@@ -809,28 +818,26 @@ export const isSuccess = (result: IServiceResult): boolean =>
 
 ```vue
 <template>
-  <!-- ✅ CORRETO - Mix de customizado (camelCase) + Tailwind (kebab-case) -->
-  <div class="flex justify-end w-full userMessageContainer">
-    <div class="messageWrapper group">
-      <div class="userBubble rounded-t-lg px-3 py-1.5">
-        <p class="text-sm">{{ message }}</p>
-      </div>
+  <!-- ✅ CORRETO - Mix de customizado (camelCase BEM) + classes utilitárias (se necessário) -->
+  <div class="cbCard cbCard--elevated">
+    <div class="cbCard__header">
+        ...
     </div>
   </div>
 </template>
 
 <style scoped>
-/* Classes customizadas em camelCase */
-.userMessageContainer {
-  direction: ltr;
-}
-
-.messageWrapper {
+/* Classes customizadas seguindo o padrão */
+.cbCard {
   display: flex;
 }
 
-.userBubble {
-  background-color: var(--chat-bubble-user);
+.cbCard__header {
+  font-weight: bold;
+}
+
+.cbCard--elevated {
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
 }
 </style>
 ```
