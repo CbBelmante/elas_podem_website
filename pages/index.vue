@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { CBButton, CBCard, CBIcon, CBNavbar, type INavbarMenuItem } from '@cb/components';
+import { useI18n } from 'vue-i18n';
 import '@cb/components/style.css';
 import '../assets/css/theme.css';
 
@@ -17,24 +18,26 @@ useHead({
 
 const currentPath = ref('/');
 
-const menuItems: INavbarMenuItem[] = [
+const { t } = useI18n();
+
+const menuItems = computed<INavbarMenuItem[]>(() => [
   {
-    label: 'Home',
+    label: t('navbar.home'),
     to: '/',
   },
   {
-    label: 'Sobre nós',
+    label: t('navbar.about'),
     to: '/sobre',
   },
   {
-    label: 'Projetos',
+    label: t('navbar.projects'),
     to: '/projetos',
   },
   {
-    label: 'Blog',
+    label: t('navbar.blog'),
     to: '/blog',
   },
-];
+]);
 
 const handleNavigate = ({ path }: { path: string }) => {
   currentPath.value = path;
@@ -69,6 +72,11 @@ onMounted(() => {
 
 <template>
   <div class="pageWrapper">
+    <!-- Language Switcher -->
+    <div class="languageSwitcherWrapper">
+      <LanguageSwitcher />
+    </div>
+
     <!-- Navbar -->
     <CBNavbar
       :menu-items="menuItems"
@@ -80,44 +88,35 @@ onMounted(() => {
       class="customNavbar"
       @navigate="handleNavigate"
       @logo-click="handleLogoClick"
-    />
+    >
+      <template #logo>
+        <img src="/logo-elas-podem.png" alt="Elas Podem" class="navbarLogo" />
+      </template>
+    </CBNavbar>
 
     <!-- Hero Section - REDESENHADO -->
     <section class="heroSection">
-      <!-- Gradientes animados de fundo -->
-      <div class="heroGradientBg"></div>
-      <div class="heroGradientOrb heroGradientOrb--1"></div>
-      <div class="heroGradientOrb heroGradientOrb--2"></div>
-      <div class="heroGradientOrb heroGradientOrb--3"></div>
-
-      <!-- Grid de fundo sutil -->
-      <div class="heroGrid"></div>
-
       <div class="heroContent">
         <!-- Badge superior -->
         <div class="heroBadge animateOnScroll">
-          <span class="heroBadgeIcon">✨</span>
-          <span>JUNTAS SOMOS MAIS FORTES</span>
+          <CBIcon icon="luc-sparkles" size="1rem" color="var(--cb-primary)" class="heroBadgeIcon" />
+          <span>{{ $t('hero.badge') }}</span>
         </div>
 
         <!-- Título principal com gradiente -->
         <h1 class="heroTitle animateOnScroll">
-          ELAS
-          <br />
-          <span class="heroTitleGradient">PODEM</span>
+          {{ $t('hero.title') }}
         </h1>
 
         <!-- Subtítulo -->
         <p class="heroSubtitle animateOnScroll">
-          Investimos em mulheres corajosas que lideram movimentos de<br class="hideOnMobile" />
-          transformação social. Cada contribuição fortalece a luta por<br class="hideOnMobile" />
-          direitos, igualdade e justiça.
+          {{ $t('hero.subtitle') }}
         </p>
 
         <!-- Botões com efeitos premium -->
         <div class="heroActions animateOnScroll">
           <CBButton
-            label="Doe Agora"
+            :label="$t('hero.btnDonate')"
             size="lg"
             :bg-color="'var(--gradient-primary)'"
             :rounded="14"
@@ -128,10 +127,10 @@ onMounted(() => {
           />
 
           <CBButton
-            label="Nossa História"
+            :label="$t('hero.btnHistory')"
             size="lg"
             variant="outline"
-            color="#7e22ce"
+            :color="'var(--cb-secondary)'"
             :rounded="14"
             append-icon="luc-arrow-right"
             class="btnHeroSecondary"
@@ -141,29 +140,27 @@ onMounted(() => {
         <!-- Estatísticas com glassmorphism -->
         <div class="heroStats animateOnScroll">
           <div class="heroStatCard">
-            <div class="heroStatIcon">🎯</div>
-            <div class="heroStatNumber">2.500+</div>
-            <div class="heroStatLabel">Mulheres Impactadas</div>
+            <CBIcon icon="luc-award" size="2rem" color="var(--cb-primary)" class="heroStatIcon" />
+            <div class="heroStatNumber">{{ $t('hero.stats.headquarter.number') }}</div>
+            <div class="heroStatLabel">{{ $t('hero.stats.headquarter.label') }}</div>
           </div>
 
           <div class="heroStatCard">
-            <div class="heroStatIcon">🌍</div>
-            <div class="heroStatNumber">45</div>
-            <div class="heroStatLabel">Comunidades</div>
+            <CBIcon
+              icon="luc-megaphone"
+              size="2rem"
+              color="var(--cb-primary)"
+              class="heroStatIcon"
+            />
+            <div class="heroStatNumber">{{ $t('hero.stats.conference.number') }}</div>
+            <div class="heroStatLabel">{{ $t('hero.stats.conference.label') }}</div>
           </div>
 
           <div class="heroStatCard">
-            <div class="heroStatIcon">💰</div>
-            <div class="heroStatNumber">R$ 1.2M</div>
-            <div class="heroStatLabel">Investidos</div>
+            <CBIcon icon="luc-users" size="2rem" color="var(--cb-primary)" class="heroStatIcon" />
+            <div class="heroStatNumber">{{ $t('hero.stats.location.number') }}</div>
+            <div class="heroStatLabel">{{ $t('hero.stats.location.label') }}</div>
           </div>
-        </div>
-      </div>
-
-      <!-- Indicador de scroll -->
-      <div class="heroScrollIndicator">
-        <div class="heroScrollMouse">
-          <div class="heroScrollWheel"></div>
         </div>
       </div>
     </section>
@@ -173,31 +170,31 @@ onMounted(() => {
       <div class="missionContainer">
         <div class="missionContent animateOnScroll">
           <div class="sectionBadge">
-            <span class="sectionBadgeIcon">🎯</span>
-            <span>NOSSA MISSÃO</span>
+            <CBIcon
+              icon="luc-target"
+              size="1rem"
+              color="var(--cb-primary)"
+              class="sectionBadgeIcon"
+            />
+            <span>{{ $t('mission.badge') }}</span>
           </div>
 
           <h2 class="sectionTitle">
-            Transformando Vidas,<br />
-            <span class="sectionTitleAccent">Construindo Futuros</span>
+            {{ $t('mission.title') }}
           </h2>
 
           <p class="missionText">
-            Acreditamos que toda mulher tem o direito de viver com dignidade, segurança e autonomia.
-            Trabalhamos incansavelmente para oferecer suporte educacional, econômico e emocional
-            para mulheres em situação de vulnerabilidade.
+            {{ $t('mission.text1') }}
           </p>
 
           <p class="missionText">
-            Através de programas de capacitação profissional, educação financeira e apoio
-            psicológico, ajudamos mulheres a reconstruírem suas vidas e se tornarem agentes de
-            mudança em suas comunidades.
+            {{ $t('mission.text2') }}
           </p>
 
           <CBButton
-            label="Conheça Nossa História"
+            :label="$t('mission.btnLearnMore')"
             size="lg"
-            :bg-color="'linear-gradient(135deg, #9333ea 0%, #c084fc 100%)'"
+            :bg-color="'var(--gradient-primary)'"
             :rounded="12"
             append-icon="luc-arrow-right"
             class="btnMission"
@@ -234,8 +231,13 @@ onMounted(() => {
               </defs>
             </svg>
             <div class="missionImageContent">
-              <div class="missionImageIcon">✨</div>
-              <div class="missionImageText">Empoderando Mulheres</div>
+              <CBIcon
+                icon="luc-sparkles"
+                size="3rem"
+                color="var(--cb-primary)"
+                class="missionImageIcon"
+              />
+              <div class="missionImageText">{{ $t('mission.imageAlt') }}</div>
             </div>
           </div>
         </div>
@@ -247,13 +249,17 @@ onMounted(() => {
       <div class="programsContainer">
         <div class="programsHeader animateOnScroll">
           <div class="sectionBadge">
-            <span class="sectionBadgeIcon">💡</span>
-            <span>NOSSOS PROGRAMAS</span>
+            <CBIcon
+              icon="luc-lightbulb"
+              size="1rem"
+              color="var(--cb-primary)"
+              class="sectionBadgeIcon"
+            />
+            <span>{{ $t('programs.badge') }}</span>
           </div>
 
           <h2 class="sectionTitle">
-            Como Fazemos a<br />
-            <span class="sectionTitleAccent">Diferença</span>
+            {{ $t('programs.title') }}
           </h2>
         </div>
 
@@ -263,15 +269,19 @@ onMounted(() => {
             <div class="programCardGlow"></div>
             <div class="programCardContent">
               <div class="programIconWrapper programIconWrapper--purple">
-                <span class="programIcon">📚</span>
+                <CBIcon
+                  icon="luc-megaphone"
+                  size="2rem"
+                  color="var(--accent-color)"
+                  class="programIcon"
+                />
               </div>
-              <h3 class="programTitle">Educação e Capacitação</h3>
+              <h3 class="programTitle">{{ $t('programs.items.communication.title') }}</h3>
               <p class="programDescription">
-                Oferecemos cursos profissionalizantes, workshops e treinamentos que preparam
-                mulheres para o mercado de trabalho.
+                {{ $t('programs.items.communication.description') }}
               </p>
               <div class="programCardFooter">
-                <span class="programCardLink">Saiba mais →</span>
+                <span class="programCardLink">{{ $t('programs.items.communication.link') }}</span>
               </div>
             </div>
           </div>
@@ -281,15 +291,19 @@ onMounted(() => {
             <div class="programCardGlow"></div>
             <div class="programCardContent">
               <div class="programIconWrapper programIconWrapper--pink">
-                <span class="programIcon">💼</span>
+                <CBIcon
+                  icon="luc-graduation-cap"
+                  size="2rem"
+                  color="var(--accent-color)"
+                  class="programIcon"
+                />
               </div>
-              <h3 class="programTitle">Empreendedorismo</h3>
+              <h3 class="programTitle">{{ $t('programs.items.education.title') }}</h3>
               <p class="programDescription">
-                Apoiamos mulheres a criarem e desenvolverem seus próprios negócios com mentoria e
-                microcrédito.
+                {{ $t('programs.items.education.description') }}
               </p>
               <div class="programCardFooter">
-                <span class="programCardLink">Saiba mais →</span>
+                <span class="programCardLink">{{ $t('programs.items.education.link') }}</span>
               </div>
             </div>
           </div>
@@ -299,15 +313,19 @@ onMounted(() => {
             <div class="programCardGlow"></div>
             <div class="programCardContent">
               <div class="programIconWrapper programIconWrapper--violet">
-                <span class="programIcon">🤝</span>
+                <CBIcon
+                  icon="luc-users"
+                  size="2rem"
+                  color="var(--accent-color)"
+                  class="programIcon"
+                />
               </div>
-              <h3 class="programTitle">Rede de Apoio</h3>
+              <h3 class="programTitle">{{ $t('programs.items.social.title') }}</h3>
               <p class="programDescription">
-                Criamos uma comunidade forte onde mulheres se apoiam mutuamente e compartilham
-                experiências.
+                {{ $t('programs.items.social.description') }}
               </p>
               <div class="programCardFooter">
-                <span class="programCardLink">Saiba mais →</span>
+                <span class="programCardLink">{{ $t('programs.items.social.link') }}</span>
               </div>
             </div>
           </div>
@@ -317,15 +335,19 @@ onMounted(() => {
             <div class="programCardGlow"></div>
             <div class="programCardContent">
               <div class="programIconWrapper programIconWrapper--fuchsia">
-                <span class="programIcon">💪</span>
+                <CBIcon
+                  icon="luc-scale"
+                  size="2rem"
+                  color="var(--accent-color)"
+                  class="programIcon"
+                />
               </div>
-              <h3 class="programTitle">Saúde Mental</h3>
+              <h3 class="programTitle">{{ $t('programs.items.political.title') }}</h3>
               <p class="programDescription">
-                Oferecemos acompanhamento psicológico e grupos de apoio para fortalecer a autoestima
-                e resiliência.
+                {{ $t('programs.items.political.description') }}
               </p>
               <div class="programCardFooter">
-                <span class="programCardLink">Saiba mais →</span>
+                <span class="programCardLink">{{ $t('programs.items.political.link') }}</span>
               </div>
             </div>
           </div>
@@ -340,14 +362,13 @@ onMounted(() => {
           <div class="testimonialCardGlow"></div>
           <div class="testimonialQuoteIcon">"</div>
           <blockquote class="testimonialQuote">
-            Transformar o futuro começa agora. De cada menina que descobre sua voz a cada mulher que
-            assume um espaço de poder, estamos mudando histórias e construindo um país mais justo.
+            {{ $t('testimonial.quote') }}
           </blockquote>
           <div class="testimonialAuthor">
             <div class="testimonialAuthorAvatar">M</div>
             <div class="testimonialAuthorInfo">
-              <div class="testimonialAuthorName">Maria da Silva</div>
-              <div class="testimonialAuthorRole">Líder Comunitária</div>
+              <div class="testimonialAuthorName">{{ $t('testimonial.author.name') }}</div>
+              <div class="testimonialAuthorRole">{{ $t('testimonial.author.role') }}</div>
             </div>
           </div>
         </div>
@@ -359,20 +380,21 @@ onMounted(() => {
       <div class="supportersContainer">
         <div class="supportersHeader animateOnScroll">
           <div class="sectionBadge">
-            <span class="sectionBadgeIcon">🤝</span>
-            <span>PARCEIROS</span>
+            <CBIcon
+              icon="luc-handshake"
+              size="1rem"
+              color="var(--cb-primary)"
+              class="sectionBadgeIcon"
+            />
+            <span>{{ $t('supporters.badge') }}</span>
           </div>
 
           <h2 class="sectionTitle">
-            Quem Apoia<br />
-            <span class="sectionTitleAccent">Nossa Causa</span>
+            {{ $t('supporters.title') }}
           </h2>
 
           <p class="supportersSubtitle">
-            Com o apoio de quem acredita na transformação, seguimos formando<br
-              class="hideOnMobile"
-            />
-            meninas e mulheres para liderar o futuro.
+            {{ $t('supporters.subtitle') }}
           </p>
         </div>
 
@@ -392,9 +414,6 @@ onMounted(() => {
           <div class="supporterCard">
             <div class="supporterCardInner">Apoiador 5</div>
           </div>
-          <div class="supporterCard">
-            <div class="supporterCardInner">Apoiador 6</div>
-          </div>
         </div>
       </div>
     </section>
@@ -405,13 +424,13 @@ onMounted(() => {
         <div class="contactInfo animateOnScroll">
           <div class="sectionBadge">
             <span class="sectionBadgeIcon">📧</span>
-            <span>CONTATO</span>
+            <span>{{ $t('contact.badge') }}</span>
           </div>
 
-          <h2 class="sectionTitle">Vamos Conversar?</h2>
+          <h2 class="sectionTitle">{{ $t('contact.title') }}</h2>
 
           <p class="contactDescription">
-            Tem dúvidas, sugestões ou quer conhecer melhor nosso trabalho? Entre em contato conosco!
+            {{ $t('contact.description') }}
           </p>
 
           <div class="contactMethods">
@@ -427,14 +446,14 @@ onMounted(() => {
             >
               <div class="contactMethodWrapper">
                 <CBIcon
-                  icon="luc-mail"
+                  icon="luc-instagram"
                   size="2rem"
                   color="var(--cb-primary)"
                   class="contactMethodIcon"
                 />
                 <div class="contactMethodContent">
-                  <div class="contactMethodLabel">E-mail</div>
-                  <div class="contactMethodValue">contato@elaspodem.org</div>
+                  <div class="contactMethodLabel">{{ $t('contact.methods.instagram.label') }}</div>
+                  <div class="contactMethodValue">{{ $t('contact.methods.instagram.value') }}</div>
                 </div>
               </div>
             </CBCard>
@@ -451,14 +470,14 @@ onMounted(() => {
             >
               <div class="contactMethodWrapper">
                 <CBIcon
-                  icon="luc-message-circle"
+                  icon="luc-user-check"
                   size="2rem"
                   color="var(--cb-primary)"
                   class="contactMethodIcon"
                 />
                 <div class="contactMethodContent">
-                  <div class="contactMethodLabel">WhatsApp</div>
-                  <div class="contactMethodValue">(11) 99999-9999</div>
+                  <div class="contactMethodLabel">{{ $t('contact.methods.president.label') }}</div>
+                  <div class="contactMethodValue">{{ $t('contact.methods.president.value') }}</div>
                 </div>
               </div>
             </CBCard>
@@ -481,8 +500,8 @@ onMounted(() => {
                   class="contactMethodIcon"
                 />
                 <div class="contactMethodContent">
-                  <div class="contactMethodLabel">Endereço</div>
-                  <div class="contactMethodValue">São Paulo, SP - Brasil</div>
+                  <div class="contactMethodLabel">{{ $t('contact.methods.location.label') }}</div>
+                  <div class="contactMethodValue">{{ $t('contact.methods.location.value') }}</div>
                 </div>
               </div>
             </CBCard>
@@ -493,41 +512,51 @@ onMounted(() => {
           <CBCard variant="elevated" :rounded="24" class="contactFormCard">
             <form class="contactForm">
               <div class="formGroup">
-                <label class="formLabel">Nome completo</label>
-                <input type="text" class="formInput" placeholder="Seu nome completo" required />
+                <label class="formLabel">{{ $t('contact.form.name.label') }}</label>
+                <input
+                  type="text"
+                  class="formInput"
+                  :placeholder="$t('contact.form.name.placeholder')"
+                  required
+                />
               </div>
 
               <div class="formGroup">
-                <label class="formLabel">E-mail</label>
-                <input type="email" class="formInput" placeholder="seu@email.com" required />
+                <label class="formLabel">{{ $t('contact.form.email.label') }}</label>
+                <input
+                  type="email"
+                  class="formInput"
+                  :placeholder="$t('contact.form.email.placeholder')"
+                  required
+                />
               </div>
 
               <div class="formGroup">
-                <label class="formLabel">Assunto</label>
+                <label class="formLabel">{{ $t('contact.form.subject.label') }}</label>
                 <select class="formInput">
-                  <option>Selecione o assunto</option>
-                  <option>Quero ser voluntária</option>
-                  <option>Quero doar</option>
-                  <option>Parcerias</option>
-                  <option>Dúvidas gerais</option>
+                  <option>{{ $t('contact.form.subject.placeholder') }}</option>
+                  <option>{{ $t('contact.form.subject.options.volunteer') }}</option>
+                  <option>{{ $t('contact.form.subject.options.donate') }}</option>
+                  <option>{{ $t('contact.form.subject.options.partnership') }}</option>
+                  <option>{{ $t('contact.form.subject.options.general') }}</option>
                 </select>
               </div>
 
               <div class="formGroup">
-                <label class="formLabel">Mensagem</label>
+                <label class="formLabel">{{ $t('contact.form.message.label') }}</label>
                 <textarea
                   class="formInput formTextarea"
                   rows="5"
-                  placeholder="Escreva sua mensagem aqui..."
+                  :placeholder="$t('contact.form.message.placeholder')"
                   required
                 ></textarea>
               </div>
 
               <CBButton
-                label="Enviar Mensagem"
+                :label="$t('contact.form.btnSubmit')"
                 type="submit"
                 size="lg"
-                :bg-color="'linear-gradient(135deg, #9333ea 0%, #c084fc 100%)'"
+                :bg-color="'var(--gradient-primary)'"
                 :rounded="12"
                 append-icon="luc-arrow-right"
                 shine
@@ -544,16 +573,15 @@ onMounted(() => {
       <div class="ctaGradientBg"></div>
       <div class="ctaContainer animateOnScroll">
         <div class="ctaContent">
-          <h2 class="ctaTitle">Juntas Somos Mais Fortes</h2>
+          <h2 class="ctaTitle">{{ $t('cta.title') }}</h2>
           <p class="ctaSubtitle">
-            Sua contribuição pode mudar a vida de uma mulher e transformar toda uma comunidade.<br />
-            Faça parte dessa transformação!
+            {{ $t('cta.subtitle') }}
           </p>
           <div class="ctaActions">
             <CBButton
-              label="Doar Agora"
+              :label="$t('cta.btnDonate')"
               size="lg"
-              :bg-color="'linear-gradient(135deg, #9333ea 0%, #c084fc 100%)'"
+              :bg-color="'var(--gradient-primary)'"
               :rounded="14"
               prepend-icon="luc-heart"
               shine
@@ -563,10 +591,10 @@ onMounted(() => {
             />
 
             <CBButton
-              label="Conhecer Projetos"
+              :label="$t('cta.btnProjects')"
               size="lg"
               variant="outline"
-              color="#7e22ce"
+              :color="'var(--cb-secondary)'"
               :rounded="14"
               append-icon="luc-arrow-right"
               class="btnCtaSecondary"
@@ -601,6 +629,23 @@ onMounted(() => {
 }
 
 /* ============================================
+   LANGUAGE SWITCHER
+   ============================================ */
+.languageSwitcherWrapper {
+  position: fixed;
+  top: 1rem;
+  right: 2rem;
+  z-index: 1000;
+}
+
+@media (max-width: 768px) {
+  .languageSwitcherWrapper {
+    top: 0.75rem;
+    right: 1rem;
+  }
+}
+
+/* ============================================
    ANIMAÇÕES DE SCROLL
    ============================================ */
 .animateOnScroll {
@@ -630,9 +675,24 @@ onMounted(() => {
   justify-content: center;
 }
 
+.navbarLogo {
+  height: 48px;
+  width: auto;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.navbarLogo:hover {
+  transform: scale(1.05);
+}
+
 @media (max-width: 768px) {
   .customNavbar :deep(.cbNavbar__logoSection) {
     margin-left: 1rem;
+  }
+
+  .navbarLogo {
+    height: 40px;
   }
 }
 
@@ -737,7 +797,7 @@ onMounted(() => {
 .heroContent {
   position: relative;
   z-index: 2;
-  max-width: 1000px;
+  max-width: 900px;
   text-align: center;
 }
 
@@ -747,27 +807,29 @@ onMounted(() => {
   align-items: center;
   gap: 0.5rem;
   padding: 0.625rem 1.5rem;
-  background: rgba(147, 51, 234, 0.08);
-  border: 1px solid rgba(147, 51, 234, 0.2);
+  background: var(--badge-bg);
+  border: 1px solid var(--badge-border);
   border-radius: 100px;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 2px;
-  color: #7e22ce;
+  color: var(--cb-secondary);
   margin-bottom: 2rem;
   transition: all 0.3s ease;
 }
 
 .heroBadge:hover {
-  background: rgba(147, 51, 234, 0.12);
-  border-color: rgba(147, 51, 234, 0.4);
+  background: var(--badge-bg-hover);
+  border-color: var(--border-hover);
   transform: translateY(-2px);
 }
 
 .heroBadgeIcon {
-  font-size: 1rem;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 0.5rem;
 }
 
 /* Título com gradiente animado */
@@ -783,14 +845,14 @@ onMounted(() => {
 }
 
 .heroTitleGradient {
-  background: linear-gradient(135deg, #c084fc 0%, #ec4899 50%, #f97316 100%);
+  background: var(--gradient-hero);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   background-size: 200% auto;
   animation: gradientShift 8s ease infinite;
   display: inline-block;
-  text-shadow: 0 0 80px rgba(192, 132, 252, 0.3);
+  text-shadow: 0 0 80px var(--shadow-md);
 }
 
 @keyframes gradientShift {
@@ -836,32 +898,32 @@ onMounted(() => {
 .heroStatCard {
   position: relative;
   padding: 2rem 1.5rem;
-  background: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(147, 51, 234, 0.15);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
   border-radius: 20px;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 20px rgba(147, 51, 234, 0.08);
+  box-shadow: var(--shadow-md);
 }
 
 .heroStatCard:hover {
-  background: #ffffff;
-  border-color: rgba(147, 51, 234, 0.3);
+  background: var(--bg-white);
+  border-color: var(--border-hover);
   transform: translateY(-5px);
-  box-shadow: 0 20px 60px rgba(147, 51, 234, 0.15);
+  box-shadow: var(--shadow-xl);
 }
 
 .heroStatIcon {
-  font-size: 2rem;
   margin-bottom: 1rem;
+  display: block;
 }
 
 .heroStatNumber {
-  font-family: 'Poppins', sans-serif; /* Aplicando Poppins */
+  font-family: 'Poppins', sans-serif;
   font-size: 2.5rem;
   font-weight: 800;
-  background: linear-gradient(135deg, #c084fc 0%, #ec4899 100%);
+  background: var(--gradient-accent);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -938,32 +1000,34 @@ onMounted(() => {
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1.25rem;
-  background: rgba(147, 51, 234, 0.1);
-  border: 1px solid rgba(147, 51, 234, 0.2);
+  background: var(--badge-bg);
+  border: 1px solid var(--badge-border);
   border-radius: 100px;
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 2px;
-  color: #c084fc;
+  color: var(--cb-primary);
   margin-bottom: 1.5rem;
 }
 
 .sectionBadgeIcon {
-  font-size: 1rem;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 0.5rem;
 }
 
 .sectionTitle {
   font-family: 'Poppins', sans-serif; /* Aplicando Poppins */
-  font-size: clamp(2.5rem, 5vw, 3.5rem);
-  font-weight: 800;
-  line-height: 1.1;
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.2;
   letter-spacing: -0.02em;
   color: #1a1a1a;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .sectionTitleAccent {
-  background: linear-gradient(135deg, #c084fc 0%, #ec4899 100%);
+  background: var(--gradient-accent);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -973,17 +1037,17 @@ onMounted(() => {
    MISSION SECTION
    ============================================ */
 .missionSection {
-  padding: 8rem 2rem;
+  padding: 3rem 2rem;
   background: #f9fafb;
   position: relative;
 }
 
 .missionContainer {
-  max-width: 1400px;
+  max-width: 1100px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 5rem;
+  gap: 4rem;
   align-items: center;
 }
 
@@ -1057,12 +1121,12 @@ onMounted(() => {
    PROGRAMS SECTION
    ============================================ */
 .programsSection {
-  padding: 8rem 2rem;
+  padding: 3rem 2rem;
   background: #ffffff;
 }
 
 .programsContainer {
-  max-width: 1400px;
+  max-width: 1100px;
   margin: 0 auto;
 }
 
@@ -1073,28 +1137,28 @@ onMounted(() => {
 
 .programsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
 }
 
 .programCard {
   position: relative;
-  background: #ffffff;
-  border: 1px solid rgba(147, 51, 234, 0.1);
-  border-radius: 24px;
-  padding: 2.5rem;
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
+  border-radius: 20px;
+  padding: 1.5rem;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(147, 51, 234, 0.06);
+  box-shadow: var(--shadow-sm);
 }
 
 .programCard:hover {
-  background: #faf5ff;
-  border-color: rgba(147, 51, 234, 0.3);
+  background: var(--bg-tint);
+  border-color: var(--border-hover);
   transform: translateY(-8px);
-  box-shadow: 0 30px 80px rgba(147, 51, 234, 0.15);
+  box-shadow: var(--shadow-xl);
 }
 
 .programCardGlow {
@@ -1122,10 +1186,10 @@ onMounted(() => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 70px;
-  height: 70px;
-  border-radius: 18px;
-  margin-bottom: 1.5rem;
+  width: 50px;
+  height: 50px;
+  border-radius: 14px;
+  margin-bottom: 1rem;
   transition: transform 0.3s ease;
 }
 
@@ -1154,22 +1218,22 @@ onMounted(() => {
 }
 
 .programIcon {
-  font-size: 2rem;
+  display: block;
 }
 
 .programTitle {
   font-family: 'Poppins', sans-serif; /* Aplicando Poppins */
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: #1a1a1a;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 
 .programDescription {
-  font-size: 1rem;
-  line-height: 1.6;
+  font-size: 0.9rem;
+  line-height: 1.5;
   color: #64748b;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .programCardFooter {
@@ -1180,38 +1244,38 @@ onMounted(() => {
 .programCardLink {
   font-size: 0.9rem;
   font-weight: 600;
-  color: #c084fc;
+  color: var(--cb-primary);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .programCardLink:hover {
-  color: #ec4899;
+  color: var(--cb-secondary);
 }
 
 /* ============================================
    TESTIMONIAL SECTION
    ============================================ */
 .testimonialSection {
-  padding: 8rem 2rem;
+  padding: 3rem 2rem;
   background: #f9fafb;
 }
 
 .testimonialContainer {
-  max-width: 1000px;
+  max-width: 900px;
   margin: 0 auto;
 }
 
 .testimonialCard {
   position: relative;
   padding: 4rem 3rem;
-  background: #ffffff;
-  border: 1px solid rgba(147, 51, 234, 0.1);
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
   border-radius: 32px;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(147, 51, 234, 0.06);
+  box-shadow: var(--shadow-sm);
 }
 
 .testimonialCardGlow {
@@ -1249,15 +1313,15 @@ onMounted(() => {
 .testimonialAuthorAvatar {
   width: 60px;
   height: 60px;
-  background: linear-gradient(135deg, #9333ea 0%, #c084fc 100%);
+  background: var(--gradient-primary);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Poppins', sans-serif; /* Aplicando Poppins */
+  font-family: 'Poppins', sans-serif;
   font-size: 1.5rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--bg-white);
 }
 
 .testimonialAuthorName {
@@ -1277,12 +1341,12 @@ onMounted(() => {
    SUPPORTERS SECTION
    ============================================ */
 .supportersSection {
-  padding: 8rem 2rem;
+  padding: 3rem 2rem;
   background: #ffffff;
 }
 
 .supportersContainer {
-  max-width: 1400px;
+  max-width: 1100px;
   margin: 0 auto;
 }
 
@@ -1307,18 +1371,18 @@ onMounted(() => {
 .supporterCard {
   position: relative;
   height: 120px;
-  background: #f9fafb;
-  border: 1px solid rgba(147, 51, 234, 0.1);
+  background: var(--bg-light);
+  border: 1px solid var(--border-light);
   border-radius: 16px;
   overflow: hidden;
   transition: all 0.3s ease;
 }
 
 .supporterCard:hover {
-  background: #ffffff;
-  border-color: rgba(147, 51, 234, 0.3);
+  background: var(--bg-white);
+  border-color: var(--border-hover);
   transform: translateY(-4px);
-  box-shadow: 0 15px 40px rgba(147, 51, 234, 0.1);
+  box-shadow: var(--shadow-lg);
 }
 
 .supporterCardInner {
@@ -1335,12 +1399,12 @@ onMounted(() => {
    CONTACT SECTION
    ============================================ */
 .contactSection {
-  padding: 8rem 2rem;
+  padding: 3rem 2rem;
   background: #f9fafb;
 }
 
 .contactContainer {
-  max-width: 1400px;
+  max-width: 1100px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 1.2fr;
@@ -1363,7 +1427,7 @@ onMounted(() => {
 
 .contactMethodCard {
   transition: all 0.3s ease !important;
-  box-shadow: 0 2px 10px rgba(147, 51, 234, 0.04);
+  box-shadow: var(--shadow-sm);
 }
 
 .contactMethodCard:hover {
@@ -1432,9 +1496,9 @@ onMounted(() => {
   width: 100%;
   padding: 1rem 1.25rem;
   font-size: 1rem;
-  color: #1a1a1a;
-  background: #f9fafb;
-  border: 1.5px solid rgba(147, 51, 234, 0.15);
+  color: var(--text-primary);
+  background: var(--bg-light);
+  border: 1.5px solid var(--border-light);
   border-radius: 12px;
   transition: all 0.3s ease;
   font-family: inherit;
@@ -1442,9 +1506,9 @@ onMounted(() => {
 
 .formInput:focus {
   outline: none;
-  background: #ffffff;
-  border-color: rgba(147, 51, 234, 0.5);
-  box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.1);
+  background: var(--bg-white);
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px var(--badge-bg);
 }
 
 .formInput::placeholder {
@@ -1480,7 +1544,7 @@ onMounted(() => {
    ============================================ */
 .ctaSection {
   position: relative;
-  padding: 8rem 2rem;
+  padding: 3rem 2rem;
   background: #ffffff;
   overflow: hidden;
 }
@@ -1498,19 +1562,19 @@ onMounted(() => {
 
 .ctaContainer {
   position: relative;
-  max-width: 1000px;
+  max-width: 900px;
   margin: 0 auto;
 }
 
 .ctaContent {
   text-align: center;
   padding: 4rem 3rem;
-  background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
-  border: 1px solid rgba(147, 51, 234, 0.2);
+  background: linear-gradient(135deg, var(--bg-tint) 0%, var(--cb-primary-10) 100%);
+  border: 1px solid var(--badge-border);
   border-radius: 32px;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  box-shadow: 0 4px 20px rgba(147, 51, 234, 0.08);
+  box-shadow: var(--shadow-md);
 }
 
 .ctaTitle {
@@ -1546,7 +1610,7 @@ onMounted(() => {
   }
 
   .programsGrid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 

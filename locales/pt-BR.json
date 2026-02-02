@@ -1,0 +1,125 @@
+{
+  "navbar": {
+    "home": "Home",
+    "about": "Sobre nós",
+    "projects": "Projetos",
+    "blog": "Blog"
+  },
+  "hero": {
+    "badge": "MOVIMENTO NACIONAL DESDE 2020",
+    "title": "ELAS PO+DEM",
+    "subtitle": "Coletivo de mulheres cis e trans que atua em defesa dos direitos e políticas públicas. Promovemos equidade, liberdade, sororidade e respeito à dignidade humana.",
+    "btnDonate": "Doe Agora",
+    "btnHistory": "Nossa História",
+    "stats": {
+      "headquarter": {
+        "number": "2025",
+        "label": "Sede Própria"
+      },
+      "conference": {
+        "number": "5ª",
+        "label": "Conferência Nacional"
+      },
+      "location": {
+        "number": "MS",
+        "label": "Campo Grande"
+      }
+    }
+  },
+  "mission": {
+    "badge": "NOSSA MISSÃO",
+    "title": "Elas Podem Amar, Elas Podem Ser, Elas Podem TUDO!",
+    "text1": "Somos um coletivo fundado em 2020 em Campo Grande - MS, atuando nacionalmente através de redes digitais. Defendemos os direitos de mulheres cis e trans, promovendo sua participação política e social.",
+    "text2": "Nossos valores fundamentais são: Equidade, Liberdade, Sororidade e Respeito à Dignidade Humana. Participamos ativamente de conferências estaduais e nacionais, conquistando reconhecimento como a Moção de Aplausos na 5ª Conferência Estadual de Políticas Públicas para Mulheres.",
+    "btnLearnMore": "Conheça Nossa História",
+    "imageAlt": "Empoderando Mulheres"
+  },
+  "programs": {
+    "badge": "NOSSOS PROGRAMAS",
+    "title": "Nossos Eixos de Atuação",
+    "items": {
+      "communication": {
+        "title": "Comunicação",
+        "description": "Produção de conteúdo e campanhas de conscientização política sobre direitos das mulheres e políticas públicas.",
+        "link": "Saiba mais →"
+      },
+      "education": {
+        "title": "Educação",
+        "description": "Rodas de conversa e ações formativas como o Agosto Lilás, promovendo consciência política e social.",
+        "link": "Saiba mais →"
+      },
+      "social": {
+        "title": "Ação Social",
+        "description": "Mobilização comunitária e apoio a causas de diversidade, fortalecendo redes de sororidade.",
+        "link": "Saiba mais →"
+      },
+      "political": {
+        "title": "Participação Política",
+        "description": "Advocacy e defesa de políticas públicas em conferências estaduais e nacionais de mulheres.",
+        "link": "Saiba mais →"
+      }
+    }
+  },
+  "testimonial": {
+    "quote": "Transformar o futuro começa agora. De cada menina que descobre sua voz a cada mulher que assume um espaço de poder, estamos mudando histórias e construindo um país mais justo.",
+    "author": {
+      "name": "Elisa Dinelli",
+      "role": "Líder Comunitária"
+    }
+  },
+  "supporters": {
+    "badge": "PARCEIROS",
+    "title": "Quem Apoia Nossa Causa",
+    "subtitle": "Com o apoio de quem acredita na transformação, seguimos formando meninas e mulheres para liderar o futuro."
+  },
+  "contact": {
+    "badge": "CONTATO",
+    "title": "Vamos Conversar?",
+    "description": "Tem dúvidas, sugestões ou quer conhecer melhor nosso trabalho? Entre em contato conosco!",
+    "methods": {
+      "instagram": {
+        "label": "Instagram",
+        "value": "{'@'}coletivoelaspodem"
+      },
+      "president": {
+        "label": "Presidente",
+        "value": "Ladielly de Souza Silva"
+      },
+      "location": {
+        "label": "Sede",
+        "value": "Campo Grande - MS"
+      }
+    },
+    "form": {
+      "name": {
+        "label": "Nome completo",
+        "placeholder": "Seu nome completo"
+      },
+      "email": {
+        "label": "E-mail",
+        "placeholder": "seu{'@'}email.com"
+      },
+      "subject": {
+        "label": "Assunto",
+        "placeholder": "Selecione o assunto",
+        "options": {
+          "volunteer": "Quero ser voluntária",
+          "donate": "Quero doar",
+          "partnership": "Parcerias",
+          "general": "Dúvidas gerais"
+        }
+      },
+      "message": {
+        "label": "Mensagem",
+        "placeholder": "Escreva sua mensagem aqui..."
+      },
+      "btnSubmit": "Enviar Mensagem"
+    }
+  },
+  "cta": {
+    "title": "Juntas Somos Mais Fortes",
+    "subtitle": "Sua contribuição pode mudar a vida de uma mulher e transformar toda uma comunidade. Faça parte dessa transformação!",
+    "btnDonate": "Doar Agora",
+    "btnProjects": "Conhecer Projetos"
+  }
+}

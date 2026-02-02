@@ -4,11 +4,11 @@
 
 ![Tipo](https://img.shields.io/badge/Tipo-GUIA-red?style=for-the-badge)
 ![Versão](https://img.shields.io/badge/Versão-1.0-blue?style=for-the-badge)
-![Status](https://img.shields.io/badge/Status-COMPLETO-green?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-REFERÊNCIA-orange?style=for-the-badge)
 
 </div>
 
-**Padrões de código do projeto Mnesis: nomenclatura, estrutura de arquivos, imports e convenções.**
+**Padrões de código: nomenclatura, estrutura de arquivos, imports e convenções.**
 
 > **Filosofia**: Consistência > Preferências pessoais. Código previsível é código fácil de manter.
 

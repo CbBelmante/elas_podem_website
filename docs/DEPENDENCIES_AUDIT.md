@@ -1,17 +1,17 @@
-# 🔍 Auditoria de Dependências - Mnesis Frontend
+# 🔍 Auditoria de Dependências - Elas Podem Website
 
-**Data:** 17 JAN 2026
-**Versão:** 1.0
-**Status:** Para Análise
+**Data:** 02 FEV 2026
+**Versão:** 2.0
+**Status:** Atualizado e Limpo
 
 ---
 
 ## 📋 Índice
 
 1. [Resumo Executivo](#-resumo-executivo)
-2. [Problemas Identificados](#-problemas-identificados)
-3. [Dependências Boas](#-dependências-boas-manter)
-4. [Plano de Ação](#-plano-de-ação)
+2. [Dependências de Produção](#-dependências-de-produção)
+3. [Dependências de Desenvolvimento](#-dependências-de-desenvolvimento)
+4. [Recomendações](#-recomendações)
 
 ---
 
@@ -19,302 +19,171 @@
 
 | Métrica | Status |
 |---------|--------|
-| **Total de dependências** | 39 production + 8 dev |
-| **Dependências saudáveis** | ✅ 95% |
-| **Problemas encontrados** | ⚠️ 3 casos |
-| **Segurança** | ✅ Sem vulnerabilidades críticas |
+| **Total de dependências** | 5 production + 4 dev |
+| **Dependências saudáveis** | ✅ 100% |
+| **Problemas encontrados** | ✅ Nenhum |
+| **Segurança** | ✅ Sem vulnerabilidades |
 | **Versões desatualizadas** | ✅ Todas atualizadas |
 
-**Veredito:** Projeto está em bom estado, com apenas 3 dependências para revisão.
+**Veredito:** Projeto minimalista e saudável. Apenas dependências essenciais instaladas.
 
 ---
 
-## ❌ Problemas Identificados
+## ✅ Dependências de Produção
 
-### 1. `latest` (package.json linha 46)
+### **Core Framework (3 pacotes)**
 
-**Status:** 🗑️ LIXO TOTAL - REMOVER
-**Uso no código:** 0 vezes
-**Tamanho:** ~1kb
+#### `nuxt: ^4.3.0`
+- **Status:** ✅ Excelente
+- **Última versão:** 4.3.0 (mais recente)
+- **Tamanho:** Framework completo
+- **Uso:** Framework principal da aplicação
+- **Motivo:** Essencial - base do projeto
 
-**O que é:**
-Package inútil que só retorna a string "latest". Provavelmente foi instalado por engano ao digitar `npm install latest` em vez de `npm install <pacote>@latest`.
+#### `vue: ^3.5.27`
+- **Status:** ✅ Excelente
+- **Última versão:** 3.5.x (stable)
+- **Tamanho:** ~100kb (runtime)
+- **Uso:** Biblioteca de UI
+- **Motivo:** Essencial - dependência do Nuxt
 
-**Ação recomendada:**
-```bash
-npm uninstall latest
-```
-
----
-
-### 2. `moment` (package.json linha 50)
-
-**Status:** ⚠️ DEPRECATED + NÃO USADO
-**Uso no código:** 0 vezes
-**Tamanho:** ~67kb (pesado!)
-**Última atualização:** 2022 (projeto oficialmente em modo manutenção)
-
-**O que é:**
-Biblioteca de manipulação de datas que foi DEPRECADA. O próprio time do Moment.js recomenda migrar para alternativas modernas.
-
-**Alternativas modernas:**
-- **Nativo:** `Intl.DateTimeFormat` + `Date` (zero deps, já no navegador)
-- **date-fns:** Modular, tree-shakeable, mais leve
-- **day.js:** Apenas 2kb, API compatível com Moment
-
-**Ação recomendada:**
-```bash
-# Verificar se há uso oculto
-grep -r "moment" app/ server/
-
-# Se não houver, remover
-npm uninstall moment
-```
+#### `vue-router: ^4.6.4`
+- **Status:** ✅ Excelente
+- **Última versão:** 4.6.x (stable)
+- **Tamanho:** ~20kb
+- **Uso:** Roteamento de páginas
+- **Motivo:** Essencial - integração Nuxt
 
 ---
 
-### 3. DUPLICAÇÃO: `marked` + `markdown-it`
+### **UI Components & Icons (2 pacotes)**
 
-**Status:** ⚠️ DUPLICADO (escolher um)
-**Uso no código:**
-- `marked`: 1 vez
-- `markdown-it`: 1 vez
+#### `lucide-vue-next: ^0.563.0`
+- **Status:** ✅ Excelente
+- **Última versão:** 0.563.x
+- **Tamanho:** ~5kb (tree-shakeable)
+- **Uso:** Biblioteca de ícones (16.000+ ícones)
+- **Motivo:** Necessário - usado em toda landing page
+- **Alternativas:** heroicons, phosphor-icons
+- **Por que manter:** Leve, moderno, fácil de usar
 
-**Comparação:**
-
-| Biblioteca | Tamanho | Velocidade | Plugins | Segurança |
-|------------|---------|------------|---------|-----------|
-| **marked** | 20kb | ⚡⚡⚡ Muito rápida | Poucos | ✅ Boa |
-| **markdown-it** | 80kb | ⚡⚡ Rápida | Muitos | ✅ Excelente |
-
-**Recomendação:**
-- **Se precisar apenas de markdown básico:** Manter `marked` (mais leve, mais rápida)
-- **Se precisar de plugins avançados (emoji, footnotes, etc):** Manter `markdown-it`
-
-**Ação recomendada:**
-```bash
-# Opção A: Manter marked (mais leve)
-npm uninstall markdown-it @types/marked
-
-# Opção B: Manter markdown-it (mais features)
-npm uninstall marked @types/marked
-```
-
-**Investigar antes de decidir:**
-```bash
-# Ver onde cada um é usado
-grep -rn "from 'marked'" app/ server/
-grep -rn "from 'markdown-it'" app/ server/
-```
+#### `reka-ui: ^2.7.0`
+- **Status:** ✅ Excelente
+- **Última versão:** 2.7.x
+- **Tamanho:** ~15kb
+- **Uso:** Primitivos headless (base do @cb/components)
+- **Motivo:** Necessário - primitivos acessíveis
+- **Nota:** Fornece components como Dialog, Dropdown, etc. com acessibilidade
 
 ---
 
-### 4. Pacotes Extraneous (não declarados no package.json)
+## 🛠️ Dependências de Desenvolvimento
 
-**Status:** ⚠️ LIXO RESIDUAL
-**Encontrados:**
-```
-@emnapi/core@1.8.1
-@emnapi/runtime@1.8.1
-@emnapi/wasi-threads@1.1.0
-@napi-rs/wasm-runtime@1.1.1
-@tybys/wasm-util@0.10.1
-```
+### **Code Quality (4 pacotes)**
 
-**O que são:**
-Dependências instaladas mas não declaradas no `package.json`. Provavelmente são sub-dependências de algum pacote WASM que foram instaladas incorretamente.
+#### `@nuxt/eslint: ^1.13.0`
+- **Status:** ✅ Excelente
+- **Uso:** Configuração ESLint otimizada para Nuxt
+- **Motivo:** Essencial para qualidade de código
 
-**Ação recomendada:**
-```bash
-npm prune
-```
+#### `eslint: ^9.39.2`
+- **Status:** ✅ Excelente
+- **Uso:** Linter JavaScript/TypeScript
+- **Motivo:** Essencial para evitar bugs
 
----
+#### `prettier: ^3.8.1`
+- **Status:** ✅ Excelente
+- **Uso:** Formatador de código
+- **Motivo:** Padronização de estilo
 
-## ✅ Dependências Boas (Manter)
-
-### Core Framework
-- ✅ `nuxt: 4.2.2` - Framework principal, versão estável mais recente
-- ✅ `vue: 3.5.26` - Vue 3 moderno com Composition API
-- ✅ `vue-router: 4.6.4` - Router oficial
-- ✅ `pinia: 3.0.4` - State management oficial (substituto do Vuex)
-- ✅ `@pinia/nuxt: 0.11.3` - Integração Pinia + Nuxt
-
-### AI & Chat
-- ✅ `ai: 6.0.39` - AI SDK da Vercel (core)
-- ✅ `@ai-sdk/vue: 3.0.39` - Integração Vue
-- ✅ `@ai-sdk/openai: 3.0.12` - Provider OpenAI
-- ✅ `@ai-sdk/groq: 3.0.10` - Provider Groq
-
-**Análise:** Stack moderna e bem mantida. AI SDK é battle-tested e usado em produção por milhares de apps.
-
-### NLP (Processamento de Linguagem Natural)
-- ✅ `@nlpjs/core: 5.0.0-alpha.5` - Engine de NLP
-- ✅ `@nlpjs/lang-pt: 5.0.0-alpha.5` - Suporte para Português
-- ✅ `@nlpjs/nlp: 5.0.0-alpha.5` - Classificador de intenções
-
-**Análise:** Essencial para detecção de comandos em linguagem natural no chat. Versão alpha mas estável.
-
-### Backend & Database
-- ✅ `@supabase/supabase-js: 2.90.1` - Cliente Supabase (Postgres + Auth + Storage)
-- ✅ `axios: 1.13.2` - Cliente HTTP (preferência do time)
-
-**Análise:** Supabase atualizado. Axios mantido por escolha da equipe.
-
-### UI Components
-- ✅ `@volanapp/vlcomponents: 0.1.5` - Biblioteca de componentes interna
-- ✅ `shadcn-nuxt: 2.4.3` - shadcn/ui para Nuxt
-- ✅ `reka-ui: 2.7.0` - Primitivos headless (base do shadcn)
-- ✅ `lucide-vue-next: 0.562.0` - Ícones modernos (16k+ ícones)
-
-**Análise:** shadcn/ui é uma das melhores escolhas para UI moderno. Reka UI fornece primitivos acessíveis.
-
-### Styling & CSS
-- ✅ `tailwindcss: 4.1.18` - Framework CSS utility-first
-- ✅ `@tailwindcss/postcss: 4.1.18` - Plugin PostCSS para Tailwind 4
-- ✅ `@tailwindcss/typography: 0.5.19` - Plugin para tipografia
-- ✅ `autoprefixer: 10.4.23` - Adiciona prefixos CSS automaticamente
-- ✅ `tailwind-merge: 3.4.0` - Merge inteligente de classes Tailwind
-- ✅ `tw-animate-css: 1.4.0` - Animações para Tailwind
-- ✅ `tailwindcss-animate: 1.0.7` (devDep) - Animações extras
-- ✅ `class-variance-authority: 0.7.1` - CVA para variants de componentes
-- ✅ `clsx: 2.1.1` - Utilitário para construir classNames condicionais
-
-**Análise:** Stack Tailwind completo e moderno. Tailwind 4 (versão mais recente).
-
-### Utilities & Helpers
-- ✅ `@vueuse/core: 14.1.0` - Coleção de composables Vue essenciais
-- ✅ `uuid: 13.0.0` - Geração de UUIDs (RFC4122)
-- ✅ `dompurify: 3.3.1` - Sanitização HTML para prevenir XSS
-- ✅ `highlight.js: 11.11.1` - Syntax highlighting para blocos de código
-
-**Análise:** VueUse é essencial. DOMPurify crítico para segurança. highlight.js útil para chat técnico.
-
-### Markdown Rendering
-- ⚠️ `marked: 17.0.1` - Renderizador markdown (AVALIAR DUPLICAÇÃO)
-- ⚠️ `markdown-it: 14.1.0` - Renderizador markdown alternativo (AVALIAR DUPLICAÇÃO)
-- ⚠️ `@types/marked: 6.0.0` - Types para marked
-
-**Análise:** Escolher um dos dois. Ver seção "Problemas Identificados".
-
-### Build & Development Tools
-- ✅ `@nuxt/eslint: 1.12.1` - ESLint configurado para Nuxt
-- ✅ `@nuxt/image: 2.0.0` - Otimização de imagens
-- ✅ `eslint: 9.39.2` - Linter JavaScript/TypeScript
-- ✅ `prettier: 3.8.0` - Formatador de código
-- ✅ `husky: 9.1.7` - Git hooks
-- ✅ `lint-staged: 16.2.7` - Lint apenas em arquivos staged
-- ✅ `sass: 1.97.2` - Preprocessador CSS
-- ✅ `vite-tsconfig-paths: 6.0.4` - Suporte para paths do tsconfig
-
-**Análise:** Setup profissional com linting automático e git hooks.
-
-### TypeScript
-- ✅ `@types/node: 25.0.9` - Types para Node.js
-- ✅ `@types/uuid: 11.0.0` - Types para uuid
-- ✅ `@vue/eslint-config-prettier: 10.2.0` - Integração ESLint + Prettier
-
-**Análise:** Types atualizados. TypeScript configurado corretamente.
+#### `@vue/eslint-config-prettier: ^10.2.0`
+- **Status:** ✅ Excelente
+- **Uso:** Integração ESLint + Prettier
+- **Motivo:** Evita conflitos entre linter e formatter
 
 ---
 
-## 🎯 Plano de Ação
+## 📊 Análise de Tamanho
 
-### Prioridade ALTA (fazer agora)
-
-```bash
-# 1. Remover 'latest' (lixo total)
-npm uninstall latest
-
-# 2. Limpar pacotes extraneous
-npm prune
+### Bundle de Produção (estimado)
+```
+Framework (Nuxt + Vue):    ~150kb gzipped
+UI Components (Reka UI):    ~15kb gzipped
+Icons (Lucide):             ~5kb gzipped (tree-shaken)
+CSS + Assets:               ~20kb gzipped
+────────────────────────────────────────
+Total:                      ~190kb gzipped
 ```
 
-### Prioridade MÉDIA (avaliar e decidir)
-
-```bash
-# 3. Avaliar uso de moment
-grep -r "moment" app/ server/
-
-# Se não houver uso, remover:
-npm uninstall moment
-
-# 4. Decidir entre marked vs markdown-it
-# Investigar onde cada um é usado:
-grep -rn "from 'marked'" app/ server/
-grep -rn "from 'markdown-it'" app/ server/
-
-# Depois escolher:
-# Opção A: npm uninstall markdown-it
-# Opção B: npm uninstall marked @types/marked
-```
-
----
-
-## 📊 Estatísticas
-
-### Distribuição por Categoria
-
-```
-Framework & Core:     8 pacotes  ✅
-AI & LLMs:            4 pacotes  ✅
-UI Components:        4 pacotes  ✅
-Styling:              9 pacotes  ✅
-Utilities:            4 pacotes  ✅
-Backend:              2 pacotes  ✅
-Development:          8 pacotes  ✅
-Markdown:             2 pacotes  ⚠️ (duplicado)
-Deprecated/Lixo:      2 pacotes  ❌ (remover)
-```
-
-### Tamanho Total (estimado)
-
-```
-Production bundle:    ~800kb gzipped
-Development:          ~1.2GB node_modules
-```
+**Comparação:** Sites similares costumam ter 300-500kb. Este projeto está **bem otimizado**.
 
 ---
 
 ## 🔒 Segurança
 
-**Última verificação:** 17 JAN 2026
+**Última verificação:** 02 FEV 2026
 
 ```bash
 npm audit
 ```
 
-**Resultado:** Nenhuma vulnerabilidade crítica ou alta encontrada.
+**Resultado:** ✅ Nenhuma vulnerabilidade encontrada
 
-**Recomendações:**
-- Executar `npm audit fix` periodicamente
-- Manter dependências atualizadas mensalmente
-- Monitorar advisories de segurança
+### Recomendações de Segurança:
+- ✅ Executar `npm audit` mensalmente
+- ✅ Manter deps atualizadas (script: `npm outdated`)
+- ✅ Usar `npm ci` no CI/CD (lock file estrito)
+
+---
+
+## 💡 Recomendações
+
+### ✅ Manter Minimalista
+Este projeto está seguindo o princípio YAGNI (You Aren't Gonna Need It) corretamente:
+- **Instalar apenas quando precisar**
+- **Não antecipar features futuras** com deps pesadas
+
+### 📦 Se Precisar Adicionar no Futuro:
+
+#### **Para Blog/CMS:**
+```bash
+npm install marked        # Markdown parser (20kb, rápido)
+npm install dompurify     # Sanitização HTML (XSS protection)
+```
+
+#### **Para Backend/Auth:**
+```bash
+npm install @supabase/supabase-js  # Backend completo
+```
+
+#### **Para Estado Global Complexo:**
+```bash
+npm install pinia         # State management oficial Vue
+```
+
+#### **Para Formulários Avançados:**
+```bash
+npm install vee-validate yup  # Validação de forms
+```
 
 ---
 
 ## 📝 Notas Finais
 
 ### O que está MUITO BOM ✅
-- Stack moderna e atualizada
-- Nenhuma dependência crítica desatualizada
-- Boa separação entre prod e dev dependencies
-- TypeScript configurado corretamente
-- Git hooks funcionando (husky + lint-staged)
+- ✅ Bundle extremamente leve (~190kb)
+- ✅ Apenas deps essenciais instaladas
+- ✅ Todas as versões atualizadas
+- ✅ Zero vulnerabilidades
+- ✅ TypeScript configurado (sem deps extras)
 
-### O que precisa ATENÇÃO ⚠️
-- Remover `latest` (lixo)
-- Avaliar `moment` (deprecated)
-- Resolver duplicação de markdown libraries
-
-### Próximos Passos
-1. Executar comandos de prioridade ALTA
-2. Avaliar uso de moment e markdown
-3. Atualizar este documento após mudanças
-4. Configurar CI/CD para rodar `npm audit` automaticamente
+### Nenhum Problema Identificado
+- ✅ Sem deps desnecessárias
+- ✅ Sem deps deprecated
+- ✅ Sem duplicações
 
 ---
 
 **Responsável:** CbBelmante
-**Última atualização:** 17 JAN 2026
-**Próxima revisão:** FEV 2026
+**Última atualização:** 02 FEV 2026
+**Próxima revisão:** MAR 2026
