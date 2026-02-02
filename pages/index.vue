@@ -1,18 +1,21 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { CBButton, CBNavbar, type INavbarMenuItem } from '@cb/components'
-import '@cb/components/style.css'
-import '../assets/css/theme.css'
+import { ref, onMounted } from 'vue';
+import { CBButton, CBCard, CBIcon, CBNavbar, type INavbarMenuItem } from '@cb/components';
+import '@cb/components/style.css';
+import '../assets/css/theme.css';
 
 useHead({
   link: [
     { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
     { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
-    { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Lato:wght@400;700&display=swap' }
-  ]
-})
+    {
+      rel: 'stylesheet',
+      href: 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Lato:wght@400;700&display=swap',
+    },
+  ],
+});
 
-const currentPath = ref('/')
+const currentPath = ref('/');
 
 const menuItems: INavbarMenuItem[] = [
   {
@@ -31,37 +34,37 @@ const menuItems: INavbarMenuItem[] = [
     label: 'Blog',
     to: '/blog',
   },
-]
+];
 
 const handleNavigate = ({ path }: { path: string }) => {
-  currentPath.value = path
-  console.log('Navegou para:', path)
-}
+  currentPath.value = path;
+  console.log('Navegou para:', path);
+};
 
 const handleLogoClick = () => {
-  currentPath.value = '/'
-  console.log('Logo clicado - voltando ao home')
-}
+  currentPath.value = '/';
+  console.log('Logo clicado - voltando ao home');
+};
 
 // Animações de scroll
 onMounted(() => {
   const observerOptions = {
     threshold: 0.1,
-    rootMargin: '0px 0px -100px 0px'
-  }
+    rootMargin: '0px 0px -100px 0px',
+  };
 
   const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
+    entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        entry.target.classList.add('isVisible')
+        entry.target.classList.add('isVisible');
       }
-    })
-  }, observerOptions)
+    });
+  }, observerOptions);
 
-  document.querySelectorAll('.animateOnScroll').forEach(el => {
-    observer.observe(el)
-  })
-})
+  document.querySelectorAll('.animateOnScroll').forEach((el) => {
+    observer.observe(el);
+  });
+});
 </script>
 
 <template>
@@ -74,9 +77,9 @@ onMounted(() => {
       placement="fixed"
       :elevation="2"
       mobile-mode="popover"
+      class="customNavbar"
       @navigate="handleNavigate"
       @logo-click="handleLogoClick"
-      class="customNavbar"
     />
 
     <!-- Hero Section - REDESENHADO -->
@@ -100,14 +103,14 @@ onMounted(() => {
         <!-- Título principal com gradiente -->
         <h1 class="heroTitle animateOnScroll">
           ELAS
-          <br>
+          <br />
           <span class="heroTitleGradient">PODEM</span>
         </h1>
 
         <!-- Subtítulo -->
         <p class="heroSubtitle animateOnScroll">
-          Investimos em mulheres corajosas que lideram movimentos de<br class="hideOnMobile">
-          transformação social. Cada contribuição fortalece a luta por<br class="hideOnMobile">
+          Investimos em mulheres corajosas que lideram movimentos de<br class="hideOnMobile" />
+          transformação social. Cada contribuição fortalece a luta por<br class="hideOnMobile" />
           direitos, igualdade e justiça.
         </p>
 
@@ -116,7 +119,7 @@ onMounted(() => {
           <CBButton
             label="Doe Agora"
             size="lg"
-            :bg-color="'linear-gradient(135deg, #9333ea 0%, #c084fc 100%)'"
+            :bg-color="'var(--gradient-primary)'"
             :rounded="14"
             prepend-icon="luc-heart"
             shine
@@ -175,7 +178,7 @@ onMounted(() => {
           </div>
 
           <h2 class="sectionTitle">
-            Transformando Vidas,<br>
+            Transformando Vidas,<br />
             <span class="sectionTitleAccent">Construindo Futuros</span>
           </h2>
 
@@ -186,13 +189,14 @@ onMounted(() => {
           </p>
 
           <p class="missionText">
-            Através de programas de capacitação profissional, educação financeira e apoio psicológico,
-            ajudamos mulheres a reconstruírem suas vidas e se tornarem agentes de mudança em suas comunidades.
+            Através de programas de capacitação profissional, educação financeira e apoio
+            psicológico, ajudamos mulheres a reconstruírem suas vidas e se tornarem agentes de
+            mudança em suas comunidades.
           </p>
 
           <CBButton
             label="Conheça Nossa História"
-            size="default"
+            size="lg"
             :bg-color="'linear-gradient(135deg, #9333ea 0%, #c084fc 100%)'"
             :rounded="12"
             append-icon="luc-arrow-right"
@@ -203,12 +207,29 @@ onMounted(() => {
         <div class="missionVisual animateOnScroll">
           <div class="missionImageCard">
             <!-- SVG Placeholder -->
-            <svg width="100%" height="100%" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg" class="missionImageSvg">
-              <path d="M263.5 400C166.5 373.5 48.5 322 0 206C88 153.5 142.5 15.5 263.5 0.5C384.5 15.5 427 122 400 206C373 290 360.5 426.5 263.5 400Z" fill="url(#paint0_linear_101_2)"/>
+            <svg
+              width="100%"
+              height="100%"
+              viewBox="0 0 400 400"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              class="missionImageSvg"
+            >
+              <path
+                d="M263.5 400C166.5 373.5 48.5 322 0 206C88 153.5 142.5 15.5 263.5 0.5C384.5 15.5 427 122 400 206C373 290 360.5 426.5 263.5 400Z"
+                fill="url(#paint0_linear_101_2)"
+              />
               <defs>
-                <linearGradient id="paint0_linear_101_2" x1="0" y1="0" x2="400" y2="400" gradientUnits="userSpaceOnUse">
-                  <stop stop-color="#C084FC" stop-opacity="0.3"/>
-                  <stop offset="1" stop-color="#EC4899" stop-opacity="0.1"/>
+                <linearGradient
+                  id="paint0_linear_101_2"
+                  x1="0"
+                  y1="0"
+                  x2="400"
+                  y2="400"
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <stop stop-color="#C084FC" stop-opacity="0.3" />
+                  <stop offset="1" stop-color="#EC4899" stop-opacity="0.1" />
                 </linearGradient>
               </defs>
             </svg>
@@ -231,7 +252,7 @@ onMounted(() => {
           </div>
 
           <h2 class="sectionTitle">
-            Como Fazemos a<br>
+            Como Fazemos a<br />
             <span class="sectionTitleAccent">Diferença</span>
           </h2>
         </div>
@@ -246,7 +267,8 @@ onMounted(() => {
               </div>
               <h3 class="programTitle">Educação e Capacitação</h3>
               <p class="programDescription">
-                Oferecemos cursos profissionalizantes, workshops e treinamentos que preparam mulheres para o mercado de trabalho.
+                Oferecemos cursos profissionalizantes, workshops e treinamentos que preparam
+                mulheres para o mercado de trabalho.
               </p>
               <div class="programCardFooter">
                 <span class="programCardLink">Saiba mais →</span>
@@ -263,7 +285,8 @@ onMounted(() => {
               </div>
               <h3 class="programTitle">Empreendedorismo</h3>
               <p class="programDescription">
-                Apoiamos mulheres a criarem e desenvolverem seus próprios negócios com mentoria e microcrédito.
+                Apoiamos mulheres a criarem e desenvolverem seus próprios negócios com mentoria e
+                microcrédito.
               </p>
               <div class="programCardFooter">
                 <span class="programCardLink">Saiba mais →</span>
@@ -280,7 +303,8 @@ onMounted(() => {
               </div>
               <h3 class="programTitle">Rede de Apoio</h3>
               <p class="programDescription">
-                Criamos uma comunidade forte onde mulheres se apoiam mutuamente e compartilham experiências.
+                Criamos uma comunidade forte onde mulheres se apoiam mutuamente e compartilham
+                experiências.
               </p>
               <div class="programCardFooter">
                 <span class="programCardLink">Saiba mais →</span>
@@ -297,7 +321,8 @@ onMounted(() => {
               </div>
               <h3 class="programTitle">Saúde Mental</h3>
               <p class="programDescription">
-                Oferecemos acompanhamento psicológico e grupos de apoio para fortalecer a autoestima e resiliência.
+                Oferecemos acompanhamento psicológico e grupos de apoio para fortalecer a autoestima
+                e resiliência.
               </p>
               <div class="programCardFooter">
                 <span class="programCardLink">Saiba mais →</span>
@@ -315,8 +340,8 @@ onMounted(() => {
           <div class="testimonialCardGlow"></div>
           <div class="testimonialQuoteIcon">"</div>
           <blockquote class="testimonialQuote">
-            Transformar o futuro começa agora. De cada menina que descobre sua voz a cada mulher
-            que assume um espaço de poder, estamos mudando histórias e construindo um país mais justo.
+            Transformar o futuro começa agora. De cada menina que descobre sua voz a cada mulher que
+            assume um espaço de poder, estamos mudando histórias e construindo um país mais justo.
           </blockquote>
           <div class="testimonialAuthor">
             <div class="testimonialAuthorAvatar">M</div>
@@ -339,12 +364,14 @@ onMounted(() => {
           </div>
 
           <h2 class="sectionTitle">
-            Quem Apoia<br>
+            Quem Apoia<br />
             <span class="sectionTitleAccent">Nossa Causa</span>
           </h2>
 
           <p class="supportersSubtitle">
-            Com o apoio de quem acredita na transformação, seguimos formando<br class="hideOnMobile">
+            Com o apoio de quem acredita na transformação, seguimos formando<br
+              class="hideOnMobile"
+            />
             meninas e mulheres para liderar o futuro.
           </p>
         </div>
@@ -381,53 +408,98 @@ onMounted(() => {
             <span>CONTATO</span>
           </div>
 
-          <h2 class="sectionTitle">
-            Vamos Conversar?
-          </h2>
+          <h2 class="sectionTitle">Vamos Conversar?</h2>
 
           <p class="contactDescription">
-            Tem dúvidas, sugestões ou quer conhecer melhor nosso trabalho?
-            Entre em contato conosco!
+            Tem dúvidas, sugestões ou quer conhecer melhor nosso trabalho? Entre em contato conosco!
           </p>
 
           <div class="contactMethods">
-            <div class="contactMethodCard">
-              <div class="contactMethodIcon">📧</div>
-              <div class="contactMethodContent">
-                <div class="contactMethodLabel">E-mail</div>
-                <div class="contactMethodValue">contato@elaspodem.org</div>
+            <CBCard
+              variant="outlined"
+              :rounded="16"
+              hover
+              density="regular"
+              bg-color="var(--bg-light)"
+              border-color="var(--border-light)"
+              :border-width="1"
+              class="contactMethodCard"
+            >
+              <div class="contactMethodWrapper">
+                <CBIcon
+                  icon="luc-mail"
+                  size="2rem"
+                  color="var(--cb-primary)"
+                  class="contactMethodIcon"
+                />
+                <div class="contactMethodContent">
+                  <div class="contactMethodLabel">E-mail</div>
+                  <div class="contactMethodValue">contato@elaspodem.org</div>
+                </div>
               </div>
-            </div>
+            </CBCard>
 
-            <div class="contactMethodCard">
-              <div class="contactMethodIcon">📱</div>
-              <div class="contactMethodContent">
-                <div class="contactMethodLabel">WhatsApp</div>
-                <div class="contactMethodValue">(11) 99999-9999</div>
+            <CBCard
+              variant="outlined"
+              :rounded="16"
+              hover
+              density="regular"
+              bg-color="var(--bg-light)"
+              border-color="var(--border-light)"
+              :border-width="1"
+              class="contactMethodCard"
+            >
+              <div class="contactMethodWrapper">
+                <CBIcon
+                  icon="luc-message-circle"
+                  size="2rem"
+                  color="var(--cb-primary)"
+                  class="contactMethodIcon"
+                />
+                <div class="contactMethodContent">
+                  <div class="contactMethodLabel">WhatsApp</div>
+                  <div class="contactMethodValue">(11) 99999-9999</div>
+                </div>
               </div>
-            </div>
+            </CBCard>
 
-            <div class="contactMethodCard">
-              <div class="contactMethodIcon">📍</div>
-              <div class="contactMethodContent">
-                <div class="contactMethodLabel">Endereço</div>
-                <div class="contactMethodValue">São Paulo, SP - Brasil</div>
+            <CBCard
+              variant="outlined"
+              :rounded="16"
+              hover
+              density="regular"
+              bg-color="var(--bg-light)"
+              border-color="var(--border-light)"
+              :border-width="1"
+              class="contactMethodCard"
+            >
+              <div class="contactMethodWrapper">
+                <CBIcon
+                  icon="luc-map-pin"
+                  size="2rem"
+                  color="var(--cb-primary)"
+                  class="contactMethodIcon"
+                />
+                <div class="contactMethodContent">
+                  <div class="contactMethodLabel">Endereço</div>
+                  <div class="contactMethodValue">São Paulo, SP - Brasil</div>
+                </div>
               </div>
-            </div>
+            </CBCard>
           </div>
         </div>
 
         <div class="contactFormWrapper animateOnScroll">
-          <div class="contactFormCard">
+          <CBCard variant="elevated" :rounded="24" class="contactFormCard">
             <form class="contactForm">
               <div class="formGroup">
                 <label class="formLabel">Nome completo</label>
-                <input type="text" class="formInput" placeholder="Seu nome completo" required>
+                <input type="text" class="formInput" placeholder="Seu nome completo" required />
               </div>
 
               <div class="formGroup">
                 <label class="formLabel">E-mail</label>
-                <input type="email" class="formInput" placeholder="seu@email.com" required>
+                <input type="email" class="formInput" placeholder="seu@email.com" required />
               </div>
 
               <div class="formGroup">
@@ -443,7 +515,12 @@ onMounted(() => {
 
               <div class="formGroup">
                 <label class="formLabel">Mensagem</label>
-                <textarea class="formInput formTextarea" rows="5" placeholder="Escreva sua mensagem aqui..." required></textarea>
+                <textarea
+                  class="formInput formTextarea"
+                  rows="5"
+                  placeholder="Escreva sua mensagem aqui..."
+                  required
+                ></textarea>
               </div>
 
               <CBButton
@@ -457,7 +534,7 @@ onMounted(() => {
                 class="btnFormSubmit"
               />
             </form>
-          </div>
+          </CBCard>
         </div>
       </div>
     </section>
@@ -469,7 +546,7 @@ onMounted(() => {
         <div class="ctaContent">
           <h2 class="ctaTitle">Juntas Somos Mais Fortes</h2>
           <p class="ctaSubtitle">
-            Sua contribuição pode mudar a vida de uma mulher e transformar toda uma comunidade.<br>
+            Sua contribuição pode mudar a vida de uma mulher e transformar toda uma comunidade.<br />
             Faça parte dessa transformação!
           </p>
           <div class="ctaActions">
@@ -503,18 +580,12 @@ onMounted(() => {
 
 <style scoped>
 /* ============================================
-   VARIÁVEIS E RESET
+   COMPONENTE PRINCIPAL
    ============================================ */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 .pageWrapper {
   min-height: 100vh;
-  background: #ffffff;
-  color: #1a1a1a;
+  background: var(--bg-white);
+  color: var(--text-primary);
   font-family: 'Lato', sans-serif; /* Aplicando Lato */
   overflow-x: hidden;
 }
@@ -574,16 +645,17 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8rem 2rem 4rem;
+  padding: 8rem 2rem 6rem;
   overflow: hidden;
-  background: linear-gradient(180deg, #faf5ff 0%, #ffffff 100%);
+  background: var(--bg-hero);
 }
 
 /* Gradiente de fundo animado */
 .heroGradientBg {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg,
+  background: linear-gradient(
+    135deg,
     rgba(147, 51, 234, 0.05) 0%,
     rgba(192, 132, 252, 0.03) 50%,
     rgba(236, 72, 153, 0.05) 100%
@@ -592,8 +664,13 @@ onMounted(() => {
 }
 
 @keyframes gradientPulse {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.7; }
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.7;
+  }
 }
 
 /* Orbs de gradiente flutuantes */
@@ -633,7 +710,8 @@ onMounted(() => {
 }
 
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translate(0, 0) scale(1);
   }
   33% {
@@ -716,8 +794,13 @@ onMounted(() => {
 }
 
 @keyframes gradientShift {
-  0%, 100% { background-position: 0% center; }
-  50% { background-position: 100% center; }
+  0%,
+  100% {
+    background-position: 0% center;
+  }
+  50% {
+    background-position: 100% center;
+  }
 }
 
 /* Subtítulo */
@@ -739,16 +822,6 @@ onMounted(() => {
   justify-content: center;
   flex-wrap: wrap;
   margin-bottom: 4rem;
-}
-
-.btnHero {
-  font-size: 1.125rem !important;
-  padding: 1.125rem 2.5rem !important;
-  box-shadow: 0 10px 40px rgba(147, 51, 234, 0.4);
-}
-
-.btnHero:hover {
-  box-shadow: 0 20px 60px rgba(147, 51, 234, 0.6);
 }
 
 /* Estatísticas com glassmorphism */
@@ -806,15 +879,20 @@ onMounted(() => {
 /* Scroll Indicator */
 .heroScrollIndicator {
   position: absolute;
-  bottom: 2rem;
+  bottom: 1.5rem;
   left: 50%;
   transform: translateX(-50%);
   animation: bounce 2s ease-in-out infinite;
 }
 
 @keyframes bounce {
-  0%, 100% { transform: translate(-50%, 0); }
-  50% { transform: translate(-50%, 10px); }
+  0%,
+  100% {
+    transform: translate(-50%, 0);
+  }
+  50% {
+    transform: translate(-50%, 10px);
+  }
 }
 
 .heroScrollMouse {
@@ -838,9 +916,18 @@ onMounted(() => {
 }
 
 @keyframes scrollWheel {
-  0% { top: 8px; opacity: 1; }
-  50% { top: 18px; opacity: 0.5; }
-  100% { top: 8px; opacity: 1; }
+  0% {
+    top: 8px;
+    opacity: 1;
+  }
+  50% {
+    top: 18px;
+    opacity: 0.5;
+  }
+  100% {
+    top: 8px;
+    opacity: 1;
+  }
 }
 
 /* ============================================
@@ -907,10 +994,6 @@ onMounted(() => {
   margin-bottom: 1.5rem;
 }
 
-.btnMission {
-  margin-top: 1rem;
-}
-
 .missionVisual {
   position: relative;
 }
@@ -918,7 +1001,8 @@ onMounted(() => {
 .missionImageCard {
   position: relative;
   height: 500px;
-  background: linear-gradient(135deg,
+  background: linear-gradient(
+    135deg,
     rgba(147, 51, 234, 0.2) 0%,
     rgba(192, 132, 252, 0.1) 50%,
     rgba(236, 72, 153, 0.2) 100%
@@ -958,15 +1042,16 @@ onMounted(() => {
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
   color: white;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
-.missionImageCard .missionImageIcon { font-size: 3rem; }
-.missionImageCard .missionImageText { 
+.missionImageCard .missionImageIcon {
+  font-size: 3rem;
+}
+.missionImageCard .missionImageText {
   font-family: 'Poppins', sans-serif; /* Aplicando Poppins */
-  font-size: 1.5rem; 
-  font-weight: 600; 
+  font-size: 1.5rem;
+  font-weight: 600;
 }
-
 
 /* ============================================
    PROGRAMS SECTION
@@ -1277,27 +1362,31 @@ onMounted(() => {
 }
 
 .contactMethodCard {
-  display: flex;
-  align-items: flex-start;
-  gap: 1.25rem;
-  padding: 1.5rem;
-  background: #ffffff;
-  border: 1px solid rgba(147, 51, 234, 0.1);
-  border-radius: 16px;
-  transition: all 0.3s ease;
+  transition: all 0.3s ease !important;
   box-shadow: 0 2px 10px rgba(147, 51, 234, 0.04);
 }
 
 .contactMethodCard:hover {
-  background: #faf5ff;
-  border-color: rgba(147, 51, 234, 0.3);
   transform: translateX(5px);
-  box-shadow: 0 4px 20px rgba(147, 51, 234, 0.1);
+  background: var(--bg-white) !important;
+  border-color: var(--border-hover) !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+
+.contactMethodCard:hover .contactMethodIcon {
+  transform: scale(1.1);
+  transition: transform 0.3s ease;
+}
+
+.contactMethodWrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
 }
 
 .contactMethodIcon {
-  font-size: 2rem;
   flex-shrink: 0;
+  transition: transform 0.3s ease;
 }
 
 .contactMethodLabel {
@@ -1317,13 +1406,7 @@ onMounted(() => {
 
 /* Formulário */
 .contactFormCard {
-  background: #ffffff;
-  border: 1px solid rgba(147, 51, 234, 0.1);
-  border-radius: 24px;
-  padding: 3rem;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  box-shadow: 0 4px 20px rgba(147, 51, 234, 0.06);
+  /* Os estilos do card já são aplicados pelo CBCard */
 }
 
 .contactForm {
@@ -1373,8 +1456,22 @@ onMounted(() => {
   min-height: 120px;
 }
 
+/* Efeito de mover seta para frente no hover */
+.btnHeroSecondary :deep(.cbButton__icon),
+.btnMission :deep(.cbButton__icon),
+.btnCtaSecondary :deep(.cbButton__icon),
+.btnFormSubmit :deep(.cbButton__icon) {
+  transition: transform 0.3s ease;
+}
+
+.btnHeroSecondary:hover :deep(.cbButton__icon),
+.btnMission:hover :deep(.cbButton__icon),
+.btnCtaSecondary:hover :deep(.cbButton__icon),
+.btnFormSubmit:hover :deep(.cbButton__icon) {
+  transform: translateX(4px);
+}
+
 .btnFormSubmit {
-  margin-top: 0.5rem;
   width: 100%;
 }
 
@@ -1391,7 +1488,8 @@ onMounted(() => {
 .ctaGradientBg {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg,
+  background: linear-gradient(
+    135deg,
     rgba(147, 51, 234, 0.15) 0%,
     rgba(192, 132, 252, 0.1) 50%,
     rgba(236, 72, 153, 0.15) 100%
@@ -1435,29 +1533,6 @@ onMounted(() => {
   gap: 1rem;
   justify-content: center;
   flex-wrap: wrap;
-}
-
-.btnCtaPrimary {
-  font-size: 1.25rem !important;
-  padding: 1.25rem 2.5rem !important;
-  box-shadow: 0 15px 50px rgba(147, 51, 234, 0.4);
-}
-
-.btnCtaPrimary:hover {
-  box-shadow: 0 20px 60px rgba(147, 51, 234, 0.6);
-}
-
-.btnCtaSecondary {
-  font-size: 1.25rem !important;
-  padding: 1.25rem 2.5rem !important;
-  background: #ffffff !important;
-  border: 1.5px solid rgba(147, 51, 234, 0.2) !important;
-}
-
-.btnCtaSecondary:hover {
-  background: #faf5ff !important;
-  border-color: rgba(147, 51, 234, 0.4) !important;
-  box-shadow: 0 10px 40px rgba(147, 51, 234, 0.2) !important;
 }
 
 /* ============================================
@@ -1504,5 +1579,4 @@ onMounted(() => {
     padding: 2rem;
   }
 }
-
 </style>

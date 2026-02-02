@@ -59,16 +59,16 @@ npm link cria **symlinks** (atalhos) entre a biblioteca e o projeto:
 ```
 ┌─────────────────────────┐
 │  Biblioteca Local       │
-│  ~/VLComponents_vue/    │
+│  ~/my-library/          │
 │  └── dist/              │ ←──────┐ Symlink
 └─────────────────────────┘        │
                                    │
 ┌─────────────────────────┐        │
 │  Projeto                │        │
-│  ~/mnesis_frontend/     │        │
+│  ~/my-project/          │        │
 │  └── node_modules/      │        │
-│      └── @volanapp/     │        │
-│          vlcomponents ──┘────────┘
+│      └── @scope/        │        │
+│          my-library ────┘────────┘
 └─────────────────────────┘
 ```
 
@@ -77,33 +77,33 @@ npm link cria **symlinks** (atalhos) entre a biblioteca e o projeto:
 #### **1. Na Biblioteca (cria link global)**
 
 ```bash
-cd ~/workspaces/VLComponents_vue
+cd ~/workspaces/my-library
 npm link
 ```
 
 **O que faz:**
-- Cria symlink em `~/.npm-global/lib/node_modules/@volanapp/vlcomponents`
+- Cria symlink em `~/.npm-global/lib/node_modules/@scope/my-library`
 - Registra a biblioteca globalmente
 
 #### **2. No Projeto (usa o link)**
 
 ```bash
-cd ~/workspaces/mnesis_frontend
-npm link @volanapp/vlcomponents
+cd ~/workspaces/my-project
+npm link @scope/my-library
 ```
 
 **O que faz:**
-- Cria symlink em `node_modules/@volanapp/vlcomponents` → biblioteca local
+- Cria symlink em `node_modules/@scope/my-library` → biblioteca local
 - Substitui a versão do npm pela versão local
 
 ### **Verificar Link Ativo**
 
 ```bash
 # No projeto
-ls -la node_modules/@volanapp/vlcomponents
+ls -la node_modules/@scope/my-library
 
 # Saída esperada:
-# lrwxrwxrwx ... node_modules/@volanapp/vlcomponents -> ../../VLComponents_vue
+# lrwxrwxrwx ... node_modules/@scope/my-library -> ../../../my-library
 ```
 
 ---
@@ -125,8 +125,8 @@ Use este checklist **ANTES** de fazer npm link:
 #### **1. Build Executado**
 
 ```bash
-cd ~/workspaces/VLComponents_vue
-npm run build:lib
+cd ~/workspaces/my-library
+npm run build
 
 # ✅ Deve mostrar: "built in X.XXs"
 # ✅ Não deve ter erros
@@ -135,50 +135,50 @@ npm run build:lib
 #### **2. Pasta dist/ Existe**
 
 ```bash
-ls -lh dist/lib/
+ls -lh dist/
 
 # ✅ Deve conter:
-# - VLComponents.es.js  (bundle ES modules)
-# - VLComponents.umd.js (bundle UMD)
-# - style.css           (estilos)
-# - index.d.ts          (tipos TypeScript)
+# - library.es.js   (bundle ES modules)
+# - library.umd.js  (bundle UMD)
+# - style.css       (estilos)
+# - index.d.ts      (tipos TypeScript)
 ```
 
 #### **3. Tamanho do Bundle Razoável**
 
 ```bash
-du -sh dist/lib/VLComponents.es.js
+du -sh dist/library.es.js
 
-# ✅ Esperado: 500KB - 1MB (sem minify em dev)
-# ⚠️ Se < 100KB: Provavelmente faltam arquivos
-# ⚠️ Se > 5MB: Algo errado no build
+# ✅ Esperado: Depende da biblioteca (100KB - 2MB típico)
+# ⚠️ Se muito pequeno: Provavelmente faltam arquivos
+# ⚠️ Se muito grande: Verificar dependências incluídas
 ```
 
-#### **4. CSS Gerado**
+#### **4. CSS Gerado (se aplicável)**
 
 ```bash
-ls -lh dist/lib/style.css
+ls -lh dist/style.css
 
-# ✅ Deve existir e ter > 100KB
+# ✅ Deve existir se sua biblioteca tem estilos
 ```
 
 #### **5. package.json Correto**
 
 ```bash
-cat dist/lib/package.json | grep -E '"main"|"module"|"types"'
+cat package.json | grep -E '"main"|"module"|"types"'
 
 # ✅ Deve ter:
-# "main": "./VLComponents.umd.js"
-# "module": "./VLComponents.es.js"
-# "types": "./index.d.ts"
+# "main": "./dist/library.umd.js"
+# "module": "./dist/library.es.js"
+# "types": "./dist/index.d.ts"
 ```
 
 #### **6. Exportações Funcionais**
 
 ```bash
-node -e "const lib = require('./dist/lib/VLComponents.umd.js'); console.log(Object.keys(lib))"
+node -e "const lib = require('./dist/library.umd.js'); console.log(Object.keys(lib))"
 
-# ✅ Deve listar componentes exportados
+# ✅ Deve listar exports da biblioteca
 # ⚠️ Se vazio: exports não configurados
 ```
 
@@ -201,11 +201,10 @@ const fs = require('fs');
 const path = require('path');
 
 const checks = {
-  'Bundle ES': 'dist/lib/VLComponents.es.js',
-  'Bundle UMD': 'dist/lib/VLComponents.umd.js',
-  'Styles': 'dist/lib/style.css',
-  'Types': 'dist/lib/index.d.ts',
-  'Package': 'dist/lib/package.json',
+  'Bundle ES': 'dist/library.es.js',
+  'Bundle UMD': 'dist/library.umd.js',
+  'Styles': 'dist/style.css',
+  'Types': 'dist/index.d.ts',
 };
 
 console.log('🔍 Verificando build...\n');
@@ -228,7 +227,7 @@ for (const [name, file] of Object.entries(checks)) {
 }
 
 if (hasErrors) {
-  console.log('\n❌ Build INCOMPLETO! Execute: npm run build:lib');
+  console.log('\n❌ Build INCOMPLETO! Execute: npm run build');
   process.exit(1);
 } else {
   console.log('\n✅ Build OK! Pode fazer npm link.');
@@ -238,7 +237,7 @@ if (hasErrors) {
 **Uso:**
 
 ```bash
-npm run build:lib && npm run verify && npm link
+npm run build && npm run verify && npm link
 ```
 
 ---
@@ -252,39 +251,45 @@ Vite cacheia dependências. Sem essa config, mudanças não aparecem!
 ### **nuxt.config.ts**
 
 ```typescript
+export default defineNuxtConfig({
+  vite: {
+    optimizeDeps: {
+      exclude: ['@scope/my-library'],  // ← CRÍTICO! Substitua pelo nome da sua biblioteca
+      force: true, // Re-otimizar sempre (opcional)
+    },
+  },
+});
+```
+
+### **Configuração Avançada (Opcional)**
+
+Para detectar automaticamente se está usando npm link:
+
+```typescript
 import { resolve } from 'path';
 import { existsSync } from 'fs';
 
 export default defineNuxtConfig(() => {
   // Detectar se biblioteca está em npm link
-  const vlComponentsPath = resolve(__dirname, '../VLComponents_vue');
-  const hasLocalVLComponents = existsSync(vlComponentsPath);
+  const libraryPath = resolve(__dirname, '../my-library');
+  const hasLocalLibrary = existsSync(libraryPath);
 
   // Log do modo
-  if (hasLocalVLComponents) {
-    console.log('*** VLComponents: Modo DESENVOLVIMENTO (npm link detectado)');
+  if (hasLocalLibrary) {
+    console.log('*** Biblioteca: Modo DESENVOLVIMENTO (npm link detectado)');
   } else {
-    console.log('*** VLComponents: Modo PRODUCAO (usando versao npm)');
+    console.log('*** Biblioteca: Modo PRODUÇÃO (usando versão npm)');
   }
 
   return {
     vite: {
       optimizeDeps: {
-        exclude: ['@volanapp/vlcomponents'],  // ← CRÍTICO!
-        force: true, // Re-otimizar sempre
+        exclude: ['@scope/my-library'],  // ← CRÍTICO!
       },
-      cacheDir: '.vite', // Cache explícito
       server: {
-        watch: hasLocalVLComponents ? {
-          // Observar mudanças no npm link
-          ignored: ['!**/node_modules/@volanapp/vlcomponents/**'],
-        } : undefined,
-        fs: hasLocalVLComponents ? {
+        fs: hasLocalLibrary ? {
           // Permitir servir arquivos via symlink
-          allow: [
-            '..',
-            vlComponentsPath,
-          ],
+          allow: ['.', libraryPath],
         } : undefined,
       },
     },
@@ -311,10 +316,10 @@ Vite ignora → Lê direto do link → Hot reload funciona ✅
 #### **1. Na Biblioteca**
 
 ```bash
-cd ~/workspaces/VLComponents_vue
+cd ~/workspaces/my-library
 
 # Build inicial
-npm run build:lib
+npm run build
 
 # Verificar (opcional mas recomendado)
 npm run verify
@@ -322,23 +327,23 @@ npm run verify
 # Criar link global
 npm link
 
-# ✅ Saída: "created symlink in ~/.npm-global/lib/node_modules/@volanapp/vlcomponents"
+# ✅ Saída: "created symlink in ~/.npm-global/lib/node_modules/@scope/my-library"
 ```
 
 #### **2. No Projeto**
 
 ```bash
-cd ~/workspaces/mnesis_frontend
+cd ~/workspaces/my-project
 
 # Adicionar exclude no nuxt.config.ts (veja seção anterior)
 
 # Linkar biblioteca
-npm link @volanapp/vlcomponents
+npm link @scope/my-library
 
-# ✅ Saída: "created symlink in node_modules/@volanapp/vlcomponents"
+# ✅ Saída: "created symlink in node_modules/@scope/my-library"
 
 # Verificar link
-ls -la node_modules/@volanapp/vlcomponents
+ls -la node_modules/@scope/my-library
 
 # Limpar cache
 rm -rf .nuxt .output .vite node_modules/.vite node_modules/.cache
@@ -355,11 +360,11 @@ npm run dev
 
 ```bash
 # 1. Editar código da biblioteca
-vim ~/workspaces/VLComponents_vue/src/components/VLButton.vue
+vim ~/workspaces/my-library/src/components/Button.vue
 
 # 2. Build (mudanças refletem automaticamente via symlink)
-cd ~/workspaces/VLComponents_vue
-npm run build:lib
+cd ~/workspaces/my-library
+npm run build
 
 # 3. Verificar no projeto (hot reload automático!)
 # Abra http://localhost:3000 no navegador
@@ -369,7 +374,7 @@ npm run build:lib
 
 ```bash
 # No projeto
-cd ~/workspaces/mnesis_frontend
+cd ~/workspaces/my-project
 
 # Limpar cache e reiniciar
 rm -rf .nuxt .output .vite node_modules/.vite node_modules/.cache
@@ -383,10 +388,10 @@ npm run dev
 #### **1. Publicar Biblioteca no npm**
 
 ```bash
-cd ~/workspaces/VLComponents_vue
+cd ~/workspaces/my-library
 
 # Verificar build final
-npm run build:lib
+npm run build
 npm run verify
 
 # Atualizar versão
@@ -400,13 +405,13 @@ npm publish
 
 ```bash
 # No projeto
-cd ~/workspaces/mnesis_frontend
+cd ~/workspaces/my-project
 
 # Remover link
-npm unlink @volanapp/vlcomponents
+npm unlink @scope/my-library
 
 # Instalar do npm
-npm install @volanapp/vlcomponents@latest
+npm install @scope/my-library@latest
 
 # Limpar cache
 rm -rf .nuxt .output .vite node_modules/.vite node_modules/.cache
@@ -427,15 +432,15 @@ npm run dev
 
 ```bash
 # 1. Verificar se link está ativo
-cd ~/workspaces/mnesis_frontend
-ls -la node_modules/@volanapp/vlcomponents
+cd ~/workspaces/my-project
+ls -la node_modules/@scope/my-library
 
-# Deve mostrar: lrwxrwxrwx ... -> ../../VLComponents_vue
+# Deve mostrar: lrwxrwxrwx ... -> ../../../my-library
 
 # 2. Se não for symlink, refazer link
-npm unlink @volanapp/vlcomponents
-cd ~/workspaces/VLComponents_vue && npm link
-cd ~/workspaces/mnesis_frontend && npm link @volanapp/vlcomponents
+npm unlink @scope/my-library
+cd ~/workspaces/my-library && npm link
+cd ~/workspaces/my-project && npm link @scope/my-library
 
 # 3. Limpar cache
 rm -rf .nuxt .output .vite node_modules/.vite node_modules/.cache
@@ -445,7 +450,7 @@ rm -rf .nuxt .output .vite node_modules/.vite node_modules/.cache
 
 ### **Problema 2: Erro "Cannot find module"**
 
-**Sintoma:** `Error: Cannot find module '@volanapp/vlcomponents'`
+**Sintoma:** `Error: Cannot find module '@scope/my-library'`
 
 **Causa:** Link quebrado ou não criado
 
@@ -453,36 +458,36 @@ rm -rf .nuxt .output .vite node_modules/.vite node_modules/.cache
 
 ```bash
 # 1. Verificar se biblioteca tem link global
-ls -la ~/.npm-global/lib/node_modules/@volanapp/vlcomponents
+ls -la ~/.npm-global/lib/node_modules/@scope/my-library
 
 # 2. Se não existir, criar
-cd ~/workspaces/VLComponents_vue
+cd ~/workspaces/my-library
 npm link
 
 # 3. Verificar build
-npm run build:lib && npm run verify
+npm run build && npm run verify
 
 # 4. Linkar no projeto
-cd ~/workspaces/mnesis_frontend
-npm link @volanapp/vlcomponents
+cd ~/workspaces/my-project
+npm link @scope/my-library
 ```
 
 ### **Problema 3: Erro no Build da Biblioteca**
 
-**Sintoma:** `npm run build:lib` falha
+**Sintoma:** `npm run build` falha
 
 **Solução:**
 
 ```bash
 # 1. Limpar cache da biblioteca
-cd ~/workspaces/VLComponents_vue
+cd ~/workspaces/my-library
 rm -rf node_modules dist
 
 # 2. Reinstalar dependências
 npm install
 
 # 3. Build novamente
-npm run build:lib
+npm run build
 
 # 4. Verificar erros no terminal
 ```
@@ -495,14 +500,14 @@ npm run build:lib
 
 ```bash
 # 1. Rebuild biblioteca (inclui tipos)
-cd ~/workspaces/VLComponents_vue
-npm run build:lib
+cd ~/workspaces/my-library
+npm run build
 
 # 2. Reiniciar TypeScript server
 # VSCode: Ctrl+Shift+P → "TypeScript: Restart TS Server"
 
 # 3. Se não resolver, limpar cache do projeto
-cd ~/workspaces/mnesis_frontend
+cd ~/workspaces/my-project
 rm -rf .nuxt node_modules/.cache
 ```
 
@@ -522,8 +527,8 @@ rm -rf .nuxt node_modules/.cache
 
 # Opção C: Usar yalc em vez de npm link
 npm install -g yalc
-cd ~/workspaces/VLComponents_vue && yalc publish
-cd ~/workspaces/mnesis_frontend && yalc add @volanapp/vlcomponents
+cd ~/workspaces/my-library && yalc publish
+cd ~/workspaces/my-project && yalc add @scope/my-library
 ```
 
 ---
@@ -539,17 +544,17 @@ Adicione ao `package.json` da biblioteca:
 ```json
 {
   "scripts": {
-    "build:lib": "vite build --config vite.config.lib.ts",
+    "build": "vite build",
     "verify": "node scripts/verifyBuild.js",
-    "link:setup": "npm run build:lib && npm run verify && npm link",
-    "link:update": "npm run build:lib && npm run verify"
+    "link:setup": "npm run build && npm run verify && npm link",
+    "link:update": "npm run build && npm run verify"
   }
 }
 ```
 
 ### **2. Configurar Vite Build**
 
-`vite.config.lib.ts`:
+`vite.config.ts`:
 
 ```typescript
 import { defineConfig } from 'vite';
@@ -637,11 +642,11 @@ npm run dev
 
 ### **Antes de npm link**
 
-- [ ] Build da biblioteca executado (`npm run build:lib`)
+- [ ] Build da biblioteca executado (`npm run build`)
 - [ ] Pasta `dist/` existe e contém arquivos
 - [ ] Bundle ES (`.es.js`) gerado
-- [ ] CSS (`style.css`) gerado
-- [ ] Tipos (`index.d.ts`) gerados
+- [ ] CSS (`style.css`) gerado (se aplicável)
+- [ ] Tipos (`index.d.ts`) gerados (se TypeScript)
 - [ ] `package.json` tem `main`, `module`, `types`
 
 ### **Durante npm link**
@@ -655,7 +660,7 @@ npm run dev
 
 ### **Durante Desenvolvimento**
 
-- [ ] Build da biblioteca funciona (`npm run build:lib`)
+- [ ] Build da biblioteca funciona (`npm run build`)
 - [ ] Mudanças aparecem automaticamente (~2-3s)
 - [ ] Hot reload funciona
 - [ ] Tipos TypeScript atualizam (reiniciar TS server)
@@ -676,11 +681,11 @@ npm run dev
 
 ```bash
 # 1. Setup (uma vez)
-cd ~/biblioteca && npm run build:lib && npm link
+cd ~/biblioteca && npm run build && npm link
 cd ~/projeto && npm link @scope/library
 
 # 2. Desenvolvimento (loop)
-cd ~/biblioteca && npm run build:lib
+cd ~/biblioteca && npm run build
 # Hot reload automático! ✨
 
 # 3. Finalizar

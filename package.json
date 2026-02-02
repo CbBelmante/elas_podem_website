@@ -7,7 +7,11 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "lint": "eslint .",
+    "lintFix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "lucide-vue-next": "^0.563.0",
@@ -15,5 +19,11 @@
     "reka-ui": "^2.7.0",
     "vue": "^3.5.27",
     "vue-router": "^4.6.4"
+  },
+  "devDependencies": {
+    "@nuxt/eslint": "^1.13.0",
+    "@vue/eslint-config-prettier": "^10.2.0",
+    "eslint": "^9.39.2",
+    "prettier": "^3.8.1"
   }
 }

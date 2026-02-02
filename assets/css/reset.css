@@ -1,0 +1,89 @@
+/* ============================================
+   CSS RESET - Normalização de estilos
+   ============================================ */
+
+/* Box sizing para todos os elementos */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Remove margens padrão de elementos estruturais */
+body,
+h1, h2, h3, h4, h5, h6,
+p, blockquote, pre,
+dl, dd, ol, ul,
+figure,
+hr {
+  margin: 0;
+}
+
+/* Remove padding padrão de listas */
+ol,
+ul {
+  padding: 0;
+  list-style: none;
+}
+
+/* Configurações básicas do body */
+body {
+  min-height: 100vh;
+  text-rendering: optimizeSpeed;
+  line-height: 1.5;
+}
+
+/* Reset de elementos de formulário */
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+/* Remove estilos padrão de botões */
+button {
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+/* Imagens responsivas por padrão */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Remove underline de links */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Herança de fonte para elementos de formulário */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Remove aparência padrão em número de input */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Scroll suave */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}

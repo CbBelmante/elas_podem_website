@@ -5,6 +5,9 @@
  * Deve ser importado DEPOIS da biblioteca para prevalecer
  */
 
+/* Importar reset CSS */
+@import './reset.css';
+
 :root {
   /* Primary Color Override - Roxo/Rosa */
   --cb-primary: #9333ea; /* Roxo vibrante */
@@ -32,6 +35,55 @@
   /* Avatar com roxo */
   --cb-navbar-avatar-bg: #c084fc;
   --cb-navbar-avatar-text: #9333ea;
+
+  /* ============================================
+     VARIÁVEIS CUSTOMIZADAS DO SITE ELAS PODEM
+     ============================================ */
+
+  /* Accent color (complementar ao primary) */
+  --accent-color: #ec4899;
+
+  /* Gradientes (usando as cores já definidas) */
+  --gradient-primary: linear-gradient(135deg, var(--cb-primary) 0%, var(--cb-primary-60) 100%);
+  --gradient-accent: linear-gradient(135deg, var(--cb-primary-60) 0%, var(--accent-color) 100%);
+  --gradient-hero: linear-gradient(135deg, var(--cb-primary-60) 0%, var(--accent-color) 50%, #f97316 100%);
+
+  /* Cores de fundo */
+  --bg-light: #f9fafb;
+  --bg-white: #ffffff;
+  --bg-hero: linear-gradient(180deg, #faf5ff 0%, #ffffff 100%);
+  --bg-tint: #faf5ff;
+
+  /* Cores de texto */
+  --text-primary: #1a1a1a;
+  --text-secondary: #64748b;
+  --text-tertiary: #94a3b8;
+
+  /* Bordas (usando RGB da primary para transparência) */
+  --border-light: rgba(147, 51, 234, 0.1);
+  --border-hover: rgba(147, 51, 234, 0.3);
+  --border-focus: rgba(147, 51, 234, 0.5);
+
+  /* Sombras */
+  --shadow-sm: 0 2px 10px rgba(147, 51, 234, 0.04);
+  --shadow-md: 0 4px 20px rgba(147, 51, 234, 0.06);
+  --shadow-lg: 0 15px 40px rgba(147, 51, 234, 0.1);
+  --shadow-xl: 0 30px 80px rgba(147, 51, 234, 0.15);
+
+  /* Badges e destaques */
+  --badge-bg: rgba(147, 51, 234, 0.08);
+  --badge-bg-hover: rgba(147, 51, 234, 0.12);
+  --badge-border: rgba(147, 51, 234, 0.2);
+  --badge-color: var(--cb-primary-dark);
+
+  /* Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(147, 51, 234, 0.15);
+
+  /* Gradientes de fundo animados */
+  --gradient-orb-1: radial-gradient(circle, var(--cb-primary) 0%, transparent 70%);
+  --gradient-orb-2: radial-gradient(circle, var(--cb-primary-60) 0%, transparent 70%);
+  --gradient-orb-3: radial-gradient(circle, var(--accent-color) 0%, transparent 70%);
 }
 
 .dark {
