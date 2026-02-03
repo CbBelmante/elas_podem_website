@@ -110,6 +110,49 @@ const props = defineProps<{
 }>()
 ```
 
+## 🚀 Deploy e Produção
+
+### 🌐 Site ao Vivo
+
+**URL Produção**: https://elas-podem-website.web.app
+
+### 📦 Tecnologia de Deploy
+
+- **Estratégia**: SSG (Static Site Generation)
+- **Hosting**: Firebase Hosting
+- **Build**: Nuxt 4 `generate` command
+- **SEO**: ✅ 100% otimizado (HTML pré-renderizado)
+- **Performance**: ⚡ ~0.5s First Contentful Paint
+
+### 🔨 Como Fazer Deploy
+
+```bash
+# 1. Build estático
+npm run generate
+
+# 2. Deploy Firebase
+firebase deploy --only hosting
+```
+
+**Documentação completa**: [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md)
+
+### 🎯 O que é SSG?
+
+**SSG** = Gerar HTML estático durante o build (não no servidor a cada request)
+
+**Vantagens:**
+- ✅ SEO perfeito (Google vê HTML completo)
+- ✅ Performance máxima (só arquivos estáticos)
+- ✅ Custo zero (Firebase free tier)
+- ✅ Segurança (sem servidor para atacar)
+
+**Como funciona:**
+```
+Vue Components → npm run generate → HTML Files → Firebase Hosting
+```
+
+---
+
 ## 🚀 Features
 
 ### Implementadas
@@ -121,13 +164,16 @@ const props = defineProps<{
 - ✅ Design responsivo mobile-first
 - ✅ Animações on-scroll com IntersectionObserver
 - ✅ ESLint + Prettier configurados
+- ✅ **Deploy automatizado Firebase Hosting**
+- ✅ **SSG para SEO perfeito**
 
 ### Planejadas
 
 - 🚧 Páginas adicionais (Sobre, Projetos, Blog)
 - 🚧 Sistema de CMS para conteúdo dinâmico
 - 🚧 Integração com formulários (backend)
-- 🚧 SEO otimizado (meta tags, sitemap)
+- 🚧 Domínio customizado (elaspodem.org)
+- 🚧 CI/CD com GitHub Actions
 - 🚧 Analytics e tracking
 
 ## 🔧 Configurações

@@ -40,6 +40,9 @@ settings.json
 .history
 .vite
 
+# Firebase
+.firebase
+
 # FlowForge
 .flowforge/logs/
 .flowforge/cache/

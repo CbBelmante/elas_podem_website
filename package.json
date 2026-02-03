@@ -11,7 +11,9 @@
     "lint": "eslint .",
     "lintFix": "eslint . --fix",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "deploy": "npm run generate && firebase deploy --only hosting",
+    "deployPreview": "npm run generate && npx serve .output/public"
   },
   "dependencies": {
     "lucide-vue-next": "^0.563.0",
