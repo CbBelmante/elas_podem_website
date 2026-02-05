@@ -9,8 +9,17 @@
 @import './reset.css';
 
 :root {
-  /* IDENTIDADE VISUAL COLETIVO ELAS PODEM */
-  /* Paleta oficial: Rosa Salmão + Vermelho + Bordô + Nude */
+  /* ============================================
+     IDENTIDADE VISUAL COLETIVO ELAS PODEM
+     ============================================
+     Paleta oficial: Rosa Salmão + Vermelho + Bordô + Nude
+
+     ✨ Theme System 2.0:
+     Mudando --cb-primary, automaticamente muda:
+     - Botões (primary, hover, pressed)
+     - Navbar (underline, pill, folder active text, avatar text, mobile active text)
+     - Focus rings e outros elementos que referenciam primary
+     ============================================ */
 
   /* Primary Color - Rosa Salmão (Cor dominante da marca) */
   --cb-primary: #ED6666; /* Rosa salmão - cor principal */
@@ -27,18 +36,13 @@
   --cb-secondary-hover: #C74545;  /* Vermelho mais claro */
   --cb-secondary-pressed: #9A2F2F;  /* Vermelho mais escuro */
 
-  /* Navbar com tema rosa salmão */
+  /* Navbar com tema rosa salmão - Customizações específicas */
   --cb-navbar-folder-active-bg: #FFF5F5;
   --cb-navbar-folder-active-text: #B23A3A;
-  --cb-navbar-pill-active-bg: #ED6666;
-  --cb-navbar-underline-active-border: #ED6666;
   --cb-navbar-mobile-active-bg: #FFF5F5;
   --cb-navbar-mobile-active-text: #B23A3A;
 
-  /* Button Primary com rosa salmão */
-  --cb-btn-primary: #ED6666;
-  --cb-btn-primary-hover: #F08080;
-  --cb-btn-primary-pressed: #B23A3A;
+  /* Button focus ring customizado */
   --cb-btn-focus-ring: rgba(237, 102, 102, 0.5);
 
   /* Button Secondary com vermelho */

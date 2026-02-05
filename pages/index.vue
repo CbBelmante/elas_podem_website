@@ -72,16 +72,11 @@ onMounted(() => {
 
 <template>
   <div class="pageWrapper">
-    <!-- Language Switcher -->
-    <div class="languageSwitcherWrapper">
-      <LanguageSwitcher />
-    </div>
-
     <!-- Navbar -->
     <CBNavbar
       :menu-items="menuItems"
       :current-path="currentPath"
-      menu-style="folder"
+      menu-style="underline"
       placement="fixed"
       :elevation="2"
       mobile-mode="popover"
@@ -118,7 +113,7 @@ onMounted(() => {
           <CBButton
             :label="$t('hero.btnDonate')"
             size="lg"
-            :bg-color="'var(--gradient-primary)'"
+            :bg-gradient="'var(--gradient-primary)'"
             :rounded="14"
             prepend-icon="luc-heart"
             shine
@@ -194,7 +189,7 @@ onMounted(() => {
           <CBButton
             :label="$t('mission.btnLearnMore')"
             size="lg"
-            :bg-color="'var(--gradient-primary)'"
+            :bg-gradient="'var(--gradient-primary)'"
             :rounded="12"
             append-icon="luc-arrow-right"
             class="btnMission"
@@ -556,7 +551,7 @@ onMounted(() => {
                 :label="$t('contact.form.btnSubmit')"
                 type="submit"
                 size="lg"
-                :bg-color="'var(--gradient-primary)'"
+                :bg-gradient="'var(--gradient-primary)'"
                 :rounded="12"
                 append-icon="luc-arrow-right"
                 shine
@@ -581,7 +576,7 @@ onMounted(() => {
             <CBButton
               :label="$t('cta.btnDonate')"
               size="lg"
-              :bg-color="'var(--gradient-primary)'"
+              :bg-gradient="'var(--gradient-primary)'"
               :rounded="14"
               prepend-icon="luc-heart"
               shine
@@ -625,23 +620,6 @@ onMounted(() => {
 @media (max-width: 768px) {
   .hideOnMobile {
     display: none;
-  }
-}
-
-/* ============================================
-   LANGUAGE SWITCHER
-   ============================================ */
-.languageSwitcherWrapper {
-  position: fixed;
-  top: 1rem;
-  right: 2rem;
-  z-index: 1000;
-}
-
-@media (max-width: 768px) {
-  .languageSwitcherWrapper {
-    top: 0.75rem;
-    right: 1rem;
   }
 }
 
