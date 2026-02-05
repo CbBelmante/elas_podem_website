@@ -8,10 +8,13 @@
 
 ## 📋 Visão Geral
 
-Atualmente o **cbcomponents** tem apenas 3 componentes:
-- ✅ CBButton
-- ✅ CBIcon
-- ✅ CBNavbar
+Atualmente o **cbcomponents** tem 6 componentes:
+- ✅ CBButton (existente + documentado)
+- ✅ CBIcon (existente + documentado)
+- ✅ CBNavbar (existente + documentado)
+- ✅ CBCard (migrado + documentado)
+- ✅ CBImage (migrado + documentado)
+- ✅ CBInput (migrado + documentado)
 
 Precisamos portar componentes do **corp-components** (que usa reka-ui + shadcn) para criar uma biblioteca completa.
 
@@ -354,13 +357,13 @@ Verificar/criar no `assets/css/theme.css`:
 ## 📝 Checklist Geral
 
 ### Fase 1 (Semana 1-2)
-- [ ] CBInput
+- [x] CBInput ✅
 - [ ] CBTextarea
 - [ ] CBSelect
 - [ ] CBLabel
 - [ ] CBCheckbox
-- [ ] CBCard
-- [ ] CBImage
+- [x] CBCard ✅
+- [x] CBImage ✅
 - [ ] CBPopover + dependências (Popover, PopoverTrigger, PopoverContent)
 
 ### Fase 2 (Semana 3-4)
@@ -380,8 +383,8 @@ Verificar/criar no `assets/css/theme.css`:
 - [ ] Adicionar @vueuse/core ao cbcomponents
 - [ ] Criar/atualizar CbColorUtils.ts
 - [ ] Criar utils/cn.ts (merge de classes)
-- [ ] Atualizar theme.css com todas as variables
-- [ ] Documentação de cada componente
+- [x] Atualizar theme.css com todas as variables ✅
+- [x] Documentação de cada componente ✅ (auto-discovery implementado)
 
 ---
 
@@ -413,5 +416,20 @@ Verificar/criar no `assets/css/theme.css`:
 
 ---
 
-**Última atualização:** 2026-01-29
-**Status:** 📋 Planejamento concluído - Pronto para execução
+**Última atualização:** 2026-02-05
+**Status:** 🚧 Em progresso - 3/8 componentes Fase 1 concluídos (37.5%)
+
+### Progresso Atual:
+- ✅ **CBButton** - Componente base com variants, cores, tamanhos, ícones e estados
+- ✅ **CBIcon** - Sistema de ícones Lucide com cores e tamanhos customizados
+- ✅ **CBNavbar** - Navbar responsiva com dropdowns e menu mobile
+- ✅ **CBCard** - Cards com variants, densities, elevations e slots
+- ✅ **CBImage** - Imagens com lazy loading, shapes, sizes e efeitos
+- ✅ **CBInput** - Input com máscaras brasileiras, validação e ícones
+- ✅ **Auto-discovery** - Sistema automático de rotas e documentação (routes.ts + discoveryUtils.ts)
+
+### Próximo Componente (Fase 1):
+- 🎯 **CBTextarea** - Campo de mensagem para formulário de contato
+- 🎯 **CBSelect** - Dropdown de assunto no formulário
+- 🎯 **CBLabel** - Labels para os formulários
+- 🎯 **CBCheckbox** - Termos e condições, newsletter opt-in
