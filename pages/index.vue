@@ -96,8 +96,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="pageWrapper">
-    <!-- Navbar -->
+  <div>
+    <!-- Navbar fora do pageWrapper para position:fixed funcionar com viewport -->
     <CBNavbar
       :menu-items="menuItems"
       :current-path="currentPath"
@@ -122,727 +122,741 @@ onMounted(() => {
       </template>
     </CBNavbar>
 
-    <!-- Hero Section - REDESENHADO -->
-    <section class="heroSection">
-      <div class="heroContent">
-        <!-- Badge superior -->
-        <CBBadge
-          :content="$t('hero.badge')"
-          variant="outline"
-          icon="luc-sparkles"
-          :icon-size="14"
-          weight="bold"
-          size="xs"
-          class="heroBadge animateOnScroll"
-        />
-
-        <!-- Título principal com gradiente -->
-        <CBLabel
-          :text="$t('hero.title')"
-          tag="h1"
-          weight="black"
-          class="heroTitle animateOnScroll"
-        />
-
-        <!-- Subtítulo -->
-        <CBLabel
-          :text="$t('hero.subtitle')"
-          size="lg"
-          color="secondary"
-          class="heroSubtitle animateOnScroll"
-        />
-
-        <!-- Botões com efeitos premium -->
-        <div class="heroActions animateOnScroll">
-          <CBButton
-            :label="$t('hero.btnDonate')"
-            size="lg"
-            :bg-gradient="'var(--gradient-primary)'"
-            :rounded="14"
-            prepend-icon="luc-heart"
-            shine
-            glow
-            class="btnHero"
-          />
-
-          <CBButton
-            :label="$t('hero.btnHistory')"
-            size="lg"
-            variant="outline"
-            :color="'var(--cb-secondary)'"
-            :rounded="14"
-            append-icon="luc-arrow-right"
-            class="btnHeroSecondary"
-          />
-        </div>
-
-        <!-- Estatísticas com glassmorphism -->
-        <div class="heroStats animateOnScroll">
-          <div class="heroStatCard">
-            <CBIcon icon="luc-award" size="2rem" color="var(--cb-primary)" class="heroStatIcon" />
-            <CBLabel
-              :text="$t('hero.stats.headquarter.number')"
-              tag="span"
-              weight="extrabold"
-              dense
-              class="heroStatNumber"
-            />
-            <CBLabel
-              :text="$t('hero.stats.headquarter.label')"
-              tag="span"
-              size="sm"
-              weight="medium"
-              dense
-              class="heroStatLabel"
-            />
-          </div>
-
-          <div class="heroStatCard">
-            <CBIcon
-              icon="luc-megaphone"
-              size="2rem"
-              color="var(--cb-primary)"
-              class="heroStatIcon"
-            />
-            <CBLabel
-              :text="$t('hero.stats.conference.number')"
-              tag="span"
-              weight="extrabold"
-              dense
-              class="heroStatNumber"
-            />
-            <CBLabel
-              :text="$t('hero.stats.conference.label')"
-              tag="span"
-              size="sm"
-              weight="medium"
-              dense
-              class="heroStatLabel"
-            />
-          </div>
-
-          <div class="heroStatCard">
-            <CBIcon icon="luc-users" size="2rem" color="var(--cb-primary)" class="heroStatIcon" />
-            <CBLabel
-              :text="$t('hero.stats.location.number')"
-              tag="span"
-              weight="extrabold"
-              dense
-              class="heroStatNumber"
-            />
-            <CBLabel
-              :text="$t('hero.stats.location.label')"
-              tag="span"
-              size="sm"
-              weight="medium"
-              dense
-              class="heroStatLabel"
-            />
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Mission Section - MODERNIZADA -->
-    <section class="missionSection">
-      <div class="missionContainer">
-        <div class="missionContent animateOnScroll">
+    <div class="pageWrapper">
+      <!-- Hero Section - REDESENHADO -->
+      <section class="heroSection">
+        <div class="heroContent">
+          <!-- Badge superior -->
           <CBBadge
-            :content="$t('mission.badge')"
+            :content="$t('hero.badge')"
             variant="outline"
-            icon="luc-target"
+            icon="luc-sparkles"
             :icon-size="14"
             weight="bold"
             size="xs"
-            class="sectionBadge"
+            class="heroBadge animateOnScroll"
           />
 
-          <CBLabel :text="$t('mission.title')" tag="h2" weight="bold" class="sectionTitle" />
-
-          <CBLabel :text="$t('mission.text1')" size="md" color="secondary" class="missionText" />
-
-          <CBLabel :text="$t('mission.text2')" size="md" color="secondary" class="missionText" />
-
-          <CBButton
-            :label="$t('mission.btnLearnMore')"
-            size="lg"
-            :bg-gradient="'var(--gradient-primary)'"
-            :rounded="12"
-            append-icon="luc-arrow-right"
-            class="btnMission"
-          />
-        </div>
-
-        <div class="missionVisual animateOnScroll">
-          <div class="missionImageCard">
-            <!-- SVG Placeholder -->
-            <svg
-              width="100%"
-              height="100%"
-              viewBox="0 0 400 400"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              class="missionImageSvg"
-            >
-              <path
-                d="M263.5 400C166.5 373.5 48.5 322 0 206C88 153.5 142.5 15.5 263.5 0.5C384.5 15.5 427 122 400 206C373 290 360.5 426.5 263.5 400Z"
-                fill="url(#paint0_linear_101_2)"
-              />
-              <defs>
-                <linearGradient
-                  id="paint0_linear_101_2"
-                  x1="0"
-                  y1="0"
-                  x2="400"
-                  y2="400"
-                  gradientUnits="userSpaceOnUse"
-                >
-                  <stop stop-color="#E6346B" stop-opacity="0.3" />
-                  <stop offset="1" stop-color="#D42D5E" stop-opacity="0.1" />
-                </linearGradient>
-              </defs>
-            </svg>
-            <div class="missionImageContent">
-              <CBIcon
-                icon="luc-sparkles"
-                size="3rem"
-                color="var(--cb-primary)"
-                class="missionImageIcon"
-              />
-              <CBLabel
-                :text="$t('mission.imageAlt')"
-                tag="span"
-                weight="semibold"
-                dense
-                class="missionImageText"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Programs Section - CARDS PREMIUM -->
-    <section class="programsSection">
-      <div class="programsContainer">
-        <div class="programsHeader animateOnScroll">
-          <CBBadge
-            :content="$t('programs.badge')"
-            variant="outline"
-            icon="luc-lightbulb"
-            :icon-size="14"
-            weight="bold"
-            size="xs"
-            class="sectionBadge"
-          />
-
-          <CBLabel :text="$t('programs.title')" tag="h2" weight="bold" class="sectionTitle" />
-        </div>
-
-        <div class="programsGrid">
-          <!-- Card 1 -->
-          <CBCard
-            variant="outlined"
-            :rounded="20"
-            hover
-            border-color="var(--border-light)"
-            class="programCard animateOnScroll"
-          >
-            <div class="programIconWrapper programIconWrapper--purple">
-              <CBIcon icon="luc-megaphone" size="2rem" color="var(--accent-color)" />
-            </div>
-            <CBLabel
-              :text="$t('programs.items.communication.title')"
-              tag="h3"
-              size="lg"
-              weight="bold"
-              class="programTitle"
-            />
-            <CBLabel
-              :text="$t('programs.items.communication.description')"
-              size="sm"
-              color="secondary"
-              class="programDescription"
-            />
-            <div class="programCardFooter">
-              <CBLabel
-                :text="$t('programs.items.communication.link')"
-                tag="span"
-                size="sm"
-                weight="semibold"
-                dense
-                class="programCardLink"
-              />
-            </div>
-          </CBCard>
-
-          <!-- Card 2 -->
-          <CBCard
-            variant="outlined"
-            :rounded="20"
-            hover
-            border-color="var(--border-light)"
-            class="programCard animateOnScroll"
-          >
-            <div class="programIconWrapper programIconWrapper--pink">
-              <CBIcon icon="luc-graduation-cap" size="2rem" color="var(--accent-color)" />
-            </div>
-            <CBLabel
-              :text="$t('programs.items.education.title')"
-              tag="h3"
-              size="lg"
-              weight="bold"
-              class="programTitle"
-            />
-            <CBLabel
-              :text="$t('programs.items.education.description')"
-              size="sm"
-              color="secondary"
-              class="programDescription"
-            />
-            <div class="programCardFooter">
-              <CBLabel
-                :text="$t('programs.items.education.link')"
-                tag="span"
-                size="sm"
-                weight="semibold"
-                dense
-                class="programCardLink"
-              />
-            </div>
-          </CBCard>
-
-          <!-- Card 3 -->
-          <CBCard
-            variant="outlined"
-            :rounded="20"
-            hover
-            border-color="var(--border-light)"
-            class="programCard animateOnScroll"
-          >
-            <div class="programIconWrapper programIconWrapper--violet">
-              <CBIcon icon="luc-users" size="2rem" color="var(--accent-color)" />
-            </div>
-            <CBLabel
-              :text="$t('programs.items.social.title')"
-              tag="h3"
-              size="lg"
-              weight="bold"
-              class="programTitle"
-            />
-            <CBLabel
-              :text="$t('programs.items.social.description')"
-              size="sm"
-              color="secondary"
-              class="programDescription"
-            />
-            <div class="programCardFooter">
-              <CBLabel
-                :text="$t('programs.items.social.link')"
-                tag="span"
-                size="sm"
-                weight="semibold"
-                dense
-                class="programCardLink"
-              />
-            </div>
-          </CBCard>
-
-          <!-- Card 4 -->
-          <CBCard
-            variant="outlined"
-            :rounded="20"
-            hover
-            border-color="var(--border-light)"
-            class="programCard animateOnScroll"
-          >
-            <div class="programIconWrapper programIconWrapper--fuchsia">
-              <CBIcon icon="luc-scale" size="2rem" color="var(--accent-color)" />
-            </div>
-            <CBLabel
-              :text="$t('programs.items.political.title')"
-              tag="h3"
-              size="lg"
-              weight="bold"
-              class="programTitle"
-            />
-            <CBLabel
-              :text="$t('programs.items.political.description')"
-              size="sm"
-              color="secondary"
-              class="programDescription"
-            />
-            <div class="programCardFooter">
-              <CBLabel
-                :text="$t('programs.items.political.link')"
-                tag="span"
-                size="sm"
-                weight="semibold"
-                dense
-                class="programCardLink"
-              />
-            </div>
-          </CBCard>
-        </div>
-      </div>
-    </section>
-
-    <!-- Testimonial Section - ELEGANTE -->
-    <section class="testimonialSection">
-      <div class="testimonialContainer animateOnScroll">
-        <div class="testimonialCard">
-          <div class="testimonialCardGlow"></div>
-          <div class="testimonialQuoteIcon">"</div>
-          <blockquote class="testimonialQuote">
-            {{ $t('testimonial.quote') }}
-          </blockquote>
-          <div class="testimonialAuthor">
-            <div class="testimonialAuthorAvatar">M</div>
-            <div class="testimonialAuthorInfo">
-              <CBLabel
-                :text="$t('testimonial.author.name')"
-                tag="span"
-                weight="semibold"
-                dense
-                class="testimonialAuthorName"
-              />
-              <CBLabel
-                :text="$t('testimonial.author.role')"
-                tag="span"
-                size="sm"
-                color="secondary"
-                dense
-                class="testimonialAuthorRole"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Supporters Section - MODERNA -->
-    <section class="supportersSection">
-      <div class="supportersContainer">
-        <div class="supportersHeader animateOnScroll">
-          <CBBadge
-            :content="$t('supporters.badge')"
-            variant="outline"
-            icon="luc-handshake"
-            :icon-size="14"
-            weight="bold"
-            size="xs"
-            class="sectionBadge"
-          />
-
-          <CBLabel :text="$t('supporters.title')" tag="h2" weight="bold" class="sectionTitle" />
-
+          <!-- Título principal com gradiente -->
           <CBLabel
-            :text="$t('supporters.subtitle')"
-            size="md"
-            color="secondary"
-            class="supportersSubtitle"
-          />
-        </div>
-
-        <div class="supportersGrid animateOnScroll">
-          <CBCard
-            variant="outlined"
-            :rounded="16"
-            hover
-            bg-color="var(--bg-light)"
-            border-color="var(--border-light)"
-            class="supporterCard"
-          >
-            <div class="supporterCardInner">
-              <CBLabel text="Apoiador 1" size="md" weight="semibold" color="secondary" />
-            </div>
-          </CBCard>
-
-          <CBCard
-            variant="outlined"
-            :rounded="16"
-            hover
-            bg-color="var(--bg-light)"
-            border-color="var(--border-light)"
-            class="supporterCard"
-          >
-            <div class="supporterCardInner">
-              <CBLabel text="Apoiador 2" size="md" weight="semibold" color="secondary" />
-            </div>
-          </CBCard>
-
-          <CBCard
-            variant="outlined"
-            :rounded="16"
-            hover
-            bg-color="var(--bg-light)"
-            border-color="var(--border-light)"
-            class="supporterCard"
-          >
-            <div class="supporterCardInner">
-              <CBLabel text="Apoiador 3" size="md" weight="semibold" color="secondary" />
-            </div>
-          </CBCard>
-
-          <CBCard
-            variant="outlined"
-            :rounded="16"
-            hover
-            bg-color="var(--bg-light)"
-            border-color="var(--border-light)"
-            class="supporterCard"
-          >
-            <div class="supporterCardInner">
-              <CBLabel text="Apoiador 4" size="md" weight="semibold" color="secondary" />
-            </div>
-          </CBCard>
-
-          <CBCard
-            variant="outlined"
-            :rounded="16"
-            hover
-            bg-color="var(--bg-light)"
-            border-color="var(--border-light)"
-            class="supporterCard"
-          >
-            <div class="supporterCardInner">
-              <CBLabel text="Apoiador 5" size="md" weight="semibold" color="secondary" />
-            </div>
-          </CBCard>
-        </div>
-      </div>
-    </section>
-
-    <!-- Contact Section - REDESENHADA -->
-    <section class="contactSection">
-      <div class="contactContainer">
-        <div class="contactInfo animateOnScroll">
-          <CBBadge
-            :content="$t('contact.badge')"
-            variant="outline"
-            icon="luc-mail"
-            :icon-size="14"
-            weight="bold"
-            size="xs"
-            class="sectionBadge"
+            :text="$t('hero.title')"
+            tag="h1"
+            weight="black"
+            class="heroTitle animateOnScroll"
           />
 
-          <CBLabel :text="$t('contact.title')" tag="h2" weight="bold" class="sectionTitle" />
-
+          <!-- Subtítulo -->
           <CBLabel
-            :text="$t('contact.description')"
-            size="md"
+            :text="$t('hero.subtitle')"
+            size="lg"
             color="secondary"
-            class="contactDescription"
+            class="heroSubtitle animateOnScroll"
           />
 
-          <div class="contactMethods">
-            <CBCard
-              variant="outlined"
-              :rounded="16"
-              hover
-              density="regular"
-              bg-color="var(--bg-light)"
-              border-color="var(--border-light)"
-              :border-width="1"
-              class="contactMethodCard"
-            >
-              <div class="contactMethodWrapper">
-                <CBIcon
-                  icon="luc-instagram"
-                  size="2rem"
-                  color="var(--cb-primary)"
-                  class="contactMethodIcon"
-                />
-                <div class="contactMethodContent">
-                  <CBLabel
-                    :text="$t('contact.methods.instagram.label')"
-                    tag="span"
-                    size="xs"
-                    color="tertiary"
-                    weight="bold"
-                    class="contactMethodLabel"
-                  />
-                  <CBLabel
-                    :text="$t('contact.methods.instagram.value')"
-                    tag="span"
-                    size="md"
-                    weight="medium"
-                    class="contactMethodValue"
-                  />
-                </div>
-              </div>
-            </CBCard>
-
-            <CBCard
-              variant="outlined"
-              :rounded="16"
-              hover
-              density="regular"
-              bg-color="var(--bg-light)"
-              border-color="var(--border-light)"
-              :border-width="1"
-              class="contactMethodCard"
-            >
-              <div class="contactMethodWrapper">
-                <CBIcon
-                  icon="luc-user-check"
-                  size="2rem"
-                  color="var(--cb-primary)"
-                  class="contactMethodIcon"
-                />
-                <div class="contactMethodContent">
-                  <CBLabel
-                    :text="$t('contact.methods.president.label')"
-                    tag="span"
-                    size="xs"
-                    color="tertiary"
-                    weight="bold"
-                    class="contactMethodLabel"
-                  />
-                  <CBLabel
-                    :text="$t('contact.methods.president.value')"
-                    tag="span"
-                    size="md"
-                    weight="medium"
-                    class="contactMethodValue"
-                  />
-                </div>
-              </div>
-            </CBCard>
-
-            <CBCard
-              variant="outlined"
-              :rounded="16"
-              hover
-              density="regular"
-              bg-color="var(--bg-light)"
-              border-color="var(--border-light)"
-              :border-width="1"
-              class="contactMethodCard"
-            >
-              <div class="contactMethodWrapper">
-                <CBIcon
-                  icon="luc-map-pin"
-                  size="2rem"
-                  color="var(--cb-primary)"
-                  class="contactMethodIcon"
-                />
-                <div class="contactMethodContent">
-                  <CBLabel
-                    :text="$t('contact.methods.location.label')"
-                    tag="span"
-                    size="xs"
-                    color="tertiary"
-                    weight="bold"
-                    class="contactMethodLabel"
-                  />
-                  <CBLabel
-                    :text="$t('contact.methods.location.value')"
-                    tag="span"
-                    size="md"
-                    weight="medium"
-                    class="contactMethodValue"
-                  />
-                </div>
-              </div>
-            </CBCard>
-          </div>
-        </div>
-
-        <div class="contactFormWrapper animateOnScroll">
-          <CBCard variant="elevated" :rounded="24" class="contactFormCard">
-            <form class="contactForm">
-              <CBInput
-                v-model="formName"
-                name="contact-name"
-                :label="$t('contact.form.name.label')"
-                :placeholder="$t('contact.form.name.placeholder')"
-                :rounded="12"
-                prepend-icon="luc-user"
-                required
-              />
-
-              <CBInput
-                v-model="formEmail"
-                name="contact-email"
-                type="email"
-                :label="$t('contact.form.email.label')"
-                :placeholder="$t('contact.form.email.placeholder')"
-                :rounded="12"
-                prepend-icon="luc-mail"
-                required
-              />
-
-              <CBSelect
-                v-model="formSubject"
-                name="contact-subject"
-                :items="subjectItems"
-                :label="$t('contact.form.subject.label')"
-                :placeholder="$t('contact.form.subject.placeholder')"
-                :rounded="12"
-              />
-
-              <CBTextarea
-                v-model="formMessage"
-                name="contact-message"
-                :label="$t('contact.form.message.label')"
-                :placeholder="$t('contact.form.message.placeholder')"
-                :rows="5"
-                :rounded="12"
-                required
-              />
-
-              <CBButton
-                :label="$t('contact.form.btnSubmit')"
-                type="submit"
-                size="lg"
-                :bg-gradient="'var(--gradient-primary)'"
-                :rounded="12"
-                append-icon="luc-arrow-right"
-                shine
-                block
-                class="btnFormSubmit"
-              />
-            </form>
-          </CBCard>
-        </div>
-      </div>
-    </section>
-
-    <!-- CTA Final - IMPACTANTE -->
-    <section class="ctaSection">
-      <div class="ctaGradientBg"></div>
-      <div class="ctaContainer animateOnScroll">
-        <div class="ctaContent">
-          <CBLabel :text="$t('cta.title')" tag="h2" weight="extrabold" class="ctaTitle" />
-          <CBLabel :text="$t('cta.subtitle')" size="lg" color="secondary" class="ctaSubtitle" />
-          <div class="ctaActions">
+          <!-- Botões com efeitos premium -->
+          <div class="heroActions animateOnScroll">
             <CBButton
-              :label="$t('cta.btnDonate')"
+              :label="$t('hero.btnDonate')"
               size="lg"
               :bg-gradient="'var(--gradient-primary)'"
               :rounded="14"
               prepend-icon="luc-heart"
               shine
               glow
-              pulse
-              class="btnCtaPrimary"
+              class="btnHero"
             />
 
             <CBButton
-              :label="$t('cta.btnProjects')"
+              :label="$t('hero.btnHistory')"
               size="lg"
               variant="outline"
               :color="'var(--cb-secondary)'"
               :rounded="14"
               append-icon="luc-arrow-right"
-              class="btnCtaSecondary"
+              class="btnHeroSecondary"
             />
           </div>
+
+          <!-- Estatísticas com glassmorphism -->
+          <div class="heroStats animateOnScroll">
+            <div class="heroStatCard">
+              <CBIcon icon="luc-award" size="2rem" color="var(--cb-primary)" class="heroStatIcon" />
+              <CBLabel
+                :text="$t('hero.stats.headquarter.number')"
+                tag="span"
+                weight="extrabold"
+                dense
+                class="heroStatNumber"
+              />
+              <CBLabel
+                :text="$t('hero.stats.headquarter.label')"
+                tag="span"
+                size="sm"
+                weight="medium"
+                dense
+                class="heroStatLabel"
+              />
+            </div>
+
+            <div class="heroStatCard">
+              <CBIcon
+                icon="luc-megaphone"
+                size="2rem"
+                color="var(--cb-primary)"
+                class="heroStatIcon"
+              />
+              <CBLabel
+                :text="$t('hero.stats.conference.number')"
+                tag="span"
+                weight="extrabold"
+                dense
+                class="heroStatNumber"
+              />
+              <CBLabel
+                :text="$t('hero.stats.conference.label')"
+                tag="span"
+                size="sm"
+                weight="medium"
+                dense
+                class="heroStatLabel"
+              />
+            </div>
+
+            <div class="heroStatCard">
+              <CBIcon icon="luc-users" size="2rem" color="var(--cb-primary)" class="heroStatIcon" />
+              <CBLabel
+                :text="$t('hero.stats.location.number')"
+                tag="span"
+                weight="extrabold"
+                dense
+                class="heroStatNumber"
+              />
+              <CBLabel
+                :text="$t('hero.stats.location.label')"
+                tag="span"
+                size="sm"
+                weight="medium"
+                dense
+                class="heroStatLabel"
+              />
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      <!-- Mission Section - MODERNIZADA -->
+      <section class="missionSection">
+        <div class="missionContainer">
+          <div class="missionContent animateOnScroll">
+            <CBBadge
+              :content="$t('mission.badge')"
+              variant="outline"
+              icon="luc-target"
+              :icon-size="14"
+              weight="bold"
+              size="xs"
+              class="sectionBadge"
+            />
+
+            <CBLabel :text="$t('mission.title')" tag="h2" weight="bold" class="sectionTitle" />
+
+            <CBLabel :text="$t('mission.text1')" size="md" color="secondary" class="missionText" />
+
+            <CBLabel :text="$t('mission.text2')" size="md" color="secondary" class="missionText" />
+
+            <CBButton
+              :label="$t('mission.btnLearnMore')"
+              size="lg"
+              :bg-gradient="'var(--gradient-primary)'"
+              :rounded="12"
+              append-icon="luc-arrow-right"
+              class="btnMission"
+            />
+          </div>
+
+          <div class="missionVisual animateOnScroll">
+            <div class="missionImageCard">
+              <!-- SVG Placeholder -->
+              <svg
+                width="100%"
+                height="100%"
+                viewBox="0 0 400 400"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                class="missionImageSvg"
+              >
+                <path
+                  d="M263.5 400C166.5 373.5 48.5 322 0 206C88 153.5 142.5 15.5 263.5 0.5C384.5 15.5 427 122 400 206C373 290 360.5 426.5 263.5 400Z"
+                  fill="url(#paint0_linear_101_2)"
+                />
+                <defs>
+                  <linearGradient
+                    id="paint0_linear_101_2"
+                    x1="0"
+                    y1="0"
+                    x2="400"
+                    y2="400"
+                    gradientUnits="userSpaceOnUse"
+                  >
+                    <stop stop-color="#E6346B" stop-opacity="0.3" />
+                    <stop offset="1" stop-color="#D42D5E" stop-opacity="0.1" />
+                  </linearGradient>
+                </defs>
+              </svg>
+              <div class="missionImageContent">
+                <CBIcon
+                  icon="luc-sparkles"
+                  size="3rem"
+                  color="var(--cb-primary)"
+                  class="missionImageIcon"
+                />
+                <CBLabel
+                  :text="$t('mission.imageAlt')"
+                  tag="span"
+                  weight="semibold"
+                  dense
+                  class="missionImageText"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Programs Section - CARDS PREMIUM -->
+      <section class="programsSection">
+        <div class="programsContainer">
+          <div class="programsHeader animateOnScroll">
+            <CBBadge
+              :content="$t('programs.badge')"
+              variant="outline"
+              icon="luc-lightbulb"
+              :icon-size="14"
+              weight="bold"
+              size="xs"
+              class="sectionBadge"
+            />
+
+            <CBLabel :text="$t('programs.title')" tag="h2" weight="bold" class="sectionTitle" />
+          </div>
+
+          <div class="programsGrid">
+            <!-- Card 1 -->
+            <CBCard
+              variant="outlined"
+              :rounded="20"
+              hover
+              border-color="var(--border-light)"
+              class="programCard animateOnScroll"
+            >
+              <div class="programIconWrapper programIconWrapper--magenta">
+                <CBIcon icon="luc-megaphone" size="2rem" color="#ffffff" />
+              </div>
+              <CBLabel
+                :text="$t('programs.items.communication.title')"
+                tag="h3"
+                size="lg"
+                weight="bold"
+                class="programTitle"
+              />
+              <CBLabel
+                :text="$t('programs.items.communication.description')"
+                size="sm"
+                color="secondary"
+                class="programDescription"
+              />
+              <div class="programCardFooter">
+                <CBLabel
+                  :text="$t('programs.items.communication.link')"
+                  tag="span"
+                  size="sm"
+                  weight="semibold"
+                  dense
+                  class="programCardLink"
+                />
+              </div>
+            </CBCard>
+
+            <!-- Card 2 -->
+            <CBCard
+              variant="outlined"
+              :rounded="20"
+              hover
+              border-color="var(--border-light)"
+              class="programCard animateOnScroll"
+            >
+              <div class="programIconWrapper programIconWrapper--coral">
+                <CBIcon icon="luc-graduation-cap" size="2rem" color="#ffffff" />
+              </div>
+              <CBLabel
+                :text="$t('programs.items.education.title')"
+                tag="h3"
+                size="lg"
+                weight="bold"
+                class="programTitle"
+              />
+              <CBLabel
+                :text="$t('programs.items.education.description')"
+                size="sm"
+                color="secondary"
+                class="programDescription"
+              />
+              <div class="programCardFooter">
+                <CBLabel
+                  :text="$t('programs.items.education.link')"
+                  tag="span"
+                  size="sm"
+                  weight="semibold"
+                  dense
+                  class="programCardLink"
+                />
+              </div>
+            </CBCard>
+
+            <!-- Card 3 -->
+            <CBCard
+              variant="outlined"
+              :rounded="20"
+              hover
+              border-color="var(--border-light)"
+              class="programCard animateOnScroll"
+            >
+              <div class="programIconWrapper programIconWrapper--rosa">
+                <CBIcon icon="luc-users" size="2rem" color="#ffffff" />
+              </div>
+              <CBLabel
+                :text="$t('programs.items.social.title')"
+                tag="h3"
+                size="lg"
+                weight="bold"
+                class="programTitle"
+              />
+              <CBLabel
+                :text="$t('programs.items.social.description')"
+                size="sm"
+                color="secondary"
+                class="programDescription"
+              />
+              <div class="programCardFooter">
+                <CBLabel
+                  :text="$t('programs.items.social.link')"
+                  tag="span"
+                  size="sm"
+                  weight="semibold"
+                  dense
+                  class="programCardLink"
+                />
+              </div>
+            </CBCard>
+
+            <!-- Card 4 -->
+            <CBCard
+              variant="outlined"
+              :rounded="20"
+              hover
+              border-color="var(--border-light)"
+              class="programCard animateOnScroll"
+            >
+              <div class="programIconWrapper programIconWrapper--oliva">
+                <CBIcon icon="luc-scale" size="2rem" color="#ffffff" />
+              </div>
+              <CBLabel
+                :text="$t('programs.items.political.title')"
+                tag="h3"
+                size="lg"
+                weight="bold"
+                class="programTitle"
+              />
+              <CBLabel
+                :text="$t('programs.items.political.description')"
+                size="sm"
+                color="secondary"
+                class="programDescription"
+              />
+              <div class="programCardFooter">
+                <CBLabel
+                  :text="$t('programs.items.political.link')"
+                  tag="span"
+                  size="sm"
+                  weight="semibold"
+                  dense
+                  class="programCardLink"
+                />
+              </div>
+            </CBCard>
+          </div>
+        </div>
+      </section>
+
+      <!-- Testimonial Section - ELEGANTE -->
+      <section class="testimonialSection">
+        <div class="testimonialContainer animateOnScroll">
+          <div class="testimonialCard">
+            <div class="testimonialCardGlow"></div>
+            <div class="testimonialQuoteIcon">"</div>
+            <blockquote class="testimonialQuote">
+              {{ $t('testimonial.quote') }}
+            </blockquote>
+            <div class="testimonialAuthor">
+              <div class="testimonialAuthorAvatar">M</div>
+              <div class="testimonialAuthorInfo">
+                <CBLabel
+                  :text="$t('testimonial.author.name')"
+                  tag="span"
+                  weight="semibold"
+                  dense
+                  class="testimonialAuthorName"
+                />
+                <CBLabel
+                  :text="$t('testimonial.author.role')"
+                  tag="span"
+                  size="sm"
+                  color="secondary"
+                  dense
+                  class="testimonialAuthorRole"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Supporters Section - MODERNA -->
+      <section class="supportersSection">
+        <div class="supportersContainer">
+          <div class="supportersHeader animateOnScroll">
+            <CBBadge
+              :content="$t('supporters.badge')"
+              variant="outline"
+              icon="luc-handshake"
+              :icon-size="14"
+              weight="bold"
+              size="xs"
+              class="sectionBadge"
+            />
+
+            <CBLabel :text="$t('supporters.title')" tag="h2" weight="bold" class="sectionTitle" />
+
+            <CBLabel
+              :text="$t('supporters.subtitle')"
+              size="md"
+              color="secondary"
+              class="supportersSubtitle"
+            />
+          </div>
+
+          <div class="supportersGrid animateOnScroll">
+            <CBCard
+              variant="outlined"
+              :rounded="16"
+              hover
+              bg-color="var(--bg-light)"
+              border-color="var(--border-light)"
+              class="supporterCard"
+            >
+              <div class="supporterCardInner">
+                <CBLabel text="Apoiador 1" size="md" weight="semibold" color="secondary" />
+              </div>
+            </CBCard>
+
+            <CBCard
+              variant="outlined"
+              :rounded="16"
+              hover
+              bg-color="var(--bg-light)"
+              border-color="var(--border-light)"
+              class="supporterCard"
+            >
+              <div class="supporterCardInner">
+                <CBLabel text="Apoiador 2" size="md" weight="semibold" color="secondary" />
+              </div>
+            </CBCard>
+
+            <CBCard
+              variant="outlined"
+              :rounded="16"
+              hover
+              bg-color="var(--bg-light)"
+              border-color="var(--border-light)"
+              class="supporterCard"
+            >
+              <div class="supporterCardInner">
+                <CBLabel text="Apoiador 3" size="md" weight="semibold" color="secondary" />
+              </div>
+            </CBCard>
+
+            <CBCard
+              variant="outlined"
+              :rounded="16"
+              hover
+              bg-color="var(--bg-light)"
+              border-color="var(--border-light)"
+              class="supporterCard"
+            >
+              <div class="supporterCardInner">
+                <CBLabel text="Apoiador 4" size="md" weight="semibold" color="secondary" />
+              </div>
+            </CBCard>
+
+            <CBCard
+              variant="outlined"
+              :rounded="16"
+              hover
+              bg-color="var(--bg-light)"
+              border-color="var(--border-light)"
+              class="supporterCard"
+            >
+              <div class="supporterCardInner">
+                <CBLabel text="Apoiador 5" size="md" weight="semibold" color="secondary" />
+              </div>
+            </CBCard>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact Section - REDESENHADA -->
+      <section class="contactSection">
+        <div class="contactContainer">
+          <div class="contactInfo animateOnScroll">
+            <CBBadge
+              :content="$t('contact.badge')"
+              variant="outline"
+              icon="luc-mail"
+              :icon-size="14"
+              weight="bold"
+              size="xs"
+              class="sectionBadge"
+            />
+
+            <CBLabel :text="$t('contact.title')" tag="h2" weight="bold" class="sectionTitle" />
+
+            <CBLabel
+              :text="$t('contact.description')"
+              size="md"
+              color="secondary"
+              class="contactDescription"
+            />
+
+            <div class="contactMethods">
+              <CBCard
+                variant="outlined"
+                :rounded="16"
+                hover
+                bg-color="var(--bg-white)"
+                border-color="var(--border-light)"
+                :border-width="1"
+                class="contactMethodCard contactMethodCard--magenta"
+              >
+                <div class="contactMethodInner">
+                  <div class="contactMethodIconWrapper">
+                    <CBIcon icon="luc-instagram" size="1.5rem" color="#ffffff" />
+                  </div>
+                  <div class="contactMethodContent">
+                    <CBLabel
+                      :text="$t('contact.methods.instagram.label')"
+                      tag="span"
+                      size="xs"
+                      color="tertiary"
+                      weight="bold"
+                      dense
+                      class="contactMethodLabel"
+                    />
+                    <CBLabel
+                      :text="$t('contact.methods.instagram.value')"
+                      tag="span"
+                      size="md"
+                      weight="semibold"
+                      dense
+                      class="contactMethodValue"
+                    />
+                  </div>
+                  <CBIcon
+                    icon="luc-arrow-up-right"
+                    size="1.25rem"
+                    color="var(--text-tertiary)"
+                    class="contactMethodArrow"
+                  />
+                </div>
+              </CBCard>
+
+              <CBCard
+                variant="outlined"
+                :rounded="16"
+                hover
+                bg-color="var(--bg-white)"
+                border-color="var(--border-light)"
+                :border-width="1"
+                class="contactMethodCard contactMethodCard--coral"
+              >
+                <div class="contactMethodInner">
+                  <div class="contactMethodIconWrapper">
+                    <CBIcon icon="luc-user-check" size="1.5rem" color="#ffffff" />
+                  </div>
+                  <div class="contactMethodContent">
+                    <CBLabel
+                      :text="$t('contact.methods.president.label')"
+                      tag="span"
+                      size="xs"
+                      color="tertiary"
+                      weight="bold"
+                      dense
+                      class="contactMethodLabel"
+                    />
+                    <CBLabel
+                      :text="$t('contact.methods.president.value')"
+                      tag="span"
+                      size="md"
+                      weight="semibold"
+                      dense
+                      class="contactMethodValue"
+                    />
+                  </div>
+                  <CBIcon
+                    icon="luc-arrow-up-right"
+                    size="1.25rem"
+                    color="var(--text-tertiary)"
+                    class="contactMethodArrow"
+                  />
+                </div>
+              </CBCard>
+
+              <CBCard
+                variant="outlined"
+                :rounded="16"
+                hover
+                bg-color="var(--bg-white)"
+                border-color="var(--border-light)"
+                :border-width="1"
+                class="contactMethodCard contactMethodCard--rosa"
+              >
+                <div class="contactMethodInner">
+                  <div class="contactMethodIconWrapper">
+                    <CBIcon icon="luc-map-pin" size="1.5rem" color="#ffffff" />
+                  </div>
+                  <div class="contactMethodContent">
+                    <CBLabel
+                      :text="$t('contact.methods.location.label')"
+                      tag="span"
+                      size="xs"
+                      color="tertiary"
+                      weight="bold"
+                      dense
+                      class="contactMethodLabel"
+                    />
+                    <CBLabel
+                      :text="$t('contact.methods.location.value')"
+                      tag="span"
+                      size="md"
+                      weight="semibold"
+                      dense
+                      class="contactMethodValue"
+                    />
+                  </div>
+                  <CBIcon
+                    icon="luc-arrow-up-right"
+                    size="1.25rem"
+                    color="var(--text-tertiary)"
+                    class="contactMethodArrow"
+                  />
+                </div>
+              </CBCard>
+            </div>
+          </div>
+
+          <div class="contactFormWrapper animateOnScroll">
+            <CBCard variant="elevated" :rounded="24" class="contactFormCard">
+              <form class="contactForm">
+                <CBInput
+                  v-model="formName"
+                  name="contact-name"
+                  :label="$t('contact.form.name.label')"
+                  :placeholder="$t('contact.form.name.placeholder')"
+                  :rounded="12"
+                  prepend-icon="luc-user"
+                  required
+                />
+
+                <CBInput
+                  v-model="formEmail"
+                  name="contact-email"
+                  type="email"
+                  :label="$t('contact.form.email.label')"
+                  :placeholder="$t('contact.form.email.placeholder')"
+                  :rounded="12"
+                  prepend-icon="luc-mail"
+                  required
+                />
+
+                <CBSelect
+                  v-model="formSubject"
+                  name="contact-subject"
+                  :items="subjectItems"
+                  :label="$t('contact.form.subject.label')"
+                  :placeholder="$t('contact.form.subject.placeholder')"
+                  :rounded="12"
+                />
+
+                <CBTextarea
+                  v-model="formMessage"
+                  name="contact-message"
+                  :label="$t('contact.form.message.label')"
+                  :placeholder="$t('contact.form.message.placeholder')"
+                  :rows="5"
+                  :rounded="12"
+                  required
+                />
+
+                <CBButton
+                  :label="$t('contact.form.btnSubmit')"
+                  type="submit"
+                  size="lg"
+                  :bg-gradient="'var(--gradient-primary)'"
+                  :rounded="12"
+                  append-icon="luc-arrow-right"
+                  shine
+                  block
+                  class="btnFormSubmit"
+                />
+              </form>
+            </CBCard>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA Final - IMPACTANTE -->
+      <section class="ctaSection">
+        <div class="ctaGradientBg"></div>
+        <div class="ctaContainer animateOnScroll">
+          <div class="ctaContent">
+            <CBLabel :text="$t('cta.title')" tag="h2" weight="extrabold" class="ctaTitle" />
+            <CBLabel :text="$t('cta.subtitle')" size="lg" color="secondary" class="ctaSubtitle" />
+            <div class="ctaActions">
+              <CBButton
+                :label="$t('cta.btnDonate')"
+                size="lg"
+                :bg-gradient="'var(--gradient-primary)'"
+                :rounded="14"
+                prepend-icon="luc-heart"
+                shine
+                glow
+                pulse
+                class="btnCtaPrimary"
+              />
+
+              <CBButton
+                :label="$t('cta.btnProjects')"
+                size="lg"
+                variant="outline"
+                :color="'var(--cb-secondary)'"
+                :rounded="14"
+                append-icon="luc-arrow-right"
+                class="btnCtaSecondary"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
   </div>
 </template>
 
@@ -885,9 +899,9 @@ onMounted(() => {
 /* ============================================
    NAVBAR CUSTOMIZAÇÃO
    ============================================ */
-.customNavbar {
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
+.customNavbar :deep(.cbNavbar) {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 .customNavbar :deep(.cbNavbar__logoSection) {
@@ -1185,35 +1199,57 @@ onMounted(() => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 50px;
-  height: 50px;
-  border-radius: 14px;
-  margin-bottom: 1rem;
-  transition: transform 0.3s ease;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  margin-bottom: 1.25rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
 }
 
-.programIconWrapper--purple {
-  background: rgba(230, 52, 107, 0.15);
-  border: 1px solid rgba(230, 52, 107, 0.3);
+/* Rosa Magenta - Comunicação */
+.programIconWrapper--magenta {
+  background: linear-gradient(135deg, #e6346b 0%, #ee7a96 100%);
+  box-shadow: 0 4px 14px rgba(230, 52, 107, 0.35);
 }
 
-.programIconWrapper--pink {
-  background: rgba(212, 45, 94, 0.15);
-  border: 1px solid rgba(212, 45, 94, 0.3);
+/* Vermelho Coral - Educação */
+.programIconWrapper--coral {
+  background: linear-gradient(135deg, #ee4a55 0%, #f4795e 100%);
+  box-shadow: 0 4px 14px rgba(238, 74, 85, 0.35);
 }
 
-.programIconWrapper--violet {
-  background: rgba(238, 74, 85, 0.15);
-  border: 1px solid rgba(238, 74, 85, 0.3);
+/* Rosa Escuro - Social */
+.programIconWrapper--rosa {
+  background: linear-gradient(135deg, #d42d5e 0%, #e6346b 100%);
+  box-shadow: 0 4px 14px rgba(212, 45, 94, 0.35);
 }
 
-.programIconWrapper--fuchsia {
-  background: rgba(136, 162, 1, 0.15);
-  border: 1px solid rgba(136, 162, 1, 0.3);
+/* Verde Oliva - Político */
+.programIconWrapper--oliva {
+  background: linear-gradient(135deg, #88a201 0%, #a4c41a 100%);
+  box-shadow: 0 4px 14px rgba(136, 162, 1, 0.35);
 }
 
 .programCard:hover .programIconWrapper {
   transform: scale(1.1) rotate(5deg);
+  filter: brightness(1.1);
+}
+
+.programCard:hover .programIconWrapper--magenta {
+  box-shadow: 0 8px 24px rgba(230, 52, 107, 0.45);
+}
+
+.programCard:hover .programIconWrapper--coral {
+  box-shadow: 0 8px 24px rgba(238, 74, 85, 0.45);
+}
+
+.programCard:hover .programIconWrapper--rosa {
+  box-shadow: 0 8px 24px rgba(212, 45, 94, 0.45);
+}
+
+.programCard:hover .programIconWrapper--oliva {
+  box-shadow: 0 8px 24px rgba(136, 162, 1, 0.45);
 }
 
 .programTitle {
@@ -1391,46 +1427,98 @@ onMounted(() => {
 .contactMethods {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .contactMethodCard {
-  transition: all 0.3s ease !important;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: var(--shadow-sm);
+  cursor: pointer;
 }
 
 .contactMethodCard:hover {
-  transform: translateX(5px);
-  background: var(--bg-white) !important;
-  border-color: var(--border-hover) !important;
-  box-shadow: var(--shadow-lg) !important;
+  transform: translateY(-3px);
 }
 
-.contactMethodCard:hover .contactMethodIcon {
-  transform: scale(1.1);
-  transition: transform 0.3s ease;
-}
-
-.contactMethodWrapper {
+.contactMethodInner {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 1.25rem;
 }
 
-.contactMethodIcon {
+.contactMethodCard--magenta:hover {
+  border-color: rgba(230, 52, 107, 0.3);
+  box-shadow: 0 12px 32px rgba(230, 52, 107, 0.12);
+}
+
+.contactMethodCard--coral:hover {
+  border-color: rgba(238, 74, 85, 0.3);
+  box-shadow: 0 12px 32px rgba(238, 74, 85, 0.12);
+}
+
+.contactMethodCard--rosa:hover {
+  border-color: rgba(212, 45, 94, 0.3);
+  box-shadow: 0 12px 32px rgba(212, 45, 94, 0.12);
+}
+
+/* Icon wrappers com gradiente - mesma linguagem dos programs */
+.contactMethodIconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
   flex-shrink: 0;
-  transition: transform 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.contactMethodCard--magenta .contactMethodIconWrapper {
+  background: linear-gradient(135deg, #e6346b 0%, #ee7a96 100%);
+  box-shadow: 0 4px 12px rgba(230, 52, 107, 0.3);
+}
+
+.contactMethodCard--coral .contactMethodIconWrapper {
+  background: linear-gradient(135deg, #ee4a55 0%, #f4795e 100%);
+  box-shadow: 0 4px 12px rgba(238, 74, 85, 0.3);
+}
+
+.contactMethodCard--rosa .contactMethodIconWrapper {
+  background: linear-gradient(135deg, #d42d5e 0%, #e6346b 100%);
+  box-shadow: 0 4px 12px rgba(212, 45, 94, 0.3);
+}
+
+.contactMethodCard:hover .contactMethodIconWrapper {
+  transform: scale(1.08);
+  filter: brightness(1.1);
+}
+
+.contactMethodContent {
+  flex: 1;
+  min-width: 0;
 }
 
 .contactMethodLabel {
   text-transform: uppercase;
   letter-spacing: 1px;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
   display: block;
 }
 
 .contactMethodValue {
   display: block;
+}
+
+.contactMethodArrow {
+  flex-shrink: 0;
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: all 0.3s ease;
+}
+
+.contactMethodCard:hover .contactMethodArrow {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 /* Formulário */
