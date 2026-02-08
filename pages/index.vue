@@ -1,6 +1,18 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
-import { CBButton, CBCard, CBIcon, CBNavbar, type INavbarMenuItem } from '@cb/components';
+import {
+  CBBadge,
+  CBButton,
+  CBCard,
+  CBIcon,
+  CBImage,
+  CBInput,
+  CBLabel,
+  CBNavbar,
+  CBSelect,
+  CBTextarea,
+  type INavbarMenuItem,
+} from '@cb/components';
 import { useI18n } from 'vue-i18n';
 import '@cb/components/style.css';
 import '../assets/css/theme.css';
@@ -49,6 +61,19 @@ const handleLogoClick = () => {
   console.log('Logo clicado - voltando ao home');
 };
 
+// Form state
+const formName = ref('');
+const formEmail = ref('');
+const formSubject = ref<string | undefined>(undefined);
+const formMessage = ref('');
+
+const subjectItems = computed(() => [
+  { value: 'volunteer', label: t('contact.form.subject.options.volunteer') },
+  { value: 'donate', label: t('contact.form.subject.options.donate') },
+  { value: 'partnership', label: t('contact.form.subject.options.partnership') },
+  { value: 'general', label: t('contact.form.subject.options.general') },
+]);
+
 // Animações de scroll
 onMounted(() => {
   const observerOptions = {
@@ -85,7 +110,15 @@ onMounted(() => {
       @logo-click="handleLogoClick"
     >
       <template #logo>
-        <img src="/logo-elas-podem.png" alt="Elas Podem" class="navbarLogo" />
+        <CBImage
+          src="/logo-elas-podem.png"
+          alt="Elas Podem"
+          size="auto"
+          :height="48"
+          fit="contain"
+          :eager="true"
+          class="navbarLogo"
+        />
       </template>
     </CBNavbar>
 
@@ -93,20 +126,31 @@ onMounted(() => {
     <section class="heroSection">
       <div class="heroContent">
         <!-- Badge superior -->
-        <div class="heroBadge animateOnScroll">
-          <CBIcon icon="luc-sparkles" size="1rem" color="var(--cb-primary)" class="heroBadgeIcon" />
-          <span>{{ $t('hero.badge') }}</span>
-        </div>
+        <CBBadge
+          :content="$t('hero.badge')"
+          variant="outline"
+          icon="luc-sparkles"
+          :icon-size="14"
+          weight="bold"
+          size="xs"
+          class="heroBadge animateOnScroll"
+        />
 
         <!-- Título principal com gradiente -->
-        <h1 class="heroTitle animateOnScroll">
-          {{ $t('hero.title') }}
-        </h1>
+        <CBLabel
+          :text="$t('hero.title')"
+          tag="h1"
+          weight="black"
+          class="heroTitle animateOnScroll"
+        />
 
         <!-- Subtítulo -->
-        <p class="heroSubtitle animateOnScroll">
-          {{ $t('hero.subtitle') }}
-        </p>
+        <CBLabel
+          :text="$t('hero.subtitle')"
+          size="lg"
+          color="secondary"
+          class="heroSubtitle animateOnScroll"
+        />
 
         <!-- Botões com efeitos premium -->
         <div class="heroActions animateOnScroll">
@@ -136,8 +180,21 @@ onMounted(() => {
         <div class="heroStats animateOnScroll">
           <div class="heroStatCard">
             <CBIcon icon="luc-award" size="2rem" color="var(--cb-primary)" class="heroStatIcon" />
-            <div class="heroStatNumber">{{ $t('hero.stats.headquarter.number') }}</div>
-            <div class="heroStatLabel">{{ $t('hero.stats.headquarter.label') }}</div>
+            <CBLabel
+              :text="$t('hero.stats.headquarter.number')"
+              tag="span"
+              weight="extrabold"
+              dense
+              class="heroStatNumber"
+            />
+            <CBLabel
+              :text="$t('hero.stats.headquarter.label')"
+              tag="span"
+              size="sm"
+              weight="medium"
+              dense
+              class="heroStatLabel"
+            />
           </div>
 
           <div class="heroStatCard">
@@ -147,14 +204,40 @@ onMounted(() => {
               color="var(--cb-primary)"
               class="heroStatIcon"
             />
-            <div class="heroStatNumber">{{ $t('hero.stats.conference.number') }}</div>
-            <div class="heroStatLabel">{{ $t('hero.stats.conference.label') }}</div>
+            <CBLabel
+              :text="$t('hero.stats.conference.number')"
+              tag="span"
+              weight="extrabold"
+              dense
+              class="heroStatNumber"
+            />
+            <CBLabel
+              :text="$t('hero.stats.conference.label')"
+              tag="span"
+              size="sm"
+              weight="medium"
+              dense
+              class="heroStatLabel"
+            />
           </div>
 
           <div class="heroStatCard">
             <CBIcon icon="luc-users" size="2rem" color="var(--cb-primary)" class="heroStatIcon" />
-            <div class="heroStatNumber">{{ $t('hero.stats.location.number') }}</div>
-            <div class="heroStatLabel">{{ $t('hero.stats.location.label') }}</div>
+            <CBLabel
+              :text="$t('hero.stats.location.number')"
+              tag="span"
+              weight="extrabold"
+              dense
+              class="heroStatNumber"
+            />
+            <CBLabel
+              :text="$t('hero.stats.location.label')"
+              tag="span"
+              size="sm"
+              weight="medium"
+              dense
+              class="heroStatLabel"
+            />
           </div>
         </div>
       </div>
@@ -164,27 +247,21 @@ onMounted(() => {
     <section class="missionSection">
       <div class="missionContainer">
         <div class="missionContent animateOnScroll">
-          <div class="sectionBadge">
-            <CBIcon
-              icon="luc-target"
-              size="1rem"
-              color="var(--cb-primary)"
-              class="sectionBadgeIcon"
-            />
-            <span>{{ $t('mission.badge') }}</span>
-          </div>
+          <CBBadge
+            :content="$t('mission.badge')"
+            variant="outline"
+            icon="luc-target"
+            :icon-size="14"
+            weight="bold"
+            size="xs"
+            class="sectionBadge"
+          />
 
-          <h2 class="sectionTitle">
-            {{ $t('mission.title') }}
-          </h2>
+          <CBLabel :text="$t('mission.title')" tag="h2" weight="bold" class="sectionTitle" />
 
-          <p class="missionText">
-            {{ $t('mission.text1') }}
-          </p>
+          <CBLabel :text="$t('mission.text1')" size="md" color="secondary" class="missionText" />
 
-          <p class="missionText">
-            {{ $t('mission.text2') }}
-          </p>
+          <CBLabel :text="$t('mission.text2')" size="md" color="secondary" class="missionText" />
 
           <CBButton
             :label="$t('mission.btnLearnMore')"
@@ -220,8 +297,8 @@ onMounted(() => {
                   y2="400"
                   gradientUnits="userSpaceOnUse"
                 >
-                  <stop stop-color="#C084FC" stop-opacity="0.3" />
-                  <stop offset="1" stop-color="#EC4899" stop-opacity="0.1" />
+                  <stop stop-color="#E6346B" stop-opacity="0.3" />
+                  <stop offset="1" stop-color="#D42D5E" stop-opacity="0.1" />
                 </linearGradient>
               </defs>
             </svg>
@@ -232,7 +309,13 @@ onMounted(() => {
                 color="var(--cb-primary)"
                 class="missionImageIcon"
               />
-              <div class="missionImageText">{{ $t('mission.imageAlt') }}</div>
+              <CBLabel
+                :text="$t('mission.imageAlt')"
+                tag="span"
+                weight="semibold"
+                dense
+                class="missionImageText"
+              />
             </div>
           </div>
         </div>
@@ -243,109 +326,163 @@ onMounted(() => {
     <section class="programsSection">
       <div class="programsContainer">
         <div class="programsHeader animateOnScroll">
-          <div class="sectionBadge">
-            <CBIcon
-              icon="luc-lightbulb"
-              size="1rem"
-              color="var(--cb-primary)"
-              class="sectionBadgeIcon"
-            />
-            <span>{{ $t('programs.badge') }}</span>
-          </div>
+          <CBBadge
+            :content="$t('programs.badge')"
+            variant="outline"
+            icon="luc-lightbulb"
+            :icon-size="14"
+            weight="bold"
+            size="xs"
+            class="sectionBadge"
+          />
 
-          <h2 class="sectionTitle">
-            {{ $t('programs.title') }}
-          </h2>
+          <CBLabel :text="$t('programs.title')" tag="h2" weight="bold" class="sectionTitle" />
         </div>
 
         <div class="programsGrid">
           <!-- Card 1 -->
-          <div class="programCard animateOnScroll">
-            <div class="programCardGlow"></div>
-            <div class="programCardContent">
-              <div class="programIconWrapper programIconWrapper--purple">
-                <CBIcon
-                  icon="luc-megaphone"
-                  size="2rem"
-                  color="var(--accent-color)"
-                  class="programIcon"
-                />
-              </div>
-              <h3 class="programTitle">{{ $t('programs.items.communication.title') }}</h3>
-              <p class="programDescription">
-                {{ $t('programs.items.communication.description') }}
-              </p>
-              <div class="programCardFooter">
-                <span class="programCardLink">{{ $t('programs.items.communication.link') }}</span>
-              </div>
+          <CBCard
+            variant="outlined"
+            :rounded="20"
+            hover
+            border-color="var(--border-light)"
+            class="programCard animateOnScroll"
+          >
+            <div class="programIconWrapper programIconWrapper--purple">
+              <CBIcon icon="luc-megaphone" size="2rem" color="var(--accent-color)" />
             </div>
-          </div>
+            <CBLabel
+              :text="$t('programs.items.communication.title')"
+              tag="h3"
+              size="lg"
+              weight="bold"
+              class="programTitle"
+            />
+            <CBLabel
+              :text="$t('programs.items.communication.description')"
+              size="sm"
+              color="secondary"
+              class="programDescription"
+            />
+            <div class="programCardFooter">
+              <CBLabel
+                :text="$t('programs.items.communication.link')"
+                tag="span"
+                size="sm"
+                weight="semibold"
+                dense
+                class="programCardLink"
+              />
+            </div>
+          </CBCard>
 
           <!-- Card 2 -->
-          <div class="programCard animateOnScroll">
-            <div class="programCardGlow"></div>
-            <div class="programCardContent">
-              <div class="programIconWrapper programIconWrapper--pink">
-                <CBIcon
-                  icon="luc-graduation-cap"
-                  size="2rem"
-                  color="var(--accent-color)"
-                  class="programIcon"
-                />
-              </div>
-              <h3 class="programTitle">{{ $t('programs.items.education.title') }}</h3>
-              <p class="programDescription">
-                {{ $t('programs.items.education.description') }}
-              </p>
-              <div class="programCardFooter">
-                <span class="programCardLink">{{ $t('programs.items.education.link') }}</span>
-              </div>
+          <CBCard
+            variant="outlined"
+            :rounded="20"
+            hover
+            border-color="var(--border-light)"
+            class="programCard animateOnScroll"
+          >
+            <div class="programIconWrapper programIconWrapper--pink">
+              <CBIcon icon="luc-graduation-cap" size="2rem" color="var(--accent-color)" />
             </div>
-          </div>
+            <CBLabel
+              :text="$t('programs.items.education.title')"
+              tag="h3"
+              size="lg"
+              weight="bold"
+              class="programTitle"
+            />
+            <CBLabel
+              :text="$t('programs.items.education.description')"
+              size="sm"
+              color="secondary"
+              class="programDescription"
+            />
+            <div class="programCardFooter">
+              <CBLabel
+                :text="$t('programs.items.education.link')"
+                tag="span"
+                size="sm"
+                weight="semibold"
+                dense
+                class="programCardLink"
+              />
+            </div>
+          </CBCard>
 
           <!-- Card 3 -->
-          <div class="programCard animateOnScroll">
-            <div class="programCardGlow"></div>
-            <div class="programCardContent">
-              <div class="programIconWrapper programIconWrapper--violet">
-                <CBIcon
-                  icon="luc-users"
-                  size="2rem"
-                  color="var(--accent-color)"
-                  class="programIcon"
-                />
-              </div>
-              <h3 class="programTitle">{{ $t('programs.items.social.title') }}</h3>
-              <p class="programDescription">
-                {{ $t('programs.items.social.description') }}
-              </p>
-              <div class="programCardFooter">
-                <span class="programCardLink">{{ $t('programs.items.social.link') }}</span>
-              </div>
+          <CBCard
+            variant="outlined"
+            :rounded="20"
+            hover
+            border-color="var(--border-light)"
+            class="programCard animateOnScroll"
+          >
+            <div class="programIconWrapper programIconWrapper--violet">
+              <CBIcon icon="luc-users" size="2rem" color="var(--accent-color)" />
             </div>
-          </div>
+            <CBLabel
+              :text="$t('programs.items.social.title')"
+              tag="h3"
+              size="lg"
+              weight="bold"
+              class="programTitle"
+            />
+            <CBLabel
+              :text="$t('programs.items.social.description')"
+              size="sm"
+              color="secondary"
+              class="programDescription"
+            />
+            <div class="programCardFooter">
+              <CBLabel
+                :text="$t('programs.items.social.link')"
+                tag="span"
+                size="sm"
+                weight="semibold"
+                dense
+                class="programCardLink"
+              />
+            </div>
+          </CBCard>
 
           <!-- Card 4 -->
-          <div class="programCard animateOnScroll">
-            <div class="programCardGlow"></div>
-            <div class="programCardContent">
-              <div class="programIconWrapper programIconWrapper--fuchsia">
-                <CBIcon
-                  icon="luc-scale"
-                  size="2rem"
-                  color="var(--accent-color)"
-                  class="programIcon"
-                />
-              </div>
-              <h3 class="programTitle">{{ $t('programs.items.political.title') }}</h3>
-              <p class="programDescription">
-                {{ $t('programs.items.political.description') }}
-              </p>
-              <div class="programCardFooter">
-                <span class="programCardLink">{{ $t('programs.items.political.link') }}</span>
-              </div>
+          <CBCard
+            variant="outlined"
+            :rounded="20"
+            hover
+            border-color="var(--border-light)"
+            class="programCard animateOnScroll"
+          >
+            <div class="programIconWrapper programIconWrapper--fuchsia">
+              <CBIcon icon="luc-scale" size="2rem" color="var(--accent-color)" />
             </div>
-          </div>
+            <CBLabel
+              :text="$t('programs.items.political.title')"
+              tag="h3"
+              size="lg"
+              weight="bold"
+              class="programTitle"
+            />
+            <CBLabel
+              :text="$t('programs.items.political.description')"
+              size="sm"
+              color="secondary"
+              class="programDescription"
+            />
+            <div class="programCardFooter">
+              <CBLabel
+                :text="$t('programs.items.political.link')"
+                tag="span"
+                size="sm"
+                weight="semibold"
+                dense
+                class="programCardLink"
+              />
+            </div>
+          </CBCard>
         </div>
       </div>
     </section>
@@ -362,8 +499,21 @@ onMounted(() => {
           <div class="testimonialAuthor">
             <div class="testimonialAuthorAvatar">M</div>
             <div class="testimonialAuthorInfo">
-              <div class="testimonialAuthorName">{{ $t('testimonial.author.name') }}</div>
-              <div class="testimonialAuthorRole">{{ $t('testimonial.author.role') }}</div>
+              <CBLabel
+                :text="$t('testimonial.author.name')"
+                tag="span"
+                weight="semibold"
+                dense
+                class="testimonialAuthorName"
+              />
+              <CBLabel
+                :text="$t('testimonial.author.role')"
+                tag="span"
+                size="sm"
+                color="secondary"
+                dense
+                class="testimonialAuthorRole"
+              />
             </div>
           </div>
         </div>
@@ -374,41 +524,91 @@ onMounted(() => {
     <section class="supportersSection">
       <div class="supportersContainer">
         <div class="supportersHeader animateOnScroll">
-          <div class="sectionBadge">
-            <CBIcon
-              icon="luc-handshake"
-              size="1rem"
-              color="var(--cb-primary)"
-              class="sectionBadgeIcon"
-            />
-            <span>{{ $t('supporters.badge') }}</span>
-          </div>
+          <CBBadge
+            :content="$t('supporters.badge')"
+            variant="outline"
+            icon="luc-handshake"
+            :icon-size="14"
+            weight="bold"
+            size="xs"
+            class="sectionBadge"
+          />
 
-          <h2 class="sectionTitle">
-            {{ $t('supporters.title') }}
-          </h2>
+          <CBLabel :text="$t('supporters.title')" tag="h2" weight="bold" class="sectionTitle" />
 
-          <p class="supportersSubtitle">
-            {{ $t('supporters.subtitle') }}
-          </p>
+          <CBLabel
+            :text="$t('supporters.subtitle')"
+            size="md"
+            color="secondary"
+            class="supportersSubtitle"
+          />
         </div>
 
         <div class="supportersGrid animateOnScroll">
-          <div class="supporterCard">
-            <div class="supporterCardInner">Apoiador 1</div>
-          </div>
-          <div class="supporterCard">
-            <div class="supporterCardInner">Apoiador 2</div>
-          </div>
-          <div class="supporterCard">
-            <div class="supporterCardInner">Apoiador 3</div>
-          </div>
-          <div class="supporterCard">
-            <div class="supporterCardInner">Apoiador 4</div>
-          </div>
-          <div class="supporterCard">
-            <div class="supporterCardInner">Apoiador 5</div>
-          </div>
+          <CBCard
+            variant="outlined"
+            :rounded="16"
+            hover
+            bg-color="var(--bg-light)"
+            border-color="var(--border-light)"
+            class="supporterCard"
+          >
+            <div class="supporterCardInner">
+              <CBLabel text="Apoiador 1" size="md" weight="semibold" color="secondary" />
+            </div>
+          </CBCard>
+
+          <CBCard
+            variant="outlined"
+            :rounded="16"
+            hover
+            bg-color="var(--bg-light)"
+            border-color="var(--border-light)"
+            class="supporterCard"
+          >
+            <div class="supporterCardInner">
+              <CBLabel text="Apoiador 2" size="md" weight="semibold" color="secondary" />
+            </div>
+          </CBCard>
+
+          <CBCard
+            variant="outlined"
+            :rounded="16"
+            hover
+            bg-color="var(--bg-light)"
+            border-color="var(--border-light)"
+            class="supporterCard"
+          >
+            <div class="supporterCardInner">
+              <CBLabel text="Apoiador 3" size="md" weight="semibold" color="secondary" />
+            </div>
+          </CBCard>
+
+          <CBCard
+            variant="outlined"
+            :rounded="16"
+            hover
+            bg-color="var(--bg-light)"
+            border-color="var(--border-light)"
+            class="supporterCard"
+          >
+            <div class="supporterCardInner">
+              <CBLabel text="Apoiador 4" size="md" weight="semibold" color="secondary" />
+            </div>
+          </CBCard>
+
+          <CBCard
+            variant="outlined"
+            :rounded="16"
+            hover
+            bg-color="var(--bg-light)"
+            border-color="var(--border-light)"
+            class="supporterCard"
+          >
+            <div class="supporterCardInner">
+              <CBLabel text="Apoiador 5" size="md" weight="semibold" color="secondary" />
+            </div>
+          </CBCard>
         </div>
       </div>
     </section>
@@ -417,16 +617,24 @@ onMounted(() => {
     <section class="contactSection">
       <div class="contactContainer">
         <div class="contactInfo animateOnScroll">
-          <div class="sectionBadge">
-            <span class="sectionBadgeIcon">📧</span>
-            <span>{{ $t('contact.badge') }}</span>
-          </div>
+          <CBBadge
+            :content="$t('contact.badge')"
+            variant="outline"
+            icon="luc-mail"
+            :icon-size="14"
+            weight="bold"
+            size="xs"
+            class="sectionBadge"
+          />
 
-          <h2 class="sectionTitle">{{ $t('contact.title') }}</h2>
+          <CBLabel :text="$t('contact.title')" tag="h2" weight="bold" class="sectionTitle" />
 
-          <p class="contactDescription">
-            {{ $t('contact.description') }}
-          </p>
+          <CBLabel
+            :text="$t('contact.description')"
+            size="md"
+            color="secondary"
+            class="contactDescription"
+          />
 
           <div class="contactMethods">
             <CBCard
@@ -447,8 +655,21 @@ onMounted(() => {
                   class="contactMethodIcon"
                 />
                 <div class="contactMethodContent">
-                  <div class="contactMethodLabel">{{ $t('contact.methods.instagram.label') }}</div>
-                  <div class="contactMethodValue">{{ $t('contact.methods.instagram.value') }}</div>
+                  <CBLabel
+                    :text="$t('contact.methods.instagram.label')"
+                    tag="span"
+                    size="xs"
+                    color="tertiary"
+                    weight="bold"
+                    class="contactMethodLabel"
+                  />
+                  <CBLabel
+                    :text="$t('contact.methods.instagram.value')"
+                    tag="span"
+                    size="md"
+                    weight="medium"
+                    class="contactMethodValue"
+                  />
                 </div>
               </div>
             </CBCard>
@@ -471,8 +692,21 @@ onMounted(() => {
                   class="contactMethodIcon"
                 />
                 <div class="contactMethodContent">
-                  <div class="contactMethodLabel">{{ $t('contact.methods.president.label') }}</div>
-                  <div class="contactMethodValue">{{ $t('contact.methods.president.value') }}</div>
+                  <CBLabel
+                    :text="$t('contact.methods.president.label')"
+                    tag="span"
+                    size="xs"
+                    color="tertiary"
+                    weight="bold"
+                    class="contactMethodLabel"
+                  />
+                  <CBLabel
+                    :text="$t('contact.methods.president.value')"
+                    tag="span"
+                    size="md"
+                    weight="medium"
+                    class="contactMethodValue"
+                  />
                 </div>
               </div>
             </CBCard>
@@ -495,8 +729,21 @@ onMounted(() => {
                   class="contactMethodIcon"
                 />
                 <div class="contactMethodContent">
-                  <div class="contactMethodLabel">{{ $t('contact.methods.location.label') }}</div>
-                  <div class="contactMethodValue">{{ $t('contact.methods.location.value') }}</div>
+                  <CBLabel
+                    :text="$t('contact.methods.location.label')"
+                    tag="span"
+                    size="xs"
+                    color="tertiary"
+                    weight="bold"
+                    class="contactMethodLabel"
+                  />
+                  <CBLabel
+                    :text="$t('contact.methods.location.value')"
+                    tag="span"
+                    size="md"
+                    weight="medium"
+                    class="contactMethodValue"
+                  />
                 </div>
               </div>
             </CBCard>
@@ -506,46 +753,45 @@ onMounted(() => {
         <div class="contactFormWrapper animateOnScroll">
           <CBCard variant="elevated" :rounded="24" class="contactFormCard">
             <form class="contactForm">
-              <div class="formGroup">
-                <label class="formLabel">{{ $t('contact.form.name.label') }}</label>
-                <input
-                  type="text"
-                  class="formInput"
-                  :placeholder="$t('contact.form.name.placeholder')"
-                  required
-                />
-              </div>
+              <CBInput
+                v-model="formName"
+                name="contact-name"
+                :label="$t('contact.form.name.label')"
+                :placeholder="$t('contact.form.name.placeholder')"
+                :rounded="12"
+                prepend-icon="luc-user"
+                required
+              />
 
-              <div class="formGroup">
-                <label class="formLabel">{{ $t('contact.form.email.label') }}</label>
-                <input
-                  type="email"
-                  class="formInput"
-                  :placeholder="$t('contact.form.email.placeholder')"
-                  required
-                />
-              </div>
+              <CBInput
+                v-model="formEmail"
+                name="contact-email"
+                type="email"
+                :label="$t('contact.form.email.label')"
+                :placeholder="$t('contact.form.email.placeholder')"
+                :rounded="12"
+                prepend-icon="luc-mail"
+                required
+              />
 
-              <div class="formGroup">
-                <label class="formLabel">{{ $t('contact.form.subject.label') }}</label>
-                <select class="formInput">
-                  <option>{{ $t('contact.form.subject.placeholder') }}</option>
-                  <option>{{ $t('contact.form.subject.options.volunteer') }}</option>
-                  <option>{{ $t('contact.form.subject.options.donate') }}</option>
-                  <option>{{ $t('contact.form.subject.options.partnership') }}</option>
-                  <option>{{ $t('contact.form.subject.options.general') }}</option>
-                </select>
-              </div>
+              <CBSelect
+                v-model="formSubject"
+                name="contact-subject"
+                :items="subjectItems"
+                :label="$t('contact.form.subject.label')"
+                :placeholder="$t('contact.form.subject.placeholder')"
+                :rounded="12"
+              />
 
-              <div class="formGroup">
-                <label class="formLabel">{{ $t('contact.form.message.label') }}</label>
-                <textarea
-                  class="formInput formTextarea"
-                  rows="5"
-                  :placeholder="$t('contact.form.message.placeholder')"
-                  required
-                ></textarea>
-              </div>
+              <CBTextarea
+                v-model="formMessage"
+                name="contact-message"
+                :label="$t('contact.form.message.label')"
+                :placeholder="$t('contact.form.message.placeholder')"
+                :rows="5"
+                :rounded="12"
+                required
+              />
 
               <CBButton
                 :label="$t('contact.form.btnSubmit')"
@@ -555,6 +801,7 @@ onMounted(() => {
                 :rounded="12"
                 append-icon="luc-arrow-right"
                 shine
+                block
                 class="btnFormSubmit"
               />
             </form>
@@ -568,10 +815,8 @@ onMounted(() => {
       <div class="ctaGradientBg"></div>
       <div class="ctaContainer animateOnScroll">
         <div class="ctaContent">
-          <h2 class="ctaTitle">{{ $t('cta.title') }}</h2>
-          <p class="ctaSubtitle">
-            {{ $t('cta.subtitle') }}
-          </p>
+          <CBLabel :text="$t('cta.title')" tag="h2" weight="extrabold" class="ctaTitle" />
+          <CBLabel :text="$t('cta.subtitle')" size="lg" color="secondary" class="ctaSubtitle" />
           <div class="ctaActions">
             <CBButton
               :label="$t('cta.btnDonate')"
@@ -688,65 +933,6 @@ onMounted(() => {
   background: var(--bg-hero);
 }
 
-/* Gradiente de fundo animado */
-.heroGradientBg {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(147, 51, 234, 0.05) 0%,
-    rgba(192, 132, 252, 0.03) 50%,
-    rgba(236, 72, 153, 0.05) 100%
-  );
-  animation: gradientPulse 8s ease-in-out infinite;
-}
-
-@keyframes gradientPulse {
-  0%,
-  100% {
-    opacity: 0.4;
-  }
-  50% {
-    opacity: 0.7;
-  }
-}
-
-/* Orbs de gradiente flutuantes */
-.heroGradientOrb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(100px);
-  opacity: 0.2;
-  animation: float 20s ease-in-out infinite;
-}
-
-.heroGradientOrb--1 {
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, #9333ea 0%, transparent 70%);
-  top: -10%;
-  left: -10%;
-  animation-delay: 0s;
-}
-
-.heroGradientOrb--2 {
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, #c084fc 0%, transparent 70%);
-  bottom: -10%;
-  right: -5%;
-  animation-delay: 7s;
-}
-
-.heroGradientOrb--3 {
-  width: 350px;
-  height: 350px;
-  background: radial-gradient(circle, #ec4899 0%, transparent 70%);
-  top: 50%;
-  right: 20%;
-  animation-delay: 14s;
-}
-
 @keyframes float {
   0%,
   100% {
@@ -760,17 +946,6 @@ onMounted(() => {
   }
 }
 
-/* Grid de fundo sutil */
-.heroGrid {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(147, 51, 234, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(147, 51, 234, 0.03) 1px, transparent 1px);
-  background-size: 50px 50px;
-  opacity: 0.3;
-}
-
 /* Conteúdo do Hero */
 .heroContent {
   position: relative;
@@ -781,33 +956,15 @@ onMounted(() => {
 
 /* Badge superior */
 .heroBadge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.625rem 1.5rem;
-  background: var(--badge-bg);
-  border: 1px solid var(--badge-border);
-  border-radius: 100px;
+  margin-bottom: 2rem;
+  letter-spacing: 2px;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 2px;
-  color: var(--cb-secondary);
-  margin-bottom: 2rem;
   transition: all 0.3s ease;
 }
 
 .heroBadge:hover {
-  background: var(--badge-bg-hover);
-  border-color: var(--border-hover);
   transform: translateY(-2px);
-}
-
-.heroBadgeIcon {
-  display: inline-block;
-  vertical-align: middle;
-  margin-right: 0.5rem;
 }
 
 /* Título com gradiente animado */
@@ -818,37 +975,13 @@ onMounted(() => {
   line-height: 0.95;
   letter-spacing: -0.03em;
   margin-bottom: 1.5rem;
-  color: #1a1a1a;
+  color: var(--text-primary);
   text-transform: uppercase;
-}
-
-.heroTitleGradient {
-  background: var(--gradient-hero);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  background-size: 200% auto;
-  animation: gradientShift 8s ease infinite;
-  display: inline-block;
-  text-shadow: 0 0 80px var(--shadow-md);
-}
-
-@keyframes gradientShift {
-  0%,
-  100% {
-    background-position: 0% center;
-  }
-  50% {
-    background-position: 100% center;
-  }
 }
 
 /* Subtítulo */
 .heroSubtitle {
-  font-size: clamp(1.125rem, 2.5vw, 1.375rem);
   line-height: 1.7;
-  color: #64748b;
-  font-weight: 400;
   margin-bottom: 3rem;
   max-width: 800px;
   margin-left: auto;
@@ -910,88 +1043,18 @@ onMounted(() => {
 
 .heroStatLabel {
   font-size: 0.875rem;
-  color: #64748b;
+  color: var(--text-secondary);
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 1px;
-}
-
-/* Scroll Indicator */
-.heroScrollIndicator {
-  position: absolute;
-  bottom: 1.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  animation: bounce 2s ease-in-out infinite;
-}
-
-@keyframes bounce {
-  0%,
-  100% {
-    transform: translate(-50%, 0);
-  }
-  50% {
-    transform: translate(-50%, 10px);
-  }
-}
-
-.heroScrollMouse {
-  width: 28px;
-  height: 46px;
-  border: 2px solid rgba(147, 51, 234, 0.3);
-  border-radius: 20px;
-  position: relative;
-}
-
-.heroScrollWheel {
-  width: 3px;
-  height: 8px;
-  background: rgba(147, 51, 234, 0.6);
-  border-radius: 2px;
-  position: absolute;
-  top: 8px;
-  left: 50%;
-  transform: translateX(-50%);
-  animation: scrollWheel 2s ease-in-out infinite;
-}
-
-@keyframes scrollWheel {
-  0% {
-    top: 8px;
-    opacity: 1;
-  }
-  50% {
-    top: 18px;
-    opacity: 0.5;
-  }
-  100% {
-    top: 8px;
-    opacity: 1;
-  }
 }
 
 /* ============================================
    COMPONENTES REUTILIZÁVEIS
    ============================================ */
 .sectionBadge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1.25rem;
-  background: var(--badge-bg);
-  border: 1px solid var(--badge-border);
-  border-radius: 100px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 2px;
-  color: var(--cb-primary);
   margin-bottom: 1.5rem;
-}
-
-.sectionBadgeIcon {
-  display: inline-block;
-  vertical-align: middle;
-  margin-right: 0.5rem;
+  letter-spacing: 2px;
 }
 
 .sectionTitle {
@@ -1000,15 +1063,8 @@ onMounted(() => {
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: -0.02em;
-  color: #1a1a1a;
+  color: var(--text-primary);
   margin-bottom: 1rem;
-}
-
-.sectionTitleAccent {
-  background: var(--gradient-accent);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
 }
 
 /* ============================================
@@ -1016,7 +1072,7 @@ onMounted(() => {
    ============================================ */
 .missionSection {
   padding: 3rem 2rem;
-  background: #f9fafb;
+  background: var(--bg-light);
   position: relative;
 }
 
@@ -1030,9 +1086,7 @@ onMounted(() => {
 }
 
 .missionText {
-  font-size: 1.125rem;
   line-height: 1.8;
-  color: #64748b;
   margin-bottom: 1.5rem;
 }
 
@@ -1045,9 +1099,9 @@ onMounted(() => {
   height: 500px;
   background: linear-gradient(
     135deg,
-    rgba(147, 51, 234, 0.2) 0%,
-    rgba(192, 132, 252, 0.1) 50%,
-    rgba(236, 72, 153, 0.2) 100%
+    rgba(230, 52, 107, 0.2) 0%,
+    rgba(238, 122, 150, 0.1) 50%,
+    rgba(212, 45, 94, 0.2) 100%
   );
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 24px; /* Mantido o original, ajustando se necessário */
@@ -1100,7 +1154,7 @@ onMounted(() => {
    ============================================ */
 .programsSection {
   padding: 3rem 2rem;
-  background: #ffffff;
+  background: var(--bg-white);
 }
 
 .programsContainer {
@@ -1120,44 +1174,11 @@ onMounted(() => {
 }
 
 .programCard {
-  position: relative;
-  background: var(--bg-white);
-  border: 1px solid var(--border-light);
-  border-radius: 20px;
-  padding: 1.5rem;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
 }
 
 .programCard:hover {
-  background: var(--bg-tint);
-  border-color: var(--border-hover);
   transform: translateY(-8px);
-  box-shadow: var(--shadow-xl);
-}
-
-.programCardGlow {
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(147, 51, 234, 0.15) 0%, transparent 70%);
-  opacity: 0;
-  transition: opacity 0.4s ease;
-  pointer-events: none;
-}
-
-.programCard:hover .programCardGlow {
-  opacity: 1;
-}
-
-.programCardContent {
-  position: relative;
-  z-index: 1;
 }
 
 .programIconWrapper {
@@ -1172,45 +1193,35 @@ onMounted(() => {
 }
 
 .programIconWrapper--purple {
-  background: rgba(147, 51, 234, 0.15);
-  border: 1px solid rgba(147, 51, 234, 0.3);
+  background: rgba(230, 52, 107, 0.15);
+  border: 1px solid rgba(230, 52, 107, 0.3);
 }
 
 .programIconWrapper--pink {
-  background: rgba(236, 72, 153, 0.15);
-  border: 1px solid rgba(236, 72, 153, 0.3);
+  background: rgba(212, 45, 94, 0.15);
+  border: 1px solid rgba(212, 45, 94, 0.3);
 }
 
 .programIconWrapper--violet {
-  background: rgba(124, 58, 237, 0.15);
-  border: 1px solid rgba(124, 58, 237, 0.3);
+  background: rgba(238, 74, 85, 0.15);
+  border: 1px solid rgba(238, 74, 85, 0.3);
 }
 
 .programIconWrapper--fuchsia {
-  background: rgba(217, 70, 239, 0.15);
-  border: 1px solid rgba(217, 70, 239, 0.3);
+  background: rgba(136, 162, 1, 0.15);
+  border: 1px solid rgba(136, 162, 1, 0.3);
 }
 
 .programCard:hover .programIconWrapper {
   transform: scale(1.1) rotate(5deg);
 }
 
-.programIcon {
-  display: block;
-}
-
 .programTitle {
-  font-family: 'Poppins', sans-serif; /* Aplicando Poppins */
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #1a1a1a;
   margin-bottom: 0.75rem;
 }
 
 .programDescription {
-  font-size: 0.9rem;
   line-height: 1.5;
-  color: #64748b;
   margin-bottom: 1rem;
 }
 
@@ -1236,7 +1247,7 @@ onMounted(() => {
    ============================================ */
 .testimonialSection {
   padding: 3rem 2rem;
-  background: #f9fafb;
+  background: var(--bg-light);
 }
 
 .testimonialContainer {
@@ -1259,7 +1270,7 @@ onMounted(() => {
 .testimonialCardGlow {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at top center, rgba(147, 51, 234, 0.15) 0%, transparent 70%);
+  background: radial-gradient(circle at top center, rgba(230, 52, 107, 0.15) 0%, transparent 70%);
   opacity: 0.5;
   pointer-events: none;
 }
@@ -1267,7 +1278,7 @@ onMounted(() => {
 .testimonialQuoteIcon {
   font-size: 8rem;
   font-weight: 700;
-  color: rgba(147, 51, 234, 0.1);
+  color: rgba(230, 52, 107, 0.1);
   line-height: 1;
   margin-bottom: 1rem;
 }
@@ -1278,7 +1289,7 @@ onMounted(() => {
   font-size: clamp(1.25rem, 3vw, 1.75rem);
   font-style: italic;
   line-height: 1.6;
-  color: #1a1a1a;
+  color: var(--text-primary);
   margin: 0 0 2.5rem 0;
 }
 
@@ -1306,13 +1317,13 @@ onMounted(() => {
   font-family: 'Poppins', sans-serif; /* Aplicando Poppins */
   font-size: 1.125rem;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--text-primary);
   margin-bottom: 0.25rem;
 }
 
 .testimonialAuthorRole {
   font-size: 0.9rem;
-  color: #64748b;
+  color: var(--text-secondary);
 }
 
 /* ============================================
@@ -1320,7 +1331,7 @@ onMounted(() => {
    ============================================ */
 .supportersSection {
   padding: 3rem 2rem;
-  background: #ffffff;
+  background: var(--bg-white);
 }
 
 .supportersContainer {
@@ -1334,9 +1345,7 @@ onMounted(() => {
 }
 
 .supportersSubtitle {
-  font-size: 1.125rem;
   line-height: 1.6;
-  color: #64748b;
   margin-top: 1rem;
 }
 
@@ -1347,20 +1356,7 @@ onMounted(() => {
 }
 
 .supporterCard {
-  position: relative;
   height: 120px;
-  background: var(--bg-light);
-  border: 1px solid var(--border-light);
-  border-radius: 16px;
-  overflow: hidden;
-  transition: all 0.3s ease;
-}
-
-.supporterCard:hover {
-  background: var(--bg-white);
-  border-color: var(--border-hover);
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
 }
 
 .supporterCardInner {
@@ -1368,9 +1364,6 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   height: 100%;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #64748b;
 }
 
 /* ============================================
@@ -1378,7 +1371,7 @@ onMounted(() => {
    ============================================ */
 .contactSection {
   padding: 3rem 2rem;
-  background: #f9fafb;
+  background: var(--bg-light);
 }
 
 .contactContainer {
@@ -1391,9 +1384,7 @@ onMounted(() => {
 }
 
 .contactDescription {
-  font-size: 1.125rem;
   line-height: 1.6;
-  color: #64748b;
   margin-bottom: 3rem;
 }
 
@@ -1432,70 +1423,21 @@ onMounted(() => {
 }
 
 .contactMethodLabel {
-  font-size: 0.75rem;
-  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: #94a3b8;
   margin-bottom: 0.5rem;
+  display: block;
 }
 
 .contactMethodValue {
-  font-size: 1.125rem;
-  font-weight: 500;
-  color: #1a1a1a;
+  display: block;
 }
 
 /* Formulário */
-.contactFormCard {
-  /* Os estilos do card já são aplicados pelo CBCard */
-}
-
 .contactForm {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-}
-
-.formGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.formLabel {
-  font-family: 'Poppins', sans-serif; /* Aplicando Poppins */
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #1a1a1a;
-}
-
-.formInput {
-  width: 100%;
-  padding: 1rem 1.25rem;
-  font-size: 1rem;
-  color: var(--text-primary);
-  background: var(--bg-light);
-  border: 1.5px solid var(--border-light);
-  border-radius: 12px;
-  transition: all 0.3s ease;
-  font-family: inherit;
-}
-
-.formInput:focus {
-  outline: none;
-  background: var(--bg-white);
-  border-color: var(--border-focus);
-  box-shadow: 0 0 0 3px var(--badge-bg);
-}
-
-.formInput::placeholder {
-  color: #94a3b8;
-}
-
-.formTextarea {
-  resize: vertical;
-  min-height: 120px;
 }
 
 /* Efeito de mover seta para frente no hover */
@@ -1513,17 +1455,13 @@ onMounted(() => {
   transform: translateX(4px);
 }
 
-.btnFormSubmit {
-  width: 100%;
-}
-
 /* ============================================
    CTA SECTION
    ============================================ */
 .ctaSection {
   position: relative;
   padding: 3rem 2rem;
-  background: #ffffff;
+  background: var(--bg-white);
   overflow: hidden;
 }
 
@@ -1532,9 +1470,9 @@ onMounted(() => {
   inset: 0;
   background: linear-gradient(
     135deg,
-    rgba(147, 51, 234, 0.15) 0%,
-    rgba(192, 132, 252, 0.1) 50%,
-    rgba(236, 72, 153, 0.15) 100%
+    rgba(230, 52, 107, 0.15) 0%,
+    rgba(238, 122, 150, 0.1) 50%,
+    rgba(212, 45, 94, 0.15) 100%
   );
 }
 
@@ -1559,14 +1497,12 @@ onMounted(() => {
   font-family: 'Poppins', sans-serif; /* Aplicando Poppins */
   font-size: clamp(2rem, 5vw, 3rem);
   font-weight: 800;
-  color: #1a1a1a;
+  color: var(--text-primary);
   margin-bottom: 1.5rem;
 }
 
 .ctaSubtitle {
-  font-size: 1.25rem;
   line-height: 1.6;
-  color: #64748b;
   margin-bottom: 3rem;
 }
 

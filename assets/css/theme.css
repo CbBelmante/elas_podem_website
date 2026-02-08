@@ -3,6 +3,9 @@
  *
  * Este arquivo sobrescreve as variáveis CSS da biblioteca @cb/components
  * Deve ser importado DEPOIS da biblioteca para prevalecer
+ *
+ * Paleta inspirada no Relatório 2025 do Coletivo Elas Podem
+ * Gradiente: Rosa Magenta → Coral → Laranja
  */
 
 /* Importar reset CSS */
@@ -12,7 +15,15 @@
   /* ============================================
      IDENTIDADE VISUAL COLETIVO ELAS PODEM
      ============================================
-     Paleta oficial: Rosa Salmão + Vermelho + Bordô + Nude
+     Paleta 2025:
+     #E6346B — Rosa Magenta (Principal)
+     #EE4A55 — Vermelho Coral
+     #D42D5E — Rosa Escuro
+     #191919 — Preto Grafite
+     #88A201 — Verde Oliva
+     #EAF9FE — Azul Céu
+
+     Gradiente: linear-gradient(135deg, #e6346b, #ed6666, #f4592f)
 
      ✨ Theme System 2.0:
      Mudando --cb-primary, automaticamente muda:
@@ -21,92 +32,88 @@
      - Focus rings e outros elementos que referenciam primary
      ============================================ */
 
-  /* Primary Color - Rosa Salmão (Cor dominante da marca) */
-  --cb-primary: #ED6666; /* Rosa salmão - cor principal */
+  /* Primary Color - Rosa Magenta (Cor principal 2025) */
+  --cb-primary: #E6346B;
   --cb-primary-foreground: #ffffff;
-  --cb-primary-hover: #F08080;  /* Mais claro no hover */
-  --cb-primary-pressed: #B23A3A; /* Vermelho mais intenso */
-  --cb-primary-10: #FFF5F5;  /* Rosa muito claro para backgrounds */
-  --cb-primary-20: #FFE6E6;
-  --cb-primary-60: #C77C7C;  /* Bordô - sofisticado */
+  --cb-primary-hover: #D42D5E;
+  --cb-primary-pressed: #B8244F;
+  --cb-primary-10: #FFF0F3;
+  --cb-primary-20: #FFD6E0;
+  --cb-primary-60: #EE7A96;
 
-  /* Secondary Color - Vermelho (Cor de destaque para CTAs) */
-  --cb-secondary: #B23A3A; /* Vermelho intenso - CTAs */
+  /* Secondary Color - Rosa Escuro (CTA e outline buttons 2025) */
+  --cb-secondary: #D42D5E;
   --cb-secondary-foreground: #ffffff;
-  --cb-secondary-hover: #C74545;  /* Vermelho mais claro */
-  --cb-secondary-pressed: #9A2F2F;  /* Vermelho mais escuro */
+  --cb-secondary-hover: #B8244F;
+  --cb-secondary-pressed: #9A1D42;
 
-  /* Navbar com tema rosa salmão - Customizações específicas */
-  --cb-navbar-folder-active-bg: #FFF5F5;
-  --cb-navbar-folder-active-text: #B23A3A;
-  --cb-navbar-mobile-active-bg: #FFF5F5;
-  --cb-navbar-mobile-active-text: #B23A3A;
+  /* Navbar com tema rosa magenta */
+  --cb-navbar-folder-active-bg: #FFF0F3;
+  --cb-navbar-folder-active-text: #D42D5E;
+  --cb-navbar-mobile-active-bg: #FFF0F3;
+  --cb-navbar-mobile-active-text: #D42D5E;
 
-  /* Button focus ring customizado */
-  --cb-btn-focus-ring: rgba(237, 102, 102, 0.5);
+  /* Button focus ring */
+  --cb-btn-focus-ring: rgba(230, 52, 107, 0.5);
 
-  /* Button Secondary com vermelho */
-  --cb-btn-secondary: #B23A3A;
-  --cb-btn-secondary-hover: #C74545;
-  --cb-btn-secondary-pressed: #9A2F2F;
+  /* Button Secondary com rosa escuro */
+  --cb-btn-secondary: #D42D5E;
+  --cb-btn-secondary-hover: #B8244F;
+  --cb-btn-secondary-pressed: #9A1D42;
 
-  /* Avatar com rosa salmão */
-  --cb-navbar-avatar-bg: #C77C7C;
-  --cb-navbar-avatar-text: #B23A3A;
+  /* Avatar com rosa magenta */
+  --cb-navbar-avatar-bg: #EE7A96;
+  --cb-navbar-avatar-text: #D42D5E;
+
+  /* Border focus */
+  --cb-border-focus: rgba(230, 52, 107, 0.5);
 
   /* ============================================
      VARIÁVEIS CUSTOMIZADAS DO SITE ELAS PODEM
      ============================================ */
 
-  /* Accent color - Rosa claro/Nude (equilíbrio visual) */
-  --accent-color: #E8CBB7;
+  /* Accent color - Coral 2025 */
+  --accent-color: #EE4A55;
 
-  /* Gradientes (usando as cores da paleta rosa/vermelho) */
-  --gradient-primary: linear-gradient(135deg, var(--cb-primary) 0%, var(--cb-primary-60) 100%);
-  --gradient-accent: linear-gradient(135deg, var(--cb-primary) 0%, var(--cb-secondary) 100%);
-  --gradient-hero: linear-gradient(135deg, var(--cb-primary) 0%, var(--cb-secondary) 50%, var(--cb-primary-60) 100%);
+  /* Gradientes (inspirados no topo da paleta 2025) */
+  --gradient-primary: linear-gradient(135deg, #E6346B 0%, #EE7A96 100%);
+  --gradient-accent: linear-gradient(135deg, #E6346B 0%, #D42D5E 100%);
+  --gradient-hero: linear-gradient(135deg, #E6346B 0%, #ED6666 50%, #F4592F 100%);
 
   /* Cores de fundo */
   --bg-light: #f9fafb;
   --bg-white: #ffffff;
-  --bg-hero: linear-gradient(180deg, #FFF5F5 0%, #ffffff 100%);
-  --bg-tint: #FFF5F5;
+  --bg-hero: linear-gradient(180deg, #FFF0F3 0%, #ffffff 100%);
+  --bg-tint: #FFF0F3;
 
   /* Cores de texto */
   --text-primary: #1a1a1a;
   --text-secondary: #64748b;
   --text-tertiary: #94a3b8;
 
-  /* Bordas (usando RGB do rosa salmão para transparência) */
-  --border-light: rgba(237, 102, 102, 0.1);
-  --border-hover: rgba(237, 102, 102, 0.3);
-  --border-focus: rgba(237, 102, 102, 0.5);
+  /* Bordas (rosa magenta com transparência) */
+  --border-light: rgba(230, 52, 107, 0.1);
+  --border-hover: rgba(230, 52, 107, 0.3);
+  --border-focus: rgba(230, 52, 107, 0.5);
 
   /* Sombras */
-  --shadow-sm: 0 2px 10px rgba(237, 102, 102, 0.04);
-  --shadow-md: 0 4px 20px rgba(237, 102, 102, 0.06);
-  --shadow-lg: 0 15px 40px rgba(237, 102, 102, 0.1);
-  --shadow-xl: 0 30px 80px rgba(237, 102, 102, 0.15);
+  --shadow-sm: 0 2px 10px rgba(230, 52, 107, 0.04);
+  --shadow-md: 0 4px 20px rgba(230, 52, 107, 0.06);
+  --shadow-lg: 0 15px 40px rgba(230, 52, 107, 0.1);
+  --shadow-xl: 0 30px 80px rgba(230, 52, 107, 0.15);
 
-  /* Badges e destaques */
-  --badge-bg: rgba(237, 102, 102, 0.08);
-  --badge-bg-hover: rgba(237, 102, 102, 0.12);
-  --badge-border: rgba(237, 102, 102, 0.2);
-  --badge-color: var(--cb-secondary);
+  /* Badges - override dos defaults do CBBadge */
+  --cb-badge-primary: rgba(210, 45, 90, 0.4);
+  --cb-badge-primary-foreground: #ffffff;
+  --cb-badge-primary-hover: rgba(210, 45, 90, 0.5);
+  --cb-badge-outline-bg: rgba(230, 52, 107, 0.12);
 
   /* Glassmorphism */
   --glass-bg: rgba(255, 255, 255, 0.8);
-  --glass-border: rgba(237, 102, 102, 0.15);
+  --glass-border: rgba(230, 52, 107, 0.15);
 
   /* Gradientes de fundo animados */
-  --gradient-orb-1: radial-gradient(circle, var(--cb-primary) 0%, transparent 70%);
-  --gradient-orb-2: radial-gradient(circle, var(--cb-primary-60) 0%, transparent 70%);
-  --gradient-orb-3: radial-gradient(circle, var(--cb-secondary) 0%, transparent 70%);
-}
-
-.dark {
-  /* Primary no modo dark - Roxo mais claro */
-  --cb-primary: #a855f7;
-  --cb-primary-hover: #c084fc;
-  --cb-primary-pressed: #7e22ce;
+  --gradient-orb-1: radial-gradient(circle, #E6346B 0%, transparent 70%);
+  --gradient-orb-2: radial-gradient(circle, #EE7A96 0%, transparent 70%);
+  --gradient-orb-3: radial-gradient(circle, #D42D5E 0%, transparent 70%);
 }

@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paleta de Cores — Coletivo Elas Podem</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #0e0e0e;
+    color: #f0f0f0;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .header {
+    padding: 60px 40px 30px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.8rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #e6346b, #ed6666, #f4592f);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+
+  .header p {
+    font-size: 1rem;
+    color: #888;
+    max-width: 600px;
+    line-height: 1.5;
+  }
+
+  .section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 30px 40px;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-subtitle {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 24px;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .palette-row {
+    display: flex;
+    gap: 0;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    height: 120px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    transition: transform 0.3s ease;
+  }
+
+  .palette-row:hover {
+    transform: translateY(-2px);
+  }
+
+  .color-block {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 12px;
+    cursor: pointer;
+    transition: flex 0.3s ease;
+    position: relative;
+  }
+
+  .color-block:hover {
+    flex: 1.8;
+  }
+
+  .color-block .label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.9;
+  }
+
+  .color-block .hex {
+    font-size: 0.75rem;
+    font-weight: 500;
+    opacity: 0.8;
+    font-family: 'DM Sans', monospace;
+  }
+
+  .color-block .copied {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.75rem;
+    font-weight: 700;
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+  }
+
+  .color-block.show-copied .copied {
+    opacity: 1;
+  }
+
+  /* Cards grid */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .color-card {
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  }
+
+  .color-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  }
+
+  .color-card .swatch {
+    height: 90px;
+  }
+
+  .color-card .info {
+    padding: 10px 12px;
+    background: #1a1a1a;
+  }
+
+  .color-card .info .name {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #ccc;
+    margin-bottom: 2px;
+  }
+
+  .color-card .info .hex-val {
+    font-size: 0.7rem;
+    color: #666;
+    font-family: monospace;
+  }
+
+  /* Comparison */
+  .comparison {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-top: 40px;
+  }
+
+  @media (max-width: 700px) {
+    .comparison { grid-template-columns: 1fr; }
+    .header h1 { font-size: 2rem; }
+    .header, .section { padding-left: 20px; padding-right: 20px; }
+  }
+
+  .comp-col h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .comp-col h3 .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  /* Usage examples */
+  .usage-strip {
+    display: flex;
+    gap: 16px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+  }
+
+  .usage-item {
+    flex: 1;
+    min-width: 200px;
+    border-radius: 12px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .usage-item h4 {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .usage-item p {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    opacity: 0.85;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 50px 20px 30px;
+    color: #444;
+    font-size: 0.75rem;
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: #e6346b;
+    color: white;
+    padding: 10px 24px;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    box-shadow: 0 6px 20px rgba(230,52,107,0.4);
+    transition: transform 0.3s ease;
+    z-index: 100;
+    pointer-events: none;
+  }
+
+  .toast.show {
+    transform: translateX(-50%) translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Paleta de Cores<br>Coletivo Elas Podem</h1>
+  <p>Análise cromática extraída dos relatórios oficiais 2023–2025. Clique em qualquer cor para copiar o código hex.</p>
+</div>
+
+<!-- Relatório 2025 -->
+<div class="section">
+  <div class="section-title">
+    Relatório 2025
+    <span class="badge" style="background: #e6346b; color: white;">Principal</span>
+  </div>
+  <p class="section-subtitle">Identidade visual forte em rosa/magenta com acentos vermelhos e preto</p>
+
+  <div class="palette-row">
+    <div class="color-block" style="background: #e6346b; color: white;" onclick="copyColor('#E6346B')">
+      <span class="copied">Copiado!</span>
+      <span class="label">Rosa Principal</span>
+      <span class="hex">#E6346B</span>
+    </div>
+    <div class="color-block" style="background: #ee4a55; color: white;" onclick="copyColor('#EE4A55')">
+      <span class="copied">Copiado!</span>
+      <span class="label">Vermelho</span>
+      <span class="hex">#EE4A55</span>
+    </div>
+    <div class="color-block" style="background: #191919; color: white;" onclick="copyColor('#191919')">
+      <span class="copied">Copiado!</span>
+      <span class="label">Preto</span>
+      <span class="hex">#191919</span>
+    </div>
+    <div class="color-block" style="background: #ffffff; color: #191919; border: 1px solid #333;" onclick="copyColor('#FFFFFF')">
+      <span class="copied">Copiado!</span>
+      <span class="label">Branco</span>
+      <span class="hex">#FFFFFF</span>
+    </div>
+    <div class="color-block" style="background: #88a201; color: white;" onclick="copyColor('#88A201')">
+      <span class="copied">Copiado!</span>
+      <span class="label">Verde Oliva</span>
+      <span class="hex">#88A201</span>
+    </div>
+  </div>
+
+  <div class="cards-grid">
+    <div class="color-card" onclick="copyColor('#E6346B')">
+      <div class="swatch" style="background: #e6346b;"></div>
+      <div class="info"><div class="name">Rosa Magenta</div><div class="hex-val">#E6346B</div></div>
+    </div>
+    <div class="color-card" onclick="copyColor('#EE4A55')">
+      <div class="swatch" style="background: #ee4a55;"></div>
+      <div class="info"><div class="name">Vermelho Coral</div><div class="hex-val">#EE4A55</div></div>
+    </div>
+    <div class="color-card" onclick="copyColor('#D42D5E')">
+      <div class="swatch" style="background: linear-gradient(135deg, #e6346b, #d42d5e);"></div>
+      <div class="info"><div class="name">Rosa Escuro</div><div class="hex-val">#D42D5E</div></div>
+    </div>
+    <div class="color-card" onclick="copyColor('#191919')">
+      <div class="swatch" style="background: #191919;"></div>
+      <div class="info"><div class="name">Preto Grafite</div><div class="hex-val">#191919</div></div>
+    </div>
+    <div class="color-card" onclick="copyColor('#88A201')">
+      <div class="swatch" style="background: #88a201;"></div>
+      <div class="info"><div class="name">Verde Oliva</div><div class="hex-val">#88A201</div></div>
+    </div>
+    <div class="color-card" onclick="copyColor('#EAF9FE')">
+      <div class="swatch" style="background: #eaf9fe;"></div>
+      <div class="info"><div class="name">Azul Céu</div><div class="hex-val">#EAF9FE</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Relatório 2023-2024 -->
+<div class="section">
+  <div class="section-title">
+    Relatório 2023–2024
+    <span class="badge" style="background: #4b39b5; color: white;">Anterior</span>
+  </div>
+  <p class="section-subtitle">Paleta mais variada com roxo, laranja, rosa e coral — visual mais vibrante e contrastante</p>
+
+  <div class="palette-row">
+    <div class="color-block" style="background: #ed6666; color: white;" onclick="copyColor('#ED6666')">
+      <span class="copied">Copiado!</span>
+      <span class="label">Coral</span>
+      <span class="hex">#ED6666</span>
+    </div>
+    <div class="color-block" style="background: #4b39b5; color: white;" onclick="copyColor('#4B39B5')">
+      <span class="copied">Copiado!</span>
+      <span class="label">Roxo</span>
+      <span class="hex">#4B39B5</span>
+    </div>
+    <div class="color-block" style="background: #f4592f; color: white;" onclick="copyColor('#F4592F')">
+      <span class="copied">Copiado!</span>
+      <span class="label">Laranja</span>
+      <span class="hex">#F4592F</span>
+    </div>
+    <div class="color-block" style="background: #f79fc1; color: #333;" onclick="copyColor('#F79FC1')">
+      <span class="copied">Copiado!</span>
+      <span class="label">Rosa Claro</span>
+      <span class="hex">#F79FC1</span>
+    </div>
+    <div class="color-block" style="background: #f5f5ef; color: #333;" onclick="copyColor('#F5F5EF')">
+      <span class="copied">Copiado!</span>
+      <span class="label">Off-White</span>
+      <span class="hex">#F5F5EF</span>
+    </div>
+  </div>
+
+  <div class="cards-grid">
+    <div class="color-card" onclick="copyColor('#ED6666')">
+      <div class="swatch" style="background: #ed6666;"></div>
+      <div class="info"><div class="name">Coral Vermelho</div><div class="hex-val">#ED6666</div></div>
+    </div>
+    <div class="color-card" onclick="copyColor('#4B39B5')">
+      <div class="swatch" style="background: #4b39b5;"></div>
+      <div class="info"><div class="name">Roxo Índigo</div><div class="hex-val">#4B39B5</div></div>
+    </div>
+    <div class="color-card" onclick="copyColor('#F4592F')">
+      <div class="swatch" style="background: #f4592f;"></div>
+      <div class="info"><div class="name">Laranja Vivo</div><div class="hex-val">#F4592F</div></div>
+    </div>
+    <div class="color-card" onclick="copyColor('#F79FC1')">
+      <div class="swatch" style="background: #f79fc1;"></div>
+      <div class="info"><div class="name">Rosa Bebê</div><div class="hex-val">#F79FC1</div></div>
+    </div>
+    <div class="color-card" onclick="copyColor('#F5F5EF')">
+      <div class="swatch" style="background: #f5f5ef;"></div>
+      <div class="info"><div class="name">Off-White Quente</div><div class="hex-val">#F5F5EF</div></div>
+    </div>
+    <div class="color-card" onclick="copyColor('#EFE9CE')">
+      <div class="swatch" style="background: #efe9ce;"></div>
+      <div class="info"><div class="name">Creme Bege</div><div class="hex-val">#EFE9CE</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Uso recomendado -->
+<div class="section">
+  <div class="section-title">Como as cores são usadas</div>
+  <p class="section-subtitle">Funções visuais identificadas nos materiais</p>
+
+  <div class="usage-strip">
+    <div class="usage-item" style="background: #e6346b; color: white;">
+      <h4>Cor primária</h4>
+      <p>Rosa magenta (#E6346B) domina capas, fundos, destaques e a identidade visual principal do coletivo.</p>
+    </div>
+    <div class="usage-item" style="background: #191919; color: white;">
+      <h4>Contraste</h4>
+      <p>Preto (#191919) usado em páginas de conteúdo, tipografia e seções de dados/resultados.</p>
+    </div>
+    <div class="usage-item" style="background: #4b39b5; color: white;">
+      <h4>Acento secundário</h4>
+      <p>Roxo (#4B39B5) aparece no relatório 2023-24 como segundo destaque para seções temáticas.</p>
+    </div>
+    <div class="usage-item" style="background: #f4592f; color: white;">
+      <h4>Chamada à ação</h4>
+      <p>Laranja (#F4592F) e vermelho coral usado para títulos de impacto e destaque de dados.</p>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  Paleta extraída automaticamente dos PDFs do Coletivo Elas Podem · @coletivoelaspodem
+</div>
+
+<div class="toast" id="toast">Cor copiada!</div>
+
+<script>
+function copyColor(hex) {
+  navigator.clipboard.writeText(hex).catch(() => {});
+  const toast = document.getElementById('toast');
+  toast.textContent = `${hex} copiado!`;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 1500);
+}
+</script>
+</body>
+</html>
