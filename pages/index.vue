@@ -179,67 +179,98 @@ onMounted(() => {
 
           <!-- Estatísticas com glassmorphism -->
           <div class="heroStats animateOnScroll">
-            <div class="heroStatCard">
-              <CBIcon icon="luc-award" size="2rem" color="var(--cb-primary)" class="heroStatIcon" />
-              <CBLabel
-                :text="$t('hero.stats.headquarter.number')"
-                tag="span"
-                weight="extrabold"
-                dense
-                class="heroStatNumber"
-              />
-              <CBLabel
-                :text="$t('hero.stats.headquarter.label')"
-                tag="span"
-                size="sm"
-                weight="medium"
-                dense
-                class="heroStatLabel"
-              />
-            </div>
+            <CBCard
+              variant="outlined"
+              :rounded="20"
+              hover
+              bg-color="var(--glass-bg)"
+              border-color="var(--glass-border)"
+              :border-width="1"
+              class="heroStatCard heroStatCard--magenta"
+            >
+              <div class="heroStatInner">
+                <div class="heroStatIconWrapper">
+                  <CBIcon icon="luc-award" size="1.75rem" color="#ffffff" />
+                </div>
+                <CBLabel
+                  :text="$t('hero.stats.headquarter.number')"
+                  tag="span"
+                  weight="extrabold"
+                  dense
+                  class="heroStatNumber"
+                />
+                <CBLabel
+                  :text="$t('hero.stats.headquarter.label')"
+                  tag="span"
+                  size="sm"
+                  weight="medium"
+                  dense
+                  class="heroStatLabel"
+                />
+              </div>
+            </CBCard>
 
-            <div class="heroStatCard">
-              <CBIcon
-                icon="luc-megaphone"
-                size="2rem"
-                color="var(--cb-primary)"
-                class="heroStatIcon"
-              />
-              <CBLabel
-                :text="$t('hero.stats.conference.number')"
-                tag="span"
-                weight="extrabold"
-                dense
-                class="heroStatNumber"
-              />
-              <CBLabel
-                :text="$t('hero.stats.conference.label')"
-                tag="span"
-                size="sm"
-                weight="medium"
-                dense
-                class="heroStatLabel"
-              />
-            </div>
+            <CBCard
+              variant="outlined"
+              :rounded="20"
+              hover
+              bg-color="var(--glass-bg)"
+              border-color="var(--glass-border)"
+              :border-width="1"
+              class="heroStatCard heroStatCard--coral"
+            >
+              <div class="heroStatInner">
+                <div class="heroStatIconWrapper">
+                  <CBIcon icon="luc-megaphone" size="1.75rem" color="#ffffff" />
+                </div>
+                <CBLabel
+                  :text="$t('hero.stats.conference.number')"
+                  tag="span"
+                  weight="extrabold"
+                  dense
+                  class="heroStatNumber"
+                />
+                <CBLabel
+                  :text="$t('hero.stats.conference.label')"
+                  tag="span"
+                  size="sm"
+                  weight="medium"
+                  dense
+                  class="heroStatLabel"
+                />
+              </div>
+            </CBCard>
 
-            <div class="heroStatCard">
-              <CBIcon icon="luc-users" size="2rem" color="var(--cb-primary)" class="heroStatIcon" />
-              <CBLabel
-                :text="$t('hero.stats.location.number')"
-                tag="span"
-                weight="extrabold"
-                dense
-                class="heroStatNumber"
-              />
-              <CBLabel
-                :text="$t('hero.stats.location.label')"
-                tag="span"
-                size="sm"
-                weight="medium"
-                dense
-                class="heroStatLabel"
-              />
-            </div>
+            <CBCard
+              variant="outlined"
+              :rounded="20"
+              hover
+              bg-color="var(--glass-bg)"
+              border-color="var(--glass-border)"
+              :border-width="1"
+              class="heroStatCard heroStatCard--rosa"
+            >
+              <div class="heroStatInner">
+                <div class="heroStatIconWrapper">
+                  <CBIcon icon="luc-users" size="1.75rem" color="#ffffff" />
+                </div>
+                <CBLabel
+                  :text="$t('hero.stats.location.number')"
+                  tag="span"
+                  weight="extrabold"
+                  dense
+                  class="heroStatNumber"
+                />
+                <CBLabel
+                  :text="$t('hero.stats.location.label')"
+                  tag="span"
+                  size="sm"
+                  weight="medium"
+                  dense
+                  class="heroStatLabel"
+                />
+              </div>
+            </CBCard>
           </div>
         </div>
       </section>
@@ -550,12 +581,16 @@ onMounted(() => {
               variant="outlined"
               :rounded="16"
               hover
-              bg-color="var(--bg-light)"
+              bg-color="var(--bg-white)"
               border-color="var(--border-light)"
-              class="supporterCard"
+              :border-width="1"
+              class="supporterCard supporterCard--magenta"
             >
               <div class="supporterCardInner">
-                <CBLabel text="Apoiador 1" size="md" weight="semibold" color="secondary" />
+                <div class="supporterIconWrapper">
+                  <CBIcon icon="luc-building-2" size="1.5rem" color="#ffffff" />
+                </div>
+                <CBLabel text="Apoiador 1" size="md" weight="semibold" class="supporterName" />
               </div>
             </CBCard>
 
@@ -563,12 +598,16 @@ onMounted(() => {
               variant="outlined"
               :rounded="16"
               hover
-              bg-color="var(--bg-light)"
+              bg-color="var(--bg-white)"
               border-color="var(--border-light)"
-              class="supporterCard"
+              :border-width="1"
+              class="supporterCard supporterCard--coral"
             >
               <div class="supporterCardInner">
-                <CBLabel text="Apoiador 2" size="md" weight="semibold" color="secondary" />
+                <div class="supporterIconWrapper">
+                  <CBIcon icon="luc-heart-handshake" size="1.5rem" color="#ffffff" />
+                </div>
+                <CBLabel text="Apoiador 2" size="md" weight="semibold" class="supporterName" />
               </div>
             </CBCard>
 
@@ -576,12 +615,16 @@ onMounted(() => {
               variant="outlined"
               :rounded="16"
               hover
-              bg-color="var(--bg-light)"
+              bg-color="var(--bg-white)"
               border-color="var(--border-light)"
-              class="supporterCard"
+              :border-width="1"
+              class="supporterCard supporterCard--rosa"
             >
               <div class="supporterCardInner">
-                <CBLabel text="Apoiador 3" size="md" weight="semibold" color="secondary" />
+                <div class="supporterIconWrapper">
+                  <CBIcon icon="luc-globe" size="1.5rem" color="#ffffff" />
+                </div>
+                <CBLabel text="Apoiador 3" size="md" weight="semibold" class="supporterName" />
               </div>
             </CBCard>
 
@@ -589,12 +632,16 @@ onMounted(() => {
               variant="outlined"
               :rounded="16"
               hover
-              bg-color="var(--bg-light)"
+              bg-color="var(--bg-white)"
               border-color="var(--border-light)"
-              class="supporterCard"
+              :border-width="1"
+              class="supporterCard supporterCard--oliva"
             >
               <div class="supporterCardInner">
-                <CBLabel text="Apoiador 4" size="md" weight="semibold" color="secondary" />
+                <div class="supporterIconWrapper">
+                  <CBIcon icon="luc-star" size="1.5rem" color="#ffffff" />
+                </div>
+                <CBLabel text="Apoiador 4" size="md" weight="semibold" class="supporterName" />
               </div>
             </CBCard>
 
@@ -602,12 +649,16 @@ onMounted(() => {
               variant="outlined"
               :rounded="16"
               hover
-              bg-color="var(--bg-light)"
+              bg-color="var(--bg-white)"
               border-color="var(--border-light)"
-              class="supporterCard"
+              :border-width="1"
+              class="supporterCard supporterCard--laranja"
             >
               <div class="supporterCardInner">
-                <CBLabel text="Apoiador 5" size="md" weight="semibold" color="secondary" />
+                <div class="supporterIconWrapper">
+                  <CBIcon icon="luc-award" size="1.5rem" color="#ffffff" />
+                </div>
+                <CBLabel text="Apoiador 5" size="md" weight="semibold" class="supporterName" />
               </div>
             </CBCard>
           </div>
@@ -868,7 +919,7 @@ onMounted(() => {
   min-height: 100vh;
   background: var(--bg-white);
   color: var(--text-primary);
-  font-family: 'Lato', sans-serif; /* Aplicando Lato */
+  font-family: var(--font-body);
   overflow-x: hidden;
 }
 
@@ -983,7 +1034,7 @@ onMounted(() => {
 
 /* Título com gradiente animado */
 .heroTitle {
-  font-family: 'Poppins', sans-serif; /* Aplicando Poppins */
+  font-family: var(--font-heading);
   font-size: clamp(3.5rem, 10vw, 7rem);
   font-weight: 900;
   line-height: 0.95;
@@ -1021,31 +1072,85 @@ onMounted(() => {
 }
 
 .heroStatCard {
-  position: relative;
-  padding: 2rem 1.5rem;
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  border-radius: 20px;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: var(--shadow-md);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 .heroStatCard:hover {
-  background: var(--bg-white);
-  border-color: var(--border-hover);
   transform: translateY(-5px);
-  box-shadow: var(--shadow-xl);
 }
 
-.heroStatIcon {
-  margin-bottom: 1rem;
-  display: block;
+.heroStatInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Icon wrappers com gradiente */
+.heroStatIconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  margin-bottom: 1.25rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.heroStatCard--magenta .heroStatIconWrapper {
+  background: var(--gradient-magenta);
+  box-shadow: var(--glow-magenta);
+}
+
+.heroStatCard--coral .heroStatIconWrapper {
+  background: var(--gradient-coral);
+  box-shadow: var(--glow-coral);
+}
+
+.heroStatCard--rosa .heroStatIconWrapper {
+  background: var(--gradient-rosa);
+  box-shadow: var(--glow-rosa);
+}
+
+/* Hover glow por variante */
+.heroStatCard--magenta:hover {
+  border-color: var(--border-magenta);
+  box-shadow: var(--glow-magenta-card);
+}
+
+.heroStatCard--coral:hover {
+  border-color: var(--border-coral);
+  box-shadow: var(--glow-coral-card);
+}
+
+.heroStatCard--rosa:hover {
+  border-color: var(--border-rosa);
+  box-shadow: var(--glow-rosa-card);
+}
+
+.heroStatCard:hover .heroStatIconWrapper {
+  transform: scale(1.1) rotate(5deg);
+  filter: brightness(1.1);
+}
+
+.heroStatCard--magenta:hover .heroStatIconWrapper {
+  box-shadow: var(--glow-magenta-hover);
+}
+
+.heroStatCard--coral:hover .heroStatIconWrapper {
+  box-shadow: var(--glow-coral-hover);
+}
+
+.heroStatCard--rosa:hover .heroStatIconWrapper {
+  box-shadow: var(--glow-rosa-hover);
 }
 
 .heroStatNumber {
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--font-heading);
   font-size: 2.5rem;
   font-weight: 800;
   background: var(--gradient-accent);
@@ -1072,7 +1177,7 @@ onMounted(() => {
 }
 
 .sectionTitle {
-  font-family: 'Poppins', sans-serif; /* Aplicando Poppins */
+  font-family: var(--font-heading);
   font-size: clamp(1.75rem, 4vw, 2.5rem);
   font-weight: 700;
   line-height: 1.2;
@@ -1113,12 +1218,12 @@ onMounted(() => {
   height: 500px;
   background: linear-gradient(
     135deg,
-    rgba(230, 52, 107, 0.2) 0%,
-    rgba(238, 122, 150, 0.1) 50%,
-    rgba(212, 45, 94, 0.2) 100%
+    rgba(var(--color-magenta-rgb), 0.2) 0%,
+    rgba(var(--color-coral-claro-rgb), 0.1) 50%,
+    rgba(var(--color-rosa-rgb), 0.2) 100%
   );
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 24px; /* Mantido o original, ajustando se necessário */
+  border: 1px solid var(--border-light);
+  border-radius: 24px;
   overflow: hidden;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -1158,7 +1263,7 @@ onMounted(() => {
   font-size: 3rem;
 }
 .missionImageCard .missionImageText {
-  font-family: 'Poppins', sans-serif; /* Aplicando Poppins */
+  font-family: var(--font-heading);
   font-size: 1.5rem;
   font-weight: 600;
 }
@@ -1209,26 +1314,26 @@ onMounted(() => {
 
 /* Rosa Magenta - Comunicação */
 .programIconWrapper--magenta {
-  background: linear-gradient(135deg, #e6346b 0%, #ee7a96 100%);
-  box-shadow: 0 4px 14px rgba(230, 52, 107, 0.35);
+  background: var(--gradient-magenta);
+  box-shadow: var(--glow-magenta);
 }
 
 /* Vermelho Coral - Educação */
 .programIconWrapper--coral {
-  background: linear-gradient(135deg, #ee4a55 0%, #f4795e 100%);
-  box-shadow: 0 4px 14px rgba(238, 74, 85, 0.35);
+  background: var(--gradient-coral);
+  box-shadow: var(--glow-coral);
 }
 
 /* Rosa Escuro - Social */
 .programIconWrapper--rosa {
-  background: linear-gradient(135deg, #d42d5e 0%, #e6346b 100%);
-  box-shadow: 0 4px 14px rgba(212, 45, 94, 0.35);
+  background: var(--gradient-rosa);
+  box-shadow: var(--glow-rosa);
 }
 
 /* Verde Oliva - Político */
 .programIconWrapper--oliva {
-  background: linear-gradient(135deg, #88a201 0%, #a4c41a 100%);
-  box-shadow: 0 4px 14px rgba(136, 162, 1, 0.35);
+  background: var(--gradient-oliva);
+  box-shadow: var(--glow-oliva);
 }
 
 .programCard:hover .programIconWrapper {
@@ -1237,19 +1342,19 @@ onMounted(() => {
 }
 
 .programCard:hover .programIconWrapper--magenta {
-  box-shadow: 0 8px 24px rgba(230, 52, 107, 0.45);
+  box-shadow: var(--glow-magenta-hover);
 }
 
 .programCard:hover .programIconWrapper--coral {
-  box-shadow: 0 8px 24px rgba(238, 74, 85, 0.45);
+  box-shadow: var(--glow-coral-hover);
 }
 
 .programCard:hover .programIconWrapper--rosa {
-  box-shadow: 0 8px 24px rgba(212, 45, 94, 0.45);
+  box-shadow: var(--glow-rosa-hover);
 }
 
 .programCard:hover .programIconWrapper--oliva {
-  box-shadow: 0 8px 24px rgba(136, 162, 1, 0.45);
+  box-shadow: var(--glow-oliva-hover);
 }
 
 .programTitle {
@@ -1263,7 +1368,7 @@ onMounted(() => {
 
 .programCardFooter {
   padding-top: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid var(--border-light);
 }
 
 .programCardLink {
@@ -1306,27 +1411,33 @@ onMounted(() => {
 .testimonialCardGlow {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at top center, rgba(230, 52, 107, 0.15) 0%, transparent 70%);
+  background: radial-gradient(circle at top center, rgba(var(--color-magenta-rgb), 0.15) 0%, transparent 70%);
   opacity: 0.5;
   pointer-events: none;
 }
 
 .testimonialQuoteIcon {
-  font-size: 8rem;
-  font-weight: 700;
-  color: rgba(230, 52, 107, 0.1);
+  position: absolute;
+  top: 1.5rem;
+  left: 2rem;
+  font-family: var(--font-heading);
+  font-size: 7rem;
+  font-weight: 900;
+  color: rgba(var(--color-magenta-rgb), 0.08);
   line-height: 1;
-  margin-bottom: 1rem;
+  pointer-events: none;
+  user-select: none;
 }
 
 .testimonialQuote {
-  font-family: 'Poppins', sans-serif; /* Aplicando Poppins */
+  font-family: var(--font-heading);
   position: relative;
   font-size: clamp(1.25rem, 3vw, 1.75rem);
   font-style: italic;
   line-height: 1.6;
   color: var(--text-primary);
-  margin: 0 0 2.5rem 0;
+  margin: 0 0 2rem 0;
+  padding-top: 0.5rem;
 }
 
 .testimonialAuthor {
@@ -1343,14 +1454,14 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--font-heading);
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--bg-white);
 }
 
 .testimonialAuthorName {
-  font-family: 'Poppins', sans-serif; /* Aplicando Poppins */
+  font-family: var(--font-heading);
   font-size: 1.125rem;
   font-weight: 600;
   color: var(--text-primary);
@@ -1392,14 +1503,94 @@ onMounted(() => {
 }
 
 .supporterCard {
-  height: 120px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+}
+
+.supporterCard:hover {
+  transform: translateY(-3px);
 }
 
 .supporterCardInner {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100%;
+  gap: 1rem;
+  padding: 0.5rem 0;
+}
+
+/* Icon wrappers com gradiente — mesma linguagem visual */
+.supporterIconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  flex-shrink: 0;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.supporterCard--magenta .supporterIconWrapper {
+  background: var(--gradient-magenta);
+  box-shadow: var(--glow-magenta);
+}
+
+.supporterCard--coral .supporterIconWrapper {
+  background: var(--gradient-coral);
+  box-shadow: var(--glow-coral);
+}
+
+.supporterCard--rosa .supporterIconWrapper {
+  background: var(--gradient-rosa);
+  box-shadow: var(--glow-rosa);
+}
+
+.supporterCard--oliva .supporterIconWrapper {
+  background: var(--gradient-oliva);
+  box-shadow: var(--glow-oliva);
+}
+
+.supporterCard--laranja .supporterIconWrapper {
+  background: var(--gradient-laranja);
+  box-shadow: var(--glow-laranja);
+}
+
+/* Hover glow por variante */
+.supporterCard--magenta:hover {
+  border-color: var(--border-magenta);
+  box-shadow: var(--glow-magenta-subtle);
+}
+
+.supporterCard--coral:hover {
+  border-color: var(--border-coral);
+  box-shadow: var(--glow-coral-subtle);
+}
+
+.supporterCard--rosa:hover {
+  border-color: var(--border-rosa);
+  box-shadow: var(--glow-rosa-subtle);
+}
+
+.supporterCard--oliva:hover {
+  border-color: var(--border-oliva);
+  box-shadow: var(--glow-oliva-card);
+}
+
+.supporterCard--laranja:hover {
+  border-color: var(--border-laranja);
+  box-shadow: var(--glow-laranja-subtle);
+}
+
+.supporterCard:hover .supporterIconWrapper {
+  transform: scale(1.08);
+  filter: brightness(1.1);
+}
+
+.supporterName {
+  color: var(--text-primary);
 }
 
 /* ============================================
@@ -1447,18 +1638,18 @@ onMounted(() => {
 }
 
 .contactMethodCard--magenta:hover {
-  border-color: rgba(230, 52, 107, 0.3);
-  box-shadow: 0 12px 32px rgba(230, 52, 107, 0.12);
+  border-color: var(--border-magenta);
+  box-shadow: var(--glow-magenta-subtle);
 }
 
 .contactMethodCard--coral:hover {
-  border-color: rgba(238, 74, 85, 0.3);
-  box-shadow: 0 12px 32px rgba(238, 74, 85, 0.12);
+  border-color: var(--border-coral);
+  box-shadow: var(--glow-coral-subtle);
 }
 
 .contactMethodCard--rosa:hover {
-  border-color: rgba(212, 45, 94, 0.3);
-  box-shadow: 0 12px 32px rgba(212, 45, 94, 0.12);
+  border-color: var(--border-rosa);
+  box-shadow: var(--glow-rosa-subtle);
 }
 
 /* Icon wrappers com gradiente - mesma linguagem dos programs */
@@ -1474,18 +1665,18 @@ onMounted(() => {
 }
 
 .contactMethodCard--magenta .contactMethodIconWrapper {
-  background: linear-gradient(135deg, #e6346b 0%, #ee7a96 100%);
-  box-shadow: 0 4px 12px rgba(230, 52, 107, 0.3);
+  background: var(--gradient-magenta);
+  box-shadow: var(--glow-magenta);
 }
 
 .contactMethodCard--coral .contactMethodIconWrapper {
-  background: linear-gradient(135deg, #ee4a55 0%, #f4795e 100%);
-  box-shadow: 0 4px 12px rgba(238, 74, 85, 0.3);
+  background: var(--gradient-coral);
+  box-shadow: var(--glow-coral);
 }
 
 .contactMethodCard--rosa .contactMethodIconWrapper {
-  background: linear-gradient(135deg, #d42d5e 0%, #e6346b 100%);
-  box-shadow: 0 4px 12px rgba(212, 45, 94, 0.3);
+  background: var(--gradient-rosa);
+  box-shadow: var(--glow-rosa);
 }
 
 .contactMethodCard:hover .contactMethodIconWrapper {
@@ -1558,9 +1749,9 @@ onMounted(() => {
   inset: 0;
   background: linear-gradient(
     135deg,
-    rgba(230, 52, 107, 0.15) 0%,
-    rgba(238, 122, 150, 0.1) 50%,
-    rgba(212, 45, 94, 0.15) 100%
+    rgba(var(--color-magenta-rgb), 0.15) 0%,
+    rgba(var(--color-coral-claro-rgb), 0.1) 50%,
+    rgba(var(--color-rosa-rgb), 0.15) 100%
   );
 }
 
@@ -1582,7 +1773,7 @@ onMounted(() => {
 }
 
 .ctaTitle {
-  font-family: 'Poppins', sans-serif; /* Aplicando Poppins */
+  font-family: var(--font-heading);
   font-size: clamp(2rem, 5vw, 3rem);
   font-weight: 800;
   color: var(--text-primary);

@@ -4,8 +4,8 @@
  * Este arquivo sobrescreve as variáveis CSS da biblioteca @cb/components
  * Deve ser importado DEPOIS da biblioteca para prevalecer
  *
- * Paleta inspirada no Relatório 2025 do Coletivo Elas Podem
- * Gradiente: Rosa Magenta → Coral → Laranja
+ * Paleta extraída dos relatórios oficiais 2023-2025 do Coletivo Elas Podem
+ * Fonte: paleta-elas-podem.html
  */
 
 /* Importar reset CSS */
@@ -13,107 +13,182 @@
 
 :root {
   /* ============================================
-     IDENTIDADE VISUAL COLETIVO ELAS PODEM
-     ============================================
-     Paleta 2025:
-     #E6346B — Rosa Magenta (Principal)
-     #EE4A55 — Vermelho Coral
-     #D42D5E — Rosa Escuro
-     #191919 — Preto Grafite
-     #88A201 — Verde Oliva
-     #EAF9FE — Azul Céu
-
-     Gradiente: linear-gradient(135deg, #e6346b, #ed6666, #f4592f)
-
-     ✨ Theme System 2.0:
-     Mudando --cb-primary, automaticamente muda:
-     - Botões (primary, hover, pressed)
-     - Navbar (underline, pill, folder active text, avatar text, mobile active text)
-     - Focus rings e outros elementos que referenciam primary
+     TIPOGRAFIA
      ============================================ */
-
-  /* Primary Color - Rosa Magenta (Cor principal 2025) */
-  --cb-primary: #E6346B;
-  --cb-primary-foreground: #ffffff;
-  --cb-primary-hover: #D42D5E;
-  --cb-primary-pressed: #B8244F;
-  --cb-primary-10: #FFF0F3;
-  --cb-primary-20: #FFD6E0;
-  --cb-primary-60: #EE7A96;
-
-  /* Secondary Color - Rosa Escuro (CTA e outline buttons 2025) */
-  --cb-secondary: #D42D5E;
-  --cb-secondary-foreground: #ffffff;
-  --cb-secondary-hover: #B8244F;
-  --cb-secondary-pressed: #9A1D42;
-
-  /* Navbar com tema rosa magenta */
-  --cb-navbar-folder-active-bg: #FFF0F3;
-  --cb-navbar-folder-active-text: #D42D5E;
-  --cb-navbar-mobile-active-bg: #FFF0F3;
-  --cb-navbar-mobile-active-text: #D42D5E;
-
-  /* Button focus ring */
-  --cb-btn-focus-ring: rgba(230, 52, 107, 0.5);
-
-  /* Button Secondary com rosa escuro */
-  --cb-btn-secondary: #D42D5E;
-  --cb-btn-secondary-hover: #B8244F;
-  --cb-btn-secondary-pressed: #9A1D42;
-
-  /* Avatar com rosa magenta */
-  --cb-navbar-avatar-bg: #EE7A96;
-  --cb-navbar-avatar-text: #D42D5E;
-
-  /* Border focus */
-  --cb-border-focus: rgba(230, 52, 107, 0.5);
+  --font-heading: 'Poppins', sans-serif;
+  --font-body: 'Lato', sans-serif;
 
   /* ============================================
-     VARIÁVEIS CUSTOMIZADAS DO SITE ELAS PODEM
+     PALETA ELAS PODEM — CORES BASE
+     Extraídas dos relatórios oficiais 2023-2025
      ============================================ */
 
-  /* Accent color - Coral 2025 */
-  --accent-color: #EE4A55;
+  /* Relatório 2025 */
+  --color-magenta: #E6346B;       /* Rosa Magenta — Principal */
+  --color-coral: #EE4A55;         /* Vermelho Coral */
+  --color-rosa: #D42D5E;          /* Rosa Escuro */
+  --color-preto: #191919;         /* Preto Grafite */
+  --color-oliva: #88A201;         /* Verde Oliva */
+  --color-azul-ceu: #EAF9FE;      /* Azul Céu */
 
-  /* Gradientes (inspirados no topo da paleta 2025) */
-  --gradient-primary: linear-gradient(135deg, #E6346B 0%, #EE7A96 100%);
-  --gradient-accent: linear-gradient(135deg, #E6346B 0%, #D42D5E 100%);
-  --gradient-hero: linear-gradient(135deg, #E6346B 0%, #ED6666 50%, #F4592F 100%);
+  /* Relatório 2023-2024 (complementares) */
+  --color-coral-claro: #ED6666;   /* Coral Vermelho */
+  --color-laranja: #F4592F;       /* Laranja Vivo */
+  --color-rosa-claro: #F79FC1;    /* Rosa Bebê */
+  --color-off-white: #F5F5EF;     /* Off-White Quente */
+  --color-branco: #FFFFFF;
+
+  /* Derivadas (tons calculados da paleta) */
+  --color-rosa-pressed: #B8244F;
+  --color-rosa-deep: #9A1D42;
+  --color-oliva-claro: #A4C41A;   /* Verde Oliva claro (derivado) */
+
+  /* RGB channels — para uso com rgba() */
+  --color-magenta-rgb: 230, 52, 107;
+  --color-coral-rgb: 238, 74, 85;
+  --color-rosa-rgb: 212, 45, 94;
+  --color-laranja-rgb: 244, 89, 47;
+  --color-coral-claro-rgb: 237, 102, 102;
+  --color-oliva-rgb: 136, 162, 1;
+
+  /* ============================================
+     GRADIENTES POR VARIANTE
+     (100% cores da paleta Elas Podem)
+     ============================================ */
+  --gradient-magenta: linear-gradient(135deg, var(--color-magenta) 0%, var(--color-coral) 100%);
+  --gradient-coral: linear-gradient(135deg, var(--color-coral) 0%, var(--color-laranja) 100%);
+  --gradient-rosa: linear-gradient(135deg, var(--color-rosa) 0%, var(--color-magenta) 100%);
+  --gradient-laranja: linear-gradient(135deg, var(--color-laranja) 0%, var(--color-coral-claro) 100%);
+  --gradient-oliva: linear-gradient(135deg, var(--color-oliva) 0%, var(--color-oliva-claro) 100%);
+
+  /* Gradientes globais */
+  --gradient-primary: linear-gradient(135deg, var(--color-magenta) 0%, var(--color-coral) 100%);
+  --gradient-accent: linear-gradient(135deg, var(--color-magenta) 0%, var(--color-rosa) 100%);
+  --gradient-hero: linear-gradient(135deg, var(--color-magenta) 0%, var(--color-coral-claro) 50%, var(--color-laranja) 100%);
+
+  /* ============================================
+     GLOW / SOMBRAS POR VARIANTE
+     ============================================ */
+
+  /* Magenta */
+  --glow-magenta: 0 4px 14px rgba(var(--color-magenta-rgb), 0.35);
+  --glow-magenta-hover: 0 8px 24px rgba(var(--color-magenta-rgb), 0.45);
+  --glow-magenta-card: 0 12px 32px rgba(var(--color-magenta-rgb), 0.15);
+  --glow-magenta-subtle: 0 12px 32px rgba(var(--color-magenta-rgb), 0.12);
+
+  /* Coral */
+  --glow-coral: 0 4px 14px rgba(var(--color-coral-rgb), 0.35);
+  --glow-coral-hover: 0 8px 24px rgba(var(--color-coral-rgb), 0.45);
+  --glow-coral-card: 0 12px 32px rgba(var(--color-coral-rgb), 0.15);
+  --glow-coral-subtle: 0 12px 32px rgba(var(--color-coral-rgb), 0.12);
+
+  /* Rosa */
+  --glow-rosa: 0 4px 14px rgba(var(--color-rosa-rgb), 0.35);
+  --glow-rosa-hover: 0 8px 24px rgba(var(--color-rosa-rgb), 0.45);
+  --glow-rosa-card: 0 12px 32px rgba(var(--color-rosa-rgb), 0.15);
+  --glow-rosa-subtle: 0 12px 32px rgba(var(--color-rosa-rgb), 0.12);
+
+  /* Laranja */
+  --glow-laranja: 0 4px 14px rgba(var(--color-laranja-rgb), 0.35);
+  --glow-laranja-hover: 0 8px 24px rgba(var(--color-laranja-rgb), 0.45);
+  --glow-laranja-card: 0 12px 32px rgba(var(--color-laranja-rgb), 0.15);
+  --glow-laranja-subtle: 0 12px 32px rgba(var(--color-laranja-rgb), 0.12);
+
+  /* Oliva */
+  --glow-oliva: 0 4px 14px rgba(var(--color-oliva-rgb), 0.35);
+  --glow-oliva-hover: 0 8px 24px rgba(var(--color-oliva-rgb), 0.45);
+  --glow-oliva-card: 0 12px 32px rgba(var(--color-oliva-rgb), 0.12);
+
+  /* ============================================
+     BORDAS POR VARIANTE
+     ============================================ */
+  --border-magenta: rgba(var(--color-magenta-rgb), 0.3);
+  --border-coral: rgba(var(--color-coral-rgb), 0.3);
+  --border-rosa: rgba(var(--color-rosa-rgb), 0.3);
+  --border-laranja: rgba(var(--color-laranja-rgb), 0.3);
+  --border-oliva: rgba(var(--color-oliva-rgb), 0.3);
+
+  /* ============================================
+     CB COMPONENTS OVERRIDES
+     ============================================ */
+
+  /* Primary Color - Rosa Magenta */
+  --cb-primary: var(--color-magenta);
+  --cb-primary-foreground: var(--color-branco);
+  --cb-primary-hover: var(--color-rosa);
+  --cb-primary-pressed: var(--color-rosa-pressed);
+  --cb-primary-10: #FFF0F3;
+  --cb-primary-20: #FFD6E0;
+  --cb-primary-60: var(--color-coral-claro);
+
+  /* Secondary Color - Rosa Escuro */
+  --cb-secondary: var(--color-rosa);
+  --cb-secondary-foreground: var(--color-branco);
+  --cb-secondary-hover: var(--color-rosa-pressed);
+  --cb-secondary-pressed: var(--color-rosa-deep);
+
+  /* Navbar */
+  --cb-navbar-folder-active-bg: #FFF0F3;
+  --cb-navbar-folder-active-text: var(--color-rosa);
+  --cb-navbar-mobile-active-bg: #FFF0F3;
+  --cb-navbar-mobile-active-text: var(--color-rosa);
+
+  /* Button focus ring */
+  --cb-btn-focus-ring: rgba(var(--color-magenta-rgb), 0.5);
+
+  /* Button Secondary */
+  --cb-btn-secondary: var(--color-rosa);
+  --cb-btn-secondary-hover: var(--color-rosa-pressed);
+  --cb-btn-secondary-pressed: var(--color-rosa-deep);
+
+  /* Avatar */
+  --cb-navbar-avatar-bg: var(--color-coral-claro);
+  --cb-navbar-avatar-text: var(--color-rosa);
+
+  /* Border focus */
+  --cb-border-focus: rgba(var(--color-magenta-rgb), 0.5);
+
+  /* ============================================
+     VARIÁVEIS DO SITE
+     ============================================ */
+
+  /* Accent */
+  --accent-color: var(--color-coral);
 
   /* Cores de fundo */
   --bg-light: #f9fafb;
-  --bg-white: #ffffff;
-  --bg-hero: linear-gradient(180deg, #FFF0F3 0%, #ffffff 100%);
+  --bg-white: var(--color-branco);
+  --bg-hero: linear-gradient(180deg, #FFF0F3 0%, var(--color-branco) 100%);
   --bg-tint: #FFF0F3;
 
   /* Cores de texto */
-  --text-primary: #1a1a1a;
+  --text-primary: var(--color-preto);
   --text-secondary: #64748b;
   --text-tertiary: #94a3b8;
 
-  /* Bordas (rosa magenta com transparência) */
-  --border-light: rgba(230, 52, 107, 0.1);
-  --border-hover: rgba(230, 52, 107, 0.3);
-  --border-focus: rgba(230, 52, 107, 0.5);
+  /* Bordas globais */
+  --border-light: rgba(var(--color-magenta-rgb), 0.1);
+  --border-hover: rgba(var(--color-magenta-rgb), 0.3);
+  --border-focus: rgba(var(--color-magenta-rgb), 0.5);
 
-  /* Sombras */
-  --shadow-sm: 0 2px 10px rgba(230, 52, 107, 0.04);
-  --shadow-md: 0 4px 20px rgba(230, 52, 107, 0.06);
-  --shadow-lg: 0 15px 40px rgba(230, 52, 107, 0.1);
-  --shadow-xl: 0 30px 80px rgba(230, 52, 107, 0.15);
+  /* Sombras globais */
+  --shadow-sm: 0 2px 10px rgba(var(--color-magenta-rgb), 0.04);
+  --shadow-md: 0 4px 20px rgba(var(--color-magenta-rgb), 0.06);
+  --shadow-lg: 0 15px 40px rgba(var(--color-magenta-rgb), 0.1);
+  --shadow-xl: 0 30px 80px rgba(var(--color-magenta-rgb), 0.15);
 
-  /* Badges - override dos defaults do CBBadge */
-  --cb-badge-primary: rgba(210, 45, 90, 0.4);
-  --cb-badge-primary-foreground: #ffffff;
-  --cb-badge-primary-hover: rgba(210, 45, 90, 0.5);
-  --cb-badge-outline-bg: rgba(230, 52, 107, 0.12);
+  /* Badges */
+  --cb-badge-primary: rgba(var(--color-rosa-rgb), 0.4);
+  --cb-badge-primary-foreground: var(--color-branco);
+  --cb-badge-primary-hover: rgba(var(--color-rosa-rgb), 0.5);
+  --cb-badge-outline-bg: rgba(var(--color-magenta-rgb), 0.12);
 
   /* Glassmorphism */
   --glass-bg: rgba(255, 255, 255, 0.8);
-  --glass-border: rgba(230, 52, 107, 0.15);
+  --glass-border: rgba(var(--color-magenta-rgb), 0.15);
 
-  /* Gradientes de fundo animados */
-  --gradient-orb-1: radial-gradient(circle, #E6346B 0%, transparent 70%);
-  --gradient-orb-2: radial-gradient(circle, #EE7A96 0%, transparent 70%);
-  --gradient-orb-3: radial-gradient(circle, #D42D5E 0%, transparent 70%);
+  /* Gradientes de fundo (orbs) */
+  --gradient-orb-1: radial-gradient(circle, var(--color-magenta) 0%, transparent 70%);
+  --gradient-orb-2: radial-gradient(circle, var(--color-coral-claro) 0%, transparent 70%);
+  --gradient-orb-3: radial-gradient(circle, var(--color-rosa) 0%, transparent 70%);
 }
