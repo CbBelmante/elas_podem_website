@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import { CBButton } from '@cb/components';
 import { useI18n } from 'vue-i18n';
 
 const { locale } = useI18n();
@@ -21,14 +22,17 @@ const switchLanguage = (code: string) => {
 
 <template>
   <div class="languageSwitcher">
-    <button
+    <CBButton
       v-for="loc in availableLocales"
       :key="loc.code"
+      :label="loc.name"
+      variant="outline"
+      size="sm"
+      :rounded="8"
+      :color="'var(--cb-secondary)'"
       class="languageBtn"
       @click="switchLanguage(loc.code)"
-    >
-      {{ loc.name }}
-    </button>
+    />
   </div>
 </template>
 
@@ -37,23 +41,5 @@ const switchLanguage = (code: string) => {
   display: flex;
   gap: 0.5rem;
   align-items: center;
-}
-
-.languageBtn {
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--cb-secondary);
-  background: var(--badge-bg);
-  border: 1px solid var(--badge-border);
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.languageBtn:hover {
-  background: var(--badge-bg-hover);
-  border-color: var(--border-hover);
-  transform: translateY(-2px);
 }
 </style>
