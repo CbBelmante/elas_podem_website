@@ -126,13 +126,28 @@ const props = defineProps<{
 
 ### 🔨 Como Fazer Deploy
 
-```bash
-# 1. Build estático
-npm run generate
+#### Primeira vez (setup)
 
-# 2. Deploy Firebase
-firebase deploy --only hosting
+```bash
+# 1. Instalar Firebase CLI
+npm install -g firebase-tools
+
+# 2. Login no Firebase
+firebase login
+
+# 3. Configurar projeto (só na primeira vez)
+firebase use --add
+# Selecione: elas-podem-website
+# Alias: default
 ```
+
+#### Deploy
+
+```bash
+npm run deploy
+```
+
+Isso roda `npm run generate` + `firebase deploy --only hosting` automaticamente.
 
 **Documentação completa**: [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md)
 

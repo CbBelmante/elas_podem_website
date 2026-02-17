@@ -4,10 +4,12 @@ import {
   CBBadge,
   CBButton,
   CBCard,
+  CBCarousel,
   CBIcon,
   CBImage,
   CBInput,
   CBLabel,
+  CBMarquee,
   CBNavbar,
   CBSelect,
   CBTextarea,
@@ -73,6 +75,41 @@ const subjectItems = computed(() => [
   { value: 'partnership', label: t('contact.form.subject.options.partnership') },
   { value: 'general', label: t('contact.form.subject.options.general') },
 ]);
+
+// Testimonials (hardcoded — virá do admin depois)
+const testimonials = [
+  {
+    quote:
+      'Transformar o futuro começa agora. De cada menina que descobre sua voz a cada mulher que assume um espaço de poder, estamos mudando histórias e construindo um país mais justo.',
+    name: 'Elisa Dinelli',
+    role: 'Líder Comunitária',
+    initials: 'ED',
+  },
+  {
+    quote:
+      'O programa mudou completamente minha perspectiva. Aprendi que posso ser protagonista da minha própria história e inspirar outras mulheres ao meu redor.',
+    name: 'Ana Clara Santos',
+    role: 'Participante do Programa',
+    initials: 'AS',
+  },
+  {
+    quote:
+      'Ver o impacto real na vida dessas mulheres é o que nos motiva a continuar. Cada conquista delas é uma vitória para toda a sociedade.',
+    name: 'Roberto Mendes',
+    role: 'Parceiro Institucional',
+    initials: 'RM',
+  },
+];
+const testimonialIndex = ref(0);
+
+// Supporters (hardcoded — virá do admin depois)
+const supporters = [
+  { name: 'Apoiador 1', icon: 'luc-building-2', color: 'magenta' },
+  { name: 'Apoiador 2', icon: 'luc-heart-handshake', color: 'coral' },
+  { name: 'Apoiador 3', icon: 'luc-globe', color: 'rosa' },
+  { name: 'Apoiador 4', icon: 'luc-star', color: 'oliva' },
+  { name: 'Apoiador 5', icon: 'luc-award', color: 'laranja' },
+];
 
 // Animações de scroll
 onMounted(() => {
@@ -519,36 +556,51 @@ onMounted(() => {
         </div>
       </section>
 
-      <!-- Testimonial Section - ELEGANTE -->
+      <!-- Testimonial Section - CAROUSEL -->
       <section class="testimonialSection">
         <div class="testimonialContainer animateOnScroll">
-          <div class="testimonialCard">
-            <div class="testimonialCardGlow"></div>
-            <div class="testimonialQuoteIcon">"</div>
-            <blockquote class="testimonialQuote">
-              {{ $t('testimonial.quote') }}
-            </blockquote>
-            <div class="testimonialAuthor">
-              <div class="testimonialAuthorAvatar">M</div>
-              <div class="testimonialAuthorInfo">
-                <CBLabel
-                  :text="$t('testimonial.author.name')"
-                  tag="span"
-                  weight="semibold"
-                  dense
-                  class="testimonialAuthorName"
-                />
-                <CBLabel
-                  :text="$t('testimonial.author.role')"
-                  tag="span"
-                  size="sm"
-                  color="secondary"
-                  dense
-                  class="testimonialAuthorRole"
-                />
+          <CBCarousel
+            v-model="testimonialIndex"
+            :total="testimonials.length"
+            autoplay
+            :autoplay-interval="6000"
+            transition-type="horizontal"
+            :show-navigation="false"
+            pause-on-hover
+            class="testimonialCarousel"
+          >
+            <template #slide="{ index }">
+              <div class="testimonialCard">
+                <div class="testimonialCardGlow"></div>
+                <div class="testimonialQuoteIcon">"</div>
+                <blockquote class="testimonialQuote">
+                  {{ testimonials[index].quote }}
+                </blockquote>
+                <div class="testimonialAuthor">
+                  <div class="testimonialAuthorAvatar">
+                    {{ testimonials[index].initials }}
+                  </div>
+                  <div class="testimonialAuthorInfo">
+                    <CBLabel
+                      :text="testimonials[index].name"
+                      tag="span"
+                      weight="semibold"
+                      dense
+                      class="testimonialAuthorName"
+                    />
+                    <CBLabel
+                      :text="testimonials[index].role"
+                      tag="span"
+                      size="sm"
+                      color="secondary"
+                      dense
+                      class="testimonialAuthorRole"
+                    />
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+            </template>
+          </CBCarousel>
         </div>
       </section>
 
@@ -576,92 +628,33 @@ onMounted(() => {
             />
           </div>
 
-          <div class="supportersGrid animateOnScroll">
+          <CBMarquee
+            :gap="24"
+            :speed="40"
+            slow-on-hover
+            :slow-on-hover-rate="0.3"
+            :fade-size="60"
+            class="supportersMarquee animateOnScroll"
+          >
             <CBCard
+              v-for="supporter in supporters"
+              :key="supporter.name"
               variant="outlined"
               :rounded="16"
               hover
               bg-color="var(--bg-white)"
               border-color="var(--border-light)"
               :border-width="1"
-              class="supporterCard supporterCard--magenta"
+              :class="['supporterCard', `supporterCard--${supporter.color}`]"
             >
               <div class="supporterCardInner">
                 <div class="supporterIconWrapper">
-                  <CBIcon icon="luc-building-2" size="1.5rem" color="#ffffff" />
+                  <CBIcon :icon="supporter.icon" size="1.5rem" color="#ffffff" />
                 </div>
-                <CBLabel text="Apoiador 1" size="md" weight="semibold" class="supporterName" />
+                <CBLabel :text="supporter.name" size="md" weight="semibold" class="supporterName" />
               </div>
             </CBCard>
-
-            <CBCard
-              variant="outlined"
-              :rounded="16"
-              hover
-              bg-color="var(--bg-white)"
-              border-color="var(--border-light)"
-              :border-width="1"
-              class="supporterCard supporterCard--coral"
-            >
-              <div class="supporterCardInner">
-                <div class="supporterIconWrapper">
-                  <CBIcon icon="luc-heart-handshake" size="1.5rem" color="#ffffff" />
-                </div>
-                <CBLabel text="Apoiador 2" size="md" weight="semibold" class="supporterName" />
-              </div>
-            </CBCard>
-
-            <CBCard
-              variant="outlined"
-              :rounded="16"
-              hover
-              bg-color="var(--bg-white)"
-              border-color="var(--border-light)"
-              :border-width="1"
-              class="supporterCard supporterCard--rosa"
-            >
-              <div class="supporterCardInner">
-                <div class="supporterIconWrapper">
-                  <CBIcon icon="luc-globe" size="1.5rem" color="#ffffff" />
-                </div>
-                <CBLabel text="Apoiador 3" size="md" weight="semibold" class="supporterName" />
-              </div>
-            </CBCard>
-
-            <CBCard
-              variant="outlined"
-              :rounded="16"
-              hover
-              bg-color="var(--bg-white)"
-              border-color="var(--border-light)"
-              :border-width="1"
-              class="supporterCard supporterCard--oliva"
-            >
-              <div class="supporterCardInner">
-                <div class="supporterIconWrapper">
-                  <CBIcon icon="luc-star" size="1.5rem" color="#ffffff" />
-                </div>
-                <CBLabel text="Apoiador 4" size="md" weight="semibold" class="supporterName" />
-              </div>
-            </CBCard>
-
-            <CBCard
-              variant="outlined"
-              :rounded="16"
-              hover
-              bg-color="var(--bg-white)"
-              border-color="var(--border-light)"
-              :border-width="1"
-              class="supporterCard supporterCard--laranja"
-            >
-              <div class="supporterCardInner">
-                <div class="supporterIconWrapper">
-                  <CBIcon icon="luc-award" size="1.5rem" color="#ffffff" />
-                </div>
-                <CBLabel text="Apoiador 5" size="md" weight="semibold" class="supporterName" />
-              </div>
-            </CBCard>
-          </div>
+          </CBMarquee>
         </div>
       </section>
 
@@ -1396,9 +1389,22 @@ onMounted(() => {
   margin: 0 auto;
 }
 
+.testimonialCarousel {
+  background: transparent;
+  padding-bottom: 2.5rem;
+}
+
+.testimonialCarousel :deep(.cbCarousel__indicators) {
+  bottom: 0;
+}
+
 .testimonialCard {
   position: relative;
-  padding: 4rem 3rem;
+  padding: 4rem 3rem 2rem;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   background: var(--bg-white);
   border: 1px solid var(--border-light);
   border-radius: 32px;
@@ -1496,13 +1502,13 @@ onMounted(() => {
   margin-top: 1rem;
 }
 
-.supportersGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
+.supportersMarquee {
+  margin-top: 1rem;
 }
 
 .supporterCard {
+  width: 180px;
+  flex-shrink: 0;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: var(--shadow-sm);
   cursor: pointer;
@@ -1822,10 +1828,6 @@ onMounted(() => {
 
   .programsGrid {
     grid-template-columns: 1fr;
-  }
-
-  .supportersGrid {
-    grid-template-columns: repeat(2, 1fr);
   }
 
   .ctaContent {
