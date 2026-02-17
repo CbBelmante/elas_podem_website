@@ -148,6 +148,11 @@
   /* Border focus */
   --cb-border-focus: rgba(var(--color-magenta-rgb), 0.5);
 
+  /* Carousel Indicators */
+  --cb-carousel-indicator-bg: rgba(var(--color-magenta-rgb), 0.25);
+  --cb-carousel-indicator-bg-active: var(--color-magenta);
+  --cb-carousel-indicator-bg-hover: rgba(var(--color-magenta-rgb), 0.5);
+
   /* ============================================
      VARIÁVEIS DO SITE
      ============================================ */

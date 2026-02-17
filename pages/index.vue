@@ -1395,7 +1395,7 @@ onMounted(() => {
 }
 
 .testimonialCarousel :deep(.cbCarousel__indicators) {
-  bottom: 0;
+  bottom: 4px;
 }
 
 .testimonialCard {
