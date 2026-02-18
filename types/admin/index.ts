@@ -36,8 +36,10 @@ export type {
   IHomePageData,
 } from './sections';
 
-// ---- Camada 2: Editable/Readonly split ----
+// ---- Camada 2: Editable/Readonly split (derivados de sectionFields.ts) ----
 export type {
+  FieldsByMode,
+  PreservedFields,
   IHeroEditable,
   IMissionEditable,
   IProgramEditable,

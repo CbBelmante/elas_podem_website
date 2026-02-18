@@ -3,9 +3,13 @@
  *
  * Funcoes de conversao entre formato Firestore (flat) e formato Editor (editable/readonly).
  *
+ * Usa SECTION_FIELDS como fonte de verdade para saber quais campos sao
+ * editable vs readonly. As funcoes genericas separateByFields/combineFromFields
+ * leem o config em runtime — nao precisa listar campos manualmente.
+ *
  * Padrao por secao:
- *   separate*Data()  — Firestore → { editable, readonly }  (abre pro formulario)
- *   combine*Data()   — { editable, readonly } → Firestore   (junta pro save)
+ *   separate*Data()  — Firestore -> { editable, readonly }  (abre pro formulario)
+ *   combine*Data()   — { editable, readonly } -> Firestore   (junta pro save)
  *   createDefault*() — valores iniciais quando Firestore esta vazio
  *   createNew*()     — item em branco para CRUD [+Novo] (arrays only)
  *
@@ -17,20 +21,17 @@
  *
  * @dependencias
  * - types/admin (interfaces de secao e editable/readonly)
+ * - definitions/sectionFields (config de modos)
  */
 
 import type {
   // Camada 1: Section Data
-  IHeroSection,
   IHeroStat,
-  IMissionSection,
   IProgram,
   ITestimonial,
   ISupporter,
   IContactSection,
   IContactMethod,
-  ICtaSection,
-  ISeo,
   // Camada 2: Editable/Readonly
   IHeroEditable,
   IMissionEditable,
@@ -51,51 +52,108 @@ import type {
   IHomePageData,
 } from '~/types/admin';
 
+import { SECTION_FIELDS } from '~/definitions/sectionFields';
+
+// ============================================================
+// HELPERS GENERICOS
+// ============================================================
+
+/**
+ * Deep clone de um valor (arrays, objetos, primitivos).
+ * Copia shallow de objetos e recursiva de arrays.
+ */
+function cloneValue(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map((v) => cloneValue(v));
+  if (typeof value === 'object' && value !== null) return { ...value };
+  return value;
+}
+
+/**
+ * Separa um objeto flat em { editable, readonly } baseado no config de campos.
+ *
+ * Le SECTION_FIELDS em runtime: campos marcados 'editable' vao pro editable,
+ * campos 'readonly' vao pro readonly. Valores sao clonados (nao referencia).
+ *
+ * @param data - Objeto flat do Firestore
+ * @param fields - Config de campos (ex: SECTION_FIELDS.programs)
+ * @returns { editable, readonly } com os campos separados
+ */
+function separateByFields<T extends Record<string, unknown>>(
+  data: T,
+  fields: Record<string, 'editable' | 'readonly'>,
+): { editable: Partial<T>; readonly: Partial<T> } {
+  const editable: Record<string, unknown> = {};
+  const readonly: Record<string, unknown> = {};
+
+  for (const [key, mode] of Object.entries(fields)) {
+    if (!(key in data)) continue;
+    const target = mode === 'editable' ? editable : readonly;
+    target[key] = cloneValue(data[key]);
+  }
+
+  return { editable: editable as Partial<T>, readonly: readonly as Partial<T> };
+}
+
+/**
+ * Combina editable + readonly de volta em um objeto flat.
+ *
+ * @param editable - Campos editaveis
+ * @param readonly - Campos readonly
+ * @returns Objeto flat recombinado
+ */
+function combineFromFields<T>(editable: Partial<T>, readonly: Partial<T>): T {
+  return { ...readonly, ...editable } as T;
+}
+
+/**
+ * Separa um array de objetos em { editable[], readonly[] } pareados por indice.
+ *
+ * @param data - Array de objetos do Firestore
+ * @param fields - Config de campos
+ * @returns { editable[], readonly[] }
+ */
+function separateArrayByFields<T extends Record<string, unknown>>(
+  data: T[],
+  fields: Record<string, 'editable' | 'readonly'>,
+): { editable: Partial<T>[]; readonly: Partial<T>[] } {
+  const results = data.map((item) => separateByFields(item, fields));
+  return {
+    editable: results.map((r) => r.editable),
+    readonly: results.map((r) => r.readonly),
+  };
+}
+
+/**
+ * Combina arrays pareados de editable + readonly de volta em um array flat.
+ *
+ * @param editable - Array de campos editaveis
+ * @param readonly - Array de campos readonly (pareado por indice)
+ * @param defaultReadonly - Fallback para readonly quando indice nao existe
+ * @returns Array de objetos flat recombinados
+ */
+function combineArrayFromFields<T>(
+  editable: Partial<T>[],
+  readonly: Partial<T>[],
+  defaultReadonly: Partial<T> = {},
+): T[] {
+  return editable.map((e, i) => ({ ...(readonly[i] || defaultReadonly), ...e }) as T);
+}
+
 // ============================================================
 // HERO
 // ============================================================
 
-/**
- * Separa dados Firebase do Hero em formato editable.
- *
- * @param data - Dados flat do Firestore (IHeroSection)
- * @returns Objeto com `editable` contendo todos os campos do Hero
- */
-export function separateHeroData(data: IHeroSection): { editable: IHeroEditable } {
-  return {
-    editable: {
-      badge: data.badge,
-      title: data.title,
-      subtitle: data.subtitle,
-      btnDonate: data.btnDonate,
-      btnHistory: data.btnHistory,
-      stats: data.stats.map((s) => ({ ...s })),
-    },
+export function separateHeroData(data: IHomePageData['content']['hero']) {
+  return separateByFields(data, SECTION_FIELDS.hero) as {
+    editable: IHeroEditable;
+    readonly: Record<string, never>;
   };
 }
 
-/**
- * Combina dados editable do Hero de volta para formato Firestore.
- *
- * @param editable - Dados editaveis do formulario
- * @returns IHeroSection pronto para salvar no Firestore
- */
-export function combineHeroData(editable: IHeroEditable): IHeroSection {
-  return {
-    badge: editable.badge,
-    title: editable.title,
-    subtitle: editable.subtitle,
-    btnDonate: editable.btnDonate,
-    btnHistory: editable.btnHistory,
-    stats: editable.stats.map((s) => ({ ...s })),
-  };
+export function combineHeroData(editable: IHeroEditable) {
+  return combineFromFields<IHomePageData['content']['hero']>(editable, {});
 }
 
-/**
- * Cria valores default para o Hero (estado inicial do formulario).
- *
- * @returns IHeroEditable com valores padrao
- */
 export function createDefaultHeroEditable(): IHeroEditable {
   return {
     badge: 'MOVIMENTO NACIONAL DESDE 2020',
@@ -111,11 +169,6 @@ export function createDefaultHeroEditable(): IHeroEditable {
   };
 }
 
-/**
- * Cria um stat em branco para adicionar ao Hero via CRUD [+Novo].
- *
- * @returns IHeroStat com valores vazios
- */
 export function createNewHeroStat(): IHeroStat {
   return { icon: 'luc-star', number: '', label: '' };
 }
@@ -124,47 +177,17 @@ export function createNewHeroStat(): IHeroStat {
 // MISSION
 // ============================================================
 
-/**
- * Separa dados Firebase da Missao em formato editable.
- *
- * @param data - Dados flat do Firestore (IMissionSection)
- * @returns Objeto com `editable` contendo todos os campos
- */
-export function separateMissionData(data: IMissionSection): { editable: IMissionEditable } {
-  return {
-    editable: {
-      badge: data.badge,
-      title: data.title,
-      text1: data.text1,
-      text2: data.text2,
-      btnText: data.btnText,
-      image: data.image,
-    },
+export function separateMissionData(data: IHomePageData['content']['mission']) {
+  return separateByFields(data, SECTION_FIELDS.mission) as {
+    editable: IMissionEditable;
+    readonly: Record<string, never>;
   };
 }
 
-/**
- * Combina dados editable da Missao de volta para formato Firestore.
- *
- * @param editable - Dados editaveis do formulario
- * @returns IMissionSection pronto para salvar
- */
-export function combineMissionData(editable: IMissionEditable): IMissionSection {
-  return {
-    badge: editable.badge,
-    title: editable.title,
-    text1: editable.text1,
-    text2: editable.text2,
-    btnText: editable.btnText,
-    image: editable.image,
-  };
+export function combineMissionData(editable: IMissionEditable) {
+  return combineFromFields<IHomePageData['content']['mission']>(editable, {});
 }
 
-/**
- * Cria valores default para a Missao.
- *
- * @returns IMissionEditable com valores padrao
- */
 export function createDefaultMissionEditable(): IMissionEditable {
   return {
     badge: 'NOSSA MISSAO',
@@ -180,119 +203,47 @@ export function createDefaultMissionEditable(): IMissionEditable {
 // PROGRAMS
 // ============================================================
 
-/**
- * Separa dados Firebase dos Programas em editable + readonly.
- *
- * O campo `color` vai para readonly (nao editavel pelo admin).
- *
- * @param data - Array de programas do Firestore
- * @returns Objeto com `editable[]` e `readonly[]` pareados por indice
- */
-export function separateProgramsData(
-  data: IProgram[],
-): { editable: IProgramEditable[]; readonly: IProgramReadonly[] } {
-  return {
-    editable: data.map((p) => ({
-      title: p.title,
-      description: p.description,
-      icon: p.icon,
-      link: p.link,
-    })),
-    readonly: data.map((p) => ({
-      color: p.color,
-    })),
+export function separateProgramsData(data: IProgram[]) {
+  return separateArrayByFields(data, SECTION_FIELDS.programs) as {
+    editable: IProgramEditable[];
+    readonly: IProgramReadonly[];
   };
 }
 
-/**
- * Combina editable + readonly dos Programas de volta para formato Firestore.
- *
- * @param editable - Campos editaveis de cada programa
- * @param readonly - Campos readonly (color) de cada programa
- * @returns IProgram[] pronto para salvar
- */
 export function combineProgramsData(
   editable: IProgramEditable[],
   readonly: IProgramReadonly[],
 ): IProgram[] {
-  return editable.map((e, i) => ({
-    ...e,
-    color: readonly[i]?.color || 'magenta',
-  }));
+  return combineArrayFromFields<IProgram>(editable, readonly, { color: 'magenta' });
 }
 
-/**
- * Cria valores default para um Programa (estado inicial do formulario).
- *
- * @returns IProgramEditable com valores padrao
- */
 export function createDefaultProgramEditable(): IProgramEditable {
   return { title: '', description: '', icon: 'luc-star', link: 'Saiba Mais' };
 }
 
-/**
- * Cria um programa em branco para adicionar via CRUD [+Novo].
- *
- * @returns IProgram com valores vazios (inclui color default)
- */
 export function createNewProgram(): IProgram {
-  return {
-    title: '',
-    description: '',
-    icon: 'luc-star',
-    color: 'magenta',
-    link: 'Saiba Mais',
-  };
+  return { title: '', description: '', icon: 'luc-star', color: 'magenta', link: 'Saiba Mais' };
 }
 
 // ============================================================
 // TESTIMONIALS
 // ============================================================
 
-/**
- * Separa dados Firebase dos Depoimentos em formato editable.
- *
- * @param data - Array de depoimentos do Firestore
- * @returns Objeto com `editable[]`
- */
-export function separateTestimonialsData(
-  data: ITestimonial[],
-): { editable: ITestimonialEditable[] } {
-  return {
-    editable: data.map((t) => ({
-      quote: t.quote,
-      name: t.name,
-      role: t.role,
-      initials: t.initials,
-      image: t.image,
-    })),
+export function separateTestimonialsData(data: ITestimonial[]) {
+  return separateArrayByFields(data, SECTION_FIELDS.testimonials) as {
+    editable: ITestimonialEditable[];
+    readonly: Record<string, never>[];
   };
 }
 
-/**
- * Combina editable dos Depoimentos de volta para formato Firestore.
- *
- * @param editable - Campos editaveis de cada depoimento
- * @returns ITestimonial[] pronto para salvar
- */
 export function combineTestimonialsData(editable: ITestimonialEditable[]): ITestimonial[] {
-  return editable.map((e) => ({ ...e }));
+  return combineArrayFromFields<ITestimonial>(editable, []);
 }
 
-/**
- * Cria valores default para um Depoimento.
- *
- * @returns ITestimonialEditable com valores vazios
- */
 export function createDefaultTestimonialEditable(): ITestimonialEditable {
   return { quote: '', name: '', role: '', initials: '', image: '' };
 }
 
-/**
- * Cria um depoimento em branco para CRUD [+Novo].
- *
- * @returns ITestimonial com valores vazios
- */
 export function createNewTestimonial(): ITestimonial {
   return { quote: '', name: '', role: '', initials: '', image: '' };
 }
@@ -301,61 +252,24 @@ export function createNewTestimonial(): ITestimonial {
 // SUPPORTERS
 // ============================================================
 
-/**
- * Separa dados Firebase dos Apoiadores em editable + readonly.
- *
- * O campo `color` vai para readonly.
- *
- * @param data - Array de apoiadores do Firestore
- * @returns Objeto com `editable[]` e `readonly[]` pareados por indice
- */
-export function separateSupportersData(
-  data: ISupporter[],
-): { editable: ISupporterEditable[]; readonly: ISupporterReadonly[] } {
-  return {
-    editable: data.map((s) => ({
-      name: s.name,
-      icon: s.icon,
-      image: s.image,
-      url: s.url,
-    })),
-    readonly: data.map((s) => ({
-      color: s.color,
-    })),
+export function separateSupportersData(data: ISupporter[]) {
+  return separateArrayByFields(data, SECTION_FIELDS.supporters) as {
+    editable: ISupporterEditable[];
+    readonly: ISupporterReadonly[];
   };
 }
 
-/**
- * Combina editable + readonly dos Apoiadores de volta para formato Firestore.
- *
- * @param editable - Campos editaveis de cada apoiador
- * @param readonly - Campos readonly (color) de cada apoiador
- * @returns ISupporter[] pronto para salvar
- */
 export function combineSupportersData(
   editable: ISupporterEditable[],
   readonly: ISupporterReadonly[],
 ): ISupporter[] {
-  return editable.map((e, i) => ({
-    ...e,
-    color: readonly[i]?.color || 'magenta',
-  }));
+  return combineArrayFromFields<ISupporter>(editable, readonly, { color: 'magenta' });
 }
 
-/**
- * Cria valores default para um Apoiador.
- *
- * @returns ISupporterEditable com valores padrao
- */
 export function createDefaultSupporterEditable(): ISupporterEditable {
   return { name: '', icon: 'luc-building-2', image: '', url: '' };
 }
 
-/**
- * Cria um apoiador em branco para CRUD [+Novo].
- *
- * @returns ISupporter com valores vazios (inclui color default)
- */
 export function createNewSupporter(): ISupporter {
   return { name: '', icon: 'luc-building-2', color: 'magenta', image: '', url: '' };
 }
@@ -365,44 +279,31 @@ export function createNewSupporter(): ISupporter {
 // ============================================================
 
 /**
- * Separa dados Firebase do Contato em editable + readonly.
- *
- * As cores dos metodos de contato vao para readonly.
- *
- * @param data - Dados flat do Firestore (IContactSection)
- * @returns Objeto com `editable` e `readonly`
+ * Contact tem estrutura aninhada: campos top-level + methods[] com split proprio.
+ * Usa separateArrayByFields para os methods e monta o resultado manualmente.
  */
 export function separateContactData(
   data: IContactSection,
 ): { editable: IContactEditable; readonly: IContactReadonly } {
+  const { editable: methodsEditable, readonly: methodsReadonly } = separateArrayByFields(
+    data.methods,
+    SECTION_FIELDS.contactMethod,
+  );
+
   return {
     editable: {
       badge: data.badge,
       title: data.title,
       description: data.description,
-      methods: data.methods.map((m) => ({
-        label: m.label,
-        value: m.value,
-        icon: m.icon,
-        url: m.url,
-      })),
+      methods: methodsEditable as IContactMethodEditable[],
       formSubjects: [...data.formSubjects],
     },
     readonly: {
-      methods: data.methods.map((m) => ({
-        color: m.color,
-      })),
+      methods: methodsReadonly as IContactMethodReadonly[],
     },
   };
 }
 
-/**
- * Combina editable + readonly do Contato de volta para formato Firestore.
- *
- * @param editable - Campos editaveis do contato
- * @param readonly - Campos readonly (cores dos metodos)
- * @returns IContactSection pronto para salvar
- */
 export function combineContactData(
   editable: IContactEditable,
   readonly: IContactReadonly,
@@ -411,21 +312,13 @@ export function combineContactData(
     badge: editable.badge,
     title: editable.title,
     description: editable.description,
-    methods: editable.methods.map(
-      (e: IContactMethodEditable, i: number): IContactMethod => ({
-        ...e,
-        color: readonly.methods[i]?.color || 'magenta',
-      }),
-    ),
+    methods: combineArrayFromFields<IContactMethod>(editable.methods, readonly.methods, {
+      color: 'magenta',
+    }),
     formSubjects: [...editable.formSubjects],
   };
 }
 
-/**
- * Cria valores default para o Contato.
- *
- * @returns IContactEditable com valores padrao
- */
 export function createDefaultContactEditable(): IContactEditable {
   return {
     badge: 'CONTATO',
@@ -436,11 +329,6 @@ export function createDefaultContactEditable(): IContactEditable {
   };
 }
 
-/**
- * Cria um metodo de contato em branco para CRUD [+Novo].
- *
- * @returns IContactMethod com valores vazios (inclui color default)
- */
 export function createNewContactMethod(): IContactMethod {
   return { label: '', value: '', icon: 'luc-star', color: 'magenta' };
 }
@@ -449,43 +337,17 @@ export function createNewContactMethod(): IContactMethod {
 // CTA
 // ============================================================
 
-/**
- * Separa dados Firebase do CTA em formato editable.
- *
- * @param data - Dados flat do Firestore (ICtaSection)
- * @returns Objeto com `editable`
- */
-export function separateCtaData(data: ICtaSection): { editable: ICtaEditable } {
-  return {
-    editable: {
-      title: data.title,
-      subtitle: data.subtitle,
-      btnDonate: data.btnDonate,
-      btnProjects: data.btnProjects,
-    },
+export function separateCtaData(data: IHomePageData['content']['cta']) {
+  return separateByFields(data, SECTION_FIELDS.cta) as {
+    editable: ICtaEditable;
+    readonly: Record<string, never>;
   };
 }
 
-/**
- * Combina editable do CTA de volta para formato Firestore.
- *
- * @param editable - Dados editaveis do CTA
- * @returns ICtaSection pronto para salvar
- */
-export function combineCtaData(editable: ICtaEditable): ICtaSection {
-  return {
-    title: editable.title,
-    subtitle: editable.subtitle,
-    btnDonate: editable.btnDonate,
-    btnProjects: editable.btnProjects,
-  };
+export function combineCtaData(editable: ICtaEditable) {
+  return combineFromFields<IHomePageData['content']['cta']>(editable, {});
 }
 
-/**
- * Cria valores default para o CTA.
- *
- * @returns ICtaEditable com valores padrao
- */
 export function createDefaultCtaEditable(): ICtaEditable {
   return {
     title: 'Juntas Somos Mais Fortes',
@@ -499,50 +361,17 @@ export function createDefaultCtaEditable(): ICtaEditable {
 // SEO
 // ============================================================
 
-/**
- * Separa dados Firebase do SEO em editable + readonly.
- *
- * A config Open Graph (og) vai para readonly.
- *
- * @param data - Dados flat do Firestore (ISeo)
- * @returns Objeto com `editable` e `readonly`
- */
-export function separateSeoData(data: ISeo): { editable: ISeoEditable; readonly: ISeoReadonly } {
-  return {
-    editable: {
-      title: data.title,
-      description: data.description,
-      keywords: [...data.keywords],
-      ogImage: data.ogImage,
-    },
-    readonly: {
-      og: { ...data.og },
-    },
+export function separateSeoData(data: IHomePageData['seo']) {
+  return separateByFields(data, SECTION_FIELDS.seo) as {
+    editable: ISeoEditable;
+    readonly: ISeoReadonly;
   };
 }
 
-/**
- * Combina editable + readonly do SEO de volta para formato Firestore.
- *
- * @param editable - Campos editaveis do SEO
- * @param readonly - Config OG (readonly)
- * @returns ISeo pronto para salvar
- */
-export function combineSeoData(editable: ISeoEditable, readonly: ISeoReadonly): ISeo {
-  return {
-    title: editable.title,
-    description: editable.description,
-    keywords: [...editable.keywords],
-    ogImage: editable.ogImage,
-    og: { ...readonly.og },
-  };
+export function combineSeoData(editable: ISeoEditable, readonly: ISeoReadonly) {
+  return combineFromFields<IHomePageData['seo']>(editable, readonly);
 }
 
-/**
- * Cria valores default para o SEO.
- *
- * @returns ISeoEditable com valores padrao
- */
 export function createDefaultSeoEditable(): ISeoEditable {
   return {
     title: 'Elas Podem - Coletivo de Mulheres',
@@ -561,9 +390,6 @@ export function createDefaultSeoEditable(): ISeoEditable {
  * IHomeFormsData (formato do editor com editable/readonly split).
  *
  * Usado no homeEdit.vue ao carregar dados do Firebase.
- *
- * @param pageData - Documento completo do Firestore
- * @returns IHomeFormsData pronto para o editor
  */
 export function separateAllSections(pageData: IHomePageData): IHomeFormsData {
   const c = pageData.content;
@@ -585,8 +411,6 @@ export function separateAllSections(pageData: IHomePageData): IHomeFormsData {
  *
  * Usado como fallback quando o Firebase esta vazio/offline,
  * e como estado inicial do formulario antes de carregar dados.
- *
- * @returns IHomeFormsData com todos os defaults
  */
 export function createDefaultHomeForms(): IHomeFormsData {
   return {

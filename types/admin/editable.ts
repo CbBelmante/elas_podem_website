@@ -1,202 +1,185 @@
 /**
  * Editable/Readonly Types - Elas Podem Admin
  *
- * Camada 2: Separacao do que o admin pode editar vs o que e somente leitura.
+ * Camada 2: Tipos DERIVADOS automaticamente de sections.ts + sectionFields.ts.
  *
- * Padrao:
- * - I*Editable → campos que aparecem no formulario do admin
- * - I*Readonly → campos preservados mas ocultos do formulario (ex: cores)
+ * NAO edite tipos manualmente aqui. Para mudar um campo de editable para readonly:
+ *   -> Mude em definitions/sectionFields.ts
+ *   Os tipos aqui se recalculam automaticamente via FieldsByMode.
  *
- * Por que separar? O admin nao deve alterar valores que afetam o design
- * (cores, configs OG). Esses campos sao preservados no save mas nao
- * aparecem nos inputs. Isso protege a integridade visual do site.
+ * Excecao: IContactEditable e IContactReadonly sao compostos manualmente
+ * porque Contact tem estrutura aninhada (methods[] com split proprio).
  *
  * @module types/admin/editable
  *
  * @dependencias
- * - types/admin/sections (IHeroStat, ISeoOg)
+ * - types/admin/sections (interfaces base)
+ * - definitions/sectionFields (config de modos)
  */
 
-import type { IHeroStat, ISeoOg } from './sections';
+import type {
+  IHeroSection,
+  IMissionSection,
+  IProgram,
+  ITestimonial,
+  ISupporter,
+  IContactMethod,
+  ICtaSection,
+  ISeo,
+} from './sections';
+import type { SECTION_FIELDS } from '~/definitions/sectionFields';
 
 // ============================================================
-// HERO — Tudo editavel
+// UTILITY TYPE
 // ============================================================
 
-/** Campos editaveis da secao Hero */
-export interface IHeroEditable {
-  /** Badge de destaque */
-  badge: string;
-  /** Titulo principal */
-  title: string;
-  /** Subtitulo */
-  subtitle: string;
-  /** Texto do botao de doacao */
-  btnDonate: string;
-  /** Texto do botao de historia */
-  btnHistory: string;
-  /** Stats editaveis (icon, number, label) */
-  stats: IHeroStat[];
-}
+/**
+ * Extrai de T apenas os campos cujo mode no Config e igual a Mode.
+ *
+ * @example
+ * ```typescript
+ * type Editable = FieldsByMode<IProgram, typeof SECTION_FIELDS.programs, 'editable'>
+ * // = { title: string, description: string, icon: string, link: string }
+ * ```
+ */
+export type FieldsByMode<
+  T,
+  Config extends Record<string, string>,
+  Mode extends string,
+> = Pick<
+  T,
+  { [K in keyof Config]: Config[K] extends Mode ? K : never }[keyof Config] & keyof T
+>;
+
+/**
+ * Extrai de T todos os campos que NAO sao 'editable' (readonly + hidden).
+ *
+ * Usado para gerar os tipos *Readonly — que na verdade contem tanto
+ * campos 'readonly' (visiveis no admin mas nao editaveis) quanto
+ * 'hidden' (invisiveis no admin, preservados silenciosamente no save).
+ *
+ * @example
+ * ```typescript
+ * type Preserved = PreservedFields<IProgram, typeof SECTION_FIELDS.programs>
+ * // = { color: string }  (color e 'hidden' — preservado no save)
+ * ```
+ */
+export type PreservedFields<
+  T,
+  Config extends Record<string, string>,
+> = Pick<
+  T,
+  {
+    [K in keyof Config]: Config[K] extends 'readonly' | 'hidden' ? K : never;
+  }[keyof Config] &
+    keyof T
+>;
 
 // ============================================================
-// MISSION — Tudo editavel
+// HERO — tudo editavel
 // ============================================================
 
-/** Campos editaveis da secao Missao */
-export interface IMissionEditable {
-  /** Badge de destaque */
-  badge: string;
-  /** Titulo */
-  title: string;
-  /** Primeiro paragrafo */
-  text1: string;
-  /** Segundo paragrafo */
-  text2: string;
-  /** Texto do botao CTA */
-  btnText: string;
-  /** URL da imagem (Firebase Storage) */
-  image: string;
-}
+export type IHeroEditable = FieldsByMode<
+  IHeroSection,
+  typeof SECTION_FIELDS.hero,
+  'editable'
+>;
+
+// ============================================================
+// MISSION — tudo editavel
+// ============================================================
+
+export type IMissionEditable = FieldsByMode<
+  IMissionSection,
+  typeof SECTION_FIELDS.mission,
+  'editable'
+>;
 
 // ============================================================
 // PROGRAMS — color e readonly
 // ============================================================
 
-/** Campos editaveis de um programa */
-export interface IProgramEditable {
-  /** Nome do programa */
-  title: string;
-  /** Descricao */
-  description: string;
-  /** Icone Lucide */
-  icon: string;
-  /** Texto do link/botao */
-  link: string;
-}
+export type IProgramEditable = FieldsByMode<
+  IProgram,
+  typeof SECTION_FIELDS.programs,
+  'editable'
+>;
 
-/** Campos readonly de um programa (preservados no save) */
-export interface IProgramReadonly {
-  /** Cor do tema — nao editavel pelo admin */
-  color: string;
-}
+export type IProgramReadonly = PreservedFields<IProgram, typeof SECTION_FIELDS.programs>;
 
 // ============================================================
-// TESTIMONIALS — Tudo editavel
+// TESTIMONIALS — tudo editavel
 // ============================================================
 
-/** Campos editaveis de um depoimento */
-export interface ITestimonialEditable {
-  /** Texto do depoimento */
-  quote: string;
-  /** Nome da pessoa */
-  name: string;
-  /** Cargo/funcao */
-  role: string;
-  /** Iniciais para avatar fallback */
-  initials: string;
-  /** URL da foto */
-  image: string;
-}
+export type ITestimonialEditable = FieldsByMode<
+  ITestimonial,
+  typeof SECTION_FIELDS.testimonials,
+  'editable'
+>;
 
 // ============================================================
 // SUPPORTERS — color e readonly
 // ============================================================
 
-/** Campos editaveis de um apoiador */
-export interface ISupporterEditable {
-  /** Nome do apoiador */
-  name: string;
-  /** Icone Lucide fallback */
-  icon: string;
-  /** URL do logo */
-  image: string;
-  /** URL do site */
-  url: string;
-}
+export type ISupporterEditable = FieldsByMode<
+  ISupporter,
+  typeof SECTION_FIELDS.supporters,
+  'editable'
+>;
 
-/** Campos readonly de um apoiador */
-export interface ISupporterReadonly {
-  /** Cor do tema — nao editavel pelo admin */
-  color: string;
-}
+export type ISupporterReadonly = PreservedFields<ISupporter, typeof SECTION_FIELDS.supporters>;
 
 // ============================================================
 // CONTACT — color dos metodos e readonly
 // ============================================================
 
-/** Campos editaveis de um metodo de contato */
-export interface IContactMethodEditable {
-  /** Label descritivo */
-  label: string;
-  /** Valor do contato */
-  value: string;
-  /** Icone Lucide */
-  icon: string;
-  /** URL clicavel (opcional) */
-  url?: string;
-}
+/** Campos editaveis de um metodo de contato (derivado via FieldsByMode) */
+export type IContactMethodEditable = FieldsByMode<
+  IContactMethod,
+  typeof SECTION_FIELDS.contactMethod,
+  'editable'
+>;
 
-/** Campos readonly de um metodo de contato */
-export interface IContactMethodReadonly {
-  /** Cor do tema — nao editavel pelo admin */
-  color: string;
-}
+/** Campos preservados de um metodo de contato (readonly + hidden) */
+export type IContactMethodReadonly = PreservedFields<
+  IContactMethod,
+  typeof SECTION_FIELDS.contactMethod
+>;
 
-/** Campos editaveis da secao Contato (inclui sub-arrays) */
+/**
+ * Campos editaveis da secao Contato.
+ *
+ * Composta manualmente porque Contact tem estrutura aninhada:
+ * os campos top-level sao todos editaveis, e methods[] usa o split
+ * derivado de contactMethod.
+ */
 export interface IContactEditable {
-  /** Badge de destaque */
   badge: string;
-  /** Titulo */
   title: string;
-  /** Descricao */
   description: string;
-  /** Metodos de contato editaveis */
   methods: IContactMethodEditable[];
-  /** Opcoes do select de assunto */
   formSubjects: string[];
 }
 
-/** Campos readonly da secao Contato */
+/** Campos readonly da secao Contato (cores dos metodos) */
 export interface IContactReadonly {
-  /** Cores dos metodos de contato */
   methods: IContactMethodReadonly[];
 }
 
 // ============================================================
-// CTA — Tudo editavel
+// CTA — tudo editavel
 // ============================================================
 
-/** Campos editaveis da secao CTA */
-export interface ICtaEditable {
-  /** Titulo */
-  title: string;
-  /** Subtitulo */
-  subtitle: string;
-  /** Texto do botao de doacao */
-  btnDonate: string;
-  /** Texto do botao de projetos */
-  btnProjects: string;
-}
+export type ICtaEditable = FieldsByMode<
+  ICtaSection,
+  typeof SECTION_FIELDS.cta,
+  'editable'
+>;
 
 // ============================================================
 // SEO — og config e readonly
 // ============================================================
 
-/** Campos editaveis do SEO */
-export interface ISeoEditable {
-  /** Titulo da pagina */
-  title: string;
-  /** Meta description */
-  description: string;
-  /** Keywords */
-  keywords: string[];
-  /** URL da imagem OG */
-  ogImage: string;
-}
+export type ISeoEditable = FieldsByMode<ISeo, typeof SECTION_FIELDS.seo, 'editable'>;
 
-/** Campos readonly do SEO (config Open Graph) */
-export interface ISeoReadonly {
-  /** Configuracao OG — nao editavel pelo admin */
-  og: ISeoOg;
-}
+export type ISeoReadonly = PreservedFields<ISeo, typeof SECTION_FIELDS.seo>;
