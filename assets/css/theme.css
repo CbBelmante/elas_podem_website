@@ -145,7 +145,7 @@
   --cb-navbar-avatar-bg: var(--color-coral-claro);
   --cb-navbar-avatar-text: var(--color-rosa);
 
-  /* Border focus */
+  /* Focus ring global — todos os componentes herdam via var(--cb-border-focus) */
   --cb-border-focus: rgba(var(--color-magenta-rgb), 0.5);
 
   /* Carousel Indicators */

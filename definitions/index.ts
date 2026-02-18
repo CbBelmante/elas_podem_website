@@ -1,0 +1,36 @@
+/**
+ * Definitions - Elas Podem
+ *
+ * Barrel export de todas as constantes, configs e funcoes de validacao.
+ *
+ * O QUE VAI AQUI:
+ * - Constantes (THEME_COLOR_OPTIONS, ICON_OPTIONS)
+ * - Configs de validacao (*_CONFIG, COMPRESSION_SETTINGS)
+ * - Funcoes de validacao (createValidationRules, isValidUrl)
+ *
+ * O QUE NAO VAI AQUI:
+ * - Interfaces de entidades (IHeroSection, IProgram) → vao em types/admin
+ * - Funcoes de conversao de dados (separate/combine) → vao em utils/
+ * - Composables (useAuth, usePageData) → vao em composables/
+ *
+ * @module definitions
+ */
+
+// ---- Opcoes de tema (cores, icones) ----
+export { THEME_COLOR_OPTIONS, ICON_OPTIONS } from './themeOptions';
+
+// ---- Configs de validacao por secao ----
+export {
+  HERO_CONFIG,
+  MISSION_CONFIG,
+  PROGRAMS_CONFIG,
+  TESTIMONIALS_CONFIG,
+  SUPPORTERS_CONFIG,
+  CONTACT_CONFIG,
+  CTA_CONFIG,
+  SEO_CONFIG,
+  COMPRESSION_SETTINGS,
+} from './validationConfigs';
+
+// ---- Funcoes de validacao ----
+export { createValidationRules, isValidUrl } from './validationRules';

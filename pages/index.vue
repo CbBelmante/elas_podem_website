@@ -1837,5 +1837,17 @@ onMounted(() => {
   .contactFormCard {
     padding: 2rem;
   }
+
+  .heroActions,
+  .ctaActions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .heroActions :deep(.cbButton),
+  .ctaActions :deep(.cbButton),
+  .btnMission {
+    width: 100%;
+  }
 }
 </style>

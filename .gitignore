@@ -31,10 +31,12 @@ logs
 .idea
 
 # Local env files
-.env
+# NOTA: .env NÃO é ignorado — Firebase web config é público por design
+# (chaves ficam no bundle do browser). Segurança vem das Firebase Security Rules.
 .env.*
-package-lock.json
+!.env
 !.env.example
+package-lock.json
 settings.json
 .claude
 .history
