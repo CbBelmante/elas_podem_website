@@ -16,7 +16,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "deploy": "npm run generate && firebase deploy --only hosting",
-    "deployPreview": "npm run generate && npx serve .output/public"
+    "deployPreview": "npm run generate && npx serve .output/public",
+    "seedAdmin": "npx tsx --no-deprecation scripts/seedAdmin.ts"
   },
   "dependencies": {
     "dayjs": "^1.11.19",
@@ -29,9 +30,11 @@
     "vue-router": "^4.6.4"
   },
   "devDependencies": {
+    "@inquirer/prompts": "^8.2.1",
     "@nuxt/eslint": "^1.13.0",
     "@vue/eslint-config-prettier": "^10.2.0",
     "eslint": "^9.39.2",
+    "firebase-admin": "^13.6.1",
     "prettier": "^3.8.1"
   }
 }

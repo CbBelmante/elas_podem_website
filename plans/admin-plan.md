@@ -29,7 +29,7 @@
 ### O que evoluímos do Just Prime:
 - **Factory pattern**: `usePageData` é uma factory genérica — `useHomePageData` é gerado por ela. Novas páginas (sobre, contato) reutilizam a factory sem duplicar código.
 - **Save embutido no factory**: Just Prime usa `useFirestoreAdmin` separado. Nós embutimos `saveSection()` e `saveAll()` direto no composable da página — menos indireção, mesma funcionalidade.
-- **Multi-role auth**: Just Prime tem admin único. Nós temos sistema multi-role (admin, redatora, moderadora) com permissões por ação.
+- **Multi-role auth**: Just Prime tem admin único. Nós temos sistema multi-role (admin, writer, moderator) com permissões por ação.
 - **SECTION_FIELDS como fonte de verdade**: Config centralizada de quais campos são editable/readonly/hidden, usada para gerar types e FormUtils automaticamente.
 - **Firestore collections centralizadas**: `definitions/firestoreCollections.ts` — zero strings hardcoded.
 - **Audit trail com ID + nome**: `updatedById` + `updatedByName` (não só email).
@@ -76,14 +76,17 @@ utils/
 └── Logger.ts                    # Logger com child() e levels (padrão Mnesis)
 
 middleware/
-└── admin.ts                     # Proteção de rotas admin (redireciona se não autenticado)
+└── admin.global.ts              # Proteção global de rotas admin (redireciona se não autenticado)
 
 plugins/
 └── auth.client.ts               # Inicializa auth listener no boot (client-side only)
 
-pages/admin/                     # [PENDENTE — Fase 1/2]
-├── login.vue                    # Login Firebase Auth
-├── index.vue                    # Dashboard
+scripts/
+└── seedAdmin.ts                 # Seed interativo (inquirer) — cria Auth + Firestore user
+
+pages/admin/                     # [IMPLEMENTADO — Fase 1]
+├── login.vue                    # Login Firebase Auth (standalone, layout: false)
+├── index.vue                    # Dashboard admin (hub + status + permissões)
 └── edit/
     └── homeEdit.vue             # Editor da home (todas as seções)
 ```
@@ -173,7 +176,7 @@ pages/admin/                     # [PENDENTE — Fase 1/2]
   /{userId}
     email: "maria@example.com"
     displayName: "Maria Silva"
-    role: "admin"                  # admin | redatora | moderadora
+    role: "superAdmin"              # superAdmin | admin | writer | moderator
     active: true
     lastLogin: Timestamp
 
@@ -298,11 +301,11 @@ export const PAGE_DOCUMENTS = {
 
 ### `adminRoles.ts` — Sistema multi-role
 ```typescript
-export const ADMIN_ROLES = { ADMIN: 'admin', REDATORA: 'redatora', MODERADORA: 'moderadora' } as const;
+export const ADMIN_ROLES = { SUPER_ADMIN: 'superAdmin', ADMIN: 'admin', WRITER: 'writer', MODERATOR: 'moderator' } as const;
 export const ADMIN_ROLE_PERMISSIONS = {
   admin: { canEdit: true, canPublish: true, canManageUsers: true, canViewLogs: true },
-  redatora: { canEdit: true, canPublish: false, canManageUsers: false, canViewLogs: false },
-  moderadora: { canEdit: false, canPublish: true, canManageUsers: false, canViewLogs: true },
+  writer: { canEdit: true, canPublish: false, canManageUsers: false, canViewLogs: false },
+  moderator: { canEdit: false, canPublish: true, canManageUsers: false, canViewLogs: true },
 }
 export function isValidRole(role: string): role is AdminRole
 export function getRolePermissions(role: AdminRole): RolePermissions
@@ -350,7 +353,7 @@ export function useAuth() {
     ...toRefs(state),  // user, userData, isLoading, error
 
     // Computed
-    isAuthenticated, isAdmin, isRedatora, isModeradora,
+    isAuthenticated, isSuperAdmin, isAdmin, isWriter, isModerator,
     userRole, permissions,
 
     // Actions
@@ -514,10 +517,11 @@ export class Logger {
 
 ## 8. Infra auxiliar
 
-### `middleware/admin.ts` [IMPLEMENTADO]
+### `middleware/admin.global.ts` [IMPLEMENTADO]
 ```typescript
+// Proteção global de todas as rotas /admin/*.
 // Redireciona para /admin/login se não autenticado.
-// Verifica hasAdminAccess() do useAuth.
+// Escapa /admin/login (não protege a própria tela de login).
 ```
 
 ### `plugins/auth.client.ts` [IMPLEMENTADO]
@@ -595,21 +599,26 @@ Firebase Firestore → loadPageData() → separateAllSections() → Template
 
 ## 10. Admin Pages
 
-### Login (`pages/admin/login.vue`) [PENDENTE]
+### Login (`pages/admin/login.vue`) [IMPLEMENTADO]
 ```
-Formulário simples com email e senha.
+Tela standalone (layout: false) com identidade visual do tema.
+Fundo var(--bg-hero), card com glassmorphism, logo, email/senha.
 Usa useAuth().signIn() e redireciona para /admin no sucesso.
-Mostra erros inline.
+Toggle de senha, erro inline (coral), loading state no botão.
+onMounted: se já logado, redireciona direto.
 ```
 
-### Dashboard (`pages/admin/index.vue`) [PENDENTE]
+### Dashboard (`pages/admin/index.vue`) [IMPLEMENTADO]
 ```
-Layout simples com cards linkando para cada seção:
-- [Home Page] → /admin/edit/homeEdit
-- [Configurações] → /admin/settings (futuro)
+Hub de navegação com status real do Firestore.
+Welcome com displayName + badge da role.
+Card "Home Page" com lastUpdated e updatedByName (do originalData).
+Permissões por role: canEdit → botão "Editar", canViewLogs → seção audit.
+Audit log: placeholder visual (Fase 2 — sem ações logadas ainda).
+Logout no header.
 
-Status: última atualização, quem editou
-Audit log: últimas ações (lê de admin_logs)
+TODO Fase 2: audit log real (admin_logs), cards de páginas adicionais,
+layouts/admin.vue com sidebar.
 ```
 
 ### Home Editor (`pages/admin/edit/homeEdit.vue`) [PENDENTE — Fase 2]
@@ -736,7 +745,7 @@ service firebase.storage {
 - [x] Configurar Firestore
 - [x] Configurar Storage
 - [x] Configurar Authentication (Email/Password)
-- [ ] Criar usuário admin no Firestore (/users)
+- [x] Criar usuário admin no Firestore (/users) — via `npm run seedAdmin` (script interativo)
 - [x] Adicionar variáveis no .env
 - [x] Instalar firebase SDK no projeto
 
@@ -759,10 +768,11 @@ service firebase.storage {
 - [x] `composables/useImageCompression.ts` — compressão Canvas API (responsabilidade separada)
 - [x] `composables/useFirebaseStorage.ts` — upload + delete + validação (lê IMAGE_UPLOAD_CONFIG)
 - [x] `composables/usePageEditor.ts` — change tracking + image cleanup + navigation guard
-- [x] `middleware/admin.ts` — proteção de rotas
+- [x] `middleware/admin.global.ts` — proteção global de rotas /admin/* (renomeado de admin.ts)
 - [x] `plugins/auth.client.ts` — init auth listener
-- [ ] `pages/admin/login.vue`
-- [ ] `pages/admin/index.vue` (dashboard)
+- [x] `pages/admin/login.vue` — tela standalone com identidade visual, toggle senha, erro inline
+- [x] `pages/admin/index.vue` — dashboard com status real, permissões por role, logout
+- [x] `scripts/seedAdmin.ts` — seed interativo com @inquirer/prompts (cria Auth + Firestore user)
 
 ### Fase 2: Editor da Home
 - [ ] `pages/admin/edit/homeEdit.vue` (editor com seções)
@@ -826,5 +836,5 @@ O padrão aguenta porque:
 
 ---
 
-**Status:** Fase 1 em andamento (~90% concluída — faltam login.vue e dashboard)
-**Próximos passos:** pages/admin/login.vue → pages/admin/index.vue (dashboard)
+**Status:** Fase 1 concluída (100%)
+**Próximos passos:** Fase 2 — pages/admin/edit/homeEdit.vue (editor das 8 seções da home)

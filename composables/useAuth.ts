@@ -32,7 +32,7 @@ import {
 // ============== DEPENDENCIAS INTERNAS ==============
 
 import { useFirebase } from '@composables/useFirebase';
-import { ADMIN_ROLES, isValidRole, getRolePermissions } from '@definitions/adminRoles';
+import { ADMIN_ROLES, isValidRole, getRolePermissions, isSuperAdminRole } from '@definitions/adminRoles';
 import { FIRESTORE_COLLECTIONS } from '@definitions/firestoreCollections';
 import type { AdminRole } from '@definitions/adminRoles';
 import { Logger } from '@utils/Logger';
@@ -89,16 +89,20 @@ export function useAuth() {
 
   const isAuthenticated = computed(() => !!state.user);
 
+  const isSuperAdmin = computed(
+    () => state.userData?.role === ADMIN_ROLES.SUPER_ADMIN && state.userData?.active === true,
+  );
+
   const isAdmin = computed(
-    () => state.userData?.role === ADMIN_ROLES.ADMIN && state.userData?.active === true,
+    () => (state.userData?.role === ADMIN_ROLES.ADMIN || isSuperAdmin.value) && state.userData?.active === true,
   );
 
-  const isRedatora = computed(
-    () => state.userData?.role === ADMIN_ROLES.REDATORA && state.userData?.active === true,
+  const isWriter = computed(
+    () => state.userData?.role === ADMIN_ROLES.WRITER && state.userData?.active === true,
   );
 
-  const isModeradora = computed(
-    () => state.userData?.role === ADMIN_ROLES.MODERADORA && state.userData?.active === true,
+  const isModerator = computed(
+    () => state.userData?.role === ADMIN_ROLES.MODERATOR && state.userData?.active === true,
   );
 
   const userRole = computed(() => state.userData?.role ?? null);
@@ -282,9 +286,10 @@ export function useAuth() {
 
     // Computed
     isAuthenticated,
+    isSuperAdmin,
     isAdmin,
-    isRedatora,
-    isModeradora,
+    isWriter,
+    isModerator,
     userRole,
     permissions,
 

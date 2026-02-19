@@ -33,7 +33,7 @@
 
 O admin precisa de:
 - Login seguro (nao qualquer pessoa pode editar o site)
-- Diferentes niveis de acesso (admin faz tudo, redatora so edita, moderadora so aprova)
+- Diferentes niveis de acesso (admin faz tudo, writer so edita, moderator so aprova)
 - Protecao de rotas (nao pode acessar `/admin/*` sem login)
 - Estado compartilhado (se logou, toda a app sabe)
 
@@ -56,6 +56,7 @@ middleware admin.ts    →  protege rotas (porteiro)
 - Precisar proteger uma nova rota
 
 ❌ **Nao precisa deste guia para:**
+- Entender a tela de login e o dashboard (va em `AdminPages_GUIDE.md`)
 - Editar conteudo das secoes (va em `SectionFields_GUIDE.md`)
 - Entender o fluxo de dados load/save (va em `PageData_GUIDE.md`)
 - Mudar regras de validacao (va em `Validation_GUIDE.md`)
@@ -84,7 +85,7 @@ const handleLogin = async () => {
 const { isAuthenticated, userRole, permissions } = useAuth();
 
 if (isAuthenticated.value) {
-  console.log('Logado como:', userRole.value);  // 'admin' | 'redatora' | 'moderadora'
+  console.log('Logado como:', userRole.value);  // 'admin' | 'writer' | 'moderator'
 }
 ```
 
@@ -118,16 +119,16 @@ await signOut();  // limpa estado + redireciona pra home
 | Role | Quem é | O que faz |
 |------|--------|-----------|
 | `admin` | Administradora | Acesso total — edita, publica, gerencia usuarios, ve logs |
-| `redatora` | Redatora de conteudo | Edita textos e imagens, mas nao publica sozinha |
-| `moderadora` | Moderadora/Revisora | Nao edita, mas aprova e publica, ve logs |
+| `writer` | Writer de conteudo | Edita textos e imagens, mas nao publica sozinha |
+| `moderator` | Moderator/Revisora | Nao edita, mas aprova e publica, ve logs |
 
 ### Tabela de Permissoes
 
 ```
                canEdit   canPublish   canManageUsers   canViewLogs
 admin            ✅          ✅            ✅              ✅
-redatora         ✅          ❌            ❌              ❌
-moderadora       ❌          ✅            ❌              ✅
+writer         ✅          ❌            ❌              ❌
+moderator       ❌          ✅            ❌              ✅
 ```
 
 ### Como adicionar nova role
@@ -137,8 +138,8 @@ moderadora       ❌          ✅            ❌              ✅
 ```typescript
 export const ADMIN_ROLES = {
   ADMIN: 'admin',
-  REDATORA: 'redatora',
-  MODERADORA: 'moderadora',
+  WRITER: 'writer',
+  MODERATOR: 'moderator',
   FINANCEIRA: 'financeira',   // ← NOVA
 } as const satisfies Record<string, string>;
 ```
@@ -227,7 +228,7 @@ Usuario acessa /admin/login
 ```
 Usuario acessa /admin/dashboard
   │
-  ├─ middleware/admin.ts executa ANTES da pagina
+  ├─ middleware/admin.global.ts executa ANTES da pagina
   │     path = '/admin/dashboard'
   │     path === '/admin/login'? NAO
   │     path.startsWith('/admin')? SIM
@@ -287,7 +288,7 @@ utils/
                    useFirebase()     ← singleton ($app, $db, $auth, $storage)
                    /         \
                   ▼           ▼
-            useAuth()    middleware/admin.ts
+            useAuth()    middleware/admin.global.ts
                │              │
                │         checa $auth.currentUser
                │
@@ -369,7 +370,7 @@ Firebase Auth                    Firestore /users
 ─────────────                    ─────────────────
 email ✅                         email ✅
 uid ✅                           displayName ✅
-senha (hash) ✅                  role ✅ (admin/redatora/moderadora)
+senha (hash) ✅                  role ✅ (admin/writer/moderator)
                                  active ✅ (pode desativar)
                                  lastLogin ✅
 ```
@@ -384,8 +385,8 @@ Firebase Auth so guarda credenciais. Role e permissoes ficam no Firestore porque
 ```typescript
 export const ADMIN_ROLES = {
   ADMIN: 'admin',
-  REDATORA: 'redatora',
-  MODERADORA: 'moderadora',
+  WRITER: 'writer',
+  MODERATOR: 'moderator',
 } as const satisfies Record<string, string>;
 
 export type AdminRole = (typeof ADMIN_ROLES)[keyof typeof ADMIN_ROLES];
@@ -394,13 +395,13 @@ export type AdminRole = (typeof ADMIN_ROLES)[keyof typeof ADMIN_ROLES];
 Passo a passo:
 ```
 1. typeof ADMIN_ROLES
-   = { readonly ADMIN: 'admin', readonly REDATORA: 'redatora', readonly MODERADORA: 'moderadora' }
+   = { readonly ADMIN: 'admin', readonly WRITER: 'writer', readonly MODERATOR: 'moderator' }
 
 2. keyof typeof ADMIN_ROLES
-   = 'ADMIN' | 'REDATORA' | 'MODERADORA'
+   = 'ADMIN' | 'WRITER' | 'MODERATOR'
 
-3. (typeof ADMIN_ROLES)['ADMIN' | 'REDATORA' | 'MODERADORA']
-   = 'admin' | 'redatora' | 'moderadora'
+3. (typeof ADMIN_ROLES)['ADMIN' | 'WRITER' | 'MODERATOR']
+   = 'admin' | 'writer' | 'moderator'
 ```
 
 O `Record<AdminRole, ...>` nos display names e permissoes garante que se adicionar role nova, o TypeScript reclama em todos os mapas que faltam — impossivel esquecer.
@@ -455,8 +456,8 @@ Isso e o que faz a sessao "sobreviver" a recargas de pagina.
 
 | Export | Tipo | Descricao |
 |--------|------|-----------|
-| `ADMIN_ROLES` | const | `{ ADMIN: 'admin', REDATORA: 'redatora', MODERADORA: 'moderadora' }` |
-| `AdminRole` | type | `'admin' \| 'redatora' \| 'moderadora'` |
+| `ADMIN_ROLES` | const | `{ ADMIN: 'admin', WRITER: 'writer', MODERATOR: 'moderator' }` |
+| `AdminRole` | type | `'admin' \| 'writer' \| 'moderator'` |
 | `ADMIN_ROLE_DISPLAY_NAMES` | const | Nomes de exibicao por role |
 | `ADMIN_ROLE_DESCRIPTIONS` | const | Descricoes por role |
 | `ADMIN_ROLE_PERMISSIONS` | const | Permissoes (canEdit, canPublish, etc) por role |
@@ -484,8 +485,8 @@ Isso e o que faz a sessao "sobreviver" a recargas de pagina.
 | `error` | `Ref<string \| null>` | Mensagem de erro |
 | `isAuthenticated` | `ComputedRef<boolean>` | Tem usuario logado? |
 | `isAdmin` | `ComputedRef<boolean>` | Role admin + ativo? |
-| `isRedatora` | `ComputedRef<boolean>` | Role redatora + ativo? |
-| `isModeradora` | `ComputedRef<boolean>` | Role moderadora + ativo? |
+| `isWriter` | `ComputedRef<boolean>` | Role writer + ativo? |
+| `isModerator` | `ComputedRef<boolean>` | Role moderator + ativo? |
 | `userRole` | `ComputedRef<AdminRole \| null>` | Role atual |
 | `permissions` | `ComputedRef<Permissions \| null>` | Objeto de permissoes |
 | `signIn(email, password)` | `async` | Login com email/senha |
@@ -530,7 +531,7 @@ O uid voce pega no console do Firebase > Authentication > Users.
 
 ### Posso ter mais de um admin?
 
-Sim. Cada documento em `/users` e um usuario independente. Pode ter 3 admins, 2 redatoras e 1 moderadora — cada um com seu email/senha e role propria.
+Sim. Cada documento em `/users` e um usuario independente. Pode ter 3 admins, 2 writers e 1 moderator — cada um com seu email/senha e role propria.
 
 ### Como desativar um usuario sem deletar?
 
@@ -540,7 +541,7 @@ Mude `active: false` no documento Firestore. O login vai falhar com "Usuario des
 
 Verifique se:
 1. O documento existe em `/users` com o email correto
-2. O campo `role` tem valor valido (`admin`, `redatora` ou `moderadora`)
+2. O campo `role` tem valor valido (`admin`, `writer` ou `moderator`)
 3. O campo `active` e `true`
 
 ### Como adicionar nova role?

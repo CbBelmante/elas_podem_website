@@ -44,6 +44,7 @@ settings.json
 
 # Firebase
 .firebase
+serviceAccountKey.json
 
 # FlowForge
 .flowforge/logs/
