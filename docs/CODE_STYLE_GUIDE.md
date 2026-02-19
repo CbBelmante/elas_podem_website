@@ -21,12 +21,13 @@
 1. [**🏷️ Nomenclatura**](#️-nomenclatura) (Essencial)
 2. [**📁 Imports e Aliases**](#-imports-e-aliases) (Essencial)
 3. [**🧩 Vue SFC - Single File Component**](#-vue-sfc---single-file-component) (Essencial)
-4. [**📚 JSDoc e Documentação**](#-jsdoc-e-documentação) (Importante)
-5. [**🔧 Constantes e Types**](#-constantes-e-types) (Importante)
-6. [**🎣 Composables**](#-composables) (Importante)
-7. [**📘 Interfaces e Resultados**](#-interfaces-e-resultados) (Referência)
-8. [**🎨 Estilos CSS**](#-estilos-css) (Referência)
-9. [**✅ Checklist de Verificação**](#-checklist-de-verificação)
+4. [**🔄 Iteração e Simplicidade**](#-iteração-e-simplicidade) (Essencial)
+5. [**📚 JSDoc e Documentação**](#-jsdoc-e-documentação) (Importante)
+6. [**🔧 Constantes e Types**](#-constantes-e-types) (Importante)
+7. [**🎣 Composables**](#-composables) (Importante)
+8. [**📘 Interfaces e Resultados**](#-interfaces-e-resultados) (Referência)
+9. [**🎨 Estilos CSS**](#-estilos-css) (Referência)
+10. [**✅ Checklist de Verificação**](#-checklist-de-verificação)
 
 ---
 
@@ -883,6 +884,93 @@ Veja exemplo completo em `app/components/chat/MessageItem.vue:272-415`.
 
 ---
 
+## 🔄 Iteração e Simplicidade (Essencial)
+
+### **⚠️ REGRA DE OURO: Código Simples e Direto**
+
+**Evite** padrões rebuscados que obscurecem a intenção. O código deve ser legível de imediato — bateu o olho, entendeu.
+
+### **Iteração: Prefira Métodos Nativos Claros**
+
+| Usar | Evitar | Motivo |
+|------|--------|--------|
+| `for...of` | `.forEach()` | Suporta `break`, `continue`, `return`, `await` |
+| `for...in` | `Object.keys().forEach()` | Direto para enumerar propriedades |
+| `for` clássico | `.forEach(_, i)` com index | Controle total de fluxo |
+| `.find()` | `.filter()[0]` | Intenção clara: busca o primeiro |
+| `.some()` | `.filter().length > 0` | Intenção clara: existe algum? |
+| `.every()` | `!arr.some(x => !cond)` | Intenção clara: todos satisfazem? |
+| `.includes()` | `.indexOf() !== -1` | Legível, semântico |
+| `.map()` | `for` com `.push()` | Para transformação 1:1 (uso legítimo) |
+
+### **Exemplos Práticos**
+
+```typescript
+// ✅ CORRETO - for...of quando precisa iterar e agir
+for (const [key, mode] of Object.entries(SECTION_FIELDS.programs)) {
+  if (mode === 'editable') editable[key] = item[key];
+  else readonly[key] = item[key];
+}
+
+// ❌ ERRADO - forEach não permite break/return e obscurece fluxo
+Object.entries(SECTION_FIELDS.programs).forEach(([key, mode]) => {
+  if (mode === 'editable') editable[key] = item[key];
+  else readonly[key] = item[key];
+});
+```
+
+```typescript
+// ✅ CORRETO - find para buscar primeiro item
+const user = users.find(u => u.id === targetId);
+
+// ❌ ERRADO - filter + [0] pra pegar um item
+const user = users.filter(u => u.id === targetId)[0];
+```
+
+```typescript
+// ✅ CORRETO - .map() legítimo para transformação de dados
+const options = ICON_OPTIONS.map(opt => ({ value: opt.value, label: opt.label }));
+
+// ❌ ERRADO - acumulador com forEach/reduce desnecessário
+const options: Option[] = [];
+ICON_OPTIONS.forEach(opt => {
+  options.push({ value: opt.value, label: opt.label });
+});
+```
+
+### **Quando NÃO Usar `.reduce()`**
+
+`.reduce()` raramente é mais legível que um `for...of`. Use `.reduce()` **apenas** quando a operação é uma acumulação pura e simples (ex: somar números). Para construir objetos, arrays complexos, ou lógica condicional, prefira `for...of`.
+
+```typescript
+// ✅ CORRETO - reduce para soma simples
+const total = prices.reduce((sum, price) => sum + price, 0);
+
+// ❌ ERRADO - reduce para construir objeto (use for...of)
+const grouped = items.reduce((acc, item) => {
+  acc[item.category] = acc[item.category] || [];
+  acc[item.category].push(item);
+  return acc;
+}, {} as Record<string, Item[]>);
+
+// ✅ CORRETO - for...of para construir objeto
+const grouped: Record<string, Item[]> = {};
+for (const item of items) {
+  grouped[item.category] ??= [];
+  grouped[item.category].push(item);
+}
+```
+
+### **Princípios de Simplicidade**
+
+1. **Sem variáveis intermediárias desnecessárias** — se o valor é usado uma vez e inline é legível, não crie variável
+2. **Sem abstrações prematuras** — 3 linhas repetidas é melhor que uma abstração genérica usada 1 vez
+3. **Sem acumuladores locais** — evite `const result = []; items.forEach(x => result.push(...))`
+4. **Guard clauses** — retorne cedo (`if (!x) return;`) em vez de aninhar `if/else`
+5. **Código funcional SEM ser funcional rebuscado** — `.map()` e `.filter()` sim, cadeias de 5+ métodos não
+
+---
+
 ## ✅ Checklist de Verificação
 
 Use este checklist antes de commitar código:
@@ -928,6 +1016,16 @@ Use este checklist antes de commitar código:
 - [ ] Interface de resultado estende IBaseResult
 - [ ] Seções organizadas (COMPUTED, HELPERS, ACTIONS, RETURN)
 
+### **Iteração e Simplicidade**
+
+- [ ] Zero `.forEach()` — usar `for...of`, `for...in`, `for` clássico
+- [ ] `.find()` para buscar 1 item (nunca `.filter()[0]`)
+- [ ] `.some()` / `.every()` / `.includes()` para verificações
+- [ ] `.map()` apenas para transformação 1:1 (sem side-effects)
+- [ ] Sem acumuladores locais desnecessários (`const arr = []; x.forEach(...)`)
+- [ ] `.reduce()` apenas para acumulação numérica simples
+- [ ] Guard clauses (retorne cedo) em vez de `if/else` aninhado
+
 ### **Gerais**
 
 - [ ] Código sem console.log() (usar logger)
@@ -939,12 +1037,13 @@ Use este checklist antes de commitar código:
 
 ## 🎯 Resumo (TL;DR)
 
-### **4 Regras de Ouro**
+### **5 Regras de Ouro**
 
 1. **SEMPRE use aliases** (`@composables/useAuth` em vez de `../../composables/useAuth`)
 2. **Interfaces têm prefixo I** (`ICompany`, `IBaseResult`)
 3. **Constantes em SCREAMING_SNAKE_CASE** com `as const satisfies`
 4. **Classes CSS customizadas em camelCase** (`.userBubble`, `.messageWrapper` - exceto Tailwind/libs)
+5. **Código direto e simples** — `for...of` > `.forEach()`, `.find()` > `.filter()[0]`, zero acumuladores desnecessários
 
 ### **Template Rápido - Composable**
 
@@ -1029,7 +1128,7 @@ export function isValidNome(value: string): value is NomeType { }
 ---
 
 *📅 Criado em*: 17 JAN 26
-*📅 Última atualização*: 17 JAN 26
-*📋 Versão*: 1.0
+*📅 Última atualização*: 19 FEV 26
+*📋 Versão*: 1.1
 *👥 Responsável*: CbBelmante
 *🏷️ Tags*: [código, padrões, estilo, typescript, vue, nomenclatura, imports, aliases]

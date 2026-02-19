@@ -300,6 +300,7 @@ O `middleware/admin.ts` (named) so rodava em paginas que declarassem `definePage
 
 | Guia | Relacao |
 |------|---------|
+| `HomeEditor_GUIDE.md` | Editor da home — 8 secoes com CRUD, drag, upload, validacao |
 | `Auth_GUIDE.md` | Sistema de auth, roles e permissoes |
 | `PageData_GUIDE.md` | Factory, loadPageData, originalData |
 | `PageEditor_GUIDE.md` | Change tracking (usado no editor, nao no dashboard) |
