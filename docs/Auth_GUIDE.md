@@ -57,7 +57,8 @@ middleware admin.ts    →  protege rotas (porteiro)
 
 ❌ **Nao precisa deste guia para:**
 - Editar conteudo das secoes (va em `SectionFields_GUIDE.md`)
-- Mudar regras de validacao (va em `definitions/validationConfigs.ts`)
+- Entender o fluxo de dados load/save (va em `PageData_GUIDE.md`)
+- Mudar regras de validacao (va em `Validation_GUIDE.md`)
 - Configurar Firebase (va em `config/index.ts`)
 
 ---

@@ -29,6 +29,7 @@ export {
   CONTACT_CONFIG,
   CTA_CONFIG,
   SEO_CONFIG,
+  IMAGE_UPLOAD_CONFIG,
   COMPRESSION_SETTINGS,
 } from './validationConfigs';
 
@@ -38,6 +39,13 @@ export { createValidationRules, isValidUrl } from './validationRules';
 // ---- Config de campos editable/readonly (unica fonte de verdade) ----
 export { SECTION_FIELDS } from './sectionFields';
 export type { FieldMode } from './sectionFields';
+
+// ---- Firestore collections e documentos ----
+export {
+  FIRESTORE_COLLECTIONS,
+  PAGE_DOCUMENTS,
+} from './firestoreCollections';
+export type { FirestoreCollection, PageDocument } from './firestoreCollections';
 
 // ---- Admin roles ----
 export {

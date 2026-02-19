@@ -9,13 +9,12 @@
 
 ### Mantemos TUDO do Just Prime:
 - Section-based editing (cada seção é independente)
-- `usePageEditor` como orquestrador central (PageSectionConfig, SaveResult, change tracking)
+- `usePageEditor` como orquestrador central (SaveResult, change tracking)
 - `useValidation` com padrão `{ isValid, errors[] }` por seção
-- `useFirestoreAdmin` com `savePageSection()` genérico + wrappers + audit logging
 - `useFirebaseStorage` com upload, compressão, validação, cleanup de imagens
 - Separação editable/readonly nos dados (combine/separate pattern)
 - FormUtils com `createDefault*()`, `separate*Data()`, `combine*Data()`
-- AdminConfig com cores do tema, validation rules, defaults
+- Definitions com cores do tema, validation rules, defaults
 - Firebase Firestore + Auth + Storage
 - Middleware de autenticação
 - Type safety em tudo
@@ -23,44 +22,73 @@
 ### O que simplificamos na ORGANIZAÇÃO:
 - Just Prime: 6 FormUtils (1600+ linhas cada) → Nós: 1 FormUtils (home tem 8 seções simples)
 - Just Prime: 8+ páginas editáveis → Nós: 1 página (home) - escalável para mais
-- Just Prime: types espalhados → Nós: 1 arquivo de types (por enquanto)
-- Just Prime: AdminConfigUtils 400+ linhas → Nós: AdminConfig enxuto (sem cores Material Design, sem 6 efeitos hover)
+- Just Prime: types espalhados → Nós: `types/admin/` organizado em 4 camadas
+- Just Prime: AdminConfigUtils 400+ linhas → Nós: definitions/ enxuto (sem cores Material Design, sem 6 efeitos hover)
 - Hidden data (og, twitter) → SEO only, inline (não precisa de layer separado)
 
-**Resumo: mesmos padrões, menos arquivos, mesma funcionalidade.**
+### O que evoluímos do Just Prime:
+- **Factory pattern**: `usePageData` é uma factory genérica — `useHomePageData` é gerado por ela. Novas páginas (sobre, contato) reutilizam a factory sem duplicar código.
+- **Save embutido no factory**: Just Prime usa `useFirestoreAdmin` separado. Nós embutimos `saveSection()` e `saveAll()` direto no composable da página — menos indireção, mesma funcionalidade.
+- **Multi-role auth**: Just Prime tem admin único. Nós temos sistema multi-role (admin, redatora, moderadora) com permissões por ação.
+- **SECTION_FIELDS como fonte de verdade**: Config centralizada de quais campos são editable/readonly/hidden, usada para gerar types e FormUtils automaticamente.
+- **Firestore collections centralizadas**: `definitions/firestoreCollections.ts` — zero strings hardcoded.
+- **Audit trail com ID + nome**: `updatedById` + `updatedByName` (não só email).
+
+**Resumo: mesmos padrões, menos arquivos, mesma funcionalidade, melhor escalabilidade.**
 
 ---
 
 ## 2. Estrutura de Pastas
 
 ```
-composables/
-├── useFirebase.ts               # Firebase init (app, db, auth, storage)
-├── useAuth.ts                   # Autenticação (signIn, signOut, onAuthStateChanged)
-├── usePageEditor.ts             # Orquestrador (PageSectionConfig, saveAllSections, change tracking)
-├── usePageData.ts               # Leitura de dados (get/watch do Firestore)
-├── useFirestoreAdmin.ts         # Escrita no Firestore (savePageSection + wrappers + audit log)
-├── useValidation.ts             # Validadores por seção ({ isValid, errors[] })
-└── useFirebaseStorage.ts        # Upload, compressão, delete, validação de imagens
+config/
+├── constants.ts                 # Constantes da app (ALIAS_DEFINITIONS, APP_CONSTANTS)
+└── index.ts                     # useConfig() — .env vars com runtimeConfig
 
-types/
-└── admin.ts                     # TODOS os types (sections, editable/readonly, forms, page)
+composables/
+├── useFirebase.ts               # Firebase init (app, db, auth, storage) — singleton
+├── useAuth.ts                   # Autenticação multi-role (signIn, signOut, permissions)
+├── usePageData.ts               # Factory base — gera composables por página
+├── useHomePageData.ts           # Composable específico da home (gerado pela factory)
+├── useValidation.ts             # Validadores config-driven por seção
+├── useImageCompression.ts       # Compressão de imagens via Canvas API
+├── useFirebaseStorage.ts        # Upload, delete, validação (usa compression)
+└── usePageEditor.ts             # Change tracking, image cleanup, navigation guard
+
+types/admin/
+├── index.ts                     # Barrel export de todas as camadas
+├── sections.ts                  # Camada 1: Interfaces Firestore (IHeroSection, IHomePageData...)
+├── editable.ts                  # Camada 2: Editable/Readonly (IHeroEditable, IProgramReadonly...)
+├── formsData.ts                 # Camada 3: Container editor (IHomeFormsData)
+└── editor.ts                    # Camada 4: Types do orquestrador (SaveResult, ValidationResult...)
+
+definitions/
+├── index.ts                     # Barrel export de tudo
+├── sectionFields.ts             # SECTION_FIELDS — fonte de verdade editable/readonly/hidden
+├── validationConfigs.ts         # *_CONFIG com validationRules + items limits
+├── validationRules.ts           # createValidationRules() + isValidUrl()
+├── themeOptions.ts              # THEME_COLOR_OPTIONS, ICON_OPTIONS
+├── firestoreCollections.ts      # FIRESTORE_COLLECTIONS + PAGE_DOCUMENTS (zero hardcoded)
+└── adminRoles.ts                # ADMIN_ROLES, permissões, display names
 
 utils/
 ├── HomeFormUtils.ts             # separate/combine/createDefault para cada seção da home
-└── AdminConfig.ts               # Cores do tema, validation rules, compression settings, defaults
+└── Logger.ts                    # Logger com child() e levels (padrão Mnesis)
 
 middleware/
-└── admin.ts                     # Proteção de rotas admin
+└── admin.ts                     # Proteção de rotas admin (redireciona se não autenticado)
 
-pages/admin/
-├── index.vue                    # Dashboard
+plugins/
+└── auth.client.ts               # Inicializa auth listener no boot (client-side only)
+
+pages/admin/                     # [PENDENTE — Fase 1/2]
 ├── login.vue                    # Login Firebase Auth
+├── index.vue                    # Dashboard
 └── edit/
     └── homeEdit.vue             # Editor da home (todas as seções)
 ```
 
-**Total: ~12 arquivos** (Just Prime: ~30+ arquivos para a mesma funcionalidade)
+**Total atual: ~20 arquivos** (Just Prime: ~30+ arquivos para a mesma funcionalidade)
 
 ---
 
@@ -138,7 +166,16 @@ pages/admin/
         locale: "pt_BR"
 
     lastUpdated: timestamp
-    updatedBy: "admin"
+    updatedById: "abc123"          # ID do Firestore
+    updatedByName: "Maria Silva"   # displayName do admin
+
+/users
+  /{userId}
+    email: "maria@example.com"
+    displayName: "Maria Silva"
+    role: "admin"                  # admin | redatora | moderadora
+    active: true
+    lastLogin: Timestamp
 
 /admin_logs
   /{timestamp}_{action}
@@ -150,403 +187,86 @@ pages/admin/
 
 ---
 
-## 4. Types (types/admin.ts)
+## 4. Types (`types/admin/`)
 
+Os types são organizados em **4 camadas**, cada uma em seu arquivo:
+
+### Camada 1: `sections.ts` — Dados como são no Firestore
 ```typescript
-// ============================================================
-// SECTION DATA — Dados como são no Firebase (flat/complete)
-// ============================================================
-
-// ---- Hero ----
-export interface IHeroStat {
-  icon: string
-  number: string
-  label: string
-}
-
-export interface IHeroSection {
-  badge: string
-  title: string
-  subtitle: string
-  btnDonate: string
-  btnHistory: string
-  stats: IHeroStat[]
-}
-
-// ---- Mission ----
-export interface IMissionSection {
-  badge: string
-  title: string
-  text1: string
-  text2: string
-  btnText: string
-  image: string
-}
-
-// ---- Programs ----
-export interface IProgram {
-  title: string
-  description: string
-  icon: string
-  color: string       // magenta, coral, rosa, oliva, laranja
-  link: string
-}
-
-// ---- Testimonials ----
-export interface ITestimonial {
-  quote: string
-  name: string
-  role: string
-  initials: string
-  image: string
-}
-
-// ---- Supporters ----
-export interface ISupporter {
-  name: string
-  icon: string
-  color: string
-  image: string
-  url: string
-}
-
-// ---- Contact ----
-export interface IContactMethod {
-  label: string
-  value: string
-  icon: string
-  color: string
-  url?: string
-}
-
-export interface IContactSection {
-  badge: string
-  title: string
-  description: string
-  methods: IContactMethod[]
-  formSubjects: string[]
-}
-
-// ---- CTA ----
-export interface ICtaSection {
-  title: string
-  subtitle: string
-  btnDonate: string
-  btnProjects: string
-}
-
-// ---- SEO ----
-export interface ISeoOg {
-  type: string
-  siteName: string
-  locale: string
-}
-
-export interface ISeo {
-  title: string
-  description: string
-  keywords: string[]
-  ogImage: string
-  og: ISeoOg
-}
-
-// ============================================================
-// EDITABLE / READONLY SPLIT — Para o admin separar o que edita
-// ============================================================
-
-// ---- Hero ----
-export interface IHeroEditable {
-  badge: string
-  title: string
-  subtitle: string
-  btnDonate: string
-  btnHistory: string
-  stats: IHeroStat[]
-}
-// Hero não tem readonly (tudo é editável)
-
-// ---- Mission ----
-export interface IMissionEditable {
-  badge: string
-  title: string
-  text1: string
-  text2: string
-  btnText: string
-  image: string
-}
-
-// ---- Programs ----
-export interface IProgramEditable {
-  title: string
-  description: string
-  icon: string
-  link: string
-}
-
-export interface IProgramReadonly {
-  color: string       // cor vem do tema, admin não muda
-}
-
-// ---- Testimonials ----
-export interface ITestimonialEditable {
-  quote: string
-  name: string
-  role: string
-  initials: string
-  image: string
-}
-
-// ---- Supporters ----
-export interface ISupporterEditable {
-  name: string
-  icon: string
-  image: string
-  url: string
-}
-
-export interface ISupporterReadonly {
-  color: string
-}
-
-// ---- Contact ----
-export interface IContactMethodEditable {
-  label: string
-  value: string
-  icon: string
-  url?: string
-}
-
-export interface IContactMethodReadonly {
-  color: string
-}
-
-export interface IContactEditable {
-  badge: string
-  title: string
-  description: string
-  methods: IContactMethodEditable[]
-  formSubjects: string[]
-}
-
-export interface IContactReadonly {
-  methods: IContactMethodReadonly[]
-}
-
-// ---- CTA ----
-export interface ICtaEditable {
-  title: string
-  subtitle: string
-  btnDonate: string
-  btnProjects: string
-}
-
-// ---- SEO ----
-export interface ISeoEditable {
-  title: string
-  description: string
-  keywords: string[]
-  ogImage: string
-}
-
-export interface ISeoReadonly {
-  og: ISeoOg  // og config não muda pelo admin
-}
-
-// ============================================================
-// FORMS DATA — Container para o editor (editable + readonly)
-// ============================================================
-
-export interface IHomeFormsData {
-  hero: {
-    editable: IHeroEditable
-  }
-  mission: {
-    editable: IMissionEditable
-  }
-  programs: {
-    editable: IProgramEditable[]
-    readonly: IProgramReadonly[]
-  }
-  testimonials: {
-    editable: ITestimonialEditable[]
-  }
-  supporters: {
-    editable: ISupporterEditable[]
-    readonly: ISupporterReadonly[]
-  }
-  contact: {
-    editable: IContactEditable
-    readonly: IContactReadonly
-  }
-  cta: {
-    editable: ICtaEditable
-  }
-  seo: {
-    editable: ISeoEditable
-    readonly: ISeoReadonly
-  }
-}
-
-// ============================================================
-// PAGE COMPLETA — Como fica no Firestore
-// ============================================================
+// Interfaces que espelham o formato exato dos dados no Firestore
+export interface IHeroStat { icon: string; number: string; label: string }
+export interface IHeroSection { badge, title, subtitle, btnDonate, btnHistory, stats: IHeroStat[] }
+export interface IMissionSection { badge, title, text1, text2, btnText, image }
+export interface IProgram { title, description, icon, color, link }
+export interface ITestimonial { quote, name, role, initials, image }
+export interface ISupporter { name, icon, color, image, url }
+export interface IContactMethod { label, value, icon, color, url? }
+export interface IContactSection { badge, title, description, methods: IContactMethod[], formSubjects: string[] }
+export interface ICtaSection { title, subtitle, btnDonate, btnProjects }
+export interface ISeoOg { type, siteName, locale }
+export interface ISeo { title, description, keywords: string[], ogImage, og: ISeoOg }
 
 export interface IHomePageData {
-  content: {
-    hero: IHeroSection
-    mission: IMissionSection
-    programs: IProgram[]
-    testimonials: ITestimonial[]
-    supporters: ISupporter[]
-    contact: IContactSection
-    cta: ICtaSection
-  }
+  content: { hero, mission, programs[], testimonials[], supporters[], contact, cta }
   seo: ISeo
   lastUpdated: string
-  updatedBy: string
+  updatedById: string       # ID do Firestore
+  updatedByName: string     # displayName do admin
 }
+```
 
-// ============================================================
-// PAGE EDITOR — Types do orquestrador
-// ============================================================
+### Camada 2: `editable.ts` — Separação editable/readonly
+```typescript
+// Cada seção tem seu par editable/readonly (quando aplicável)
+export interface IHeroEditable { badge, title, subtitle, btnDonate, btnHistory, stats: IHeroStat[] }
+export interface IProgramEditable { title, description, icon, link }
+export interface IProgramReadonly { color }
+export interface ISeoEditable { title, description, keywords[], ogImage }
+export interface ISeoReadonly { og: ISeoOg }
+// ... etc. Gerados de acordo com SECTION_FIELDS (fonte de verdade)
+```
 
-export interface PageSectionConfig {
-  name: string                                                    // "Hero Section"
-  form: Ref<any>                                                  // Vue ref ao form state
-  originalData: () => any                                         // getter dos dados originais do Firebase
-  validator: (data: any) => { isValid: boolean; errors: string[] }
-  saveFunction: (data: any) => Promise<void>
-  getImageUrls: () => { old?: string; new?: string }              // para cleanup de imagens
-  updateLocalData: (data: any) => void                            // atualiza estado local após save
+### Camada 3: `formsData.ts` — Container para o editor
+```typescript
+export interface IHomeFormsData {
+  hero: { editable: IHeroEditable }
+  mission: { editable: IMissionEditable }
+  programs: { editable: IProgramEditable[]; readonly: IProgramReadonly[] }
+  testimonials: { editable: ITestimonialEditable[] }
+  supporters: { editable: ISupporterEditable[]; readonly: ISupporterReadonly[] }
+  contact: { editable: IContactEditable; readonly: IContactReadonly }
+  cta: { editable: ICtaEditable }
+  seo: { editable: ISeoEditable; readonly: ISeoReadonly }
 }
+```
 
-export interface PageEditorConfig {
-  pageName: string                    // "home"
-  sections: PageSectionConfig[]
-  pageData: Ref<any>
-  tempUploadedImages: Ref<string[]>   // tracks uploads temporários para cleanup no cancel
-}
-
+### Camada 4: `editor.ts` — Types do orquestrador
+```typescript
 export interface SaveResult {
-  success: boolean
-  message: string
-  savedSections: string[]
-  error?: Error
+  success: boolean; message: string; savedSections: string[]; error?: Error
 }
-
-// ============================================================
-// VALIDATION
-// ============================================================
-
-export interface ValidationResult {
-  isValid: boolean
-  errors: string[]
-}
-
-// ============================================================
-// ADMIN LOG
-// ============================================================
-
-export interface IAdminLog {
-  action: string
-  details: Record<string, any>
-  timestamp: string
-  user: string
-}
+export interface ValidationResult { isValid: boolean; errors: string[] }
+export interface IAdminLog { action, details, timestamp, user }
 ```
 
 ---
 
-## 5. Utils
+## 5. Definitions (`definitions/`)
 
-### HomeFormUtils.ts — Separação/Combinação de dados
-
+### `sectionFields.ts` — Fonte de verdade editable/readonly/hidden
 ```typescript
-// ============ PATTERN ============
-// Firebase (flat) → separate*Data() → { editable, readonly }
-// { editable, readonly } → combine*Data() → Firebase (flat)
-// createDefault*() → valores iniciais para formulários vazios
-
-// ============ HERO ============
-export function separateHeroData(data: IHeroSection): { editable: IHeroEditable }
-export function combineHeroData(editable: IHeroEditable): IHeroSection
-export function createDefaultHeroEditable(): IHeroEditable
-
-// ============ MISSION ============
-export function separateMissionData(data: IMissionSection): { editable: IMissionEditable }
-export function combineMissionData(editable: IMissionEditable): IMissionSection
-export function createDefaultMissionEditable(): IMissionEditable
-
-// ============ PROGRAMS ============
-export function separateProgramsData(data: IProgram[]): { editable: IProgramEditable[], readonly: IProgramReadonly[] }
-export function combineProgramsData(editable: IProgramEditable[], readonly: IProgramReadonly[]): IProgram[]
-export function createDefaultProgramEditable(): IProgramEditable
-export function createNewProgram(): IProgram   // para o CRUD [+Novo]
-
-// ============ TESTIMONIALS ============
-export function separateTestimonialsData(data: ITestimonial[]): { editable: ITestimonialEditable[] }
-export function combineTestimonialsData(editable: ITestimonialEditable[]): ITestimonial[]
-export function createDefaultTestimonialEditable(): ITestimonialEditable
-export function createNewTestimonial(): ITestimonial
-
-// ============ SUPPORTERS ============
-export function separateSupportersData(data: ISupporter[]): { editable: ISupporterEditable[], readonly: ISupporterReadonly[] }
-export function combineSupportersData(editable: ISupporterEditable[], readonly: ISupporterReadonly[]): ISupporter[]
-export function createDefaultSupporterEditable(): ISupporterEditable
-export function createNewSupporter(): ISupporter
-
-// ============ CONTACT ============
-export function separateContactData(data: IContactSection): { editable: IContactEditable, readonly: IContactReadonly }
-export function combineContactData(editable: IContactEditable, readonly: IContactReadonly): IContactSection
-export function createDefaultContactEditable(): IContactEditable
-export function createNewContactMethod(): IContactMethod
-
-// ============ CTA ============
-export function separateCtaData(data: ICtaSection): { editable: ICtaEditable }
-export function combineCtaData(editable: ICtaEditable): ICtaSection
-export function createDefaultCtaEditable(): ICtaEditable
-
-// ============ SEO ============
-export function separateSeoData(data: ISeo): { editable: ISeoEditable, readonly: ISeoReadonly }
-export function combineSeoData(editable: ISeoEditable, readonly: ISeoReadonly): ISeo
-export function createDefaultSeoEditable(): ISeoEditable
-
-// ============ PAGE COMPLETA ============
-export function createDefaultHomeForms(): IHomeFormsData   // deep clone de todos os defaults
-export function separateAllSections(pageData: IHomePageData): IHomeFormsData
+// Define quais campos de cada seção são editable, readonly ou hidden.
+// Usado para gerar types editable/readonly e guiar os FormUtils.
+export const SECTION_FIELDS = {
+  hero: { editable: ['badge', 'title', 'subtitle', 'btnDonate', 'btnHistory', 'stats'] },
+  programs: { editable: ['title', 'description', 'icon', 'link'], readonly: ['color'] },
+  seo: { editable: ['title', 'description', 'keywords', 'ogImage'], readonly: ['og'] },
+  // ... etc
+}
 ```
 
-### AdminConfig.ts — Configuração centralizada
-
+### `validationConfigs.ts` — Regras de validação por seção
 ```typescript
-// ============ CORES DO TEMA ============
-// Cores disponíveis no site Elas Podem (para selects no admin)
-export const THEME_COLOR_OPTIONS = [
-  { value: 'magenta', label: 'Magenta' },
-  { value: 'coral', label: 'Coral' },
-  { value: 'rosa', label: 'Rosa' },
-  { value: 'oliva', label: 'Oliva' },
-  { value: 'laranja', label: 'Laranja' },
-]
-
-// ============ ÍCONES DISPONÍVEIS ============
-export const ICON_OPTIONS = [
-  { value: 'luc-award', label: 'Prêmio' },
-  { value: 'luc-megaphone', label: 'Megafone' },
-  { value: 'luc-users', label: 'Pessoas' },
-  { value: 'luc-heart-handshake', label: 'Apoio' },
-  { value: 'luc-graduation-cap', label: 'Educação' },
-  { value: 'luc-scale', label: 'Justiça' },
-  { value: 'luc-globe', label: 'Globo' },
-  { value: 'luc-star', label: 'Estrela' },
-  { value: 'luc-building-2', label: 'Prédio' },
-  { value: 'luc-instagram', label: 'Instagram' },
-  { value: 'luc-user-check', label: 'Usuário' },
-  { value: 'luc-map-pin', label: 'Localização' },
-  // extensível...
-]
-
-// ============ VALIDATION RULES POR SEÇÃO ============
 export const HERO_CONFIG = {
   validationRules: {
     badge:      { required: true, minLength: 3, maxLength: 60 },
@@ -557,342 +277,270 @@ export const HERO_CONFIG = {
   },
   stats: { min: 1, max: 6 },
 }
+// ... MISSION_CONFIG, PROGRAMS_CONFIG, TESTIMONIALS_CONFIG,
+//     SUPPORTERS_CONFIG, CONTACT_CONFIG, CTA_CONFIG, SEO_CONFIG,
+//     COMPRESSION_SETTINGS
+```
 
-export const MISSION_CONFIG = {
-  validationRules: {
-    badge:   { required: true, minLength: 3, maxLength: 60 },
-    title:   { required: true, minLength: 5, maxLength: 100 },
-    text1:   { required: true, minLength: 20, maxLength: 500 },
-    text2:   { required: true, minLength: 20, maxLength: 500 },
-    btnText: { required: true, minLength: 2, maxLength: 40 },
-  },
+### `firestoreCollections.ts` — Collections centralizadas (zero hardcoded)
+```typescript
+export const FIRESTORE_COLLECTIONS = {
+  PAGES: 'pages',
+  USERS: 'users',
+  ADMIN_LOGS: 'admin_logs',
+} as const satisfies Record<string, string>;
+
+export const PAGE_DOCUMENTS = {
+  HOME: 'home',
+} as const satisfies Record<string, string>;
+// Novas páginas: adicionar aqui (ABOUT: 'about', CONTACT: 'contact'...)
+```
+
+### `adminRoles.ts` — Sistema multi-role
+```typescript
+export const ADMIN_ROLES = { ADMIN: 'admin', REDATORA: 'redatora', MODERADORA: 'moderadora' } as const;
+export const ADMIN_ROLE_PERMISSIONS = {
+  admin: { canEdit: true, canPublish: true, canManageUsers: true, canViewLogs: true },
+  redatora: { canEdit: true, canPublish: false, canManageUsers: false, canViewLogs: false },
+  moderadora: { canEdit: false, canPublish: true, canManageUsers: false, canViewLogs: true },
 }
+export function isValidRole(role: string): role is AdminRole
+export function getRolePermissions(role: AdminRole): RolePermissions
+```
 
-export const PROGRAMS_CONFIG = {
-  validationRules: {
-    title:       { required: true, minLength: 3, maxLength: 40 },
-    description: { required: true, minLength: 10, maxLength: 200 },
-    link:        { required: true, minLength: 2, maxLength: 30 },
-  },
-  items: { min: 1, max: 8 },
-}
+### `themeOptions.ts` — Cores e ícones
+```typescript
+export const THEME_COLOR_OPTIONS = [
+  { value: 'magenta', label: 'Magenta' },
+  { value: 'coral', label: 'Coral' },
+  // ...
+]
+export const ICON_OPTIONS = [
+  { value: 'luc-award', label: 'Prêmio' },
+  // ...
+]
+```
 
-export const TESTIMONIALS_CONFIG = {
-  validationRules: {
-    quote: { required: true, minLength: 20, maxLength: 500 },
-    name:  { required: true, minLength: 2, maxLength: 60 },
-    role:  { required: true, minLength: 2, maxLength: 60 },
-  },
-  items: { min: 1, max: 12 },
-}
-
-export const SUPPORTERS_CONFIG = {
-  validationRules: {
-    name: { required: true, minLength: 2, maxLength: 60 },
-  },
-  items: { min: 1, max: 20 },
-}
-
-export const CONTACT_CONFIG = {
-  validationRules: {
-    badge:       { required: true, minLength: 3, maxLength: 60 },
-    title:       { required: true, minLength: 3, maxLength: 60 },
-    description: { required: true, minLength: 10, maxLength: 300 },
-  },
-  methods: { min: 1, max: 8 },
-  formSubjects: { min: 1, max: 10 },
-}
-
-export const CTA_CONFIG = {
-  validationRules: {
-    title:       { required: true, minLength: 5, maxLength: 80 },
-    subtitle:    { required: true, minLength: 10, maxLength: 300 },
-    btnDonate:   { required: true, minLength: 2, maxLength: 30 },
-    btnProjects: { required: true, minLength: 2, maxLength: 30 },
-  },
-}
-
-export const SEO_CONFIG = {
-  validationRules: {
-    title:       { required: true, minLength: 5, maxLength: 60 },
-    description: { required: true, minLength: 10, maxLength: 160 },
-  },
-  keywords: { min: 1, max: 20 },
-}
-
-// ============ COMPRESSION SETTINGS ============
-export const COMPRESSION_SETTINGS = {
-  mission:    { enabled: true, quality: 0.8, maxWidth: 800, maxHeight: 600 },
-  supporters: { enabled: true, quality: 0.8, maxWidth: 200, maxHeight: 200 },
-  seo:        { enabled: true, quality: 0.9, maxWidth: 1200, maxHeight: 630 },
-  testimonials: { enabled: true, quality: 0.8, maxWidth: 200, maxHeight: 200 },
-}
-
-// ============ UTILITY FUNCTIONS ============
-export function createValidationRules(rules: {
-  required?: boolean
-  minLength?: number
-  maxLength?: number
-}): Array<(value: any) => string | boolean>
-// Retorna array de funções para usar em :rules do CBInput
-// Ex: [(v) => !!v || 'Campo obrigatório', (v) => v.length >= 5 || 'Mínimo 5 chars']
-
+### `validationRules.ts` — Funções de validação para UI
+```typescript
+export function createValidationRules(rules: { required?, minLength?, maxLength? }): Array<(v: any) => string | boolean>
 export function isValidUrl(url: string): boolean
-// Valida URL com new URL() constructor
 ```
 
 ---
 
 ## 6. Composables
 
-### useFirebase.ts
+### `useFirebase.ts` — Singleton Firebase [IMPLEMENTADO]
 ```typescript
-// Inicializa Firebase App, Firestore, Auth, Storage
-// Config via environment variables (.env)
-// Exporta instâncias prontas
-
+// Inicializa Firebase App, Firestore, Auth, Storage como singleton.
+// Config via useConfig() (runtimeConfig do .env).
 export function useFirebase() {
-  return {
-    $app: FirebaseApp,
-    $db: Firestore,
-    $auth: Auth,
-    $storage: FirebaseStorage,
-  }
+  return { $app, $db, $auth, $storage }
 }
 ```
 
-### useAuth.ts
+### `useAuth.ts` — Autenticação multi-role [IMPLEMENTADO]
 ```typescript
+// Singleton com Firebase Auth + Firestore users (multi-role).
+// Login, logout, auth state listener, permissões por role.
 export function useAuth() {
   return {
-    // State
-    currentUser: Ref<User | null>,
-    isAuthenticated: ComputedRef<boolean>,
+    // Estado (refs do reactive singleton)
+    ...toRefs(state),  // user, userData, isLoading, error
+
+    // Computed
+    isAuthenticated, isAdmin, isRedatora, isModeradora,
+    userRole, permissions,
 
     // Actions
-    signIn(email: string, password: string): Promise<void>,
-    signOut(): Promise<void>,
-
-    // Lifecycle
-    initAuthListener(): void,  // onAuthStateChanged
+    signIn(email, password): Promise<IAuthResult>,
+    signOut(): Promise<IAuthResult>,
+    refreshUserData(): Promise<void>,
+    hasAdminAccess(): boolean,
+    initAuthStateListener(),  // chamado pelo plugin auth.client.ts
   }
 }
 ```
 
-### usePageEditor.ts — Orquestrador Central (padrão Just Prime)
+### `usePageData.ts` — Factory base [IMPLEMENTADO]
 ```typescript
-// O coração do admin. Mesmo padrão do Just Prime.
+// Factory genérica que gera composables singleton por página.
+// Cada composable carrega do Firestore, transforma via separate/combine,
+// e expõe load/save/reset com audit trail.
 
-export function createSectionConfig(
-  name: string,
-  form: Ref<any>,
-  originalDataGetter: () => any,
-  validator: (data: any) => ValidationResult,
-  saveFunction: (data: any) => Promise<void>,
-  imageUrlsGetter: () => { old?: string; new?: string },
-  localDataUpdater: (data: any) => void,
-): PageSectionConfig
+export interface IPageDataConfig<TPageData, TFormsData> {
+  collection: string;       // ex: 'pages' (via FIRESTORE_COLLECTIONS.PAGES)
+  document: string;         // ex: 'home' (via PAGE_DOCUMENTS.HOME)
+  pageName: string;         // ex: 'home' (pra logs)
+  separateAll: (data: TPageData) => TFormsData;
+  createDefaults: () => TFormsData;
+  combineSections: { [K in keyof TFormsData]: (forms: TFormsData) => Record<string, unknown> };
+  // ^ mapped type — TypeScript EXIGE que TODAS as seções estejam presentes
+}
 
-export function createPageConfig(
-  pageName: string,
-  sections: PageSectionConfig[],
-  pageData: Ref<any>,
-  tempUploadedImages: Ref<string[]>,
-): PageEditorConfig
+export function createPageDataComposable<TPageData, TFormsData>(config) {
+  // Closure cria singleton isolado por página
+  let _state = null;
 
-export function usePageEditor() {
-  return {
-    // State
-    isSaving: Ref<boolean>,
-    hasChanges: Ref<boolean>,
-
-    // Main operations
-    saveAllSections(config: PageEditorConfig, showError: Function, showSuccess: Function): Promise<SaveResult>,
-    // Fluxo:
-    // 1. isSaving = true
-    // 2. Para cada seção:
-    //    a. Merge originalData() + form.value → sectionData
-    //    b. Roda validator → se inválido, retorna com erro
-    //    c. Coleta em sectionsToSave[]
-    // 3. Para cada seção coletada:
-    //    a. Chama saveFunction()
-    //    b. cleanupOldImage() — deleta imagem antiga do Storage se URL mudou
-    //    c. Remove de tempUploadedImages[]
-    //    d. Chama updateLocalData() — sincroniza estado local
-    // 4. logAdminAction('page_sections_updated', { page, sections, count })
-    // 5. hasChanges = false
-    // 6. finally: isSaving = false
-
-    // Change tracking
-    markAsChanged(): void,
-    setHasChanges(value: boolean): void,
-
-    // Navigation guard
-    canExit(tempUploadedImages: Ref<string[]>): boolean,
-    // Se hasChanges, mostra confirm(). Se confirmou sair, chama cleanupTempUploads()
-
-    // Image lifecycle
-    cleanupTempUploads(tempUploadedImages: Ref<string[]>): Promise<void>,
-    // Deleta todas as imagens temporárias do Storage (cancelamento/saída)
-    cleanupOldImage(oldUrl?: string, newUrl?: string, sectionName?: string): Promise<void>,
-    // Se a URL mudou e a antiga é do Firebase, deleta a antiga (silent fail)
+  return function() {
+    // Composable retornado
+    return {
+      ...toRefs(state),  // forms, originalData, isLoading, isSaving, error
+      isLoaded,
+      loadPageData(),     // Firestore → separateAll → forms
+      saveSection(name),  // combineSection → updateDoc (dot notation) → reload
+      saveAll(),          // combina TODAS as seções → updateDoc atômico → reload
+      resetSection(name), // volta pro originalData (ou defaults)
+      resetAll(),
+    }
   }
 }
 ```
 
-### usePageData.ts
+### `useHomePageData.ts` — Home específico [IMPLEMENTADO]
 ```typescript
-export function usePageData() {
-  return {
-    // Busca dados do Firestore
-    getPageData(pageId: string): Promise<IHomePageData>,
-
-    // Realtime listener
-    watchPageData(pageId: string): Ref<IHomePageData>,
-
-    // Fallback para defaults quando Firebase offline/vazio
-    // Usa createDefaultHomeForms() do HomeFormUtils
-  }
-}
+// Uma chamada à factory com config específica da home.
+// Usa FIRESTORE_COLLECTIONS e PAGE_DOCUMENTS (zero hardcoded).
+export const useHomePageData = createPageDataComposable<IHomePageData, IHomeFormsData>({
+  collection: FIRESTORE_COLLECTIONS.PAGES,
+  document: PAGE_DOCUMENTS.HOME,
+  pageName: 'home',
+  separateAll: separateAllSections,          // HomeFormUtils
+  createDefaults: createDefaultHomeForms,    // HomeFormUtils
+  combineSections: {
+    hero: (forms) => ({ 'content.hero': combineHeroData(forms.hero.editable) }),
+    mission: (forms) => ({ 'content.mission': combineMissionData(forms.mission.editable) }),
+    // ... todas as 8 seções mapeadas
+  },
+});
 ```
 
-### useFirestoreAdmin.ts — Escrita + Audit Log (padrão Just Prime)
+### `useValidation.ts` — Validadores config-driven [IMPLEMENTADO]
 ```typescript
-export function useFirestoreAdmin() {
-  return {
-    // ============ GENÉRICO ============
-    savePageSection(
-      collection: string,    // "pages"
-      documentId: string,    // "home"
-      fieldPath: string,     // "content.hero", "seo"
-      sectionData: any,
-      sectionName: string,   // para logging
-    ): Promise<void>,
-    // Internamente:
-    // - updateDoc({ [fieldPath]: sectionData, lastUpdated: ISO, updatedBy: 'admin' })
-
-    // ============ WRAPPERS POR SEÇÃO ============
-    saveHomeHeroSection(data: IHeroSection): Promise<void>,
-    // → savePageSection('pages', 'home', 'content.hero', data, 'Hero')
-    saveHomeMissionSection(data: IMissionSection): Promise<void>,
-    saveHomeProgramsSection(data: IProgram[]): Promise<void>,
-    saveHomeTestimonialsSection(data: ITestimonial[]): Promise<void>,
-    saveHomeSupportersSection(data: ISupporter[]): Promise<void>,
-    saveHomeContactSection(data: IContactSection): Promise<void>,
-    saveHomeCtaSection(data: ICtaSection): Promise<void>,
-    saveHomeSeoSection(data: ISeo): Promise<void>,
-
-    // ============ AUDIT LOG ============
-    logAdminAction(action: string, details: Record<string, any>): Promise<void>,
-    // Collection: admin_logs
-    // Doc ID: `${Date.now()}_${action}`
-    // Campos: { action, details, timestamp: ISO, user: 'admin' }
-    // Silent fail — não quebra se logging falhar
-  }
-}
-```
-
-### useValidation.ts — Validadores por seção (padrão Just Prime)
-```typescript
-// Todos retornam { isValid: boolean, errors: string[] }
-
+// Genérico — lê regras dos *_CONFIG em runtime.
+// Adicionar campo no config = validação automática (sem listar campos manualmente).
 export function useValidation() {
   return {
-    // ============ DISPATCHER GENÉRICO ============
-    validateSection(
-      name: string,             // "Hero Section"
-      data: any,
-      validator: Function,      // validador específico abaixo
-      showError: Function,      // callback de UI (toast/alert)
-    ): boolean,
-    // Chama validator(data), se inválido mostra showError com errors.join(', ')
+    // Genéricos (reutilizáveis para qualquer página)
+    validateFields(data, validationRules, sectionLabel): ValidationResult,
+    validateItemCount(items, rules, label): string[],
+    validateArrayItems(items, validationRules, sectionLabel): string[],
 
-    // ============ VALIDADORES POR SEÇÃO ============
-    validateHeroSection(data: IHeroEditable): ValidationResult,
-    // - badge, title, subtitle, btnDonate, btnHistory required (usa HERO_CONFIG)
-    // - stats: min 1, max 6; cada stat precisa de icon, number, label
-
-    validateMissionSection(data: IMissionEditable): ValidationResult,
-    // - badge, title, text1, text2, btnText required (usa MISSION_CONFIG)
-
-    validateProgramsSection(data: IProgramEditable[]): ValidationResult,
-    // - min 1, max 8 programs (usa PROGRAMS_CONFIG)
-    // - cada program: title, description, icon, link required
-
-    validateTestimonialsSection(data: ITestimonialEditable[]): ValidationResult,
-    // - min 1, max 12 testimonials (usa TESTIMONIALS_CONFIG)
-    // - cada item: quote (min 20), name, role required
-
-    validateSupportersSection(data: ISupporterEditable[]): ValidationResult,
-    // - min 1, max 20 supporters (usa SUPPORTERS_CONFIG)
-    // - cada item: name required
-
-    validateContactSection(data: IContactEditable): ValidationResult,
-    // - badge, title, description required (usa CONTACT_CONFIG)
-    // - methods: min 1, max 8; cada method: label, value, icon
-    // - formSubjects: min 1, max 10
-
-    validateCtaSection(data: ICtaEditable): ValidationResult,
-    // - title, subtitle, btnDonate, btnProjects required (usa CTA_CONFIG)
-
-    validateSeoSection(data: ISeoEditable): ValidationResult,
-    // - title (max 60), description (max 160) required (usa SEO_CONFIG)
-    // - keywords: min 1, max 20
-    // - ogImage: isValidUrl() se preenchido
-
-    // ============ HELPERS ============
-    isValidUrl(url: string): boolean,
+    // Específicos da home (wrappers finos que passam o config certo)
+    validateHero(data): ValidationResult,
+    validateMission(data): ValidationResult,
+    validatePrograms(items): ValidationResult,
+    validateTestimonials(items): ValidationResult,
+    validateSupporters(items): ValidationResult,
+    validateContact(data): ValidationResult,
+    validateCta(data): ValidationResult,
+    validateSeo(data): ValidationResult,
   }
 }
 ```
 
-### useFirebaseStorage.ts — Upload com compressão (padrão Just Prime)
+### `useImageCompression.ts` — Compressão de imagens [IMPLEMENTADO]
 ```typescript
+// Comprime imagens via Canvas API (client-side).
+// Responsabilidade única: compressão. Não sabe de Firebase.
+// Fallback seguro: se falhar, retorna o arquivo original.
+export function useImageCompression() {
+  return {
+    compressImage(file, options?): Promise<File>,  // redimensiona + ajusta qualidade JPEG
+    isCompressionSupported(): boolean,             // checa Canvas API
+  }
+}
+```
+
+### `useFirebaseStorage.ts` — Upload e gerenciamento de arquivos [IMPLEMENTADO]
+```typescript
+// Upload genérico, upload com compressão por categoria,
+// delete com silent fail, e validação de imagens.
+// Limites vêm de IMAGE_UPLOAD_CONFIG (definitions/validationConfigs.ts).
+// Compressão delegada ao useImageCompression.
 export function useFirebaseStorage() {
   return {
-    // ============ UPLOAD GENÉRICO ============
-    uploadFile(file: File, path: string): Promise<string>,
-    // Faz upload para Firebase Storage, retorna download URL
+    validateImageFile(file, maxSizeMB?): IFileValidation,  // tipo + tamanho + extensão
+    uploadFile(file, path): Promise<string>,               // upload genérico
+    uploadImage(file, category, customPath?): Promise<string>,  // comprime + upload
+    deleteFile(url): Promise<void>,                        // silent fail
+  }
+}
+```
 
-    // ============ UPLOAD COM COMPRESSÃO ============
-    uploadImage(
-      file: File,
-      category: keyof typeof COMPRESSION_SETTINGS,  // 'mission', 'supporters', 'seo', 'testimonials'
-      customPath?: string,
-    ): Promise<string>,
-    // Fluxo:
-    // 1. Valida tipo (image/*)
-    // 2. Busca config em COMPRESSION_SETTINGS[category]
-    // 3. Se compression.enabled:
-    //    a. Comprime com canvas (quality, maxWidth, maxHeight)
-    //    b. Fallback para original se compressão falhar
-    // 4. Gera filename: `${category}-${Date.now()}[_compressed].{ext}`
-    // 5. Path: `images/${category}/${fileName}`
-    // 6. uploadFile() e retorna URL
-
-    // ============ DELETE ============
-    deleteFile(url: string): Promise<void>,
-    // Extrai path da URL do Firebase (decodeURIComponent)
-    // deleteObject(ref)
-    // Silent fail
-
-    // ============ VALIDAÇÃO ============
-    validateImageFile(file: File, maxSizeMB?: number): { isValid: boolean; error?: string },
-    // 1. Tipo deve começar com 'image/'
-    // 2. Tamanho <= maxSizeMB * 1024 * 1024 (default: 5MB)
-    // 3. Extensão deve ser jpg, jpeg, png, webp
+### `usePageEditor.ts` — Orquestrador do editor [IMPLEMENTADO]
+```typescript
+// Change tracking, image cleanup, navigation guard.
+// NÃO faz save (save está no usePageData factory).
+// Usa useFirebaseStorage.deleteFile() para cleanup.
+export function usePageEditor() {
+  return {
+    hasChanges: Readonly<Ref<boolean>>,   // flag de mudanças
+    markAsChanged(),                       // seta hasChanges = true
+    resetChanges(),                        // seta hasChanges = false (após save)
+    cleanupOldImage(oldUrl, newUrl): Promise<void>,        // deleta imagem antiga
+    cleanupTempUploads(tempUploadedImages): Promise<void>, // limpa uploads não salvos
+    canExit(tempUploadedImages): Promise<boolean>,         // guard com confirm
   }
 }
 ```
 
 ---
 
-## 7. Fluxo de Dados Completo
+## 7. Utils
+
+### `HomeFormUtils.ts` — Separação/Combinação de dados [IMPLEMENTADO]
+```typescript
+// Pattern: Firebase (flat) → separate*Data() → { editable, readonly }
+//          { editable, readonly } → combine*Data() → Firebase (flat)
+//          createDefault*() → valores iniciais para formulários vazios
+
+// Por seção: separateHeroData, combineHeroData, createDefaultHeroEditable, ...
+// Agregadores: separateAllSections(pageData), createDefaultHomeForms()
+```
+
+### `Logger.ts` — Logger estruturado [IMPLEMENTADO]
+```typescript
+// Logger com child() e levels (padrão Mnesis).
+// Cada composable cria child com contexto: Logger.child({ composable: 'useAuth' })
+export class Logger {
+  static child(context): Logger
+  info(msg, meta?), warn(msg, meta?), error(msg, error?, meta?), debug(msg, meta?)
+}
+```
+
+---
+
+## 8. Infra auxiliar
+
+### `middleware/admin.ts` [IMPLEMENTADO]
+```typescript
+// Redireciona para /admin/login se não autenticado.
+// Verifica hasAdminAccess() do useAuth.
+```
+
+### `plugins/auth.client.ts` [IMPLEMENTADO]
+```typescript
+// Nuxt plugin (client-side only).
+// Chama initAuthStateListener() do useAuth no boot da aplicação.
+```
+
+### `config/constants.ts` [IMPLEMENTADO]
+```typescript
+// ALIAS_DEFINITIONS — fonte única de path aliases (@composables, @definitions, etc.)
+// getAliases(baseUrl) — converte para formato Nuxt/Vite
+// APP_CONSTANTS — constantes da app (nome, versão, features flags)
+```
+
+---
+
+## 9. Fluxo de Dados Completo
 
 ### No Editor (Admin):
 ```
 ┌─ Firebase ────────────────────────────────────────────────────────────────┐
-│  getPageData('home') → IHomePageData (flat)                              │
+│  loadPageData() → getDoc('pages/home') → IHomePageData (flat)            │
 └──────────────────────────────────────────┬────────────────────────────────┘
                                            ↓
 ┌─ HomeFormUtils ──────────────────────────────────────────────────────────┐
@@ -908,19 +556,18 @@ export function useFirebaseStorage() {
 │  Readonly é preservado mas não mostrado (ou mostrado como read-only)    │
 └──────────────────────────────────────────┬────────────────────────────────┘
                                            ↓
-┌─ Save Flow (usePageEditor.saveAllSections) ──────────────────────────────┐
-│  1. combine*Data(editable, readonly) → flat data                        │
-│  2. validator(flatData) → { isValid, errors }                           │
-│  3. saveFunction(flatData) → Firestore                                  │
-│  4. cleanupOldImage() se imagem mudou                                   │
-│  5. logAdminAction()                                                    │
-│  6. updateLocalData()                                                   │
+┌─ Save Flow (useHomePageData.saveSection / saveAll) ──────────────────────┐
+│  1. combine*Data(editable, readonly) → Firestore update data            │
+│  2. updateDoc com dot notation ('content.hero': {...})                  │
+│  3. Audit trail: updatedById + updatedByName + lastUpdated              │
+│  4. Reload automático (loadPageData)                                    │
+│  5. cleanupOldImage() se imagem mudou [via usePageEditor]               │
 └──────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### No Site (Público):
 ```
-Firebase Firestore → usePageData().watchPageData('home') → ref<IHomePageData> → Template
+Firebase Firestore → loadPageData() → separateAllSections() → Template
                                               ↓
                                      Fallback: createDefaultHomeForms() se vazio
 ```
@@ -946,9 +593,16 @@ Firebase Firestore → usePageData().watchPageData('home') → ref<IHomePageData
 
 ---
 
-## 8. Admin Pages
+## 10. Admin Pages
 
-### Dashboard (pages/admin/index.vue)
+### Login (`pages/admin/login.vue`) [PENDENTE]
+```
+Formulário simples com email e senha.
+Usa useAuth().signIn() e redireciona para /admin no sucesso.
+Mostra erros inline.
+```
+
+### Dashboard (`pages/admin/index.vue`) [PENDENTE]
 ```
 Layout simples com cards linkando para cada seção:
 - [Home Page] → /admin/edit/homeEdit
@@ -958,7 +612,7 @@ Status: última atualização, quem editou
 Audit log: últimas ações (lê de admin_logs)
 ```
 
-### Home Editor (pages/admin/edit/homeEdit.vue)
+### Home Editor (`pages/admin/edit/homeEdit.vue`) [PENDENTE — Fase 2]
 
 **Layout:** Accordion/Tabs com cada seção expandível
 
@@ -996,64 +650,17 @@ Audit log: últimas ações (lê de admin_logs)
 ```
 
 **Funcionalidades do editor:**
-- Cada seção registrada via `createSectionConfig()`
-- Validação em tempo real com `createValidationRules()` do AdminConfig
-- Validação final no save com `validateSection()` do useValidation
+- Cada seção usa `useHomePageData().saveSection('hero')` direto
+- Validação com `useValidation().validateHero(data)` antes do save
 - Change tracking (hasChanges) com confirmação ao sair
 - Upload de imagens com compressão automática
 - Cleanup de imagens temporárias no cancel
-- Audit logging de cada save
 - CRUD (add/edit/delete) para arrays (stats, programs, testimonials, supporters, methods)
 - Usa CBInput, CBTextarea, CBSelect, CBCard, CBButton do cbcomponents
 
-### Como cada seção é registrada no editor:
-```typescript
-// No homeEdit.vue setup:
-const { saveAllSections, hasChanges, markAsChanged, canExit, cleanupTempUploads } = usePageEditor()
-const { saveHomeHeroSection, saveHomeMissionSection, ... } = useFirestoreAdmin()
-const { validateHeroSection, validateMissionSection, ... } = useValidation()
-
-const pageData = await getPageData('home')
-const forms = ref(separateAllSections(pageData))
-const tempUploadedImages = ref<string[]>([])
-
-const sections: PageSectionConfig[] = [
-  createSectionConfig(
-    'Hero',
-    computed(() => forms.value.hero.editable),
-    () => pageData.content.hero,
-    validateHeroSection,
-    saveHomeHeroSection,
-    () => ({}),  // hero não tem imagem
-    (data) => { pageData.content.hero = data },
-  ),
-  createSectionConfig(
-    'Missão',
-    computed(() => forms.value.mission.editable),
-    () => pageData.content.mission,
-    validateMissionSection,
-    saveHomeMissionSection,
-    () => ({
-      old: pageData.content.mission.image,
-      new: forms.value.mission.editable.image,
-    }),
-    (data) => { pageData.content.mission = data },
-  ),
-  // ... demais seções
-]
-
-const pageConfig = createPageConfig('home', sections, ref(pageData), tempUploadedImages)
-
-// Save
-const handleSave = () => saveAllSections(pageConfig, showError, showSuccess)
-
-// Navigation guard
-onBeforeRouteLeave(() => canExit(tempUploadedImages))
-```
-
 ---
 
-## 9. Sobre o i18n
+## 11. Sobre o i18n
 
 ### Manter i18n para:
 - Labels de UI fixos (botões "Enviar", "Voltar", etc)
@@ -1072,7 +679,7 @@ onBeforeRouteLeave(() => canExit(tempUploadedImages))
 
 ---
 
-## 10. Firebase Setup
+## 12. Firebase Setup
 
 ### .env
 ```
@@ -1092,6 +699,11 @@ service cloud.firestore {
     // Leitura pública (site)
     match /pages/{pageId} {
       allow read: if true;
+      allow write: if request.auth != null;
+    }
+    // Users — só admin autenticado
+    match /users/{userId} {
+      allow read: if request.auth != null;
       allow write: if request.auth != null;
     }
     // Audit logs — só admin
@@ -1117,34 +729,43 @@ service firebase.storage {
 
 ---
 
-## 11. Checklist de Implementação
+## 13. Checklist de Implementação
 
 ### Fase 0: Setup Firebase
-- [ ] Criar projeto Firebase
-- [ ] Configurar Firestore
-- [ ] Configurar Storage
-- [ ] Configurar Authentication (Email/Password)
-- [ ] Criar usuário admin
-- [ ] Adicionar variáveis no .env
-- [ ] Instalar firebase SDK no projeto
+- [x] Criar projeto Firebase
+- [x] Configurar Firestore
+- [x] Configurar Storage
+- [x] Configurar Authentication (Email/Password)
+- [ ] Criar usuário admin no Firestore (/users)
+- [x] Adicionar variáveis no .env
+- [x] Instalar firebase SDK no projeto
 
 ### Fase 1: Infraestrutura
-- [ ] types/admin.ts (interfaces completas: sections + editable/readonly + forms + editor + validation)
-- [ ] utils/AdminConfig.ts (cores, ícones, validation rules, compression settings)
-- [ ] utils/HomeFormUtils.ts (separate/combine/createDefault para cada seção)
-- [ ] composables/useFirebase.ts (init)
-- [ ] composables/useAuth.ts (login/logout/listener)
-- [ ] composables/usePageData.ts (get/watch + fallback)
-- [ ] composables/useValidation.ts (8 validadores + dispatcher)
-- [ ] composables/useFirestoreAdmin.ts (savePageSection + 8 wrappers + audit log)
-- [ ] composables/useFirebaseStorage.ts (upload + compressão + delete + validação)
-- [ ] composables/usePageEditor.ts (orquestrador: saveAllSections + change tracking + image cleanup)
-- [ ] middleware/admin.ts (proteção de rotas)
-- [ ] pages/admin/login.vue
-- [ ] pages/admin/index.vue (dashboard + audit log)
+- [x] `types/admin/` — 4 camadas (sections, editable, formsData, editor)
+- [x] `definitions/sectionFields.ts` — fonte de verdade editable/readonly
+- [x] `definitions/validationConfigs.ts` — regras por seção + compression settings
+- [x] `definitions/validationRules.ts` — createValidationRules + isValidUrl
+- [x] `definitions/themeOptions.ts` — cores e ícones
+- [x] `definitions/firestoreCollections.ts` — collections + documents centralizados
+- [x] `definitions/adminRoles.ts` — sistema multi-role com permissões
+- [x] `utils/HomeFormUtils.ts` — separate/combine/createDefault para cada seção
+- [x] `utils/Logger.ts` — Logger estruturado com child()
+- [x] `config/constants.ts` — ALIAS_DEFINITIONS + APP_CONSTANTS
+- [x] `composables/useFirebase.ts` — init singleton
+- [x] `composables/useAuth.ts` — login/logout/listener/multi-role
+- [x] `composables/usePageData.ts` — factory base genérica
+- [x] `composables/useHomePageData.ts` — composable home (gerado pela factory)
+- [x] `composables/useValidation.ts` — 8 validadores config-driven
+- [x] `composables/useImageCompression.ts` — compressão Canvas API (responsabilidade separada)
+- [x] `composables/useFirebaseStorage.ts` — upload + delete + validação (lê IMAGE_UPLOAD_CONFIG)
+- [x] `composables/usePageEditor.ts` — change tracking + image cleanup + navigation guard
+- [x] `middleware/admin.ts` — proteção de rotas
+- [x] `plugins/auth.client.ts` — init auth listener
+- [ ] `pages/admin/login.vue`
+- [ ] `pages/admin/index.vue` (dashboard)
 
 ### Fase 2: Editor da Home
-- [ ] pages/admin/edit/homeEdit.vue (registro de seções via createSectionConfig)
+- [ ] `pages/admin/edit/homeEdit.vue` (editor com seções)
 - [ ] Seção Hero (textos + stats CRUD + validação inline)
 - [ ] Seção Missão (textos + image upload com compressão)
 - [ ] Seção Programas (CRUD de cards + seletor de ícones)
@@ -1157,64 +778,53 @@ service firebase.storage {
 - [ ] Cleanup de imagens temporárias no cancel/exit
 
 ### Fase 3: Conectar Site ao Firebase
-- [ ] Substituir i18n/hardcoded por usePageData().watchPageData() no index.vue
+- [ ] Substituir i18n/hardcoded por dados do Firebase no index.vue
 - [ ] Fallback para defaults quando Firebase offline/vazio
 - [ ] Loading states com CBSkeleton
 - [ ] Testar fluxo completo: admin edita → Firebase atualiza → site reflete
 
 ---
 
-## 12. Dependências Novas
+## 14. Decisões Arquiteturais
 
-```json
-{
-  "dependencies": {
-    "firebase": "^11.x"
-  }
-}
-```
+### Por que factory ao invés de herança?
+O `usePageData` é uma **factory function** (não uma classe base). Cada chamada cria um composable singleton isolado via closure. Escolhido porque:
+- É o padrão Vue idiomático (composables, não classes)
+- Closure garante isolamento entre páginas sem `this`
+- TypeScript genéricos (`<TPageData, TFormsData>`) dão type-safety completa
+- Para nova página: `createPageDataComposable<IAboutPageData, IAboutFormsData>({...})`
 
----
+### Por que não useFirestoreAdmin separado?
+No Just Prime, o save fica em composable separado. Aqui o save está DENTRO do factory (`saveSection`, `saveAll`). Motivo:
+- Menos indireção — o composable que carrega os dados também salva
+- Dot notation é gerada pelo `combineSections` config — não precisa wrapper
+- Audit trail (updatedById + updatedByName) é adicionado automaticamente
 
-## 13. Resumo: Just Prime vs Elas Podem
-
-| Aspecto | Just Prime | Elas Podem |
-|---------|-----------|------------|
-| Páginas editáveis | 8+ | 1 (home) — escalável |
-| FormUtils | 6 arquivos (1600+ linhas cada) | 1 arquivo (~300 linhas) |
-| Types | Espalhados por seção | 1 arquivo organizado |
-| Camadas de dados | editable + readonly + hidden | editable + readonly (hidden inline no SEO) |
-| AdminConfig | 400+ linhas (Material Design, 6 efeitos) | ~150 linhas (cores do tema, ícones, rules) |
-| Composables | 5+ pesados | 7 enxutos (mesma API) |
-| Validadores | 30+ funções | 8 funções (1 por seção) |
-| Save wrappers | 25+ funções | 8 funções (1 por seção) |
-| Audit logging | Sim | Sim |
-| Image compression | Sim (5 presets) | Sim (4 presets) |
-| Image cleanup | Sim (old/new + temp) | Sim (mesmo padrão) |
-| Change tracking | Sim | Sim |
-| Navigation guard | Sim | Sim |
-| **Funcionalidade total** | **100%** | **100%** |
-| **Arquivos** | **~30+** | **~12** |
-| **Linhas estimadas** | **~8000+** | **~2500** |
-
-**Resultado: mesma funcionalidade, 1/3 dos arquivos, 1/3 do código.**
+### Por que SECTION_FIELDS?
+Fonte única de verdade para editable/readonly. Garante que:
+- `types/admin/editable.ts` corresponde exatamente ao config
+- `HomeFormUtils.ts` separate/combine respeita a classificação
+- Adicionar campo = 1 lugar (SECTION_FIELDS) e propagação automática
 
 ---
 
-## 14. Escalabilidade Futura
+## 15. Escalabilidade Futura
 
 Quando precisar crescer:
-1. **Nova página** → novo documento no Firestore + novo `*FormUtils.ts` + novo `*Edit.vue`
-2. **Nova seção** → nova interface em types + novo validador + novo save wrapper + seção no editor
+1. **Nova página** → novo `*FormUtils.ts` + nova config em `createPageDataComposable()` + novo `PAGE_DOCUMENTS.ABOUT`
+2. **Nova seção** → nova interface em types + campo no SECTION_FIELDS + validador + combine/separate
 3. **Novo idioma** → duplicar documento com prefixo (`home_en`, `home_es`)
 4. **Blog** → nova collection no Firestore + CRUD page
 5. **Projetos** → mesma coisa, collection própria
-6. **Multi-admin** → Firebase Auth com roles + updatedBy dinâmico
+6. **Novo role** → adicionar em `ADMIN_ROLES` + definir permissões em `ADMIN_ROLE_PERMISSIONS`
 
-O padrão aguenta porque cada seção é independente.
-Adicionar seção nova = 1 interface + 1 validador + 1 save wrapper + 1 createSectionConfig no editor.
+O padrão aguenta porque:
+- Cada seção é independente
+- A factory gera composables completos para qualquer página
+- Validação é config-driven (não precisa código novo)
+- Collections e documents são centralizados
 
 ---
 
-**Status:** Pronto para implementação
-**Primeiro passo:** Firebase setup + types/admin.ts + utils (AdminConfig + HomeFormUtils)
+**Status:** Fase 1 em andamento (~90% concluída — faltam login.vue e dashboard)
+**Próximos passos:** pages/admin/login.vue → pages/admin/index.vue (dashboard)

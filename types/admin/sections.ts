@@ -230,6 +230,8 @@ export interface IHomePageData {
   seo: ISeo;
   /** ISO timestamp do ultimo update */
   lastUpdated: string;
-  /** Email do admin que fez o ultimo update */
-  updatedBy: string;
+  /** ID do admin que fez o ultimo update */
+  updatedById: string;
+  /** Nome do admin que fez o ultimo update */
+  updatedByName: string;
 }

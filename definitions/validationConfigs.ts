@@ -141,6 +141,22 @@ export const SEO_CONFIG = {
 } as const;
 
 // ============================================================
+// IMAGE UPLOAD
+// ============================================================
+
+/**
+ * Config global de upload de imagens.
+ *
+ * Consumido pelo useFirebaseStorage.ts na validacao de arquivos.
+ */
+export const IMAGE_UPLOAD_CONFIG = {
+  /** Tamanho maximo em MB */
+  maxSizeMB: 5,
+  /** Extensoes aceitas */
+  validExtensions: ['jpg', 'jpeg', 'png', 'webp'],
+} as const;
+
+// ============================================================
 // COMPRESSION SETTINGS
 // ============================================================
 
@@ -148,7 +164,9 @@ export const SEO_CONFIG = {
  * Configuracoes de compressao por categoria de imagem.
  *
  * Consumido pelo useFirebaseStorage.ts no upload de imagens.
+ * Valores passados para useImageCompression.compressImage().
  *
+ * @property enabled - se compressao esta ativa pra essa categoria
  * @property quality - 0 a 1 (1 = sem compressao)
  * @property maxWidth/maxHeight - redimensiona se maior que esses valores
  */

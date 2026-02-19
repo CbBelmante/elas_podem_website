@@ -63,7 +63,8 @@ Para mover `icon` de editavel para hidden: **1 arquivo** (+ ajustar UI).
 
 ❌ **Nao precisa deste guia para:**
 - Mudar textos default (va em `HomeFormUtils.ts` → `createDefault*()`)
-- Mudar regras de validacao (va em `definitions/validationConfigs.ts`)
+- Mudar regras de validacao (va em `Validation_GUIDE.md`)
+- Entender o fluxo de dados load/save (va em `PageData_GUIDE.md`)
 - Mudar opcoes de cores/icones (va em `definitions/themeOptions.ts`)
 
 ---

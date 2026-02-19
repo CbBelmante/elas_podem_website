@@ -33,6 +33,7 @@ import {
 
 import { useFirebase } from '@composables/useFirebase';
 import { ADMIN_ROLES, isValidRole, getRolePermissions } from '@definitions/adminRoles';
+import { FIRESTORE_COLLECTIONS } from '@definitions/firestoreCollections';
 import type { AdminRole } from '@definitions/adminRoles';
 import { Logger } from '@utils/Logger';
 
@@ -115,7 +116,7 @@ export function useAuth() {
    */
   const fetchUserData = async (email: string): Promise<IUserData | null> => {
     try {
-      const usersRef = collection($db, 'users');
+      const usersRef = collection($db, FIRESTORE_COLLECTIONS.USERS);
       const q = query(usersRef, where('email', '==', email));
       const querySnapshot = await getDocs(q);
 
@@ -137,7 +138,7 @@ export function useAuth() {
    */
   const updateLastLogin = async (userId: string): Promise<void> => {
     try {
-      const userDocRef = doc($db, 'users', userId);
+      const userDocRef = doc($db, FIRESTORE_COLLECTIONS.USERS, userId);
       await updateDoc(userDocRef, { lastLogin: Timestamp.now() });
     } catch (error) {
       logger.warn('Erro ao atualizar ultimo login', { userId });
