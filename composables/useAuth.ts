@@ -36,6 +36,8 @@ import { ADMIN_ROLES, isValidRole, getRolePermissions, isSuperAdminRole } from '
 import { FIRESTORE_COLLECTIONS } from '@definitions/firestoreCollections';
 import type { AdminRole } from '@definitions/adminRoles';
 import { Logger } from '@utils/Logger';
+import { useCache } from '@composables/useCache';
+import { CACHE_KEYS } from '@definitions/cacheKeys';
 
 // ============== INTERFACES ==============
 
@@ -84,6 +86,7 @@ function getState() {
 export function useAuth() {
   const { $auth, $db } = useFirebase();
   const state = getState();
+  const cache = useCache();
 
   // ===== COMPUTED =====
 
@@ -185,6 +188,9 @@ export function useAuth() {
       state.user = firebaseUser;
       state.userData = userData;
 
+      // Cache pra hidratacao instantanea no reload (RAM + localStorage)
+      cache.set(CACHE_KEYS.USER_DATA, userData);
+
       if (userData.id) {
         await updateLastLogin(userData.id);
       }
@@ -215,6 +221,9 @@ export function useAuth() {
       state.user = null;
       state.userData = null;
       state.error = null;
+
+      // Limpa cache do usuario
+      cache.remove(CACHE_KEYS.USER_DATA);
 
       logger.info('Logout realizado');
 
@@ -254,23 +263,36 @@ export function useAuth() {
    * Chamado pelo plugin auth.client.ts no boot da aplicacao.
    */
   const initAuthStateListener = () => {
+    // Restaura userData do cache pra exibicao instantanea (evita flash de loading)
+    const cached = cache.get<IUserData>(CACHE_KEYS.USER_DATA);
+    if (cached) {
+      state.userData = cached;
+      logger.debug('userData restaurado do cache', { role: cached.role });
+    }
+
     return onAuthStateChanged($auth, async (firebaseUser) => {
       state.isLoading = true;
 
       if (firebaseUser) {
+        // Busca dados frescos do Firestore (fonte de verdade)
         const userData = await fetchUserData(firebaseUser.email!);
         state.user = firebaseUser;
         state.userData = userData;
 
         if (userData) {
+          // Atualiza cache com dados frescos
+          cache.set(CACHE_KEYS.USER_DATA, userData);
           logger.debug('Auth state: logado', {
             email: firebaseUser.email,
             role: userData.role,
           });
+        } else {
+          cache.remove(CACHE_KEYS.USER_DATA);
         }
       } else {
         state.user = null;
         state.userData = null;
+        cache.remove(CACHE_KEYS.USER_DATA);
         logger.debug('Auth state: deslogado');
       }
 

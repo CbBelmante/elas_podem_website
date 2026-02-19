@@ -300,7 +300,7 @@ const cleanupOldImage = async (oldUrl?, newUrl?) => {
 
 ### Por que o usePageEditor nao faz save?
 
-No Just Prime, o usePageEditor centraliza tudo (save, validacao, cleanup, tracking). No nosso projeto, save esta embutido na factory `usePageData` (`saveSection`, `saveAll`). Duplicar seria redundante. O usePageEditor foca nas 3 responsabilidades de UX que a factory nao cobre.
+O save esta embutido na factory `usePageData` (`saveSection`, `saveAll`). Duplicar seria redundante. O usePageEditor foca nas 3 responsabilidades de UX que a factory nao cobre.
 
 ### hasChanges e readonly — como muda?
 

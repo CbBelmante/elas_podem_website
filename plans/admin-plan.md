@@ -48,6 +48,7 @@ config/
 composables/
 ├── useFirebase.ts               # Firebase init (app, db, auth, storage) — singleton
 ├── useAuth.ts                   # Autenticação multi-role (signIn, signOut, permissions)
+├── useCache.ts                  # Cache 2 níveis (RAM + localStorage) — get/set/getOrFetch
 ├── usePageData.ts               # Factory base — gera composables por página
 ├── useHomePageData.ts           # Composable específico da home (gerado pela factory)
 ├── useValidation.ts             # Validadores config-driven por seção
@@ -69,11 +70,13 @@ definitions/
 ├── validationRules.ts           # createValidationRules() + isValidUrl()
 ├── themeOptions.ts              # THEME_COLOR_OPTIONS, ICON_OPTIONS
 ├── firestoreCollections.ts      # FIRESTORE_COLLECTIONS + PAGE_DOCUMENTS (zero hardcoded)
-└── adminRoles.ts                # ADMIN_ROLES, permissões, display names
+├── adminRoles.ts                # ADMIN_ROLES, permissões, display names
+└── cacheKeys.ts                 # CACHE_KEYS — chaves lógicas centralizadas do cache
 
 utils/
 ├── HomeFormUtils.ts             # separate/combine/createDefault para cada seção da home
-└── Logger.ts                    # Logger com child() e levels (padrão Mnesis)
+├── Logger.ts                    # Logger com child() e levels (padrão Mnesis)
+└── LocalStorage.ts              # Wrapper Safari-safe para localStorage (fallback in-memory)
 
 middleware/
 └── admin.global.ts              # Proteção global de rotas admin (redireciona se não autenticado)
@@ -91,7 +94,7 @@ pages/admin/                     # [IMPLEMENTADO — Fase 1]
     └── homeEdit.vue             # Editor da home (todas as seções)
 ```
 
-**Total atual: ~20 arquivos** (Just Prime: ~30+ arquivos para a mesma funcionalidade)
+**Total atual: ~23 arquivos** (Just Prime: ~30+ arquivos para a mesma funcionalidade)
 
 ---
 
@@ -330,6 +333,16 @@ export function createValidationRules(rules: { required?, minLength?, maxLength?
 export function isValidUrl(url: string): boolean
 ```
 
+### `cacheKeys.ts` — Chaves lógicas do cache [IMPLEMENTADO]
+```typescript
+// Chaves centralizadas para useCache. Novas chaves = adicionar aqui.
+export const CACHE_KEYS = {
+  USER_DATA: 'userData',
+  // futuro: PAGE_HOME: 'pageHome', etc.
+} as const;
+export type CacheKey = (typeof CACHE_KEYS)[keyof typeof CACHE_KEYS];
+```
+
 ---
 
 ## 6. Composables
@@ -362,6 +375,24 @@ export function useAuth() {
     refreshUserData(): Promise<void>,
     hasAdminAccess(): boolean,
     initAuthStateListener(),  // chamado pelo plugin auth.client.ts
+  }
+}
+```
+
+### `useCache.ts` — Cache 2 níveis [IMPLEMENTADO]
+```typescript
+// Cache lean com 2 níveis: RAM (~0ms) → localStorage (~2ms).
+// Singleton sem Pinia/Vue — plain object pra RAM, LocalStorage.ts pra disco.
+// Prefixo automático: ep_cache: (via APP_CONSTANTS.app.localStoragePrefix).
+// Usado pelo useAuth pra restaurar userData instantaneamente no boot.
+export function useCache() {
+  return {
+    get<T>(key): T | null,          // RAM → localStorage → null
+    set<T>(key, data): void,        // grava nos 2 níveis
+    getOrFetch<T>(key, fetchFn): Promise<T>,  // cache-first, fetch se miss
+    remove(key): void,              // remove dos 2 níveis
+    clearAll(): void,               // limpa tudo com prefixo ep_cache:*
+    has(key): boolean,              // checa existência
   }
 }
 ```
@@ -510,6 +541,22 @@ export function usePageEditor() {
 export class Logger {
   static child(context): Logger
   info(msg, meta?), warn(msg, meta?), error(msg, error?, meta?), debug(msg, meta?)
+}
+```
+
+### `LocalStorage.ts` — Wrapper Safari-safe [IMPLEMENTADO]
+```typescript
+// Wrapper robusto para localStorage com fallback in-memory (Map).
+// Trata: Safari Private Mode, QuotaExceededError, SSR (sem window).
+// API tipada: getObj<T>/setObj<T> para objetos, getString/setString para primitivos.
+// Usado internamente pelo useCache — consumidores não chamam direto.
+export class LocalStorage {
+  static getString(key): string | null
+  static setString(key, value): void
+  static getObj<T>(key): T | null
+  static setObj<T>(key, value): void
+  static removeItem(key): void
+  static getAllKeysWithPrefix(prefix): string[]
 }
 ```
 
@@ -773,6 +820,9 @@ service firebase.storage {
 - [x] `pages/admin/login.vue` — tela standalone com identidade visual, toggle senha, erro inline
 - [x] `pages/admin/index.vue` — dashboard com status real, permissões por role, logout
 - [x] `scripts/seedAdmin.ts` — seed interativo com @inquirer/prompts (cria Auth + Firestore user)
+- [x] `utils/LocalStorage.ts` — wrapper Safari-safe com fallback in-memory
+- [x] `definitions/cacheKeys.ts` — chaves lógicas centralizadas (CACHE_KEYS)
+- [x] `composables/useCache.ts` — cache 2 níveis (RAM + localStorage), usado pelo useAuth
 
 ### Fase 2: Editor da Home
 - [ ] `pages/admin/edit/homeEdit.vue` (editor com seções)
@@ -809,6 +859,13 @@ No Just Prime, o save fica em composable separado. Aqui o save está DENTRO do f
 - Menos indireção — o composable que carrega os dados também salva
 - Dot notation é gerada pelo `combineSections` config — não precisa wrapper
 - Audit trail (updatedById + updatedByName) é adicionado automaticamente
+
+### Por que cache 2 níveis (e não Pinia)?
+O `useCache` usa plain object (RAM) + `LocalStorage` (disco). Sem Pinia porque:
+- Nenhum componente Vue lê diretamente do cache — quem consome é o `useAuth`, que tem seu próprio `reactive()` state
+- Pinia adicionaria overhead desnecessário (devtools, plugins, reactive proxy)
+- Plain object `{}` é ~0ms de acesso, perfeito pra cache intermediário
+- O cache é infraestrutura interna, não estado de UI
 
 ### Por que SECTION_FIELDS?
 Fonte única de verdade para editable/readonly. Garante que:

@@ -178,7 +178,7 @@ gh issue create --title "feat: Implementar sistema X" \
                 --label "type:feature,priority:high" \
                 --assignee "@me" \
                 --milestone "v2.0" \
-                --project "Mnesis Board"
+                --project "Elas Podem Board"
 ```
 
 ### **🏷️ Labels FlowForge Padrão**
@@ -224,14 +224,14 @@ gh run list                               # Ver execuções CI/CD
 
 ---
 
-### **📋 Templates de Issue (Mnesis.ai)**
+### **📋 Templates de Issue**
 
 #### **Template Padrão de Bug**:
 ```markdown
 **Desenvolvedor**: @username
-**Projeto**: Mnesis.ai - Chat Interface Médica
+**Projeto**: Elas Podem - Admin Panel
 **Issue ID**: #XXX
-**Task ID**: MNESIS-XXX
+**Task ID**: EP-XXX
 
 ## 🎯 Objetivos:
 - [ ] Corrigir comportamento incorreto no chat médico
@@ -261,9 +261,9 @@ gh run list                               # Ver execuções CI/CD
 #### **Template de Feature**:
 ```markdown
 **Desenvolvedor**: @username
-**Projeto**: Mnesis.ai - Chat Interface Médica
+**Projeto**: Elas Podem - Admin Panel
 **Issue ID**: #XXX
-**Task ID**: MNESIS-XXX
+**Task ID**: EP-XXX
 
 ## 🎯 Objetivos:
 - [ ] Implementar funcionalidade X no chat médico
@@ -293,12 +293,12 @@ gh run list                               # Ver execuções CI/CD
 **Dependências**: AI SDK/Nuxt 4/Vue 3/etc
 ```
 
-#### **Exemplo Real (MNESIS-009)**:
+#### **Exemplo**:
 ```markdown
 **Desenvolvedor**: @CbBelmante
-**Projeto**: Mnesis.ai - Chat Interface Médica
+**Projeto**: Elas Podem - Admin Panel
 **Issue ID**: #9
-**Task ID**: MNESIS-009
+**Task ID**: EP-009
 
 ## 🎯 Objetivos:
 - [x] Implementar componente CbAudioWaves.vue
@@ -334,9 +334,9 @@ gh run list                               # Ver execuções CI/CD
 # Salvar template em arquivo temporário
 cat > /tmp/issue-body.md <<'EOF'
 **Desenvolvedor**: @CbBelmante
-**Projeto**: Mnesis.ai - Chat Interface Médica
+**Projeto**: Elas Podem - Admin Panel
 **Issue ID**: #XXX
-**Task ID**: MNESIS-XXX
+**Task ID**: EP-XXX
 
 ## 🎯 Objetivos:
 - [ ] [Objetivo principal]
@@ -352,7 +352,7 @@ EOF
 
 # Criar issue com o template
 gh issue create \
-  --title "[MNESIS-XXX]: Título da issue" \
+  --title "[EP-XXX]: Título da issue" \
   --body-file /tmp/issue-body.md \
   --label "type:feature,area:chat,status:in-progress" \
   --assignee "@me"
@@ -368,7 +368,7 @@ gh issue create \
 
 ## 🔗 **Navegação na Documentação**
 
-### **📚 Documentação Mnesis.ai Completa**
+### **📚 Documentacao Completa**
 | Tópico | Arquivo | Descrição |
 |--------|---------|-----------|
 | **Contexto Projeto** | [CLAUDE.md](../CLAUDE.md) | Instruções completas FlowForge |
@@ -615,6 +615,6 @@ Execute os agentes em paralelo quando possível"
 ---
 
 *📅 Atualizado em*: 03 OUT 25\
-*📋 Versão*: 3.0 - Mnesis.ai\
+*📋 Versão*: 3.0\
 *👥 Responsável*: FlowForge Team + CbBelmante\
-*🏷️ Tags*: [flowforge, quick-reference, comandos, regras-criticas, universal, workflows, agentes, mnesis-ai, chat-medico]
+*🏷️ Tags*: [flowforge, quick-reference, comandos, regras-criticas, universal, workflows, agentes]

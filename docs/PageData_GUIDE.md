@@ -523,9 +523,9 @@ Sim. `saveAll()` combina TODAS as secoes em um unico `updateDoc()`. Se falhar, n
 
 E um snapshot dos dados como vieram do Firestore no ultimo `loadPageData()`. Serve como referencia para `resetSection`/`resetAll` — "voltar pro que era antes de editar".
 
-### Por que nao usar useFirestoreAdmin separado (como Just Prime)?
+### Por que o save esta embutido na factory?
 
-No Just Prime, o save fica em composable separado com wrappers por secao (saveHomeHeroSection, saveHomeMissionSection...). Aqui o save esta embutido na factory porque:
+O save esta embutido na factory (e nao em composable separado com wrappers por secao) porque:
 - Menos indireção — quem carrega os dados tambem salva
 - Dot notation e gerada pelo `combineSections` config — nao precisa wrapper
 - Audit trail e adicionado automaticamente

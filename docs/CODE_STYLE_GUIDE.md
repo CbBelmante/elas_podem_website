@@ -36,9 +36,9 @@
 
 | Item | Padrão | Exemplo |
 |------|--------|---------|
-| **Constantes** | `SCREAMING_SNAKE_CASE` | `MNESIS_ROLES`, `COMPANY_TYPES` |
-| **Interfaces** | `IPascalCase` (prefixo I obrigatório) | `ICompany`, `IMeta`, `IBaseEntity` |
-| **Types** | `PascalCase` (derivados, sem prefixo) | `CompanyType`, `MnesisRole` |
+| **Constantes** | `SCREAMING_SNAKE_CASE` | `ADMIN_ROLES`, `CACHE_KEYS` |
+| **Interfaces** | `IPascalCase` (prefixo I obrigatório) | `IUserData`, `IMeta`, `IBaseEntity` |
+| **Types** | `PascalCase` (derivados, sem prefixo) | `AdminRole`, `CacheKey` |
 | **Funções** | `camelCase` (iniciar com verbo) | `isValid()`, `getUser()`, `createOrder()` |
 | **Composables** | `use*` pattern | `useAuth()`, `useDoctor()`, `usePatient()` |
 | **Componentes Vue** | `PascalCase` (prefixo Cb para custom) | `CbButton`, `CbModal`, `MessageItem` |
@@ -52,25 +52,25 @@
 // ✅ CORRETO - Nomenclatura consistente
 
 // Constantes
-export const MNESIS_ROLES = {
-  PATIENT: 'patient',
-  DOCTOR: 'doctor',
+export const ADMIN_ROLES = {
+  ADMIN: 'admin',
+  WRITER: 'writer',
+  MODERATOR: 'moderator',
 } as const satisfies Record<string, string>;
 
 // Types derivados
-export type MnesisRole = typeof MNESIS_ROLES[keyof typeof MNESIS_ROLES];
+export type AdminRole = typeof ADMIN_ROLES[keyof typeof ADMIN_ROLES];
 
 // Interfaces com prefixo I
-export interface ICompany {
+export interface IUserData {
   id: string;
-  name: string;
-  type: CompanyType;
+  email: string;
+  role: AdminRole;
 }
 
 // Funções com verbo
-export function isValidRole(role: string): role is MnesisRole { }
+export function isValidRole(role: string): role is AdminRole { }
 export function getRoleDisplayName(role: string): string { }
-export function createUser(data: ICreateUserData): Promise<IUser> { }
 
 // Composables com use*
 export const useAuth = () => { }
@@ -81,7 +81,7 @@ export const useDoctor = () => { }
 // ❌ ERRADO - Nomenclatura inconsistente
 
 // Sem padrão nas constantes
-export const mnesisRoles = { patient: 'patient' }
+export const adminRoles = { admin: 'admin' }
 
 // Interface sem prefixo I
 export interface Company { }
@@ -100,9 +100,9 @@ Use prefixos consistentes para agrupar constantes relacionadas:
 
 ```typescript
 // ✅ CORRETO - Prefixos consistentes
-export const MNESIS_ROLES = { ... }
-export const MNESIS_ROLE_DISPLAY_NAMES = { ... }
-export const MNESIS_ROLE_DESCRIPTIONS = { ... }
+export const ADMIN_ROLES = { ... }
+export const ADMIN_ROLE_DISPLAY_NAMES = { ... }
+export const ADMIN_ROLE_DESCRIPTIONS = { ... }
 
 export const COMPANY_TYPES = { ... }
 export const COMPANY_TYPE_DISPLAY_NAMES = { ... }
@@ -145,19 +145,18 @@ Veja `nuxt.config.ts:32-48` para a lista completa:
 ```typescript
 // ✅ CORRETO - Sempre usar aliases
 import { useAuth } from '@composables/useAuth';
-import { MNESIS_ROLES } from '@definitions/roles';
-import { supabase } from '@services/supabase';
-import { CbLogger } from '@utils/CbLogger';
-import type { ICompany } from '@types/company';
-import { useGlobalStore } from '@stores/global';
+import { ADMIN_ROLES } from '@definitions/adminRoles';
+import type { AdminRole } from '@definitions/adminRoles';
+import { Logger } from '@utils/Logger';
+import { useCache } from '@composables/useCache';
 import CbButton from '@components/ui/CbButton.vue';
 ```
 
 ```typescript
 // ❌ ERRADO - NUNCA usar caminhos relativos
 import { useAuth } from '../../composables/useAuth';
-import { MNESIS_ROLES } from '../../../definitions/roles';
-import { supabase } from '../../../../services/supabase';
+import { ADMIN_ROLES } from '../../../definitions/adminRoles';
+import { Logger } from '../../../../utils/Logger';
 import CbButton from '../ui/CbButton.vue';
 ```
 
@@ -178,11 +177,10 @@ import { computed } from 'vue';
 import type { AuthChangeEvent, Session } from '@supabase/supabase-js';
 
 // ============== DEPENDÊNCIAS INTERNAS ==============
-import { useGlobalStore, type IAppUser } from '@stores/global';
-import { supabase } from '@services/supabase';
-import { CbLogger } from '@utils/CbLogger';
-import { TABLES, MNESIS_ROLES, type IBaseResult } from '@definitions';
-import { getFirstName } from '@utils/StringUtils';
+import { useFirebase } from '@composables/useFirebase';
+import { ADMIN_ROLES } from '@definitions/adminRoles';
+import { Logger } from '@utils/Logger';
+import { CACHE_KEYS } from '@definitions/cacheKeys';
 ```
 
 ---
@@ -415,19 +413,18 @@ export const useAuth = () => {
 
 ```typescript
 // ✅ CORRETO - Type safety garantido
-export const MNESIS_ROLES = {
-  PATIENT: 'patient',
-  DOCTOR: 'doctor',
-  SECRETARY: 'secretary',
+export const ADMIN_ROLES = {
   ADMIN: 'admin',
+  WRITER: 'writer',
+  MODERATOR: 'moderator',
 } as const satisfies Record<string, string>;
 ```
 
 ```typescript
 // ❌ ERRADO - Sem type safety
-export const MNESIS_ROLES = {
-  PATIENT: 'patient',
-  DOCTOR: 'doctor',
+export const ADMIN_ROLES = {
+  ADMIN: 'admin',
+  WRITER: 'writer',
 };
 ```
 
@@ -437,8 +434,8 @@ Types derivam das constantes:
 
 ```typescript
 // ✅ CORRETO - Type derivado da constante
-export type MnesisRole = typeof MNESIS_ROLES[keyof typeof MNESIS_ROLES];
-// Valores: 'patient' | 'doctor' | 'secretary' | 'admin'
+export type AdminRole = typeof ADMIN_ROLES[keyof typeof ADMIN_ROLES];
+// Valores: 'admin' | 'writer' | 'moderator'
 
 export type CompanyType = typeof COMPANY_TYPES[keyof typeof COMPANY_TYPES];
 // Valores: 'personal' | 'company'
@@ -450,62 +447,54 @@ Todo arquivo de definições (`@definitions`) segue esta estrutura:
 
 ```typescript
 /**
- * 🎭 Roles - Papéis de usuários do Mnesis
+ * 🎭 Roles - Papeis de usuario do Admin
  */
 
 // ============== ROLES ==============
 
-export const MNESIS_ROLES = {
-  PATIENT: 'patient',
-  DOCTOR: 'doctor',
+export const ADMIN_ROLES = {
+  ADMIN: 'admin',
+  WRITER: 'writer',
+  MODERATOR: 'moderator',
 } as const satisfies Record<string, string>;
 
 // ============== TYPES ==============
 
-export type MnesisRole = typeof MNESIS_ROLES[keyof typeof MNESIS_ROLES];
+export type AdminRole = typeof ADMIN_ROLES[keyof typeof ADMIN_ROLES];
 
 // ============== DISPLAY NAMES ==============
 
-export const MNESIS_ROLE_DISPLAY_NAMES: Record<MnesisRole, string> = {
-  [MNESIS_ROLES.PATIENT]: 'Paciente',
-  [MNESIS_ROLES.DOCTOR]: 'Médico',
+export const ADMIN_ROLE_DISPLAY_NAMES: Record<AdminRole, string> = {
+  [ADMIN_ROLES.ADMIN]: 'Administradora',
+  [ADMIN_ROLES.WRITER]: 'Writer',
+  [ADMIN_ROLES.MODERATOR]: 'Moderator',
 };
 
 // ============== DESCRIPTIONS ==============
 
-export const MNESIS_ROLE_DESCRIPTIONS: Record<MnesisRole, string> = {
-  [MNESIS_ROLES.PATIENT]: 'Pode agendar consultas e visualizar histórico médico',
-  [MNESIS_ROLES.DOCTOR]: 'Pode atender pacientes e gerenciar prontuários',
+export const ADMIN_ROLE_DESCRIPTIONS: Record<AdminRole, string> = {
+  [ADMIN_ROLES.ADMIN]: 'Acesso total — edita, publica, gerencia usuarios',
+  [ADMIN_ROLES.WRITER]: 'Edita textos e imagens, mas nao publica sozinha',
+  [ADMIN_ROLES.MODERATOR]: 'Aprova e publica, ve logs',
 };
-
-// ============== OPTIONS FOR SELECTS ==============
-
-export const MNESIS_ROLE_OPTIONS = [
-  {
-    value: MNESIS_ROLES.PATIENT,
-    label: MNESIS_ROLE_DISPLAY_NAMES[MNESIS_ROLES.PATIENT],
-    description: MNESIS_ROLE_DESCRIPTIONS[MNESIS_ROLES.PATIENT],
-  },
-  // ...
-] as const;
 
 // ============== UTILS ==============
 
-export function isValidRole(role: string): role is MnesisRole {
-  return Object.values(MNESIS_ROLES).includes(role as MnesisRole);
+export function isValidRole(role: string): role is AdminRole {
+  return Object.values(ADMIN_ROLES).includes(role as AdminRole);
 }
 
 export function getRoleDisplayName(role: string): string {
   if (isValidRole(role)) {
-    return MNESIS_ROLE_DISPLAY_NAMES[role];
+    return ADMIN_ROLE_DISPLAY_NAMES[role];
   }
   return role;
 }
 
-export const ALL_ROLES = Object.values(MNESIS_ROLES) as MnesisRole[];
+export const ALL_ROLES = Object.values(ADMIN_ROLES) as AdminRole[];
 ```
 
-Veja exemplo completo em `app/definitions/roles.ts:1-135`.
+Veja exemplo completo em `definitions/adminRoles.ts`.
 
 ---
 

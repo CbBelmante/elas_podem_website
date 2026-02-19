@@ -188,12 +188,17 @@ Browser abre o site
   │
   ├─ plugins/auth.client.ts executa
   │     → useAuth().initAuthStateListener()
-  │     → Firebase checa: "tem sessao ativa no browser?"
-  │         SIM → busca userData do Firestore → state preenchido
-  │         NAO → state.user = null, isLoading = false
+  │         ├─ cache.get('userData') → restaura do localStorage (~2ms)
+  │         │   → UI ja mostra nome/role (sem flash de loading)
+  │         │
+  │         └─ Firebase checa: "tem sessao ativa no browser?"
+  │             SIM → busca userData do Firestore → atualiza state + cache
+  │             NAO → state.user = null, cache limpo, isLoading = false
   │
   └─ App renderiza (auth state ja resolvido)
 ```
+
+> Para detalhes do sistema de cache, veja `Cache_GUIDE.md`.
 
 ### Login
 
@@ -214,6 +219,7 @@ Usuario acessa /admin/login
   │     │
   │     ├─ 4. state.user = FirebaseUser
   │     │     state.userData = { role: 'admin', active: true, ... }
+  │     │     cache.set('userData', userData) → RAM + localStorage
   │     │     → isAuthenticated = true
   │     │     → isAdmin = true
   │     │     → permissions = { canEdit: true, canPublish: true, ... }
@@ -246,6 +252,7 @@ signOut()
   │
   ├─ state.user = null
   │   state.userData = null
+  │   cache.remove('userData') → limpa RAM + localStorage
   │   → isAuthenticated = false
   │   → permissions = null
   │
@@ -268,6 +275,7 @@ definitions/
 composables/
 ├── useFirebase.ts        ← singleton Firebase (app, db, auth, storage)
 ├── useAuth.ts            ← singleton auth (login, logout, state, roles)
+├── useCache.ts           ← cache 2 niveis (RAM + localStorage)
 
 plugins/
 ├── auth.client.ts        ← inicializa listener no boot (client-only)
@@ -276,7 +284,8 @@ middleware/
 ├── admin.ts              ← protege rotas /admin/*
 
 utils/
-├── Logger.ts             ← logs estruturados (copiado do Mnesis)
+├── Logger.ts             ← logs estruturados
+├── LocalStorage.ts       ← wrapper Safari-safe do localStorage
 ```
 
 ### Diagrama de dependencias
@@ -294,6 +303,7 @@ utils/
                │
                ├─ Firebase Auth (signIn, signOut, onAuthStateChanged)
                ├─ Firestore /users (role, active, displayName)
+               ├─ useCache (cache 2 niveis — RAM + localStorage)
                ├─ Logger (logs estruturados)
                └─ adminRoles (ADMIN_ROLES, permissions)
                      │
@@ -327,10 +337,10 @@ utils/
 
 ### O padrao singleton
 
-O Just Prime tinha um problema: cada componente que chama `useAuth()` cria estado novo.
+O problema comum: cada componente que chama `useAuth()` cria estado novo.
 
 ```typescript
-// ❌ Just Prime — estado duplicado
+// ❌ Errado — estado duplicado
 export const useAuth = () => {
   const authState = reactive({ user: null });  // novo a cada chamada!
   return { ...toRefs(authState) };
@@ -550,7 +560,11 @@ Veja secao [Como adicionar nova role](#como-adicionar-nova-role) — sao 3 passo
 
 ### A sessao sobrevive a recargas de pagina?
 
-Sim. O Firebase Auth persiste a sessao no browser (IndexedDB). No boot, o plugin `auth.client.ts` detecta a sessao e re-busca os dados do Firestore automaticamente.
+Sim, em 2 niveis:
+1. **Cache** — `userData` e restaurado do localStorage instantaneamente (~2ms), evitando flash de loading
+2. **Firebase Auth** — sessao persiste no IndexedDB. O plugin `auth.client.ts` detecta a sessao e re-busca dados frescos do Firestore automaticamente
+
+Veja `Cache_GUIDE.md` para detalhes do sistema de cache.
 
 ### Qual a diferenca entre isAuthenticated e hasAdminAccess?
 

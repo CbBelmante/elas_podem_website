@@ -52,6 +52,7 @@ export interface IAppConstants {
   name: string;
   version: string;
   defaultLocale: 'pt-BR' | 'en' | 'es';
+  localStoragePrefix: string;
 }
 
 export interface IContactConstants {
@@ -108,6 +109,7 @@ export const APP_CONSTANTS: Readonly<IConstants> = {
     name: 'Elas Podem',
     version: '1.0.0',
     defaultLocale: 'pt-BR',
+    localStoragePrefix: 'ep_',
   },
 
   contact: {
