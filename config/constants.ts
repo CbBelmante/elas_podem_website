@@ -7,6 +7,45 @@
  * Para valores que vem do .env, use useConfig() de config/index.ts
  */
 
+// ============== ALIASES ==============
+
+/**
+ * Definicao centralizada de path aliases (FONTE UNICA)
+ *
+ * Usado em nuxt.config.ts (alias + vite.resolve.alias)
+ * e nos imports do projeto (@config, @composables, etc).
+ */
+export const ALIAS_DEFINITIONS = {
+  '@': '.',
+  '@config': './config',
+  '@components': './components',
+  '@composables': './composables',
+  '@utils': './utils',
+  '@assets': './assets',
+  '@definitions': './definitions',
+  '@data': './data',
+  '@appTypes': './types',
+  '@plugins': './plugins',
+} as const;
+
+/**
+ * Converte definicoes de aliases para formato Nuxt/Vite (paths absolutos).
+ *
+ * @param baseUrl - URL base do projeto (import.meta.url)
+ */
+export function getAliases(baseUrl: string | URL): Record<string, string> {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { fileURLToPath } = require('node:url');
+
+  const aliases: Record<string, string> = {};
+
+  for (const [alias, path] of Object.entries(ALIAS_DEFINITIONS)) {
+    aliases[alias] = fileURLToPath(new URL(path, baseUrl));
+  }
+
+  return aliases;
+}
+
 // ============== TYPES ==============
 
 export interface IAppConstants {
@@ -52,6 +91,7 @@ export interface IFeaturesConstants {
   enableDonations: boolean;
   enableNewsletter: boolean;
   enableBlog: boolean;
+  enableDebugLogs: boolean;
 }
 
 export interface IConstants {
@@ -106,5 +146,6 @@ export const APP_CONSTANTS: Readonly<IConstants> = {
     enableDonations: true,
     enableNewsletter: false,
     enableBlog: false,
+    enableDebugLogs: true,
   },
 };

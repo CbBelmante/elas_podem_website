@@ -1,8 +1,11 @@
 import { resolve, dirname } from 'path';
 import { existsSync, lstatSync, readlinkSync } from 'fs';
+import { ALIAS_DEFINITIONS, getAliases } from './config/constants';
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig(() => {
+  const aliases = getAliases(import.meta.url);
+
   // Detectar se CBComponents está em desenvolvimento local (npm link)
   const cbSymlinkPath = resolve(__dirname, 'node_modules/@cb/components');
   const isSymlink = existsSync(cbSymlinkPath) && lstatSync(cbSymlinkPath).isSymbolicLink();
@@ -23,6 +26,9 @@ export default defineNuxtConfig(() => {
     compatibilityDate: '2025-07-15',
     devtools: { enabled: true },
     modules: ['@nuxt/eslint'],
+
+    // Aliases centralizados (fonte: config/constants.ts ALIAS_DEFINITIONS)
+    alias: ALIAS_DEFINITIONS,
 
     // Runtime config — Nuxt mapeia NUXT_PUBLIC_* do .env automaticamente
     // Ex: NUXT_PUBLIC_FIREBASE_API_KEY → runtimeConfig.public.firebaseApiKey
@@ -46,6 +52,11 @@ export default defineNuxtConfig(() => {
     },
 
     vite: {
+      resolve: {
+        alias: {
+          ...aliases,
+        },
+      },
       optimizeDeps: {
         exclude: ['@cb/components'],
       },

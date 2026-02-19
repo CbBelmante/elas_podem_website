@@ -83,6 +83,20 @@ export function useConfig(): IElasPODEMConfig {
   };
 }
 
+// ============== CONFIG ESTATICO (para uso fora de contexto Vue) ==============
+
+/**
+ * Config estatico para imports diretos (Logger, utils puras).
+ * Nao tem env vars — apenas constants + flags derivadas.
+ *
+ * Para config completo (com Firebase, analytics), use useConfig().
+ */
+export const config = {
+  ...APP_CONSTANTS,
+  isProduction: false,
+  isDevelopment: true,
+} as { isProduction: boolean; isDevelopment: boolean } & IConstants;
+
 // Re-export constants para conveniencia
 export { APP_CONSTANTS } from './constants';
 export type { IConstants } from './constants';

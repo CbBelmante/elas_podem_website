@@ -38,3 +38,16 @@ export { createValidationRules, isValidUrl } from './validationRules';
 // ---- Config de campos editable/readonly (unica fonte de verdade) ----
 export { SECTION_FIELDS } from './sectionFields';
 export type { FieldMode } from './sectionFields';
+
+// ---- Admin roles ----
+export {
+  ADMIN_ROLES,
+  ADMIN_ROLE_DISPLAY_NAMES,
+  ADMIN_ROLE_DESCRIPTIONS,
+  ADMIN_ROLE_PERMISSIONS,
+  isValidRole,
+  getRoleDisplayName,
+  getRolePermissions,
+  ALL_ROLES,
+} from './adminRoles';
+export type { AdminRole } from './adminRoles';
