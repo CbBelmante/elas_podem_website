@@ -132,6 +132,73 @@ export function createNewProgram(): IProgram {
 
 **Passo 4** — Adicione o input na UI do formulario.
 
+### Cenario: Remover campo `btnHistory` do Hero
+
+**Passo 1** — Remova da interface em `types/admin/sections.ts`:
+
+```typescript
+// ANTES:
+export interface IHeroSection {
+  badge: string;
+  title: string;
+  subtitle: string;
+  btnDonate: string;
+  btnHistory: string;    // ← REMOVER
+  stats: IHeroStat[];
+}
+
+// DEPOIS:
+export interface IHeroSection {
+  badge: string;
+  title: string;
+  subtitle: string;
+  btnDonate: string;
+  stats: IHeroStat[];
+}
+```
+
+**Passo 2** — Remova do config em `definitions/sectionFields.ts`:
+
+```typescript
+// ANTES:
+hero: {
+  badge: 'editable',
+  title: 'editable',
+  subtitle: 'editable',
+  btnDonate: 'editable',
+  btnHistory: 'editable',    // ← REMOVER
+  stats: 'editable',
+},
+
+// DEPOIS:
+hero: {
+  badge: 'editable',
+  title: 'editable',
+  subtitle: 'editable',
+  btnDonate: 'editable',
+  stats: 'editable',
+},
+```
+
+**Passo 3** — Siga os erros do TypeScript. O tipo `IHeroEditable` se recalcula automaticamente (nao tem mais `btnHistory`), entao o compilador vai apontar cada lugar que ainda referencia o campo removido:
+
+```
+❌ createDefaultHeroEditable() → Property 'btnHistory' does not exist
+❌ template do admin → v-model="hero.editable.btnHistory" → erro
+```
+
+Corrija cada erro removendo a referencia. O TypeScript te guia — **voce nunca esquece de limpar algo**.
+
+**Passo 4** — Remova o input da UI do formulario.
+
+### Resumo dos 3 cenarios
+
+| Cenario | Arquivos obrigatorios | O que o TypeScript faz |
+|---------|----------------------|----------------------|
+| **Mudar modo** | `sectionFields.ts` (1 arquivo) | Tipos recalculam, build passa |
+| **Adicionar campo** | `sections.ts` + `sectionFields.ts` (2 arquivos) | Tipos expandem, defaults pedem o campo novo |
+| **Remover campo** | `sections.ts` + `sectionFields.ts` (2 arquivos) | Tipos encolhem, erros guiam a limpeza |
+
 ---
 
 ## 🚀 Os 3 Modos (Importante)
@@ -304,6 +371,250 @@ Contact tem estrutura aninhada — campos top-level + methods[] com split propri
 | **contactMethod** | label, value, icon, url | color | — |
 | **cta** | title, subtitle, btnDonate, btnProjects | — | — |
 | **seo** | title, description, keywords, ogImage | og | — |
+
+---
+
+## 🔬 Como Funciona Por Dentro (Tecnico)
+
+### O papel do `as const`
+
+O `as const` em `sectionFields.ts` e o que permite tudo funcionar:
+
+```typescript
+// SEM as const:
+const x = { color: 'hidden' }
+// TypeScript entende: { color: string }
+// Perdeu o valor literal — 'hidden' virou string generico
+
+// COM as const:
+const x = { color: 'hidden' } as const
+// TypeScript entende: { readonly color: 'hidden' }
+// PRESERVA o valor literal — permite filtrar por modo depois
+```
+
+Sem `as const`, o TypeScript nao consegue distinguir `'editable'` de `'hidden'` porque ambos sao apenas `string`.
+
+---
+
+### FieldsByMode — passo a passo
+
+```typescript
+export type FieldsByMode<
+  T,                                      // interface base (ex: IProgram)
+  Config extends Record<string, string>,  // config (ex: SECTION_FIELDS.programs)
+  Mode extends string,                    // modo desejado (ex: 'editable')
+> = Pick<
+  T,
+  { [K in keyof Config]: Config[K] extends Mode ? K : never }[keyof Config] & keyof T
+>;
+```
+
+Exemplo concreto — `FieldsByMode<IProgram, SECTION_FIELDS.programs, 'editable'>`:
+
+**Passo 1** — Para cada campo do config, pergunta: "o valor e `'editable'`?"
+
+```
+title:       'editable' extends 'editable'? SIM → 'title'
+description: 'editable' extends 'editable'? SIM → 'description'
+icon:        'editable' extends 'editable'? SIM → 'icon'
+color:       'hidden'   extends 'editable'? NAO → never
+link:        'editable' extends 'editable'? SIM → 'link'
+
+= { title: 'title', description: 'description', icon: 'icon', color: never, link: 'link' }
+```
+
+**Passo 2** — Pega os valores (nomes dos campos aprovados):
+
+```
+'title' | 'description' | 'icon' | never | 'link'
+= 'title' | 'description' | 'icon' | 'link'     (never desaparece em unions)
+```
+
+**Passo 3** — `& keyof T` garante que existem na interface:
+
+```
+('title' | 'description' | 'icon' | 'link') & keyof IProgram
+= 'title' | 'description' | 'icon' | 'link'     (todos existem)
+```
+
+**Passo 4** — `Pick<IProgram, ...>` extrai so esses campos:
+
+```typescript
+Pick<IProgram, 'title' | 'description' | 'icon' | 'link'>
+= { title: string, description: string, icon: string, link: string }
+```
+
+**Resultado:** `color` foi excluido automaticamente porque e `'hidden'`, nao `'editable'`.
+
+Se amanha mudar `icon: 'hidden'` no config, o tipo recalcula sozinho:
+
+```typescript
+// Antes: { title, description, icon, link }
+// Depois: { title, description, link }    ← icon sumiu automaticamente
+```
+
+---
+
+### PreservedFields — a mesma logica invertida
+
+```typescript
+export type PreservedFields<T, Config> = Pick<
+  T,
+  { [K in keyof Config]: Config[K] extends 'readonly' | 'hidden' ? K : never }[keyof Config] & keyof T
+>;
+```
+
+A diferenca: ao inves de filtrar por UM modo, pega **tudo que NAO e editable**:
+
+```
+title:       'editable' extends 'readonly' | 'hidden'? NAO → never
+description: 'editable' extends 'readonly' | 'hidden'? NAO → never
+icon:        'editable' extends 'readonly' | 'hidden'? NAO → never
+color:       'hidden'   extends 'readonly' | 'hidden'? SIM → 'color'
+link:        'editable' extends 'readonly' | 'hidden'? NAO → never
+
+Pick<IProgram, 'color'> = { color: string }
+```
+
+---
+
+### FieldsByMode e reutilizavel — 1 utility type serve pra tudo
+
+```typescript
+// Programs — editaveis
+FieldsByMode<IProgram, config.programs, 'editable'>
+// = { title, description, icon, link }
+
+// Programs — hidden
+FieldsByMode<IProgram, config.programs, 'hidden'>
+// = { color }
+
+// SEO — editaveis
+FieldsByMode<ISeo, config.seo, 'editable'>
+// = { title, description, keywords, ogImage }
+
+// SEO — hidden
+FieldsByMode<ISeo, config.seo, 'hidden'>
+// = { og }
+
+// Supporters — editaveis
+FieldsByMode<ISupporter, config.supporters, 'editable'>
+// = { name, icon, image, url }
+```
+
+Muda so os 3 parametros: qual interface, qual config, qual modo.
+
+---
+
+### Helpers de runtime — como separate/combine funcionam
+
+Os utility types resolvem os TIPOS em compile time. Em runtime, quem faz o trabalho sao 4 helpers genericos:
+
+#### `cloneValue` — copia segura
+
+```typescript
+function cloneValue(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map((v) => cloneValue(v));
+  if (typeof value === 'object' && value !== null) return { ...value };
+  return value;
+}
+```
+
+Por que: sem clone, editar um campo no form alteraria o dado original do Firebase (mesma referencia em memoria). Com clone, cada um tem sua copia independente.
+
+#### `separateByFields` — separa 1 objeto por modo
+
+```typescript
+function separateByFields(data, fields) {
+  const editable = {};
+  const readonly = {};
+
+  for (const [key, mode] of Object.entries(fields)) {
+    if (!(key in data)) continue;
+    const target = mode === 'editable' ? editable : readonly;
+    target[key] = cloneValue(data[key]);
+  }
+
+  return { editable, readonly };
+}
+```
+
+Exemplo com dado real:
+
+```
+data   = { title: 'Comunicacao', icon: 'luc-megaphone', color: 'magenta', ... }
+fields = { title: 'editable', icon: 'editable', color: 'hidden', ... }
+
+Loop:
+  key='title', mode='editable' → editable.title = 'Comunicacao'
+  key='icon',  mode='editable' → editable.icon = 'luc-megaphone'
+  key='color', mode='hidden'   → readonly.color = 'magenta'  (nao e 'editable' → vai pro readonly)
+
+Resultado:
+  editable: { title: 'Comunicacao', icon: 'luc-megaphone', ... }
+  readonly: { color: 'magenta' }
+```
+
+**Detalhe:** a unica checagem e `mode === 'editable'`. Tudo que nao e editable (seja `'readonly'` ou `'hidden'`) vai pro mesmo bucket. Simples.
+
+#### `combineFromFields` — junta de volta (1 linha)
+
+```typescript
+function combineFromFields(editable, readonly) {
+  return { ...readonly, ...editable };
+}
+```
+
+Na hora do save: `{ color: 'magenta' } + { title: 'Educacao', icon: 'luc-star', ... }` = dado flat completo pro Firebase.
+
+#### `separateArrayByFields` — versao pra arrays
+
+```typescript
+function separateArrayByFields(data, fields) {
+  const results = data.map((item) => separateByFields(item, fields));
+  return {
+    editable: results.map((r) => r.editable),
+    readonly: results.map((r) => r.readonly),
+  };
+}
+```
+
+Aplica `separateByFields` em cada item do array. Resultado: arrays pareados por indice.
+
+```
+Firebase: [
+  { title: 'Comunicacao', color: 'magenta' },     // [0]
+  { title: 'Educacao',    color: 'coral' },        // [1]
+]
+
+editable: [
+  { title: 'Comunicacao' },   // [0]
+  { title: 'Educacao' },      // [1]
+]
+readonly: [
+  { color: 'magenta' },       // [0] casa com editable[0]
+  { color: 'coral' },         // [1] casa com editable[1]
+]
+```
+
+---
+
+### Tipos vs Runtime — dois lados da mesma moeda
+
+O mesmo config (`SECTION_FIELDS`) alimenta os dois mundos:
+
+```
+SECTION_FIELDS.programs = { title: 'editable', color: 'hidden', ... }
+        |                                               |
+        ↓ (compile time)                                ↓ (runtime)
+  FieldsByMode / PreservedFields              separateByFields / combineFromFields
+  geram os TIPOS corretos                    separam os DADOS corretamente
+  (TypeScript grita se errar)                (JavaScript executa a separacao)
+```
+
+Ambos leem o mesmo config, entao estao sempre sincronizados. Se mudar `icon: 'hidden'` no config:
+- **Compile time:** FieldsByMode remove `icon` do tipo IProgramEditable → TypeScript grita se a UI tentar acessar `editable.icon`
+- **Runtime:** separateByFields coloca `icon` no bucket readonly → o dado vai pro lugar certo
 
 ---
 
