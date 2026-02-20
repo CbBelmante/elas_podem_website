@@ -43,11 +43,11 @@ Sem factory, cada pagina (home, sobre, contato) duplicaria toda essa logica.
 ### A Solucao
 
 ```
-usePageData.ts (factory base)
+usePageData.ts (factory base + instancias)
     │
-    ├── useHomePageData.ts  → composable da home
-    ├── useAboutPageData.ts → composable do sobre (futuro)
-    └── useContactPageData.ts → composable do contato (futuro)
+    ├── useHomePageData     → composable da home (dentro de usePageData.ts)
+    ├── useAboutPageData    → composable do sobre (futuro)
+    └── useContactPageData  → composable do contato (futuro)
 ```
 
 A factory `createPageDataComposable()` recebe uma **config** e gera um composable completo com load/save/reset. Cada pagina so precisa dizer:
@@ -292,8 +292,7 @@ Se usasse sem dot notation, sobrescreveria `content` inteiro (perdendo mission, 
 
 ```
 composables/
-├── usePageData.ts          ← factory base (createPageDataComposable)
-├── useHomePageData.ts      ← composable gerado pra home
+├── usePageData.ts          ← factory base + useHomePageData (instancia da home)
 ├── useFirebase.ts          ← $db (Firestore instance)
 ├── useAuth.ts              ← userData (pra audit trail)
 
@@ -306,7 +305,7 @@ definitions/
 types/admin/
 ├── sections.ts             ← IHomePageData
 ├── formsData.ts            ← IHomeFormsData
-├── editor.ts               ← SaveResult
+├── formsData.ts            ← IHomeFormsData, ISaveResult
 ```
 
 ### Diagrama de dependencias
@@ -330,18 +329,12 @@ types/admin/
       └── userData.id / userData.displayName → audit trail
 ```
 
-### useHomePageData.ts completo
+### useHomePageData (dentro de usePageData.ts)
+
+A instancia da home fica no final de `usePageData.ts`, logo apos a factory:
 
 ```typescript
-import { createPageDataComposable } from '@composables/usePageData';
-import { FIRESTORE_COLLECTIONS, PAGE_DOCUMENTS } from '@definitions/firestoreCollections';
-import {
-  separateAllSections, createDefaultHomeForms,
-  combineHeroData, combineMissionData, combineProgramsData,
-  combineTestimonialsData, combineSupportersData,
-  combineContactData, combineCtaData, combineSeoData,
-} from '~/utils/HomeFormUtils';
-import type { IHomePageData, IHomeFormsData } from '~/types/admin';
+// ============== HOME (instancia gerada pela factory) ==============
 
 export const useHomePageData = createPageDataComposable<IHomePageData, IHomeFormsData>({
   collection: FIRESTORE_COLLECTIONS.PAGES,
@@ -352,12 +345,7 @@ export const useHomePageData = createPageDataComposable<IHomePageData, IHomeForm
   combineSections: {
     hero: (forms) => ({ 'content.hero': combineHeroData(forms.hero.editable) }),
     mission: (forms) => ({ 'content.mission': combineMissionData(forms.mission.editable) }),
-    programs: (forms) => ({ 'content.programs': combineProgramsData(forms.programs.editable, forms.programs.readonly) }),
-    testimonials: (forms) => ({ 'content.testimonials': combineTestimonialsData(forms.testimonials.editable) }),
-    supporters: (forms) => ({ 'content.supporters': combineSupportersData(forms.supporters.editable, forms.supporters.readonly) }),
-    contact: (forms) => ({ 'content.contact': combineContactData(forms.contact.editable, forms.contact.readonly) }),
-    cta: (forms) => ({ 'content.cta': combineCtaData(forms.cta.editable) }),
-    seo: (forms) => ({ seo: combineSeoData(forms.seo.editable, forms.seo.readonly) }),
+    // ... demais secoes
   },
 });
 
@@ -471,11 +459,11 @@ Isso garante que `forms` e `originalData` estejam sincronizados com o Firestore.
 | `IPageDataConfig` | interface | Config que cada pagina fornece |
 | `IPageDataState` | interface | Estado reativo interno |
 
-### `composables/useHomePageData.ts`
+### `composables/usePageData.ts` (exports adicionais da home)
 
 | Export | Tipo | Descricao |
 |--------|------|-----------|
-| `useHomePageData` | composable | Composable da home (gerado pela factory) |
+| `useHomePageData` | composable | Instancia da home (gerado pela factory) |
 | `UseHomePageData` | type | ReturnType do composable |
 
 ### Retorno de qualquer composable gerado pela factory

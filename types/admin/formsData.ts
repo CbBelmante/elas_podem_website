@@ -1,18 +1,10 @@
 /**
- * FormsData Types - Elas Podem Admin
+ * FormsData & Editor Types - Elas Podem Admin
  *
- * Camada 3: Container unico que agrupa editable + readonly de todas as secoes.
- * Este e o tipo do `ref()` reativo no editor — o estado central do formulario.
- *
- * Fluxo:
- *   Firestore (IHomePageData) → separateAllSections() → IHomeFormsData (ref reativo)
- *   IHomeFormsData → combine*Data() → Firestore (save)
- *
- * @module types/admin/formsData
- *
- * @dependencias
- * - types/admin/editable (todas as interfaces Editable/Readonly)
+ * Container do editor (editable/readonly) + types do orquestrador (save, validacao, audit).
  */
+
+import type { Ref } from 'vue';
 
 import type {
   IHeroEditable,
@@ -29,58 +21,65 @@ import type {
   ISeoReadonly,
 } from './editable';
 
-/**
- * Container completo do formulario de edicao da homepage.
- *
- * Cada secao tem `editable` (campos do formulario) e opcionalmente
- * `readonly` (campos preservados mas ocultos do admin).
- *
- * @exemplo
- * ```typescript
- * const forms = ref<IHomeFormsData>(createDefaultHomeForms())
- *
- * // Acessar dados editaveis do hero:
- * forms.value.hero.editable.title = 'Novo Titulo'
- *
- * // Readonly e preservado automaticamente no save:
- * forms.value.programs.readonly[0].color // 'magenta' (nao aparece no form)
- * ```
- */
+// ============================================================
+// FORMS DATA
+// ============================================================
+
 export interface IHomeFormsData {
-  /** Hero — apenas editable (tudo editavel) */
-  hero: {
-    editable: IHeroEditable;
-  };
-  /** Missao — apenas editable (tudo editavel) */
-  mission: {
-    editable: IMissionEditable;
-  };
-  /** Programas — editable + readonly (color e readonly) */
-  programs: {
-    editable: IProgramEditable[];
-    readonly: IProgramReadonly[];
-  };
-  /** Depoimentos — apenas editable (tudo editavel) */
-  testimonials: {
-    editable: ITestimonialEditable[];
-  };
-  /** Apoiadores — editable + readonly (color e readonly) */
-  supporters: {
-    editable: ISupporterEditable[];
-    readonly: ISupporterReadonly[];
-  };
-  /** Contato — editable + readonly (cores dos metodos) */
-  contact: {
-    editable: IContactEditable;
-    readonly: IContactReadonly;
-  };
-  /** CTA — apenas editable (tudo editavel) */
-  cta: {
-    editable: ICtaEditable;
-  };
-  /** SEO — editable + readonly (config OG) */
-  seo: {
-    editable: ISeoEditable;
-    readonly: ISeoReadonly;
-  };
+  hero: { editable: IHeroEditable };
+  mission: { editable: IMissionEditable };
+  programs: { editable: IProgramEditable[]; readonly: IProgramReadonly[] };
+  testimonials: { editable: ITestimonialEditable[] };
+  supporters: { editable: ISupporterEditable[]; readonly: ISupporterReadonly[] };
+  contact: { editable: IContactEditable; readonly: IContactReadonly };
+  cta: { editable: ICtaEditable };
+  seo: { editable: ISeoEditable; readonly: ISeoReadonly };
+}
+
+// ============================================================
+// PAGE EDITOR
+// ============================================================
+
+export interface IPageSectionConfig {
+  name: string;
+  form: Ref<any>;
+  originalData: () => any;
+  validator: (data: any) => IValidationResult;
+  saveFunction: (data: any) => Promise<void>;
+  getImageUrls: () => { old?: string; new?: string }; // compara old vs new pra deletar orfas
+  updateLocalData: (data: any) => void;
+}
+
+export interface IPageEditorConfig {
+  pageName: string;
+  sections: IPageSectionConfig[];
+  pageData: Ref<any>;
+  tempUploadedImages: Ref<string[]>; // cleanup no cancel
+}
+
+// ============================================================
+// SAVE / VALIDATION
+// ============================================================
+
+export interface ISaveResult {
+  success: boolean;
+  message: string;
+  savedSections: string[];
+  error?: Error; // presente apenas se success === false
+}
+
+export interface IValidationResult {
+  isValid: boolean;
+  errors: string[];
+}
+
+// ============================================================
+// ADMIN LOG
+// ============================================================
+
+export interface IAdminLog {
+  action: string;
+  details: Record<string, any>;
+  timestamp: string; // ISO
+  user: string;
 }

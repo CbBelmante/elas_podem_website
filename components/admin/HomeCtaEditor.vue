@@ -7,7 +7,7 @@
 
 import { CBInput, CBTextarea } from '@cb/components';
 import { CTA_CONFIG } from '@definitions/validationConfigs';
-import { createValidationRules } from '@definitions/validationRules';
+import { createValidationRules } from '@utils/validationRules';
 import type { ICtaEditable } from '@appTypes/admin';
 
 // ============== PROPS ==============

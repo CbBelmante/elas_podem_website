@@ -120,10 +120,10 @@ const result = validateContact(forms.value.contact.editable);
 
 ### Formato do resultado
 
-Toda funcao de validacao retorna `ValidationResult`:
+Toda funcao de validacao retorna `IValidationResult`:
 
 ```typescript
-interface ValidationResult {
+interface IValidationResult {
   isValid: boolean;     // true = sem erros, pode salvar
   errors: string[];     // array vazio se valido, mensagens se invalido
 }
@@ -170,7 +170,7 @@ title: { required: true, minLength: 3, maxLength: 50 },
 ```typescript
 // composables/useValidation.ts — adicionar no return
 
-const validateAboutIntro = (data: Record<string, unknown>): ValidationResult => {
+const validateAboutIntro = (data: Record<string, unknown>): IValidationResult => {
   return validateFields(data, ABOUT_INTRO_CONFIG.validationRules, 'Intro');
 };
 ```
@@ -192,7 +192,7 @@ export const ABOUT_INTRO_CONFIG = {
 Para regras que vao alem de required/minLength/maxLength, adicione no validador:
 
 ```typescript
-const validateSeo = (data: Record<string, unknown>): ValidationResult => {
+const validateSeo = (data: Record<string, unknown>): IValidationResult => {
   const result = validateFields(data, SEO_CONFIG.validationRules, 'SEO');
   const errors = [...result.errors];
 
@@ -286,7 +286,7 @@ composables/
 ├── useValidation.ts        ← helpers genericos + validadores por secao
 
 types/admin/
-├── editor.ts               ← ValidationResult
+├── formsData.ts             ← IValidationResult, ISaveResult
 ```
 
 ### Diagrama de dependencias
@@ -304,8 +304,8 @@ pages/admin/edit/homeEdit.vue
     │  chama validateHero() antes do saveSection()
     │
     ▼
-composables/useHomePageData.ts
-    saveSection('hero')
+composables/usePageData.ts
+    useHomePageData() → saveSection('hero')
 ```
 
 ---
@@ -321,7 +321,7 @@ function validateFields(
   data: Record<string, unknown>,       // dados do formulario
   validationRules: Record<string, IFieldRule>,  // regras do config
   sectionLabel: string,                // nome pra mensagem de erro
-): ValidationResult {
+): IValidationResult {
   const errors: string[] = [];
 
   // Itera sobre as REGRAS (nao sobre os dados)
@@ -406,7 +406,7 @@ const validateContact = (data) => {
 | Helper | Entrada | Saida | Uso |
 |--------|---------|-------|-----|
 | `validateField()` | 1 campo + regras | `string[]` erros | Valida 1 campo individual |
-| `validateFields()` | objeto + regras | `ValidationResult` | Valida todos os campos de um objeto |
+| `validateFields()` | objeto + regras | `IValidationResult` | Valida todos os campos de um objeto |
 | `validateItemCount()` | array + min/max | `string[]` erros | Valida quantidade de itens |
 | `validateArrayItems()` | array + regras | `string[]` erros | Valida cada item do array |
 

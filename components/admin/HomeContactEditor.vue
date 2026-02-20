@@ -9,7 +9,7 @@
 import { CBButton, CBIcon, CBInput, CBLabel, CBSelect, CBTextarea } from '@cb/components';
 import draggable from 'vuedraggable';
 import { CONTACT_CONFIG } from '@definitions/validationConfigs';
-import { createValidationRules } from '@definitions/validationRules';
+import { createValidationRules } from '@utils/validationRules';
 import { ICON_OPTIONS } from '@definitions/themeOptions';
 import { createNewContactMethod } from '@utils/HomeFormUtils';
 import { SECTION_FIELDS } from '@definitions/sectionFields';

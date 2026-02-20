@@ -10,7 +10,7 @@ import { CBButton, CBIcon, CBInput, CBLabel, CBTextarea } from '@cb/components';
 import draggable from 'vuedraggable';
 import HomeImageUploader from '@components/admin/HomeImageUploader.vue';
 import { TESTIMONIALS_CONFIG } from '@definitions/validationConfigs';
-import { createValidationRules } from '@definitions/validationRules';
+import { createValidationRules } from '@utils/validationRules';
 import { createNewTestimonial } from '@utils/HomeFormUtils';
 import type { ITestimonialEditable } from '@appTypes/admin';
 

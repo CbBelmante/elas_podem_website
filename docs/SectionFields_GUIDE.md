@@ -259,8 +259,7 @@ definitions/
 types/admin/
 ├── sections.ts             ← interfaces base (formato Firebase)
 ├── editable.ts             ← tipos DERIVADOS (FieldsByMode, PreservedFields)
-├── formsData.ts            ← container do editor (IHomeFormsData)
-├── editor.ts               ← tipos do orquestrador
+├── formsData.ts            ← container + orquestrador (IHomeFormsData, ISaveResult, IValidationResult...)
 └── index.ts                ← barrel exports
 
 utils/

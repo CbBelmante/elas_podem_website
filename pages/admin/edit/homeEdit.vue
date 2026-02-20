@@ -21,7 +21,7 @@ import HomeContactEditor from '@components/admin/HomeContactEditor.vue';
 import HomeCtaEditor from '@components/admin/HomeCtaEditor.vue';
 import HomeSeoEditor from '@components/admin/HomeSeoEditor.vue';
 
-import type { SaveResult } from '@appTypes/admin';
+import type { ISaveResult } from '@appTypes/admin';
 
 // ============== PAGE META ==============
 
@@ -125,7 +125,7 @@ async function handleSave(sectionName: string): Promise<void> {
 
   sectionErrors.value[sectionName] = [];
 
-  const saveResult: SaveResult = await saveSection(sectionName as any);
+  const saveResult: ISaveResult = await saveSection(sectionName as any);
 
   if (saveResult.success) {
     changedSections.value.delete(sectionName);

@@ -10,7 +10,7 @@ import { CBButton, CBIcon, CBInput, CBLabel, CBSelect } from '@cb/components';
 import draggable from 'vuedraggable';
 import HomeImageUploader from '@components/admin/HomeImageUploader.vue';
 import { SUPPORTERS_CONFIG } from '@definitions/validationConfigs';
-import { createValidationRules } from '@definitions/validationRules';
+import { createValidationRules } from '@utils/validationRules';
 import { ICON_OPTIONS } from '@definitions/themeOptions';
 import { createNewSupporter } from '@utils/HomeFormUtils';
 import { SECTION_FIELDS } from '@definitions/sectionFields';

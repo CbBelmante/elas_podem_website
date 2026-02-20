@@ -33,9 +33,6 @@ export {
   COMPRESSION_SETTINGS,
 } from './validationConfigs';
 
-// ---- Funcoes de validacao ----
-export { createValidationRules, isValidUrl } from './validationRules';
-
 // ---- Config de campos editable/readonly (unica fonte de verdade) ----
 export { SECTION_FIELDS } from './sectionFields';
 export type { FieldMode } from './sectionFields';

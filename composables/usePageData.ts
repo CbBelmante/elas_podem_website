@@ -1,15 +1,8 @@
 /**
- * 🎣 usePageData - Factory base para composables de dados de pagina
+ * 🎣 usePageData - Factory de composables de dados de pagina
  *
- * Gera composables singleton por pagina (home, sobre, contato...).
- * Cada composable carrega do Firestore, transforma via separate/combine,
- * e expoe load/save/reset com audit trail.
- *
- * @dependencias
- * - firebase/firestore (getDoc, updateDoc)
- * - composables/useFirebase ($db)
- * - composables/useAuth (userData para audit trail)
- * - utils/Logger
+ * Factory generica (createPageDataComposable) + instancia da home (useHomePageData).
+ * Gera singletons por pagina com load/save/reset tipados.
  */
 
 // ============== DEPENDENCIAS EXTERNAS ==============
@@ -21,43 +14,39 @@ import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { useFirebase } from '@composables/useFirebase';
 import { useAuth } from '@composables/useAuth';
 import { Logger } from '@utils/Logger';
+import { FIRESTORE_COLLECTIONS, PAGE_DOCUMENTS } from '@definitions/firestoreCollections';
+import {
+  separateAllSections,
+  createDefaultHomeForms,
+  combineHeroData,
+  combineMissionData,
+  combineProgramsData,
+  combineTestimonialsData,
+  combineSupportersData,
+  combineContactData,
+  combineCtaData,
+  combineSeoData,
+} from '@utils/HomeFormUtils';
 
-import type { SaveResult } from '~/types/admin';
+import type { ISaveResult, IHomePageData, IHomeFormsData } from '@appTypes/admin';
 
 // ============== INTERFACES ==============
 
-/**
- * Config que cada pagina fornece pra factory.
- *
- * TPageData = formato Firestore (ex: IHomePageData)
- * TFormsData = formato editor (ex: IHomeFormsData)
- */
+// TPageData = formato Firestore, TFormsData = formato editor
 export interface IPageDataConfig<TPageData, TFormsData extends Record<string, any>> {
-  /** Nome da collection no Firestore (ex: 'pages') */
   collection: string;
-  /** ID do documento no Firestore (ex: 'home', 'about') */
   document: string;
-  /** Nome legivel pra logs (ex: 'home', 'sobre') */
   pageName: string;
-  /** Transforma Firestore → editor (ex: separateAllSections) */
   separateAll: (data: TPageData) => TFormsData;
-  /** Gera estado inicial vazio (ex: createDefaultHomeForms) */
   createDefaults: () => TFormsData;
-  /** Map de secao → funcao que combina editable+readonly de volta pro Firestore */
   combineSections: { [K in keyof TFormsData]: (forms: TFormsData) => Record<string, unknown> };
 }
 
-/** Estado reativo compartilhado por todas as paginas */
 export interface IPageDataState<TPageData, TFormsData> {
-  /** Dados transformados para o editor (editable/readonly) */
   forms: TFormsData;
-  /** Snapshot original do Firestore (para reset) */
   originalData: TPageData | null;
-  /** Carregando dados do Firestore */
   isLoading: boolean;
-  /** Salvando dados no Firestore */
   isSaving: boolean;
-  /** Mensagem de erro (null = sem erro) */
   error: string | null;
 }
 
@@ -143,7 +132,7 @@ export function createPageDataComposable<
      * Salva UMA secao no Firestore via dot notation.
      * Exemplo: saveSection('hero') → updateDoc({ 'content.hero': {...} })
      */
-    const saveSection = async (section: SectionName): Promise<SaveResult> => {
+    const saveSection = async (section: SectionName): Promise<ISaveResult> => {
       state.isSaving = true;
 
       try {
@@ -186,7 +175,7 @@ export function createPageDataComposable<
     /**
      * Salva TODAS as secoes em um unico updateDoc (atomico).
      */
-    const saveAll = async (): Promise<SaveResult> => {
+    const saveAll = async (): Promise<ISaveResult> => {
       state.isSaving = true;
       const allSections = Object.keys(config.combineSections) as SectionName[];
 
@@ -275,3 +264,25 @@ export function createPageDataComposable<
     };
   };
 }
+
+// ============== HOME (instancia gerada pela factory) ==============
+
+export const useHomePageData = createPageDataComposable<IHomePageData, IHomeFormsData>({
+  collection: FIRESTORE_COLLECTIONS.PAGES,
+  document: PAGE_DOCUMENTS.HOME,
+  pageName: 'home',
+  separateAll: separateAllSections,
+  createDefaults: createDefaultHomeForms,
+  combineSections: {
+    hero: (forms) => ({ 'content.hero': combineHeroData(forms.hero.editable) }),
+    mission: (forms) => ({ 'content.mission': combineMissionData(forms.mission.editable) }),
+    programs: (forms) => ({ 'content.programs': combineProgramsData(forms.programs.editable, forms.programs.readonly) }),
+    testimonials: (forms) => ({ 'content.testimonials': combineTestimonialsData(forms.testimonials.editable) }),
+    supporters: (forms) => ({ 'content.supporters': combineSupportersData(forms.supporters.editable, forms.supporters.readonly) }),
+    contact: (forms) => ({ 'content.contact': combineContactData(forms.contact.editable, forms.contact.readonly) }),
+    cta: (forms) => ({ 'content.cta': combineCtaData(forms.cta.editable) }),
+    seo: (forms) => ({ seo: combineSeoData(forms.seo.editable, forms.seo.readonly) }),
+  },
+});
+
+export type UseHomePageData = ReturnType<typeof useHomePageData>;

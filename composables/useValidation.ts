@@ -7,7 +7,7 @@
  *
  * @dependencias
  * - definitions/validationConfigs (*_CONFIG)
- * - types/admin (ValidationResult)
+ * - types/admin (IValidationResult)
  */
 
 // ============== DEPENDENCIAS INTERNAS ==============
@@ -22,9 +22,9 @@ import {
   CTA_CONFIG,
   SEO_CONFIG,
 } from '@definitions/validationConfigs';
-import { isValidUrl } from '@definitions/validationRules';
+import { isValidUrl } from '@utils/validationRules';
 
-import type { ValidationResult } from '~/types/admin';
+import type { IValidationResult } from '@appTypes/admin';
 
 // ============== TYPES ==============
 
@@ -81,7 +81,7 @@ function validateFields(
   data: Record<string, unknown>,
   validationRules: Record<string, IFieldRule>,
   sectionLabel: string,
-): ValidationResult {
+): IValidationResult {
   const errors: string[] = [];
 
   for (const [field, rules] of Object.entries(validationRules)) {
@@ -142,7 +142,7 @@ function validateArrayItems(
 export function useValidation() {
   // ===== VALIDATORS POR SECAO =====
 
-  const validateHero = (data: Record<string, unknown>): ValidationResult => {
+  const validateHero = (data: Record<string, unknown>): IValidationResult => {
     const result = validateFields(data, HERO_CONFIG.validationRules, 'Hero');
     const errors = [...result.errors];
 
@@ -153,32 +153,32 @@ export function useValidation() {
     return { isValid: errors.length === 0, errors };
   };
 
-  const validateMission = (data: Record<string, unknown>): ValidationResult => {
+  const validateMission = (data: Record<string, unknown>): IValidationResult => {
     return validateFields(data, MISSION_CONFIG.validationRules, 'Missao');
   };
 
-  const validatePrograms = (items: Record<string, unknown>[]): ValidationResult => {
+  const validatePrograms = (items: Record<string, unknown>[]): IValidationResult => {
     const errors: string[] = [];
     errors.push(...validateItemCount(items, PROGRAMS_CONFIG.items, 'Programas'));
     errors.push(...validateArrayItems(items, PROGRAMS_CONFIG.validationRules, 'Programa'));
     return { isValid: errors.length === 0, errors };
   };
 
-  const validateTestimonials = (items: Record<string, unknown>[]): ValidationResult => {
+  const validateTestimonials = (items: Record<string, unknown>[]): IValidationResult => {
     const errors: string[] = [];
     errors.push(...validateItemCount(items, TESTIMONIALS_CONFIG.items, 'Depoimentos'));
     errors.push(...validateArrayItems(items, TESTIMONIALS_CONFIG.validationRules, 'Depoimento'));
     return { isValid: errors.length === 0, errors };
   };
 
-  const validateSupporters = (items: Record<string, unknown>[]): ValidationResult => {
+  const validateSupporters = (items: Record<string, unknown>[]): IValidationResult => {
     const errors: string[] = [];
     errors.push(...validateItemCount(items, SUPPORTERS_CONFIG.items, 'Apoiadores'));
     errors.push(...validateArrayItems(items, SUPPORTERS_CONFIG.validationRules, 'Apoiador'));
     return { isValid: errors.length === 0, errors };
   };
 
-  const validateContact = (data: Record<string, unknown>): ValidationResult => {
+  const validateContact = (data: Record<string, unknown>): IValidationResult => {
     const result = validateFields(data, CONTACT_CONFIG.validationRules, 'Contato');
     const errors = [...result.errors];
 
@@ -193,11 +193,11 @@ export function useValidation() {
     return { isValid: errors.length === 0, errors };
   };
 
-  const validateCta = (data: Record<string, unknown>): ValidationResult => {
+  const validateCta = (data: Record<string, unknown>): IValidationResult => {
     return validateFields(data, CTA_CONFIG.validationRules, 'CTA');
   };
 
-  const validateSeo = (data: Record<string, unknown>): ValidationResult => {
+  const validateSeo = (data: Record<string, unknown>): IValidationResult => {
     const result = validateFields(data, SEO_CONFIG.validationRules, 'SEO');
     const errors = [...result.errors];
 

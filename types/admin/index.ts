@@ -5,8 +5,7 @@
  *
  * - sections.ts  → Camada 1: formato exato no Firestore (flat/completo)
  * - editable.ts  → Camada 2: separacao editable/readonly para o formulario
- * - formsData.ts → Camada 3: container unico do editor (ref reativo)
- * - editor.ts    → Camada 4: orquestrador, validacao, audit log
+ * - formsData.ts → Camada 3-4: container do editor + orquestrador, validacao, audit log
  *
  * O QUE VAI AQUI:
  * - Interfaces de dados do admin (shapes de secoes, formularios, editor)
@@ -56,14 +55,12 @@ export type {
   ISeoReadonly,
 } from './editable';
 
-// ---- Camada 3: FormsData (container do editor) ----
-export type { IHomeFormsData } from './formsData';
-
-// ---- Camada 4: Editor/Orquestrador ----
+// ---- Camada 3-4: FormsData + Editor/Orquestrador ----
 export type {
-  PageSectionConfig,
-  PageEditorConfig,
-  SaveResult,
-  ValidationResult,
+  IHomeFormsData,
+  IPageSectionConfig,
+  IPageEditorConfig,
+  ISaveResult,
+  IValidationResult,
   IAdminLog,
-} from './editor';
+} from './formsData';

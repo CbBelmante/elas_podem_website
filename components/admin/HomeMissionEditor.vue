@@ -8,7 +8,7 @@
 import { CBInput, CBTextarea } from '@cb/components';
 import HomeImageUploader from '@components/admin/HomeImageUploader.vue';
 import { MISSION_CONFIG } from '@definitions/validationConfigs';
-import { createValidationRules } from '@definitions/validationRules';
+import { createValidationRules } from '@utils/validationRules';
 import type { IMissionEditable } from '@appTypes/admin';
 
 // ============== PROPS ==============

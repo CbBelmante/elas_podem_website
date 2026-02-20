@@ -49,8 +49,7 @@ composables/
 ├── useFirebase.ts               # Firebase init (app, db, auth, storage) — singleton
 ├── useAuth.ts                   # Autenticação multi-role (signIn, signOut, permissions)
 ├── useCache.ts                  # Cache 2 níveis (RAM + localStorage) — get/set/getOrFetch
-├── usePageData.ts               # Factory base — gera composables por página
-├── useHomePageData.ts           # Composable específico da home (gerado pela factory)
+├── usePageData.ts               # Factory base + useHomePageData (instancia da home)
 ├── useValidation.ts             # Validadores config-driven por seção
 ├── useImageCompression.ts       # Compressão de imagens via Canvas API
 ├── useFirebaseStorage.ts        # Upload, delete, validação (usa compression)
@@ -60,8 +59,7 @@ types/admin/
 ├── index.ts                     # Barrel export de todas as camadas
 ├── sections.ts                  # Camada 1: Interfaces Firestore (IHeroSection, IHomePageData...)
 ├── editable.ts                  # Camada 2: Editable/Readonly (IHeroEditable, IProgramReadonly...)
-├── formsData.ts                 # Camada 3: Container editor (IHomeFormsData)
-└── editor.ts                    # Camada 4: Types do orquestrador (SaveResult, ValidationResult...)
+└── formsData.ts                 # Camada 3-4: Container + orquestrador (IHomeFormsData, ISaveResult, IValidationResult...)
 
 definitions/
 ├── index.ts                     # Barrel export de tudo
@@ -246,12 +244,12 @@ export interface IHomeFormsData {
 }
 ```
 
-### Camada 4: `editor.ts` — Types do orquestrador
+### Camada 4: Orquestrador (dentro de `formsData.ts`)
 ```typescript
-export interface SaveResult {
+export interface ISaveResult {
   success: boolean; message: string; savedSections: string[]; error?: Error
 }
-export interface ValidationResult { isValid: boolean; errors: string[] }
+export interface IValidationResult { isValid: boolean; errors: string[] }
 export interface IAdminLog { action, details, timestamp, user }
 ```
 
@@ -432,10 +430,9 @@ export function createPageDataComposable<TPageData, TFormsData>(config) {
 }
 ```
 
-### `useHomePageData.ts` — Home específico [IMPLEMENTADO]
+### `useHomePageData` — Home específico (dentro de usePageData.ts) [IMPLEMENTADO]
 ```typescript
-// Uma chamada à factory com config específica da home.
-// Usa FIRESTORE_COLLECTIONS e PAGE_DOCUMENTS (zero hardcoded).
+// Instancia da home no final de usePageData.ts
 export const useHomePageData = createPageDataComposable<IHomePageData, IHomeFormsData>({
   collection: FIRESTORE_COLLECTIONS.PAGES,
   document: PAGE_DOCUMENTS.HOME,
@@ -457,19 +454,19 @@ export const useHomePageData = createPageDataComposable<IHomePageData, IHomeForm
 export function useValidation() {
   return {
     // Genéricos (reutilizáveis para qualquer página)
-    validateFields(data, validationRules, sectionLabel): ValidationResult,
+    validateFields(data, validationRules, sectionLabel): IValidationResult,
     validateItemCount(items, rules, label): string[],
     validateArrayItems(items, validationRules, sectionLabel): string[],
 
     // Específicos da home (wrappers finos que passam o config certo)
-    validateHero(data): ValidationResult,
-    validateMission(data): ValidationResult,
-    validatePrograms(items): ValidationResult,
-    validateTestimonials(items): ValidationResult,
-    validateSupporters(items): ValidationResult,
-    validateContact(data): ValidationResult,
-    validateCta(data): ValidationResult,
-    validateSeo(data): ValidationResult,
+    validateHero(data): IValidationResult,
+    validateMission(data): IValidationResult,
+    validatePrograms(items): IValidationResult,
+    validateTestimonials(items): IValidationResult,
+    validateSupporters(items): IValidationResult,
+    validateContact(data): IValidationResult,
+    validateCta(data): IValidationResult,
+    validateSeo(data): IValidationResult,
   }
 }
 ```
@@ -809,8 +806,7 @@ service firebase.storage {
 - [x] `config/constants.ts` — ALIAS_DEFINITIONS + APP_CONSTANTS
 - [x] `composables/useFirebase.ts` — init singleton
 - [x] `composables/useAuth.ts` — login/logout/listener/multi-role
-- [x] `composables/usePageData.ts` — factory base genérica
-- [x] `composables/useHomePageData.ts` — composable home (gerado pela factory)
+- [x] `composables/usePageData.ts` — factory base + useHomePageData (instancia da home)
 - [x] `composables/useValidation.ts` — 8 validadores config-driven
 - [x] `composables/useImageCompression.ts` — compressão Canvas API (responsabilidade separada)
 - [x] `composables/useFirebaseStorage.ts` — upload + delete + validação (lê IMAGE_UPLOAD_CONFIG)

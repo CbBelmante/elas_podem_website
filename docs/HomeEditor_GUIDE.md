@@ -186,7 +186,7 @@ Todos os 8 editores seguem o mesmo pattern. A diferenca e o que tem dentro.
 
 import { CBInput, ... } from '@cb/components';
 import { XXX_CONFIG } from '@definitions/validationConfigs';
-import { createValidationRules } from '@definitions/validationRules';
+import { createValidationRules } from '@utils/validationRules';
 import type { IXxxEditable } from '@appTypes/admin';
 
 // ============== PROPS ==============
@@ -527,15 +527,15 @@ utils/                                                   │
 ├── HomeFormUtils.ts ─────────────►  (createNew*())      │
 │                                                        │
 composables/                                             │
-├── useHomePageData.ts ───────────►  homeEdit.vue ◄──────┘
+├── usePageData.ts ──────────────►  homeEdit.vue ◄──────┘
+│     (useHomePageData)                   │
 ├── usePageEditor.ts ─────────────►       │
 ├── useAuth.ts ───────────────────►       │
 ├── useFirebaseStorage.ts ────────►  HomeImageUploader.vue
 │
 types/admin/
 ├── editable.ts ──────────────────►  (Props dos editors)
-├── formsData.ts ─────────────────►  (IHomeFormsData)
-├── editor.ts ────────────────────►  (SaveResult, ValidationResult)
+├── formsData.ts ─────────────────►  (IHomeFormsData, ISaveResult, IValidationResult)
 ```
 
 ### Secoes e suas capacidades
@@ -572,7 +572,7 @@ const successMessage = ref('');                                // feedback pos-s
 **2. Mapa de validadores:**
 
 ```typescript
-const validators: Record<string, (data) => ValidationResult> = {
+const validators: Record<string, (data) => IValidationResult> = {
   hero: (data) => validateHero(data),
   mission: (data) => validateMission(data),
   programs: () => validatePrograms(forms.value?.programs?.editable),

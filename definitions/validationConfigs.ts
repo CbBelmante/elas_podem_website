@@ -9,15 +9,19 @@
  *
  * COMPRESSION_SETTINGS define regras de compressao por categoria de imagem.
  *
+ * Tambem inclui funcoes utilitarias de validacao:
+ * - createValidationRules() → gera array de validators para CBInput :rules
+ * - isValidUrl() → valida se uma string e uma URL valida
+ *
  * Esses valores sao consumidos por:
  * - useValidation.ts → validacao de formularios
- * - createValidationRules() em validationRules.ts → regras inline para CBInput :rules
+ * - createValidationRules() → regras inline para CBInput :rules
  * - useFirebaseStorage.ts → compressao de imagens no upload
  *
  * @module definitions/validationConfigs
  *
  * @dependencias
- * - ZERO (apenas constantes)
+ * - ZERO (constantes e funcoes puras)
  */
 
 // ============================================================
