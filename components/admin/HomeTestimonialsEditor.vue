@@ -1,4 +1,5 @@
 <script setup lang="ts">
+/* eslint-disable vue/no-mutating-props -- editors mutam forms via ref do parent */
 /**
  * 🧩 HomeTestimonialsEditor — Editor da secao Depoimentos.
  *
@@ -90,7 +91,10 @@ function removeTestimonial(index: number): void {
               :model-value="element.quote"
               label="Citacao"
               :rules="createValidationRules(rules.quote)"
-              @update:model-value="element.quote = $event; emit('changed')"
+              @update:model-value="
+                element.quote = $event;
+                emit('changed');
+              "
             />
 
             <div class="testimonialsEditor__row">
@@ -98,14 +102,20 @@ function removeTestimonial(index: number): void {
                 :model-value="element.name"
                 label="Nome"
                 :rules="createValidationRules(rules.name)"
-                @update:model-value="element.name = $event; emit('changed')"
+                @update:model-value="
+                  element.name = $event;
+                  emit('changed');
+                "
               />
 
               <CBInput
                 :model-value="element.role"
                 label="Funcao"
                 :rules="createValidationRules(rules.role)"
-                @update:model-value="element.role = $event; emit('changed')"
+                @update:model-value="
+                  element.role = $event;
+                  emit('changed');
+                "
               />
             </div>
 
@@ -113,14 +123,20 @@ function removeTestimonial(index: number): void {
               <CBInput
                 :model-value="element.initials"
                 label="Iniciais (ex: ED)"
-                @update:model-value="element.initials = $event; emit('changed')"
+                @update:model-value="
+                  element.initials = $event;
+                  emit('changed');
+                "
               />
 
               <HomeImageUploader
                 :model-value="element.image"
                 category="testimonials"
                 label="Foto (opcional)"
-                @update:model-value="element.image = $event; emit('changed')"
+                @update:model-value="
+                  element.image = $event;
+                  emit('changed');
+                "
                 @uploaded="emit('uploaded', $event)"
               />
             </div>

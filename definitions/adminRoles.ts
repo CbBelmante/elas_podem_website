@@ -33,7 +33,8 @@ export const ADMIN_ROLE_DISPLAY_NAMES: Record<AdminRole, string> = {
 // ============== DESCRIPTIONS ==============
 
 export const ADMIN_ROLE_DESCRIPTIONS: Record<AdminRole, string> = {
-  [ADMIN_ROLES.SUPER_ADMIN]: 'Responsavel pelo projeto — controle absoluto, nao pode ser desativado',
+  [ADMIN_ROLES.SUPER_ADMIN]:
+    'Responsavel pelo projeto — controle absoluto, nao pode ser desativado',
   [ADMIN_ROLES.ADMIN]: 'Acesso total — editar conteudo, gerenciar usuarios, configuracoes',
   [ADMIN_ROLES.WRITER]: 'Editar conteudo — textos, imagens, secoes da home',
   [ADMIN_ROLES.MODERATOR]: 'Visualizar e aprovar — revisar alteracoes antes de publicar',
@@ -48,12 +49,15 @@ export const ADMIN_ROLE_DESCRIPTIONS: Record<AdminRole, string> = {
  * superAdmin e admin tem as mesmas permissoes.
  * A diferenca e hierarquica: superAdmin nao pode ser desativado/removido.
  */
-export const ADMIN_ROLE_PERMISSIONS: Record<AdminRole, {
-  canEdit: boolean;
-  canPublish: boolean;
-  canManageUsers: boolean;
-  canViewLogs: boolean;
-}> = {
+export const ADMIN_ROLE_PERMISSIONS: Record<
+  AdminRole,
+  {
+    canEdit: boolean;
+    canPublish: boolean;
+    canManageUsers: boolean;
+    canViewLogs: boolean;
+  }
+> = {
   [ADMIN_ROLES.SUPER_ADMIN]: {
     canEdit: true,
     canPublish: true,

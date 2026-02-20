@@ -1,4 +1,5 @@
 <script setup lang="ts">
+/* eslint-disable vue/no-mutating-props -- editors mutam forms via ref do parent */
 /**
  * 🧩 HomeHeroEditor — Editor da secao Hero.
  *
@@ -60,14 +61,20 @@ function removeStat(index: number): void {
         :model-value="forms.editable.badge"
         label="Badge"
         :rules="createValidationRules(rules.badge)"
-        @update:model-value="forms.editable.badge = $event; emit('changed')"
+        @update:model-value="
+          forms.editable.badge = $event;
+          emit('changed');
+        "
       />
 
       <CBInput
         :model-value="forms.editable.title"
         label="Titulo"
         :rules="createValidationRules(rules.title)"
-        @update:model-value="forms.editable.title = $event; emit('changed')"
+        @update:model-value="
+          forms.editable.title = $event;
+          emit('changed');
+        "
       />
     </div>
 
@@ -75,7 +82,10 @@ function removeStat(index: number): void {
       :model-value="forms.editable.subtitle"
       label="Subtitulo"
       :rules="createValidationRules(rules.subtitle)"
-      @update:model-value="forms.editable.subtitle = $event; emit('changed')"
+      @update:model-value="
+        forms.editable.subtitle = $event;
+        emit('changed');
+      "
     />
 
     <div class="heroEditor__row">
@@ -83,14 +93,20 @@ function removeStat(index: number): void {
         :model-value="forms.editable.btnDonate"
         label="Botao Doar"
         :rules="createValidationRules(rules.btnDonate)"
-        @update:model-value="forms.editable.btnDonate = $event; emit('changed')"
+        @update:model-value="
+          forms.editable.btnDonate = $event;
+          emit('changed');
+        "
       />
 
       <CBInput
         :model-value="forms.editable.btnHistory"
         label="Botao Historia"
         :rules="createValidationRules(rules.btnHistory)"
-        @update:model-value="forms.editable.btnHistory = $event; emit('changed')"
+        @update:model-value="
+          forms.editable.btnHistory = $event;
+          emit('changed');
+        "
       />
     </div>
 
@@ -124,17 +140,26 @@ function removeStat(index: number): void {
                 :model-value="element.icon"
                 label="Icone"
                 :items="iconSelectOptions"
-                @update:model-value="element.icon = $event; emit('changed')"
+                @update:model-value="
+                  element.icon = $event;
+                  emit('changed');
+                "
               />
               <CBInput
                 :model-value="element.number"
                 label="Numero"
-                @update:model-value="element.number = $event; emit('changed')"
+                @update:model-value="
+                  element.number = $event;
+                  emit('changed');
+                "
               />
               <CBInput
                 :model-value="element.label"
                 label="Label"
-                @update:model-value="element.label = $event; emit('changed')"
+                @update:model-value="
+                  element.label = $event;
+                  emit('changed');
+                "
               />
             </div>
 

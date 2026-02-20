@@ -12,6 +12,8 @@
 export const CACHE_KEYS = {
   /** Dados do usuario logado (role, displayName, active) */
   USER_DATA: 'userData',
+  /** Dados da homepage (IHomePageData do Firestore) */
+  HOME_PAGE: 'homePage',
 } as const;
 
 // ============== TYPES ==============

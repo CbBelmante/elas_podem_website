@@ -47,11 +47,7 @@ interface IItemsRule {
  * Valida um campo string contra suas regras.
  * Retorna array de erros (vazio = valido).
  */
-function validateField(
-  fieldName: string,
-  value: unknown,
-  rules: IFieldRule,
-): string[] {
+function validateField(fieldName: string, value: unknown, rules: IFieldRule): string[] {
   const errors: string[] = [];
   const text = typeof value === 'string' ? value.trim() : '';
 
@@ -80,7 +76,7 @@ function validateField(
 function validateFields(
   data: Record<string, unknown>,
   validationRules: Record<string, IFieldRule>,
-  sectionLabel: string,
+  sectionLabel: string
 ): IValidationResult {
   const errors: string[] = [];
 
@@ -99,11 +95,7 @@ function validateFields(
 /**
  * Valida quantidade de itens em um array.
  */
-function validateItemCount(
-  items: unknown[],
-  rules: IItemsRule,
-  label: string,
-): string[] {
+function validateItemCount(items: unknown[], rules: IItemsRule, label: string): string[] {
   const errors: string[] = [];
 
   if (items.length < rules.min) {
@@ -123,7 +115,7 @@ function validateItemCount(
 function validateArrayItems(
   items: Record<string, unknown>[],
   validationRules: Record<string, IFieldRule>,
-  sectionLabel: string,
+  sectionLabel: string
 ): string[] {
   const errors: string[] = [];
 
@@ -157,8 +149,12 @@ export function useValidation() {
     return validateFields(data, MISSION_CONFIG.validationRules, 'Missao');
   };
 
-  const validatePrograms = (items: Record<string, unknown>[]): IValidationResult => {
+  const validatePrograms = (data: Record<string, unknown>): IValidationResult => {
     const errors: string[] = [];
+    // Campos da secao (badge, title)
+    errors.push(...validateFields(data, PROGRAMS_CONFIG.sectionRules, 'Programas').errors);
+    // Items
+    const items = (data.items ?? []) as Record<string, unknown>[];
     errors.push(...validateItemCount(items, PROGRAMS_CONFIG.items, 'Programas'));
     errors.push(...validateArrayItems(items, PROGRAMS_CONFIG.validationRules, 'Programa'));
     return { isValid: errors.length === 0, errors };
@@ -171,8 +167,12 @@ export function useValidation() {
     return { isValid: errors.length === 0, errors };
   };
 
-  const validateSupporters = (items: Record<string, unknown>[]): IValidationResult => {
+  const validateSupporters = (data: Record<string, unknown>): IValidationResult => {
     const errors: string[] = [];
+    // Campos da secao (badge, title)
+    errors.push(...validateFields(data, SUPPORTERS_CONFIG.sectionRules, 'Apoiadores').errors);
+    // Items
+    const items = (data.items ?? []) as Record<string, unknown>[];
     errors.push(...validateItemCount(items, SUPPORTERS_CONFIG.items, 'Apoiadores'));
     errors.push(...validateArrayItems(items, SUPPORTERS_CONFIG.validationRules, 'Apoiador'));
     return { isValid: errors.length === 0, errors };
@@ -187,7 +187,13 @@ export function useValidation() {
     }
 
     if (Array.isArray(data.formSubjects)) {
-      errors.push(...validateItemCount(data.formSubjects, CONTACT_CONFIG.formSubjects, 'Assuntos do formulario'));
+      errors.push(
+        ...validateItemCount(
+          data.formSubjects,
+          CONTACT_CONFIG.formSubjects,
+          'Assuntos do formulario'
+        )
+      );
     }
 
     return { isValid: errors.length === 0, errors };

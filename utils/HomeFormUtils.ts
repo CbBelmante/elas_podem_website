@@ -28,8 +28,10 @@ import type {
   // Camada 1: Section Data
   IHeroStat,
   IProgram,
+  IProgramsSection,
   ITestimonial,
   ISupporter,
+  ISupportersSection,
   IContactSection,
   IContactMethod,
   // Camada 2: Editable/Readonly
@@ -37,9 +39,13 @@ import type {
   IMissionEditable,
   IProgramEditable,
   IProgramReadonly,
+  IProgramsEditable,
+  IProgramsReadonly,
   ITestimonialEditable,
   ISupporterEditable,
   ISupporterReadonly,
+  ISupportersEditable,
+  ISupportersReadonly,
   IContactEditable,
   IContactReadonly,
   IContactMethodEditable,
@@ -53,6 +59,21 @@ import type {
 } from '~/types/admin';
 
 import { SECTION_FIELDS } from '~/definitions/sectionFields';
+import {
+  HERO_DEFAULTS,
+  HERO_STAT_DEFAULTS,
+  MISSION_DEFAULTS,
+  PROGRAMS_SECTION_DEFAULTS,
+  PROGRAM_ITEM_DEFAULTS,
+  TESTIMONIAL_DEFAULTS,
+  SUPPORTERS_SECTION_DEFAULTS,
+  SUPPORTER_ITEM_DEFAULTS,
+  CONTACT_DEFAULTS,
+  CONTACT_METHOD_DEFAULTS,
+  CTA_DEFAULTS,
+  SEO_DEFAULTS,
+  SEO_OG_DEFAULTS,
+} from '~/definitions/sectionDefaults';
 
 // ============================================================
 // HELPERS GENERICOS
@@ -80,7 +101,7 @@ function cloneValue(value: unknown): unknown {
  */
 function separateByFields<T extends Record<string, unknown>>(
   data: T,
-  fields: Record<string, 'editable' | 'readonly'>,
+  fields: Record<string, 'editable' | 'readonly'>
 ): { editable: Partial<T>; readonly: Partial<T> } {
   const editable: Record<string, unknown> = {};
   const readonly: Record<string, unknown> = {};
@@ -114,7 +135,7 @@ function combineFromFields<T>(editable: Partial<T>, readonly: Partial<T>): T {
  */
 function separateArrayByFields<T extends Record<string, unknown>>(
   data: T[],
-  fields: Record<string, 'editable' | 'readonly'>,
+  fields: Record<string, 'editable' | 'readonly'>
 ): { editable: Partial<T>[]; readonly: Partial<T>[] } {
   const results = data.map((item) => separateByFields(item, fields));
   return {
@@ -134,7 +155,7 @@ function separateArrayByFields<T extends Record<string, unknown>>(
 function combineArrayFromFields<T>(
   editable: Partial<T>[],
   readonly: Partial<T>[],
-  defaultReadonly: Partial<T> = {},
+  defaultReadonly: Partial<T> = {}
 ): T[] {
   return editable.map((e, i) => ({ ...(readonly[i] || defaultReadonly), ...e }) as T);
 }
@@ -155,22 +176,11 @@ export function combineHeroData(editable: IHeroEditable) {
 }
 
 export function createDefaultHeroEditable(): IHeroEditable {
-  return {
-    badge: 'MOVIMENTO NACIONAL DESDE 2020',
-    title: 'ELAS PO+DEM',
-    subtitle: '',
-    btnDonate: 'Doe Agora',
-    btnHistory: 'Nossa Historia',
-    stats: [
-      { icon: 'luc-award', number: '2025', label: 'Sede Propria' },
-      { icon: 'luc-megaphone', number: '5a', label: 'Conferencia Nacional' },
-      { icon: 'luc-users', number: 'MS', label: 'Campo Grande' },
-    ],
-  };
+  return { ...HERO_DEFAULTS, stats: [...HERO_DEFAULTS.stats.map((s) => ({ ...s }))] };
 }
 
 export function createNewHeroStat(): IHeroStat {
-  return { icon: 'luc-star', number: '', label: '' };
+  return { ...HERO_STAT_DEFAULTS };
 }
 
 // ============================================================
@@ -189,40 +199,54 @@ export function combineMissionData(editable: IMissionEditable) {
 }
 
 export function createDefaultMissionEditable(): IMissionEditable {
-  return {
-    badge: 'NOSSA MISSAO',
-    title: 'Elas Podem Amar, Elas Podem Ser, Elas Podem TUDO!',
-    text1: '',
-    text2: '',
-    btnText: 'Conheca Nossa Historia',
-    image: '',
-  };
+  return { ...MISSION_DEFAULTS };
 }
 
 // ============================================================
-// PROGRAMS
+// PROGRAMS — estrutura aninhada (secao + items[])
 // ============================================================
 
-export function separateProgramsData(data: IProgram[]) {
-  return separateArrayByFields(data, SECTION_FIELDS.programs) as {
-    editable: IProgramEditable[];
-    readonly: IProgramReadonly[];
+export function separateProgramsData(data: IProgramsSection): {
+  editable: IProgramsEditable;
+  readonly: IProgramsReadonly;
+} {
+  const { editable: itemsEditable, readonly: itemsReadonly } = separateArrayByFields(
+    data.items,
+    SECTION_FIELDS.programs
+  );
+
+  return {
+    editable: {
+      badge: data.badge,
+      title: data.title,
+      subtitle: data.subtitle,
+      items: itemsEditable as IProgramEditable[],
+    },
+    readonly: {
+      items: itemsReadonly as IProgramReadonly[],
+    },
   };
 }
 
 export function combineProgramsData(
-  editable: IProgramEditable[],
-  readonly: IProgramReadonly[],
-): IProgram[] {
-  return combineArrayFromFields<IProgram>(editable, readonly, { color: 'magenta' });
+  editable: IProgramsEditable,
+  readonly: IProgramsReadonly
+): IProgramsSection {
+  return {
+    badge: editable.badge,
+    title: editable.title,
+    subtitle: editable.subtitle,
+    items: combineArrayFromFields<IProgram>(editable.items, readonly.items, { color: 'magenta' }),
+  };
 }
 
-export function createDefaultProgramEditable(): IProgramEditable {
-  return { title: '', description: '', icon: 'luc-star', link: 'Saiba Mais' };
+export function createDefaultProgramsEditable(): IProgramsEditable {
+  const { color: _, ...editableFields } = PROGRAM_ITEM_DEFAULTS;
+  return { ...PROGRAMS_SECTION_DEFAULTS, items: [{ ...editableFields }] };
 }
 
 export function createNewProgram(): IProgram {
-  return { title: '', description: '', icon: 'luc-star', color: 'magenta', link: 'Saiba Mais' };
+  return { ...PROGRAM_ITEM_DEFAULTS };
 }
 
 // ============================================================
@@ -241,37 +265,58 @@ export function combineTestimonialsData(editable: ITestimonialEditable[]): ITest
 }
 
 export function createDefaultTestimonialEditable(): ITestimonialEditable {
-  return { quote: '', name: '', role: '', initials: '', image: '' };
+  return { ...TESTIMONIAL_DEFAULTS };
 }
 
 export function createNewTestimonial(): ITestimonial {
-  return { quote: '', name: '', role: '', initials: '', image: '' };
+  return { ...TESTIMONIAL_DEFAULTS };
 }
 
 // ============================================================
-// SUPPORTERS
+// SUPPORTERS — estrutura aninhada (secao + items[])
 // ============================================================
 
-export function separateSupportersData(data: ISupporter[]) {
-  return separateArrayByFields(data, SECTION_FIELDS.supporters) as {
-    editable: ISupporterEditable[];
-    readonly: ISupporterReadonly[];
+export function separateSupportersData(data: ISupportersSection): {
+  editable: ISupportersEditable;
+  readonly: ISupportersReadonly;
+} {
+  const { editable: itemsEditable, readonly: itemsReadonly } = separateArrayByFields(
+    data.items,
+    SECTION_FIELDS.supporters
+  );
+
+  return {
+    editable: {
+      badge: data.badge,
+      title: data.title,
+      subtitle: data.subtitle,
+      items: itemsEditable as ISupporterEditable[],
+    },
+    readonly: {
+      items: itemsReadonly as ISupporterReadonly[],
+    },
   };
 }
 
 export function combineSupportersData(
-  editable: ISupporterEditable[],
-  readonly: ISupporterReadonly[],
-): ISupporter[] {
-  return combineArrayFromFields<ISupporter>(editable, readonly, { color: 'magenta' });
+  editable: ISupportersEditable,
+  readonly: ISupportersReadonly
+): ISupportersSection {
+  return {
+    badge: editable.badge,
+    title: editable.title,
+    subtitle: editable.subtitle,
+    items: combineArrayFromFields<ISupporter>(editable.items, readonly.items, { color: 'magenta' }),
+  };
 }
 
-export function createDefaultSupporterEditable(): ISupporterEditable {
-  return { name: '', icon: 'luc-building-2', image: '', url: '' };
+export function createDefaultSupportersEditable(): ISupportersEditable {
+  const { color: _, ...editableFields } = SUPPORTER_ITEM_DEFAULTS;
+  return { ...SUPPORTERS_SECTION_DEFAULTS, items: [{ ...editableFields }] };
 }
 
 export function createNewSupporter(): ISupporter {
-  return { name: '', icon: 'luc-building-2', color: 'magenta', image: '', url: '' };
+  return { ...SUPPORTER_ITEM_DEFAULTS };
 }
 
 // ============================================================
@@ -282,12 +327,13 @@ export function createNewSupporter(): ISupporter {
  * Contact tem estrutura aninhada: campos top-level + methods[] com split proprio.
  * Usa separateArrayByFields para os methods e monta o resultado manualmente.
  */
-export function separateContactData(
-  data: IContactSection,
-): { editable: IContactEditable; readonly: IContactReadonly } {
+export function separateContactData(data: IContactSection): {
+  editable: IContactEditable;
+  readonly: IContactReadonly;
+} {
   const { editable: methodsEditable, readonly: methodsReadonly } = separateArrayByFields(
     data.methods,
-    SECTION_FIELDS.contactMethod,
+    SECTION_FIELDS.contactMethod
   );
 
   return {
@@ -306,7 +352,7 @@ export function separateContactData(
 
 export function combineContactData(
   editable: IContactEditable,
-  readonly: IContactReadonly,
+  readonly: IContactReadonly
 ): IContactSection {
   return {
     badge: editable.badge,
@@ -320,17 +366,11 @@ export function combineContactData(
 }
 
 export function createDefaultContactEditable(): IContactEditable {
-  return {
-    badge: 'CONTATO',
-    title: 'Vamos Conversar?',
-    description: '',
-    methods: [],
-    formSubjects: ['Quero ser voluntaria', 'Quero doar', 'Parcerias', 'Duvidas gerais'],
-  };
+  return { ...CONTACT_DEFAULTS, formSubjects: [...CONTACT_DEFAULTS.formSubjects], methods: [] };
 }
 
 export function createNewContactMethod(): IContactMethod {
-  return { label: '', value: '', icon: 'luc-star', color: 'magenta' };
+  return { ...CONTACT_METHOD_DEFAULTS };
 }
 
 // ============================================================
@@ -349,12 +389,7 @@ export function combineCtaData(editable: ICtaEditable) {
 }
 
 export function createDefaultCtaEditable(): ICtaEditable {
-  return {
-    title: 'Juntas Somos Mais Fortes',
-    subtitle: '',
-    btnDonate: 'Doar Agora',
-    btnProjects: 'Conhecer Projetos',
-  };
+  return { ...CTA_DEFAULTS };
 }
 
 // ============================================================
@@ -373,12 +408,7 @@ export function combineSeoData(editable: ISeoEditable, readonly: ISeoReadonly) {
 }
 
 export function createDefaultSeoEditable(): ISeoEditable {
-  return {
-    title: 'Elas Podem - Coletivo de Mulheres',
-    description: '',
-    keywords: ['elas podem', 'mulheres', 'empoderamento'],
-    ogImage: '',
-  };
+  return { ...SEO_DEFAULTS, keywords: [...SEO_DEFAULTS.keywords] };
 }
 
 // ============================================================
@@ -417,13 +447,13 @@ export function createDefaultHomeForms(): IHomeFormsData {
     hero: { editable: createDefaultHeroEditable() },
     mission: { editable: createDefaultMissionEditable() },
     programs: {
-      editable: [createDefaultProgramEditable()],
-      readonly: [{ color: 'magenta' }],
+      editable: createDefaultProgramsEditable(),
+      readonly: { items: [{ color: 'magenta' }] },
     },
     testimonials: { editable: [createDefaultTestimonialEditable()] },
     supporters: {
-      editable: [createDefaultSupporterEditable()],
-      readonly: [{ color: 'magenta' }],
+      editable: createDefaultSupportersEditable(),
+      readonly: { items: [{ color: 'magenta' }] },
     },
     contact: {
       editable: createDefaultContactEditable(),
@@ -432,7 +462,7 @@ export function createDefaultHomeForms(): IHomeFormsData {
     cta: { editable: createDefaultCtaEditable() },
     seo: {
       editable: createDefaultSeoEditable(),
-      readonly: { og: { type: 'website', siteName: 'Elas Podem', locale: 'pt_BR' } },
+      readonly: { og: { ...SEO_OG_DEFAULTS } },
     },
   };
 }

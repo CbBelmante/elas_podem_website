@@ -57,10 +57,7 @@ export function usePageEditor() {
    *
    * Silent fail — loga warning se falhar mas nao lanca erro.
    */
-  const cleanupOldImage = async (
-    oldUrl?: string,
-    newUrl?: string,
-  ): Promise<void> => {
+  const cleanupOldImage = async (oldUrl?: string, newUrl?: string): Promise<void> => {
     if (!oldUrl) return;
     if (oldUrl === newUrl) return;
     if (!oldUrl.includes('firebase')) return;
@@ -75,9 +72,7 @@ export function usePageEditor() {
    * Chamado quando o usuario sai sem salvar — evita lixo no Storage.
    * Limpa o array apos deletar.
    */
-  const cleanupTempUploads = async (
-    tempUploadedImages: Ref<string[]>,
-  ): Promise<void> => {
+  const cleanupTempUploads = async (tempUploadedImages: Ref<string[]>): Promise<void> => {
     if (tempUploadedImages.value.length === 0) return;
 
     logger.debug('Limpando uploads temporarios', {
@@ -101,13 +96,9 @@ export function usePageEditor() {
    *
    * Uso: chamar antes de navigateTo() ou no onBeforeRouteLeave.
    */
-  const canExit = async (
-    tempUploadedImages: Ref<string[]>,
-  ): Promise<boolean> => {
+  const canExit = async (tempUploadedImages: Ref<string[]>): Promise<boolean> => {
     if (hasChanges.value) {
-      const confirmed = window.confirm(
-        'Voce tem alteracoes nao salvas. Deseja sair mesmo assim?',
-      );
+      const confirmed = window.confirm('Voce tem alteracoes nao salvas. Deseja sair mesmo assim?');
 
       if (!confirmed) return false;
     }

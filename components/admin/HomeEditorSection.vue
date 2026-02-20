@@ -144,18 +144,18 @@ defineEmits<{
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background: var(--gradient-magenta, linear-gradient(135deg, #E6346B, #D42D5E));
+  background: var(--gradient-magenta, linear-gradient(135deg, #e6346b, #d42d5e));
   flex-shrink: 0;
 }
 
 .editorSection__errorBadge {
-  color: var(--color-coral, #EE4A55);
-  border-color: var(--color-coral, #EE4A55);
+  color: var(--color-coral, #ee4a55);
+  border-color: var(--color-coral, #ee4a55);
 }
 
 .editorSection__changedBadge {
-  color: var(--color-oliva, #88A201);
-  border-color: var(--color-oliva, #88A201);
+  color: var(--color-oliva, #88a201);
+  border-color: var(--color-oliva, #88a201);
 }
 
 /* Body */
@@ -184,7 +184,7 @@ defineEmits<{
 
 .editorSection__errorText {
   font-size: 0.8125rem;
-  color: var(--color-coral, #EE4A55);
+  color: var(--color-coral, #ee4a55);
   font-family: var(--font-body);
 }
 

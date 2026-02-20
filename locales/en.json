@@ -5,91 +5,10 @@
     "projects": "Projects",
     "blog": "Blog"
   },
-  "hero": {
-    "badge": "NATIONAL MOVEMENT SINCE 2020",
-    "title": "THEY CAN",
-    "subtitle": "Collective of cis and trans women working to defend rights and public policies. We promote equity, freedom, sisterhood, and respect for human dignity.",
-    "btnDonate": "Donate Now",
-    "btnHistory": "Our Story",
-    "stats": {
-      "headquarter": {
-        "number": "2025",
-        "label": "Own Headquarters"
-      },
-      "conference": {
-        "number": "5th",
-        "label": "National Conference"
-      },
-      "location": {
-        "number": "MS",
-        "label": "Campo Grande"
-      }
-    }
-  },
   "mission": {
-    "badge": "OUR MISSION",
-    "title": "They Can Love, They Can Be, They Can DO EVERYTHING!",
-    "text1": "We are a collective founded in 2020 in Campo Grande - MS, operating nationwide through digital networks. We defend the rights of cis and trans women, promoting their political and social participation.",
-    "text2": "Our core values are: Equity, Freedom, Sisterhood, and Respect for Human Dignity. We actively participate in state and national conferences, earning recognition as the Motion of Applause at the 5th State Conference on Public Policies for Women.",
-    "btnLearnMore": "Learn Our Story",
     "imageAlt": "Empowering Women"
   },
-  "programs": {
-    "badge": "OUR PROGRAMS",
-    "title": "Our Areas of Action",
-    "items": {
-      "communication": {
-        "title": "Communication",
-        "description": "Content production and political awareness campaigns about women's rights and public policies.",
-        "link": "Learn more →"
-      },
-      "education": {
-        "title": "Education",
-        "description": "Conversation circles and formative actions like Purple August, promoting political and social awareness.",
-        "link": "Learn more →"
-      },
-      "social": {
-        "title": "Social Action",
-        "description": "Community mobilization and support for diversity causes, strengthening networks of sisterhood.",
-        "link": "Learn more →"
-      },
-      "political": {
-        "title": "Political Participation",
-        "description": "Advocacy and defense of public policies in state and national women's conferences.",
-        "link": "Learn more →"
-      }
-    }
-  },
-  "testimonial": {
-    "quote": "Transforming the future starts now. From each girl who discovers her voice to every woman who takes a position of power, we are changing stories and building a fairer country.",
-    "author": {
-      "name": "Elisa Dinelli",
-      "role": "Community Leader"
-    }
-  },
-  "supporters": {
-    "badge": "PARTNERS",
-    "title": "Who Supports Our Cause",
-    "subtitle": "With the support of those who believe in transformation, we continue training girls and women to lead the future."
-  },
   "contact": {
-    "badge": "CONTACT",
-    "title": "Let's Talk?",
-    "description": "Have questions, suggestions, or want to learn more about our work? Contact us!",
-    "methods": {
-      "instagram": {
-        "label": "Instagram",
-        "value": "{'@'}coletivoelaspodem"
-      },
-      "president": {
-        "label": "President",
-        "value": "Ladielly de Souza Silva"
-      },
-      "location": {
-        "label": "Headquarters",
-        "value": "Campo Grande - MS"
-      }
-    },
     "form": {
       "name": {
         "label": "Full name",
@@ -101,13 +20,7 @@
       },
       "subject": {
         "label": "Subject",
-        "placeholder": "Select subject",
-        "options": {
-          "volunteer": "I want to volunteer",
-          "donate": "I want to donate",
-          "partnership": "Partnerships",
-          "general": "General questions"
-        }
+        "placeholder": "Select subject"
       },
       "message": {
         "label": "Message",
@@ -115,11 +28,5 @@
       },
       "btnSubmit": "Send Message"
     }
-  },
-  "cta": {
-    "title": "Together We Are Stronger",
-    "subtitle": "Your contribution can change a woman's life and transform an entire community. Be part of this transformation!",
-    "btnDonate": "Donate Now",
-    "btnProjects": "Discover Projects"
   }
 }

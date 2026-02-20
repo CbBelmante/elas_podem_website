@@ -120,7 +120,12 @@ onMounted(async () => {
 
       <!-- Loading -->
       <div v-if="isLoading" class="dashboardLoading">
-        <CBIcon icon="luc-loader-2" size="1.5rem" color="var(--text-tertiary)" class="dashboardLoading__spinner" />
+        <CBIcon
+          icon="luc-loader-2"
+          size="1.5rem"
+          color="var(--text-tertiary)"
+          class="dashboardLoading__spinner"
+        />
         <CBLabel text="Carregando dados..." size="sm" color="tertiary" />
       </div>
 
@@ -148,7 +153,11 @@ onMounted(async () => {
             </div>
             <div class="pageCard__titleGroup">
               <CBLabel text="Home Page" tag="h3" weight="bold" />
-              <CBLabel text="Pagina principal do site — 8 secoes editaveis" size="sm" color="secondary" />
+              <CBLabel
+                text="Pagina principal do site — 8 secoes editaveis"
+                size="sm"
+                color="secondary"
+              />
             </div>
           </div>
 
@@ -175,12 +184,7 @@ onMounted(async () => {
               prepend-icon="luc-pencil"
               @click="navigateToHomeEdit"
             />
-            <CBBadge
-              v-else
-              content="Sem permissao para editar"
-              variant="outline"
-              size="xs"
-            />
+            <CBBadge v-else content="Sem permissao para editar" variant="outline" size="xs" />
           </div>
         </CBCard>
       </section>
@@ -275,8 +279,12 @@ onMounted(async () => {
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ============================================

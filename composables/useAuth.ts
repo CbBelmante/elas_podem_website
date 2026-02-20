@@ -19,20 +19,12 @@ import {
   onAuthStateChanged,
 } from 'firebase/auth';
 import type { User as FirebaseUser } from 'firebase/auth';
-import {
-  collection,
-  query,
-  where,
-  getDocs,
-  doc,
-  updateDoc,
-  Timestamp,
-} from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, updateDoc, Timestamp } from 'firebase/firestore';
 
 // ============== DEPENDENCIAS INTERNAS ==============
 
 import { useFirebase } from '@composables/useFirebase';
-import { ADMIN_ROLES, isValidRole, getRolePermissions, isSuperAdminRole } from '@definitions/adminRoles';
+import { ADMIN_ROLES, isValidRole, getRolePermissions } from '@definitions/adminRoles';
 import { FIRESTORE_COLLECTIONS } from '@definitions/firestoreCollections';
 import type { AdminRole } from '@definitions/adminRoles';
 import { Logger } from '@utils/Logger';
@@ -93,19 +85,21 @@ export function useAuth() {
   const isAuthenticated = computed(() => !!state.user);
 
   const isSuperAdmin = computed(
-    () => state.userData?.role === ADMIN_ROLES.SUPER_ADMIN && state.userData?.active === true,
+    () => state.userData?.role === ADMIN_ROLES.SUPER_ADMIN && state.userData?.active === true
   );
 
   const isAdmin = computed(
-    () => (state.userData?.role === ADMIN_ROLES.ADMIN || isSuperAdmin.value) && state.userData?.active === true,
+    () =>
+      (state.userData?.role === ADMIN_ROLES.ADMIN || isSuperAdmin.value) &&
+      state.userData?.active === true
   );
 
   const isWriter = computed(
-    () => state.userData?.role === ADMIN_ROLES.WRITER && state.userData?.active === true,
+    () => state.userData?.role === ADMIN_ROLES.WRITER && state.userData?.active === true
   );
 
   const isModerator = computed(
-    () => state.userData?.role === ADMIN_ROLES.MODERATOR && state.userData?.active === true,
+    () => state.userData?.role === ADMIN_ROLES.MODERATOR && state.userData?.active === true
   );
 
   const userRole = computed(() => state.userData?.role ?? null);
@@ -147,8 +141,8 @@ export function useAuth() {
     try {
       const userDocRef = doc($db, FIRESTORE_COLLECTIONS.USERS, userId);
       await updateDoc(userDocRef, { lastLogin: Timestamp.now() });
-    } catch (error) {
-      logger.warn('Erro ao atualizar ultimo login', { userId });
+    } catch (err) {
+      logger.warn('Erro ao atualizar ultimo login', { userId, err });
     }
   };
 

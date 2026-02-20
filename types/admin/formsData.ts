@@ -9,11 +9,11 @@ import type { Ref } from 'vue';
 import type {
   IHeroEditable,
   IMissionEditable,
-  IProgramEditable,
-  IProgramReadonly,
+  IProgramsEditable,
+  IProgramsReadonly,
   ITestimonialEditable,
-  ISupporterEditable,
-  ISupporterReadonly,
+  ISupportersEditable,
+  ISupportersReadonly,
   IContactEditable,
   IContactReadonly,
   ICtaEditable,
@@ -28,9 +28,9 @@ import type {
 export interface IHomeFormsData {
   hero: { editable: IHeroEditable };
   mission: { editable: IMissionEditable };
-  programs: { editable: IProgramEditable[]; readonly: IProgramReadonly[] };
+  programs: { editable: IProgramsEditable; readonly: IProgramsReadonly };
   testimonials: { editable: ITestimonialEditable[] };
-  supporters: { editable: ISupporterEditable[]; readonly: ISupporterReadonly[] };
+  supporters: { editable: ISupportersEditable; readonly: ISupportersReadonly };
   contact: { editable: IContactEditable; readonly: IContactReadonly };
   cta: { editable: ICtaEditable };
   seo: { editable: ISeoEditable; readonly: ISeoReadonly };

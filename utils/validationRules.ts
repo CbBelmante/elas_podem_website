@@ -53,16 +53,12 @@ export function createValidationRules(rules: {
 
   if (rules.minLength) {
     const min = rules.minLength;
-    validators.push((v: string) =>
-      !v || v.length >= min ? true : `Minimo ${min} caracteres`,
-    );
+    validators.push((v: string) => (!v || v.length >= min ? true : `Minimo ${min} caracteres`));
   }
 
   if (rules.maxLength) {
     const max = rules.maxLength;
-    validators.push((v: string) =>
-      !v || v.length <= max ? true : `Maximo ${max} caracteres`,
-    );
+    validators.push((v: string) => (!v || v.length <= max ? true : `Maximo ${max} caracteres`));
   }
 
   return validators;

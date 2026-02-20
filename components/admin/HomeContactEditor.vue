@@ -1,4 +1,5 @@
 <script setup lang="ts">
+/* eslint-disable vue/no-mutating-props -- editors mutam forms via ref do parent */
 /**
  * 🧩 HomeContactEditor — Editor da secao Contato.
  *
@@ -13,7 +14,12 @@ import { createValidationRules } from '@utils/validationRules';
 import { ICON_OPTIONS } from '@definitions/themeOptions';
 import { createNewContactMethod } from '@utils/HomeFormUtils';
 import { SECTION_FIELDS } from '@definitions/sectionFields';
-import type { IContactEditable, IContactReadonly, IContactMethodEditable, IContactMethodReadonly } from '@appTypes/admin';
+import type {
+  IContactEditable,
+  IContactReadonly,
+  IContactMethodEditable,
+  IContactMethodReadonly,
+} from '@appTypes/admin';
 
 // ============== PROPS ==============
 
@@ -99,21 +105,30 @@ function updateSubject(index: number, value: string): void {
         :model-value="forms.editable.badge"
         label="Badge"
         :rules="createValidationRules(rules.badge)"
-        @update:model-value="forms.editable.badge = $event; emit('changed')"
+        @update:model-value="
+          forms.editable.badge = $event;
+          emit('changed');
+        "
       />
 
       <CBInput
         :model-value="forms.editable.title"
         label="Titulo"
         :rules="createValidationRules(rules.title)"
-        @update:model-value="forms.editable.title = $event; emit('changed')"
+        @update:model-value="
+          forms.editable.title = $event;
+          emit('changed');
+        "
       />
 
       <CBTextarea
         :model-value="forms.editable.description"
         label="Descricao"
         :rules="createValidationRules(rules.description)"
-        @update:model-value="forms.editable.description = $event; emit('changed')"
+        @update:model-value="
+          forms.editable.description = $event;
+          emit('changed');
+        "
       />
     </div>
 
@@ -134,7 +149,9 @@ function updateSubject(index: number, value: string): void {
         handle=".dragHandle"
         :animation="200"
         ghost-class="contactEditor__ghost"
-        @update:model-value="forms.editable.methods.splice(0, forms.editable.methods.length, ...$event)"
+        @update:model-value="
+          forms.editable.methods.splice(0, forms.editable.methods.length, ...$event)
+        "
         @end="onMethodsDragEnd"
       >
         <template #item="{ element, index }: { element: IContactMethodEditable; index: number }">
@@ -160,12 +177,18 @@ function updateSubject(index: number, value: string): void {
                 <CBInput
                   :model-value="element.label"
                   label="Label"
-                  @update:model-value="element.label = $event; emit('changed')"
+                  @update:model-value="
+                    element.label = $event;
+                    emit('changed');
+                  "
                 />
                 <CBInput
                   :model-value="element.value"
                   label="Valor"
-                  @update:model-value="element.value = $event; emit('changed')"
+                  @update:model-value="
+                    element.value = $event;
+                    emit('changed');
+                  "
                 />
               </div>
               <div class="contactEditor__row">
@@ -173,12 +196,18 @@ function updateSubject(index: number, value: string): void {
                   :model-value="element.icon"
                   label="Icone"
                   :items="iconSelectOptions"
-                  @update:model-value="element.icon = $event; emit('changed')"
+                  @update:model-value="
+                    element.icon = $event;
+                    emit('changed');
+                  "
                 />
                 <CBInput
                   :model-value="element.url"
                   label="URL (opcional)"
-                  @update:model-value="element.url = $event; emit('changed')"
+                  @update:model-value="
+                    element.url = $event;
+                    emit('changed');
+                  "
                 />
               </div>
             </div>

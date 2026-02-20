@@ -13,7 +13,8 @@ export const FIRESTORE_COLLECTIONS = {
   ADMIN_LOGS: 'admin_logs',
 } as const satisfies Record<string, string>;
 
-export type FirestoreCollection = (typeof FIRESTORE_COLLECTIONS)[keyof typeof FIRESTORE_COLLECTIONS];
+export type FirestoreCollection =
+  (typeof FIRESTORE_COLLECTIONS)[keyof typeof FIRESTORE_COLLECTIONS];
 
 // ============== DOCUMENTS (por collection) ==============
 

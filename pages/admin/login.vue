@@ -18,7 +18,7 @@ definePageMeta({
 
 // ============== COMPOSABLES ==============
 
-const { signIn, isAuthenticated, isLoading: authLoading } = useAuth();
+const { signIn, isAuthenticated } = useAuth();
 
 // ============== REACTIVE STATE ==============
 
@@ -87,11 +87,7 @@ onMounted(() => {
       </div>
 
       <!-- Card de login -->
-      <CBCard
-        variant="elevated"
-        :rounded="24"
-        class="loginCard"
-      >
+      <CBCard variant="elevated" :rounded="24" class="loginCard">
         <!-- Header -->
         <div class="loginCard__header">
           <CBLabel
@@ -101,21 +97,13 @@ onMounted(() => {
             weight="bold"
             class="loginCard__title"
           />
-          <CBLabel
-            text="Entre com suas credenciais para acessar"
-            size="sm"
-            color="secondary"
-          />
+          <CBLabel text="Entre com suas credenciais para acessar" size="sm" color="secondary" />
         </div>
 
         <!-- Erro -->
         <div v-if="error" class="loginError">
           <CBIcon icon="luc-alert-circle" size="1rem" color="var(--color-coral)" />
-          <CBLabel
-            :text="error"
-            size="sm"
-            class="loginError__text"
-          />
+          <CBLabel :text="error" size="sm" class="loginError__text" />
         </div>
 
         <!-- Formulario -->
@@ -174,12 +162,7 @@ onMounted(() => {
       </CBCard>
 
       <!-- Rodape discreto -->
-      <CBLabel
-        text="Elas Podem — Painel Admin"
-        size="xs"
-        color="tertiary"
-        class="loginFooter"
-      />
+      <CBLabel text="Elas Podem — Painel Admin" size="xs" color="tertiary" class="loginFooter" />
     </div>
   </div>
 </template>
@@ -205,11 +188,7 @@ onMounted(() => {
   width: 500px;
   height: 500px;
   border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(var(--color-magenta-rgb), 0.12) 0%,
-    transparent 70%
-  );
+  background: radial-gradient(circle, rgba(var(--color-magenta-rgb), 0.12) 0%, transparent 70%);
   top: -100px;
   right: -100px;
   pointer-events: none;

@@ -42,7 +42,7 @@ const {
   validateCta,
   validateSeo,
 } = useValidation();
-const { hasChanges, markAsChanged, resetChanges, cleanupOldImage, canExit } = usePageEditor();
+const { hasChanges, markAsChanged, resetChanges, canExit } = usePageEditor();
 const { userData } = useAuth();
 
 // ============== STATE ==============
@@ -64,7 +64,7 @@ const successMessage = ref('');
 
 // ============== SECTION CONFIG ==============
 
-const sections = [
+const _sections = [
   { name: 'hero', title: 'Hero', icon: 'luc-star' },
   { name: 'mission', title: 'Missao', icon: 'luc-heart' },
   { name: 'programs', title: 'Programas', icon: 'luc-layout-grid' },
@@ -77,12 +77,20 @@ const sections = [
 
 // ============== VALIDATORS MAP ==============
 
-const validators: Record<string, (data: Record<string, unknown>) => { isValid: boolean; errors: string[] }> = {
+const validators: Record<
+  string,
+  (data: Record<string, unknown>) => { isValid: boolean; errors: string[] }
+> = {
   hero: (data) => validateHero(data),
   mission: (data) => validateMission(data),
-  programs: () => validatePrograms(forms.value?.programs?.editable as unknown as Record<string, unknown>[]),
-  testimonials: () => validateTestimonials(forms.value?.testimonials?.editable as unknown as Record<string, unknown>[]),
-  supporters: () => validateSupporters(forms.value?.supporters?.editable as unknown as Record<string, unknown>[]),
+  programs: () =>
+    validatePrograms(forms.value?.programs?.editable as unknown as Record<string, unknown>),
+  testimonials: () =>
+    validateTestimonials(
+      forms.value?.testimonials?.editable as unknown as Record<string, unknown>[]
+    ),
+  supporters: () =>
+    validateSupporters(forms.value?.supporters?.editable as unknown as Record<string, unknown>),
   contact: (data) => validateContact(data),
   cta: (data) => validateCta(data),
   seo: (data) => validateSeo(data),
@@ -133,7 +141,9 @@ async function handleSave(sectionName: string): Promise<void> {
       resetChanges();
     }
     successMessage.value = saveResult.message;
-    setTimeout(() => { successMessage.value = ''; }, 3000);
+    setTimeout(() => {
+      successMessage.value = '';
+    }, 3000);
   } else {
     sectionErrors.value[sectionName] = [saveResult.message];
   }
@@ -195,7 +205,13 @@ onUnmounted(() => {
             @click="navigateBack"
           />
           <div>
-            <CBLabel text="Editar Home" tag="h1" size="xl" weight="bold" class="homeEditHeader__title" />
+            <CBLabel
+              text="Editar Home"
+              tag="h1"
+              size="xl"
+              weight="bold"
+              class="homeEditHeader__title"
+            />
             <CBLabel
               v-if="userData?.displayName"
               :text="`Editando como ${userData.displayName}`"
@@ -214,7 +230,12 @@ onUnmounted(() => {
 
       <!-- Loading -->
       <div v-if="isLoading" class="homeEditLoading">
-        <CBIcon icon="luc-loader-2" size="1.5rem" color="var(--text-tertiary)" class="homeEditLoading__spinner" />
+        <CBIcon
+          icon="luc-loader-2"
+          size="1.5rem"
+          color="var(--text-tertiary)"
+          class="homeEditLoading__spinner"
+        />
         <CBLabel text="Carregando dados da pagina..." size="sm" color="tertiary" />
       </div>
 
@@ -447,7 +468,7 @@ onUnmounted(() => {
 
 .homeEditSuccess__text {
   font-size: 0.875rem;
-  color: var(--color-oliva, #88A201);
+  color: var(--color-oliva, #88a201);
   font-family: var(--font-body);
 }
 
@@ -467,8 +488,12 @@ onUnmounted(() => {
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ============================================

@@ -13,11 +13,42 @@ import {
   CBNavbar,
   CBSelect,
   CBTextarea,
+  createGradient,
+  createGlow,
   type INavbarMenuItem,
 } from '@cb/components';
 import { useI18n } from 'vue-i18n';
 import '@cb/components/style.css';
 import '../assets/css/theme.css';
+
+// ============== FIREBASE DATA ==============
+
+const { hero, mission, programs, testimonials, supporters, contact, cta, seo } =
+  useHomePublicData();
+
+// Cores ciclicas para hero stats (IHeroStat nao tem campo color)
+const STAT_COLORS = ['magenta', 'coral', 'rosa', 'oliva', 'laranja'] as const;
+
+// Resolve nome do tema para CSS variable (passthrough se ja for hex/rgb/hsl/var)
+const toVar = (color: string) =>
+  color.startsWith('#') ||
+  color.startsWith('rgb') ||
+  color.startsWith('hsl') ||
+  color.startsWith('var(')
+    ? color
+    : `var(--color-${color})`;
+
+// CSS custom properties por cor (compoe createGradient + createGlow da CbColorUtils)
+const colorVars = (color: string) => {
+  const c = toVar(color);
+  return {
+    '--c-gradient': createGradient(c),
+    '--c-glow': createGlow(c),
+    '--c-glow-hover': createGlow(c, 24, 0.45),
+  };
+};
+
+// ============== SEO ==============
 
 useHead({
   link: [
@@ -30,101 +61,66 @@ useHead({
   ],
 });
 
-const currentPath = ref('/');
+useSeoMeta({
+  title: () => seo.value.title,
+  description: () => seo.value.description,
+  keywords: () => seo.value.keywords.join(', '),
+  ogTitle: () => seo.value.title,
+  ogDescription: () => seo.value.description,
+  ogImage: () => seo.value.ogImage,
+  ogType: () => seo.value.og.type as 'website',
+  ogSiteName: () => seo.value.og.siteName,
+  ogLocale: () => seo.value.og.locale,
+});
 
+// ============== NAVBAR (i18n) ==============
+
+const currentPath = ref('/');
 const { t } = useI18n();
 
 const menuItems = computed<INavbarMenuItem[]>(() => [
-  {
-    label: t('navbar.home'),
-    to: '/',
-  },
-  {
-    label: t('navbar.about'),
-    to: '/sobre',
-  },
-  {
-    label: t('navbar.projects'),
-    to: '/projetos',
-  },
-  {
-    label: t('navbar.blog'),
-    to: '/blog',
-  },
+  { label: t('navbar.home'), to: '/' },
+  { label: t('navbar.about'), to: '/sobre' },
+  { label: t('navbar.projects'), to: '/projetos' },
+  { label: t('navbar.blog'), to: '/blog' },
 ]);
 
 const handleNavigate = ({ path }: { path: string }) => {
   currentPath.value = path;
-  console.log('Navegou para:', path);
 };
 
 const handleLogoClick = () => {
   currentPath.value = '/';
-  console.log('Logo clicado - voltando ao home');
 };
 
-// Form state
+// ============== CONTACT FORM ==============
+
 const formName = ref('');
 const formEmail = ref('');
 const formSubject = ref<string | undefined>(undefined);
 const formMessage = ref('');
 
-const subjectItems = computed(() => [
-  { value: 'volunteer', label: t('contact.form.subject.options.volunteer') },
-  { value: 'donate', label: t('contact.form.subject.options.donate') },
-  { value: 'partnership', label: t('contact.form.subject.options.partnership') },
-  { value: 'general', label: t('contact.form.subject.options.general') },
-]);
+const subjectItems = computed(() =>
+  contact.value.formSubjects.map((s) => ({ value: s, label: s }))
+);
 
-// Testimonials (hardcoded — virá do admin depois)
-const testimonials = [
-  {
-    quote:
-      'Transformar o futuro começa agora. De cada menina que descobre sua voz a cada mulher que assume um espaço de poder, estamos mudando histórias e construindo um país mais justo.',
-    name: 'Elisa Dinelli',
-    role: 'Líder Comunitária',
-    initials: 'ED',
-  },
-  {
-    quote:
-      'O programa mudou completamente minha perspectiva. Aprendi que posso ser protagonista da minha própria história e inspirar outras mulheres ao meu redor.',
-    name: 'Ana Clara Santos',
-    role: 'Participante do Programa',
-    initials: 'AS',
-  },
-  {
-    quote:
-      'Ver o impacto real na vida dessas mulheres é o que nos motiva a continuar. Cada conquista delas é uma vitória para toda a sociedade.',
-    name: 'Roberto Mendes',
-    role: 'Parceiro Institucional',
-    initials: 'RM',
-  },
-];
+// ============== TESTIMONIALS CAROUSEL ==============
+
 const testimonialIndex = ref(0);
 
-// Supporters (hardcoded — virá do admin depois)
-const supporters = [
-  { name: 'Apoiador 1', icon: 'luc-building-2', color: 'magenta' },
-  { name: 'Apoiador 2', icon: 'luc-heart-handshake', color: 'coral' },
-  { name: 'Apoiador 3', icon: 'luc-globe', color: 'rosa' },
-  { name: 'Apoiador 4', icon: 'luc-star', color: 'oliva' },
-  { name: 'Apoiador 5', icon: 'luc-award', color: 'laranja' },
-];
+// ============== SCROLL ANIMATIONS ==============
 
-// Animações de scroll
 onMounted(() => {
-  const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -100px 0px',
-  };
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('isVisible');
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('isVisible');
+        }
       }
-    });
-  }, observerOptions);
+    },
+    { threshold: 0.1, rootMargin: '0px 0px -100px 0px' }
+  );
 
   document.querySelectorAll('.animateOnScroll').forEach((el) => {
     observer.observe(el);
@@ -165,7 +161,7 @@ onMounted(() => {
         <div class="heroContent">
           <!-- Badge superior -->
           <CBBadge
-            :content="$t('hero.badge')"
+            :content="hero.badge"
             variant="outline"
             icon="luc-sparkles"
             :icon-size="14"
@@ -174,26 +170,18 @@ onMounted(() => {
             class="heroBadge animateOnScroll"
           />
 
-          <!-- Título principal com gradiente -->
-          <CBLabel
-            :text="$t('hero.title')"
-            tag="h1"
-            weight="black"
-            class="heroTitle animateOnScroll"
-          />
+          <CBLabel :text="hero.title" tag="h1" weight="black" class="heroTitle animateOnScroll" />
 
-          <!-- Subtítulo -->
           <CBLabel
-            :text="$t('hero.subtitle')"
+            :text="hero.subtitle"
             size="lg"
             color="secondary"
             class="heroSubtitle animateOnScroll"
           />
 
-          <!-- Botões com efeitos premium -->
           <div class="heroActions animateOnScroll">
             <CBButton
-              :label="$t('hero.btnDonate')"
+              :label="hero.btnDonate"
               size="lg"
               :bg-gradient="'var(--gradient-primary)'"
               :rounded="14"
@@ -204,7 +192,7 @@ onMounted(() => {
             />
 
             <CBButton
-              :label="$t('hero.btnHistory')"
+              :label="hero.btnHistory"
               size="lg"
               variant="outline"
               :color="'var(--cb-secondary)'"
@@ -214,92 +202,34 @@ onMounted(() => {
             />
           </div>
 
-          <!-- Estatísticas com glassmorphism -->
           <div class="heroStats animateOnScroll">
             <CBCard
+              v-for="(stat, i) in hero.stats"
+              :key="i"
               variant="outlined"
               :rounded="20"
               hover
               bg-color="var(--glass-bg)"
               border-color="var(--glass-border)"
               :border-width="1"
-              class="heroStatCard heroStatCard--magenta"
+              class="heroStatCard"
             >
               <div class="heroStatInner">
-                <div class="heroStatIconWrapper">
-                  <CBIcon icon="luc-award" size="1.75rem" color="#ffffff" />
+                <div
+                  class="heroStatIconWrapper"
+                  :style="colorVars(STAT_COLORS[i % STAT_COLORS.length])"
+                >
+                  <CBIcon :icon="stat.icon" size="1.75rem" color="#ffffff" />
                 </div>
                 <CBLabel
-                  :text="$t('hero.stats.headquarter.number')"
+                  :text="stat.number"
                   tag="span"
                   weight="extrabold"
                   dense
                   class="heroStatNumber"
                 />
                 <CBLabel
-                  :text="$t('hero.stats.headquarter.label')"
-                  tag="span"
-                  size="sm"
-                  weight="medium"
-                  dense
-                  class="heroStatLabel"
-                />
-              </div>
-            </CBCard>
-
-            <CBCard
-              variant="outlined"
-              :rounded="20"
-              hover
-              bg-color="var(--glass-bg)"
-              border-color="var(--glass-border)"
-              :border-width="1"
-              class="heroStatCard heroStatCard--coral"
-            >
-              <div class="heroStatInner">
-                <div class="heroStatIconWrapper">
-                  <CBIcon icon="luc-megaphone" size="1.75rem" color="#ffffff" />
-                </div>
-                <CBLabel
-                  :text="$t('hero.stats.conference.number')"
-                  tag="span"
-                  weight="extrabold"
-                  dense
-                  class="heroStatNumber"
-                />
-                <CBLabel
-                  :text="$t('hero.stats.conference.label')"
-                  tag="span"
-                  size="sm"
-                  weight="medium"
-                  dense
-                  class="heroStatLabel"
-                />
-              </div>
-            </CBCard>
-
-            <CBCard
-              variant="outlined"
-              :rounded="20"
-              hover
-              bg-color="var(--glass-bg)"
-              border-color="var(--glass-border)"
-              :border-width="1"
-              class="heroStatCard heroStatCard--rosa"
-            >
-              <div class="heroStatInner">
-                <div class="heroStatIconWrapper">
-                  <CBIcon icon="luc-users" size="1.75rem" color="#ffffff" />
-                </div>
-                <CBLabel
-                  :text="$t('hero.stats.location.number')"
-                  tag="span"
-                  weight="extrabold"
-                  dense
-                  class="heroStatNumber"
-                />
-                <CBLabel
-                  :text="$t('hero.stats.location.label')"
+                  :text="stat.label"
                   tag="span"
                   size="sm"
                   weight="medium"
@@ -317,7 +247,7 @@ onMounted(() => {
         <div class="missionContainer">
           <div class="missionContent animateOnScroll">
             <CBBadge
-              :content="$t('mission.badge')"
+              :content="mission.badge"
               variant="outline"
               icon="luc-target"
               :icon-size="14"
@@ -326,14 +256,14 @@ onMounted(() => {
               class="sectionBadge"
             />
 
-            <CBLabel :text="$t('mission.title')" tag="h2" weight="bold" class="sectionTitle" />
+            <CBLabel :text="mission.title" tag="h2" weight="bold" class="sectionTitle" />
 
-            <CBLabel :text="$t('mission.text1')" size="md" color="secondary" class="missionText" />
+            <CBLabel :text="mission.text1" size="md" color="secondary" class="missionText" />
 
-            <CBLabel :text="$t('mission.text2')" size="md" color="secondary" class="missionText" />
+            <CBLabel :text="mission.text2" size="md" color="secondary" class="missionText" />
 
             <CBButton
-              :label="$t('mission.btnLearnMore')"
+              :label="mission.btnText"
               size="lg"
               :bg-gradient="'var(--gradient-primary)'"
               :rounded="12"
@@ -396,7 +326,7 @@ onMounted(() => {
         <div class="programsContainer">
           <div class="programsHeader animateOnScroll">
             <CBBadge
-              :content="$t('programs.badge')"
+              :content="programs.badge"
               variant="outline"
               icon="luc-lightbulb"
               :icon-size="14"
@@ -405,145 +335,46 @@ onMounted(() => {
               class="sectionBadge"
             />
 
-            <CBLabel :text="$t('programs.title')" tag="h2" weight="bold" class="sectionTitle" />
+            <CBLabel :text="programs.title" tag="h2" weight="bold" class="sectionTitle" />
+
+            <CBLabel
+              v-if="programs.subtitle"
+              :text="programs.subtitle"
+              size="md"
+              color="secondary"
+              class="programsSubtitle"
+            />
           </div>
 
           <div class="programsGrid">
-            <!-- Card 1 -->
             <CBCard
+              v-for="program in programs.items"
+              :key="program.title"
               variant="outlined"
               :rounded="20"
               hover
               border-color="var(--border-light)"
               class="programCard animateOnScroll"
             >
-              <div class="programIconWrapper programIconWrapper--magenta">
-                <CBIcon icon="luc-megaphone" size="2rem" color="#ffffff" />
+              <div class="programIconWrapper" :style="colorVars(program.color)">
+                <CBIcon :icon="program.icon" size="2rem" color="#ffffff" />
               </div>
               <CBLabel
-                :text="$t('programs.items.communication.title')"
+                :text="program.title"
                 tag="h3"
                 size="lg"
                 weight="bold"
                 class="programTitle"
               />
               <CBLabel
-                :text="$t('programs.items.communication.description')"
+                :text="program.description"
                 size="sm"
                 color="secondary"
                 class="programDescription"
               />
               <div class="programCardFooter">
                 <CBLabel
-                  :text="$t('programs.items.communication.link')"
-                  tag="span"
-                  size="sm"
-                  weight="semibold"
-                  dense
-                  class="programCardLink"
-                />
-              </div>
-            </CBCard>
-
-            <!-- Card 2 -->
-            <CBCard
-              variant="outlined"
-              :rounded="20"
-              hover
-              border-color="var(--border-light)"
-              class="programCard animateOnScroll"
-            >
-              <div class="programIconWrapper programIconWrapper--coral">
-                <CBIcon icon="luc-graduation-cap" size="2rem" color="#ffffff" />
-              </div>
-              <CBLabel
-                :text="$t('programs.items.education.title')"
-                tag="h3"
-                size="lg"
-                weight="bold"
-                class="programTitle"
-              />
-              <CBLabel
-                :text="$t('programs.items.education.description')"
-                size="sm"
-                color="secondary"
-                class="programDescription"
-              />
-              <div class="programCardFooter">
-                <CBLabel
-                  :text="$t('programs.items.education.link')"
-                  tag="span"
-                  size="sm"
-                  weight="semibold"
-                  dense
-                  class="programCardLink"
-                />
-              </div>
-            </CBCard>
-
-            <!-- Card 3 -->
-            <CBCard
-              variant="outlined"
-              :rounded="20"
-              hover
-              border-color="var(--border-light)"
-              class="programCard animateOnScroll"
-            >
-              <div class="programIconWrapper programIconWrapper--rosa">
-                <CBIcon icon="luc-users" size="2rem" color="#ffffff" />
-              </div>
-              <CBLabel
-                :text="$t('programs.items.social.title')"
-                tag="h3"
-                size="lg"
-                weight="bold"
-                class="programTitle"
-              />
-              <CBLabel
-                :text="$t('programs.items.social.description')"
-                size="sm"
-                color="secondary"
-                class="programDescription"
-              />
-              <div class="programCardFooter">
-                <CBLabel
-                  :text="$t('programs.items.social.link')"
-                  tag="span"
-                  size="sm"
-                  weight="semibold"
-                  dense
-                  class="programCardLink"
-                />
-              </div>
-            </CBCard>
-
-            <!-- Card 4 -->
-            <CBCard
-              variant="outlined"
-              :rounded="20"
-              hover
-              border-color="var(--border-light)"
-              class="programCard animateOnScroll"
-            >
-              <div class="programIconWrapper programIconWrapper--oliva">
-                <CBIcon icon="luc-scale" size="2rem" color="#ffffff" />
-              </div>
-              <CBLabel
-                :text="$t('programs.items.political.title')"
-                tag="h3"
-                size="lg"
-                weight="bold"
-                class="programTitle"
-              />
-              <CBLabel
-                :text="$t('programs.items.political.description')"
-                size="sm"
-                color="secondary"
-                class="programDescription"
-              />
-              <div class="programCardFooter">
-                <CBLabel
-                  :text="$t('programs.items.political.link')"
+                  :text="program.link"
                   tag="span"
                   size="sm"
                   weight="semibold"
@@ -609,7 +440,7 @@ onMounted(() => {
         <div class="supportersContainer">
           <div class="supportersHeader animateOnScroll">
             <CBBadge
-              :content="$t('supporters.badge')"
+              :content="supporters.badge"
               variant="outline"
               icon="luc-handshake"
               :icon-size="14"
@@ -618,10 +449,11 @@ onMounted(() => {
               class="sectionBadge"
             />
 
-            <CBLabel :text="$t('supporters.title')" tag="h2" weight="bold" class="sectionTitle" />
+            <CBLabel :text="supporters.title" tag="h2" weight="bold" class="sectionTitle" />
 
             <CBLabel
-              :text="$t('supporters.subtitle')"
+              v-if="supporters.subtitle"
+              :text="supporters.subtitle"
               size="md"
               color="secondary"
               class="supportersSubtitle"
@@ -637,7 +469,7 @@ onMounted(() => {
             class="supportersMarquee animateOnScroll"
           >
             <CBCard
-              v-for="supporter in supporters"
+              v-for="supporter in supporters.items"
               :key="supporter.name"
               variant="outlined"
               :rounded="16"
@@ -645,10 +477,10 @@ onMounted(() => {
               bg-color="var(--bg-white)"
               border-color="var(--border-light)"
               :border-width="1"
-              :class="['supporterCard', `supporterCard--${supporter.color}`]"
+              class="supporterCard"
             >
               <div class="supporterCardInner">
-                <div class="supporterIconWrapper">
+                <div class="supporterIconWrapper" :style="colorVars(supporter.color)">
                   <CBIcon :icon="supporter.icon" size="1.5rem" color="#ffffff" />
                 </div>
                 <CBLabel :text="supporter.name" size="md" weight="semibold" class="supporterName" />
@@ -663,7 +495,7 @@ onMounted(() => {
         <div class="contactContainer">
           <div class="contactInfo animateOnScroll">
             <CBBadge
-              :content="$t('contact.badge')"
+              :content="contact.badge"
               variant="outline"
               icon="luc-mail"
               :icon-size="14"
@@ -672,10 +504,10 @@ onMounted(() => {
               class="sectionBadge"
             />
 
-            <CBLabel :text="$t('contact.title')" tag="h2" weight="bold" class="sectionTitle" />
+            <CBLabel :text="contact.title" tag="h2" weight="bold" class="sectionTitle" />
 
             <CBLabel
-              :text="$t('contact.description')"
+              :text="contact.description"
               size="md"
               color="secondary"
               class="contactDescription"
@@ -683,21 +515,23 @@ onMounted(() => {
 
             <div class="contactMethods">
               <CBCard
+                v-for="method in contact.methods"
+                :key="method.label"
                 variant="outlined"
                 :rounded="16"
                 hover
                 bg-color="var(--bg-white)"
                 border-color="var(--border-light)"
                 :border-width="1"
-                class="contactMethodCard contactMethodCard--magenta"
+                class="contactMethodCard"
               >
                 <div class="contactMethodInner">
-                  <div class="contactMethodIconWrapper">
-                    <CBIcon icon="luc-instagram" size="1.5rem" color="#ffffff" />
+                  <div class="contactMethodIconWrapper" :style="colorVars(method.color)">
+                    <CBIcon :icon="method.icon" size="1.5rem" color="#ffffff" />
                   </div>
                   <div class="contactMethodContent">
                     <CBLabel
-                      :text="$t('contact.methods.instagram.label')"
+                      :text="method.label"
                       tag="span"
                       size="xs"
                       color="tertiary"
@@ -706,89 +540,7 @@ onMounted(() => {
                       class="contactMethodLabel"
                     />
                     <CBLabel
-                      :text="$t('contact.methods.instagram.value')"
-                      tag="span"
-                      size="md"
-                      weight="semibold"
-                      dense
-                      class="contactMethodValue"
-                    />
-                  </div>
-                  <CBIcon
-                    icon="luc-arrow-up-right"
-                    size="1.25rem"
-                    color="var(--text-tertiary)"
-                    class="contactMethodArrow"
-                  />
-                </div>
-              </CBCard>
-
-              <CBCard
-                variant="outlined"
-                :rounded="16"
-                hover
-                bg-color="var(--bg-white)"
-                border-color="var(--border-light)"
-                :border-width="1"
-                class="contactMethodCard contactMethodCard--coral"
-              >
-                <div class="contactMethodInner">
-                  <div class="contactMethodIconWrapper">
-                    <CBIcon icon="luc-user-check" size="1.5rem" color="#ffffff" />
-                  </div>
-                  <div class="contactMethodContent">
-                    <CBLabel
-                      :text="$t('contact.methods.president.label')"
-                      tag="span"
-                      size="xs"
-                      color="tertiary"
-                      weight="bold"
-                      dense
-                      class="contactMethodLabel"
-                    />
-                    <CBLabel
-                      :text="$t('contact.methods.president.value')"
-                      tag="span"
-                      size="md"
-                      weight="semibold"
-                      dense
-                      class="contactMethodValue"
-                    />
-                  </div>
-                  <CBIcon
-                    icon="luc-arrow-up-right"
-                    size="1.25rem"
-                    color="var(--text-tertiary)"
-                    class="contactMethodArrow"
-                  />
-                </div>
-              </CBCard>
-
-              <CBCard
-                variant="outlined"
-                :rounded="16"
-                hover
-                bg-color="var(--bg-white)"
-                border-color="var(--border-light)"
-                :border-width="1"
-                class="contactMethodCard contactMethodCard--rosa"
-              >
-                <div class="contactMethodInner">
-                  <div class="contactMethodIconWrapper">
-                    <CBIcon icon="luc-map-pin" size="1.5rem" color="#ffffff" />
-                  </div>
-                  <div class="contactMethodContent">
-                    <CBLabel
-                      :text="$t('contact.methods.location.label')"
-                      tag="span"
-                      size="xs"
-                      color="tertiary"
-                      weight="bold"
-                      dense
-                      class="contactMethodLabel"
-                    />
-                    <CBLabel
-                      :text="$t('contact.methods.location.value')"
+                      :text="method.value"
                       tag="span"
                       size="md"
                       weight="semibold"
@@ -872,11 +624,11 @@ onMounted(() => {
         <div class="ctaGradientBg"></div>
         <div class="ctaContainer animateOnScroll">
           <div class="ctaContent">
-            <CBLabel :text="$t('cta.title')" tag="h2" weight="extrabold" class="ctaTitle" />
-            <CBLabel :text="$t('cta.subtitle')" size="lg" color="secondary" class="ctaSubtitle" />
+            <CBLabel :text="cta.title" tag="h2" weight="extrabold" class="ctaTitle" />
+            <CBLabel :text="cta.subtitle" size="lg" color="secondary" class="ctaSubtitle" />
             <div class="ctaActions">
               <CBButton
-                :label="$t('cta.btnDonate')"
+                :label="cta.btnDonate"
                 size="lg"
                 :bg-gradient="'var(--gradient-primary)'"
                 :rounded="14"
@@ -888,7 +640,7 @@ onMounted(() => {
               />
 
               <CBButton
-                :label="$t('cta.btnProjects')"
+                :label="cta.btnProjects"
                 size="lg"
                 variant="outline"
                 :color="'var(--cb-secondary)'"
@@ -1082,7 +834,7 @@ onMounted(() => {
   text-align: center;
 }
 
-/* Icon wrappers com gradiente */
+/* Icon wrappers com gradiente (cor via buildColorStyles) */
 .heroStatIconWrapper {
   display: flex;
   align-items: center;
@@ -1092,54 +844,14 @@ onMounted(() => {
   border-radius: 16px;
   margin-bottom: 1.25rem;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.heroStatCard--magenta .heroStatIconWrapper {
-  background: var(--gradient-magenta);
-  box-shadow: var(--glow-magenta);
-}
-
-.heroStatCard--coral .heroStatIconWrapper {
-  background: var(--gradient-coral);
-  box-shadow: var(--glow-coral);
-}
-
-.heroStatCard--rosa .heroStatIconWrapper {
-  background: var(--gradient-rosa);
-  box-shadow: var(--glow-rosa);
-}
-
-/* Hover glow por variante */
-.heroStatCard--magenta:hover {
-  border-color: var(--border-magenta);
-  box-shadow: var(--glow-magenta-card);
-}
-
-.heroStatCard--coral:hover {
-  border-color: var(--border-coral);
-  box-shadow: var(--glow-coral-card);
-}
-
-.heroStatCard--rosa:hover {
-  border-color: var(--border-rosa);
-  box-shadow: var(--glow-rosa-card);
+  background: var(--c-gradient);
+  box-shadow: var(--c-glow);
 }
 
 .heroStatCard:hover .heroStatIconWrapper {
   transform: scale(1.1) rotate(5deg);
   filter: brightness(1.1);
-}
-
-.heroStatCard--magenta:hover .heroStatIconWrapper {
-  box-shadow: var(--glow-magenta-hover);
-}
-
-.heroStatCard--coral:hover .heroStatIconWrapper {
-  box-shadow: var(--glow-coral-hover);
-}
-
-.heroStatCard--rosa:hover .heroStatIconWrapper {
-  box-shadow: var(--glow-rosa-hover);
+  box-shadow: var(--c-glow-hover);
 }
 
 .heroStatNumber {
@@ -1303,51 +1015,14 @@ onMounted(() => {
   margin-bottom: 1.25rem;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
-}
-
-/* Rosa Magenta - Comunicação */
-.programIconWrapper--magenta {
-  background: var(--gradient-magenta);
-  box-shadow: var(--glow-magenta);
-}
-
-/* Vermelho Coral - Educação */
-.programIconWrapper--coral {
-  background: var(--gradient-coral);
-  box-shadow: var(--glow-coral);
-}
-
-/* Rosa Escuro - Social */
-.programIconWrapper--rosa {
-  background: var(--gradient-rosa);
-  box-shadow: var(--glow-rosa);
-}
-
-/* Verde Oliva - Político */
-.programIconWrapper--oliva {
-  background: var(--gradient-oliva);
-  box-shadow: var(--glow-oliva);
+  background: var(--c-gradient);
+  box-shadow: var(--c-glow);
 }
 
 .programCard:hover .programIconWrapper {
   transform: scale(1.1) rotate(5deg);
   filter: brightness(1.1);
-}
-
-.programCard:hover .programIconWrapper--magenta {
-  box-shadow: var(--glow-magenta-hover);
-}
-
-.programCard:hover .programIconWrapper--coral {
-  box-shadow: var(--glow-coral-hover);
-}
-
-.programCard:hover .programIconWrapper--rosa {
-  box-shadow: var(--glow-rosa-hover);
-}
-
-.programCard:hover .programIconWrapper--oliva {
-  box-shadow: var(--glow-oliva-hover);
+  box-shadow: var(--c-glow-hover);
 }
 
 .programTitle {
@@ -1417,7 +1092,11 @@ onMounted(() => {
 .testimonialCardGlow {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at top center, rgba(var(--color-magenta-rgb), 0.15) 0%, transparent 70%);
+  background: radial-gradient(
+    circle at top center,
+    rgba(var(--color-magenta-rgb), 0.15) 0%,
+    transparent 70%
+  );
   opacity: 0.5;
   pointer-events: none;
 }
@@ -1527,7 +1206,7 @@ onMounted(() => {
   padding: 0.5rem 0;
 }
 
-/* Icon wrappers com gradiente — mesma linguagem visual */
+/* Icon wrappers com gradiente (cor via buildColorStyles) */
 .supporterIconWrapper {
   display: flex;
   align-items: center;
@@ -1537,62 +1216,14 @@ onMounted(() => {
   border-radius: 14px;
   flex-shrink: 0;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.supporterCard--magenta .supporterIconWrapper {
-  background: var(--gradient-magenta);
-  box-shadow: var(--glow-magenta);
-}
-
-.supporterCard--coral .supporterIconWrapper {
-  background: var(--gradient-coral);
-  box-shadow: var(--glow-coral);
-}
-
-.supporterCard--rosa .supporterIconWrapper {
-  background: var(--gradient-rosa);
-  box-shadow: var(--glow-rosa);
-}
-
-.supporterCard--oliva .supporterIconWrapper {
-  background: var(--gradient-oliva);
-  box-shadow: var(--glow-oliva);
-}
-
-.supporterCard--laranja .supporterIconWrapper {
-  background: var(--gradient-laranja);
-  box-shadow: var(--glow-laranja);
-}
-
-/* Hover glow por variante */
-.supporterCard--magenta:hover {
-  border-color: var(--border-magenta);
-  box-shadow: var(--glow-magenta-subtle);
-}
-
-.supporterCard--coral:hover {
-  border-color: var(--border-coral);
-  box-shadow: var(--glow-coral-subtle);
-}
-
-.supporterCard--rosa:hover {
-  border-color: var(--border-rosa);
-  box-shadow: var(--glow-rosa-subtle);
-}
-
-.supporterCard--oliva:hover {
-  border-color: var(--border-oliva);
-  box-shadow: var(--glow-oliva-card);
-}
-
-.supporterCard--laranja:hover {
-  border-color: var(--border-laranja);
-  box-shadow: var(--glow-laranja-subtle);
+  background: var(--c-gradient);
+  box-shadow: var(--c-glow);
 }
 
 .supporterCard:hover .supporterIconWrapper {
   transform: scale(1.08);
   filter: brightness(1.1);
+  box-shadow: var(--c-glow-hover);
 }
 
 .supporterName {
@@ -1643,22 +1274,7 @@ onMounted(() => {
   gap: 1.25rem;
 }
 
-.contactMethodCard--magenta:hover {
-  border-color: var(--border-magenta);
-  box-shadow: var(--glow-magenta-subtle);
-}
-
-.contactMethodCard--coral:hover {
-  border-color: var(--border-coral);
-  box-shadow: var(--glow-coral-subtle);
-}
-
-.contactMethodCard--rosa:hover {
-  border-color: var(--border-rosa);
-  box-shadow: var(--glow-rosa-subtle);
-}
-
-/* Icon wrappers com gradiente - mesma linguagem dos programs */
+/* Icon wrappers com gradiente (cor via buildColorStyles) */
 .contactMethodIconWrapper {
   display: flex;
   align-items: center;
@@ -1668,26 +1284,14 @@ onMounted(() => {
   border-radius: 14px;
   flex-shrink: 0;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.contactMethodCard--magenta .contactMethodIconWrapper {
-  background: var(--gradient-magenta);
-  box-shadow: var(--glow-magenta);
-}
-
-.contactMethodCard--coral .contactMethodIconWrapper {
-  background: var(--gradient-coral);
-  box-shadow: var(--glow-coral);
-}
-
-.contactMethodCard--rosa .contactMethodIconWrapper {
-  background: var(--gradient-rosa);
-  box-shadow: var(--glow-rosa);
+  background: var(--c-gradient);
+  box-shadow: var(--c-glow);
 }
 
 .contactMethodCard:hover .contactMethodIconWrapper {
   transform: scale(1.08);
   filter: brightness(1.1);
+  box-shadow: var(--c-glow-hover);
 }
 
 .contactMethodContent {

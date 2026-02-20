@@ -62,12 +62,18 @@ export const MISSION_CONFIG = {
 
 /** Regras de validacao e limites da secao Programas */
 export const PROGRAMS_CONFIG = {
+  /** Regras dos metadados da secao (badge, title, subtitle) */
+  sectionRules: {
+    badge: { required: true, minLength: 3, maxLength: 60 },
+    title: { required: true, minLength: 3, maxLength: 80 },
+    subtitle: { required: false, maxLength: 300 },
+  },
+  /** Regras de cada item de programa */
   validationRules: {
     title: { required: true, minLength: 3, maxLength: 40 },
     description: { required: true, minLength: 10, maxLength: 200 },
     link: { required: true, minLength: 2, maxLength: 30 },
   },
-  /** Min/max de programas */
   items: { min: 1, max: 8 },
 } as const;
 
@@ -92,10 +98,16 @@ export const TESTIMONIALS_CONFIG = {
 
 /** Regras de validacao e limites da secao Apoiadores */
 export const SUPPORTERS_CONFIG = {
+  /** Regras dos metadados da secao (badge, title, subtitle) */
+  sectionRules: {
+    badge: { required: true, minLength: 3, maxLength: 60 },
+    title: { required: true, minLength: 3, maxLength: 80 },
+    subtitle: { required: false, maxLength: 300 },
+  },
+  /** Regras de cada item de apoiador */
   validationRules: {
     name: { required: true, minLength: 2, maxLength: 60 },
   },
-  /** Min/max de apoiadores */
   items: { min: 1, max: 20 },
 } as const;
 

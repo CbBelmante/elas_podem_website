@@ -26,7 +26,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{
   'update:modelValue': [url: string];
-  'uploaded': [url: string];
+  uploaded: [url: string];
 }>();
 
 // ============== COMPOSABLES ==============
@@ -114,12 +114,7 @@ function removeImage(): void {
     />
 
     <!-- Erro de upload -->
-    <CBLabel
-      v-if="uploadError"
-      :text="uploadError"
-      size="xs"
-      class="imageUploader__error"
-    />
+    <CBLabel v-if="uploadError" :text="uploadError" size="xs" class="imageUploader__error" />
   </div>
 </template>
 
@@ -165,7 +160,7 @@ function removeImage(): void {
 }
 
 .imageUploader__removeBtn:hover {
-  background: var(--color-coral, #EE4A55);
+  background: var(--color-coral, #ee4a55);
 }
 
 .imageUploader__placeholder {
@@ -174,6 +169,6 @@ function removeImage(): void {
 }
 
 .imageUploader__error {
-  color: var(--color-coral, #EE4A55);
+  color: var(--color-coral, #ee4a55);
 }
 </style>

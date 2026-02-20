@@ -1,4 +1,5 @@
 <script setup lang="ts">
+/* eslint-disable vue/no-mutating-props -- editors mutam forms via ref do parent */
 /**
  * 🧩 HomeProgramsEditor — Editor da secao Programas.
  *
@@ -12,12 +13,17 @@ import { createValidationRules } from '@utils/validationRules';
 import { ICON_OPTIONS } from '@definitions/themeOptions';
 import { createNewProgram } from '@utils/HomeFormUtils';
 import { SECTION_FIELDS } from '@definitions/sectionFields';
-import type { IProgramEditable, IProgramReadonly } from '@appTypes/admin';
+import type {
+  IProgramEditable,
+  IProgramReadonly,
+  IProgramsEditable,
+  IProgramsReadonly,
+} from '@appTypes/admin';
 
 // ============== PROPS ==============
 
 interface Props {
-  forms: { editable: IProgramEditable[]; readonly: IProgramReadonly[] };
+  forms: { editable: IProgramsEditable; readonly: IProgramsReadonly };
 }
 
 const props = defineProps<Props>();
@@ -30,7 +36,8 @@ const emit = defineEmits<{
 
 // ============== VALIDATION ==============
 
-const rules = PROGRAMS_CONFIG.validationRules;
+const itemRules = PROGRAMS_CONFIG.validationRules;
+const sectionRules = PROGRAMS_CONFIG.sectionRules;
 
 // ============== ICON OPTIONS ==============
 
@@ -42,55 +49,84 @@ const iconSelectOptions = ICON_OPTIONS.map((opt) => ({
 // ============== CRUD ==============
 
 function addProgram(): void {
-  if (props.forms.editable.length >= PROGRAMS_CONFIG.items.max) return;
+  if (props.forms.editable.items.length >= PROGRAMS_CONFIG.items.max) return;
   const newItem = createNewProgram();
-  // Separar editable/readonly do novo item
   const editable: Record<string, unknown> = {};
   const readonly: Record<string, unknown> = {};
   for (const [key, mode] of Object.entries(SECTION_FIELDS.programs)) {
     if (mode === 'editable') editable[key] = (newItem as Record<string, unknown>)[key];
     else readonly[key] = (newItem as Record<string, unknown>)[key];
   }
-  props.forms.editable.push(editable as unknown as IProgramEditable);
-  props.forms.readonly.push(readonly as unknown as IProgramReadonly);
+  props.forms.editable.items.push(editable as unknown as IProgramEditable);
+  props.forms.readonly.items.push(readonly as unknown as IProgramReadonly);
   emit('changed');
 }
 
 function removeProgram(index: number): void {
-  if (props.forms.editable.length <= PROGRAMS_CONFIG.items.min) return;
-  props.forms.editable.splice(index, 1);
-  props.forms.readonly.splice(index, 1);
+  if (props.forms.editable.items.length <= PROGRAMS_CONFIG.items.min) return;
+  props.forms.editable.items.splice(index, 1);
+  props.forms.readonly.items.splice(index, 1);
   emit('changed');
 }
 
-/** Sincroniza readonly ao reordenar editable via drag */
 function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
   const { oldIndex, newIndex } = evt;
   if (oldIndex == null || newIndex == null || oldIndex === newIndex) return;
-  const [item] = props.forms.readonly.splice(oldIndex, 1);
-  props.forms.readonly.splice(newIndex, 0, item);
+  const [item] = props.forms.readonly.items.splice(oldIndex, 1);
+  props.forms.readonly.items.splice(newIndex, 0, item);
   emit('changed');
 }
 </script>
 
 <template>
   <div class="programsEditor">
+    <!-- Metadados da secao -->
+    <div class="programsEditor__sectionFields">
+      <CBInput
+        :model-value="forms.editable.badge"
+        label="Badge"
+        :rules="createValidationRules(sectionRules.badge)"
+        @update:model-value="
+          forms.editable.badge = $event;
+          emit('changed');
+        "
+      />
+      <CBInput
+        :model-value="forms.editable.title"
+        label="Titulo da Secao"
+        :rules="createValidationRules(sectionRules.title)"
+        @update:model-value="
+          forms.editable.title = $event;
+          emit('changed');
+        "
+      />
+      <CBInput
+        :model-value="forms.editable.subtitle"
+        label="Subtitulo (opcional)"
+        @update:model-value="
+          forms.editable.subtitle = $event;
+          emit('changed');
+        "
+      />
+    </div>
+
+    <!-- Items -->
     <div class="programsEditor__header">
       <CBLabel text="Programas" weight="semibold" size="sm" />
       <CBLabel
-        :text="`${forms.editable.length}/${PROGRAMS_CONFIG.items.max}`"
+        :text="`${forms.editable.items.length}/${PROGRAMS_CONFIG.items.max}`"
         size="xs"
         class="programsEditor__counter"
       />
     </div>
 
     <draggable
-      :model-value="forms.editable"
+      :model-value="forms.editable.items"
       item-key="_dragId"
       handle=".dragHandle"
       :animation="200"
       ghost-class="programsEditor__ghost"
-      @update:model-value="forms.editable.splice(0, forms.editable.length, ...$event)"
+      @update:model-value="forms.editable.items.splice(0, forms.editable.items.length, ...$event)"
       @end="onDragEnd"
     >
       <template #item="{ element, index }: { element: IProgramEditable; index: number }">
@@ -106,7 +142,7 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
               prepend-icon="luc-trash-2"
               :color="'var(--color-coral)'"
               :rounded="8"
-              :disabled="forms.editable.length <= PROGRAMS_CONFIG.items.min"
+              :disabled="forms.editable.items.length <= PROGRAMS_CONFIG.items.min"
               @click="removeProgram(index)"
             />
           </div>
@@ -116,29 +152,41 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
               <CBInput
                 :model-value="element.title"
                 label="Titulo"
-                :rules="createValidationRules(rules.title)"
-                @update:model-value="element.title = $event; emit('changed')"
+                :rules="createValidationRules(itemRules.title)"
+                @update:model-value="
+                  element.title = $event;
+                  emit('changed');
+                "
               />
               <CBSelect
                 :model-value="element.icon"
                 label="Icone"
                 :items="iconSelectOptions"
-                @update:model-value="element.icon = $event; emit('changed')"
+                @update:model-value="
+                  element.icon = $event;
+                  emit('changed');
+                "
               />
             </div>
 
             <CBTextarea
               :model-value="element.description"
               label="Descricao"
-              :rules="createValidationRules(rules.description)"
-              @update:model-value="element.description = $event; emit('changed')"
+              :rules="createValidationRules(itemRules.description)"
+              @update:model-value="
+                element.description = $event;
+                emit('changed');
+              "
             />
 
             <CBInput
               :model-value="element.link"
               label="Texto do Link"
-              :rules="createValidationRules(rules.link)"
-              @update:model-value="element.link = $event; emit('changed')"
+              :rules="createValidationRules(itemRules.link)"
+              @update:model-value="
+                element.link = $event;
+                emit('changed');
+              "
             />
           </div>
         </div>
@@ -151,7 +199,7 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
       size="sm"
       prepend-icon="luc-plus"
       :rounded="10"
-      :disabled="forms.editable.length >= PROGRAMS_CONFIG.items.max"
+      :disabled="forms.editable.items.length >= PROGRAMS_CONFIG.items.max"
       @click="addProgram"
     />
   </div>
@@ -162,6 +210,15 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+}
+
+.programsEditor__sectionFields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-light);
+  margin-bottom: 0.5rem;
 }
 
 .programsEditor__header {

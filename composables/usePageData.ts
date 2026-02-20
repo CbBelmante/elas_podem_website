@@ -39,7 +39,7 @@ export interface IPageDataConfig<TPageData, TFormsData extends Record<string, an
   pageName: string;
   separateAll: (data: TPageData) => TFormsData;
   createDefaults: () => TFormsData;
-  combineSections: { [K in keyof TFormsData]: (forms: TFormsData) => Record<string, unknown> };
+  combineSections: { [_K in keyof TFormsData]: (forms: TFormsData) => Record<string, unknown> };
 }
 
 export interface IPageDataState<TPageData, TFormsData> {
@@ -58,10 +58,9 @@ export interface IPageDataState<TPageData, TFormsData> {
  * Cada chamada cria um singleton SEPARADO (via closure).
  * Ou seja: useHomePageData tem seu estado, useAboutPageData tem outro.
  */
-export function createPageDataComposable<
-  TPageData,
-  TFormsData extends Record<string, any>,
->(config: IPageDataConfig<TPageData, TFormsData>) {
+export function createPageDataComposable<TPageData, TFormsData extends Record<string, any>>(
+  config: IPageDataConfig<TPageData, TFormsData>
+) {
   type SectionName = keyof TFormsData & string;
 
   const logger = Logger.child({ composable: `usePageData:${config.pageName}` });
@@ -195,7 +194,10 @@ export function createPageDataComposable<
           updatedByName: userData.value?.displayName ?? 'unknown',
         });
 
-        logger.info('Todas as secoes salvas', { page: config.pageName, updatedBy: userData.value?.displayName });
+        logger.info('Todas as secoes salvas', {
+          page: config.pageName,
+          updatedBy: userData.value?.displayName,
+        });
 
         await loadPageData();
 
@@ -276,10 +278,21 @@ export const useHomePageData = createPageDataComposable<IHomePageData, IHomeForm
   combineSections: {
     hero: (forms) => ({ 'content.hero': combineHeroData(forms.hero.editable) }),
     mission: (forms) => ({ 'content.mission': combineMissionData(forms.mission.editable) }),
-    programs: (forms) => ({ 'content.programs': combineProgramsData(forms.programs.editable, forms.programs.readonly) }),
-    testimonials: (forms) => ({ 'content.testimonials': combineTestimonialsData(forms.testimonials.editable) }),
-    supporters: (forms) => ({ 'content.supporters': combineSupportersData(forms.supporters.editable, forms.supporters.readonly) }),
-    contact: (forms) => ({ 'content.contact': combineContactData(forms.contact.editable, forms.contact.readonly) }),
+    programs: (forms) => ({
+      'content.programs': combineProgramsData(forms.programs.editable, forms.programs.readonly),
+    }),
+    testimonials: (forms) => ({
+      'content.testimonials': combineTestimonialsData(forms.testimonials.editable),
+    }),
+    supporters: (forms) => ({
+      'content.supporters': combineSupportersData(
+        forms.supporters.editable,
+        forms.supporters.readonly
+      ),
+    }),
+    contact: (forms) => ({
+      'content.contact': combineContactData(forms.contact.editable, forms.contact.readonly),
+    }),
     cta: (forms) => ({ 'content.cta': combineCtaData(forms.cta.editable) }),
     seo: (forms) => ({ seo: combineSeoData(forms.seo.editable, forms.seo.readonly) }),
   },

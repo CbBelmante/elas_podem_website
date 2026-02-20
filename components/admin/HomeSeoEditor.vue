@@ -1,4 +1,5 @@
 <script setup lang="ts">
+/* eslint-disable vue/no-mutating-props -- editors mutam forms via ref do parent */
 /**
  * 🧩 HomeSeoEditor — Editor da secao SEO.
  *
@@ -60,9 +61,15 @@ function updateKeyword(index: number, value: string): void {
         :model-value="forms.editable.title"
         label="Titulo SEO"
         :rules="createValidationRules(rules.title)"
-        @update:model-value="forms.editable.title = $event; emit('changed')"
+        @update:model-value="
+          forms.editable.title = $event;
+          emit('changed');
+        "
       />
-      <span class="seoEditor__charCount" :class="{ 'seoEditor__charCount--warn': forms.editable.title.length > 55 }">
+      <span
+        class="seoEditor__charCount"
+        :class="{ 'seoEditor__charCount--warn': forms.editable.title.length > 55 }"
+      >
         {{ forms.editable.title.length }}/{{ rules.title.maxLength }}
       </span>
     </div>
@@ -73,9 +80,15 @@ function updateKeyword(index: number, value: string): void {
         :model-value="forms.editable.description"
         label="Descricao SEO"
         :rules="createValidationRules(rules.description)"
-        @update:model-value="forms.editable.description = $event; emit('changed')"
+        @update:model-value="
+          forms.editable.description = $event;
+          emit('changed');
+        "
       />
-      <span class="seoEditor__charCount" :class="{ 'seoEditor__charCount--warn': forms.editable.description.length > 150 }">
+      <span
+        class="seoEditor__charCount"
+        :class="{ 'seoEditor__charCount--warn': forms.editable.description.length > 150 }"
+      >
         {{ forms.editable.description.length }}/{{ rules.description.maxLength }}
       </span>
     </div>
@@ -138,7 +151,10 @@ function updateKeyword(index: number, value: string): void {
       :model-value="forms.editable.ogImage"
       category="seo"
       label="Imagem OG (Open Graph)"
-      @update:model-value="forms.editable.ogImage = $event; emit('changed')"
+      @update:model-value="
+        forms.editable.ogImage = $event;
+        emit('changed');
+      "
       @uploaded="emit('uploaded', $event)"
     />
   </div>
@@ -165,7 +181,7 @@ function updateKeyword(index: number, value: string): void {
 }
 
 .seoEditor__charCount--warn {
-  color: var(--color-coral, #EE4A55);
+  color: var(--color-coral, #ee4a55);
 }
 
 .seoEditor__section {

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+/* eslint-disable vue/no-mutating-props -- editors mutam forms via ref do parent */
 /**
  * 🧩 HomeCtaEditor — Editor da secao CTA (Call to Action).
  *
@@ -35,14 +36,20 @@ const rules = CTA_CONFIG.validationRules;
       :model-value="forms.editable.title"
       label="Titulo"
       :rules="createValidationRules(rules.title)"
-      @update:model-value="forms.editable.title = $event; emit('changed')"
+      @update:model-value="
+        forms.editable.title = $event;
+        emit('changed');
+      "
     />
 
     <CBTextarea
       :model-value="forms.editable.subtitle"
       label="Subtitulo"
       :rules="createValidationRules(rules.subtitle)"
-      @update:model-value="forms.editable.subtitle = $event; emit('changed')"
+      @update:model-value="
+        forms.editable.subtitle = $event;
+        emit('changed');
+      "
     />
 
     <div class="ctaEditor__row">
@@ -50,14 +57,20 @@ const rules = CTA_CONFIG.validationRules;
         :model-value="forms.editable.btnDonate"
         label="Botao Doar"
         :rules="createValidationRules(rules.btnDonate)"
-        @update:model-value="forms.editable.btnDonate = $event; emit('changed')"
+        @update:model-value="
+          forms.editable.btnDonate = $event;
+          emit('changed');
+        "
       />
 
       <CBInput
         :model-value="forms.editable.btnProjects"
         label="Botao Projetos"
         :rules="createValidationRules(rules.btnProjects)"
-        @update:model-value="forms.editable.btnProjects = $event; emit('changed')"
+        @update:model-value="
+          forms.editable.btnProjects = $event;
+          emit('changed');
+        "
       />
     </div>
   </div>

@@ -38,11 +38,25 @@ export { SECTION_FIELDS } from './sectionFields';
 export type { FieldMode } from './sectionFields';
 
 // ---- Firestore collections e documentos ----
-export {
-  FIRESTORE_COLLECTIONS,
-  PAGE_DOCUMENTS,
-} from './firestoreCollections';
+export { FIRESTORE_COLLECTIONS, PAGE_DOCUMENTS } from './firestoreCollections';
 export type { FirestoreCollection, PageDocument } from './firestoreCollections';
+
+// ---- Defaults por secao (valores iniciais quando Firestore vazio) ----
+export {
+  HERO_DEFAULTS,
+  HERO_STAT_DEFAULTS,
+  MISSION_DEFAULTS,
+  PROGRAMS_SECTION_DEFAULTS,
+  PROGRAM_ITEM_DEFAULTS,
+  TESTIMONIAL_DEFAULTS,
+  SUPPORTERS_SECTION_DEFAULTS,
+  SUPPORTER_ITEM_DEFAULTS,
+  CONTACT_DEFAULTS,
+  CONTACT_METHOD_DEFAULTS,
+  CTA_DEFAULTS,
+  SEO_DEFAULTS,
+  SEO_OG_DEFAULTS,
+} from './sectionDefaults';
 
 // ---- Admin roles ----
 export {

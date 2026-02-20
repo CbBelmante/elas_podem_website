@@ -45,7 +45,6 @@ function makeStorageKey(key: string): string {
 // ============== COMPOSABLE ==============
 
 export function useCache() {
-
   /**
    * Busca dado do cache (RAM → localStorage).
    *
@@ -100,6 +99,7 @@ export function useCache() {
    * Remove dado do cache (RAM + localStorage).
    */
   function remove(key: string): void {
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
     delete _ram[key];
     LocalStorage.removeItem(makeStorageKey(key));
     logger.debug('Cache REMOVE', { key });
@@ -109,9 +109,10 @@ export function useCache() {
    * Limpa todo o cache (RAM + localStorage).
    */
   function clearAll(): void {
-    Object.keys(_ram).forEach(key => delete _ram[key]);
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+    Object.keys(_ram).forEach((key) => delete _ram[key]);
 
-    LocalStorage.keys().forEach(storageKey => {
+    LocalStorage.keys().forEach((storageKey) => {
       if (storageKey.startsWith(CACHE_PREFIX)) {
         LocalStorage.removeItem(storageKey);
       }

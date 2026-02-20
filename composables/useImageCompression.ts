@@ -68,7 +68,7 @@ function calculateDimensions(
   originalWidth: number,
   originalHeight: number,
   maxWidth: number,
-  maxHeight: number,
+  maxHeight: number
 ): { width: number; height: number } {
   let width = originalWidth;
   let height = originalHeight;
@@ -97,7 +97,7 @@ function canvasToBlob(canvas: HTMLCanvasElement, quality: number): Promise<Blob>
         else reject(new Error('Falha ao converter canvas para blob'));
       },
       'image/jpeg',
-      quality,
+      quality
     );
   });
 }
@@ -145,7 +145,7 @@ export function useImageCompression() {
    */
   const compressImage = async (
     file: File,
-    options: Partial<ICompressionOptions> = {},
+    options: Partial<ICompressionOptions> = {}
   ): Promise<File> => {
     const opts: ICompressionOptions = { ...DEFAULT_OPTIONS, ...options };
 
@@ -161,7 +161,7 @@ export function useImageCompression() {
         img.width,
         img.height,
         opts.maxWidth,
-        opts.maxHeight,
+        opts.maxHeight
       );
 
       const canvas = document.createElement('canvas');

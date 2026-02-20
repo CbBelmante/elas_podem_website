@@ -1,4 +1,5 @@
 <script setup lang="ts">
+/* eslint-disable vue/no-mutating-props -- editors mutam forms via ref do parent */
 /**
  * 🧩 HomeSupportersEditor — Editor da secao Apoiadores.
  *
@@ -14,12 +15,17 @@ import { createValidationRules } from '@utils/validationRules';
 import { ICON_OPTIONS } from '@definitions/themeOptions';
 import { createNewSupporter } from '@utils/HomeFormUtils';
 import { SECTION_FIELDS } from '@definitions/sectionFields';
-import type { ISupporterEditable, ISupporterReadonly } from '@appTypes/admin';
+import type {
+  ISupporterEditable,
+  ISupporterReadonly,
+  ISupportersEditable,
+  ISupportersReadonly,
+} from '@appTypes/admin';
 
 // ============== PROPS ==============
 
 interface Props {
-  forms: { editable: ISupporterEditable[]; readonly: ISupporterReadonly[] };
+  forms: { editable: ISupportersEditable; readonly: ISupportersReadonly };
 }
 
 const props = defineProps<Props>();
@@ -33,7 +39,8 @@ const emit = defineEmits<{
 
 // ============== VALIDATION ==============
 
-const rules = SUPPORTERS_CONFIG.validationRules;
+const itemRules = SUPPORTERS_CONFIG.validationRules;
+const sectionRules = SUPPORTERS_CONFIG.sectionRules;
 
 // ============== ICON OPTIONS ==============
 
@@ -45,7 +52,7 @@ const iconSelectOptions = ICON_OPTIONS.map((opt) => ({
 // ============== CRUD ==============
 
 function addSupporter(): void {
-  if (props.forms.editable.length >= SUPPORTERS_CONFIG.items.max) return;
+  if (props.forms.editable.items.length >= SUPPORTERS_CONFIG.items.max) return;
   const newItem = createNewSupporter();
   const editable: Record<string, unknown> = {};
   const readonly: Record<string, unknown> = {};
@@ -53,45 +60,76 @@ function addSupporter(): void {
     if (mode === 'editable') editable[key] = (newItem as Record<string, unknown>)[key];
     else readonly[key] = (newItem as Record<string, unknown>)[key];
   }
-  props.forms.editable.push(editable as unknown as ISupporterEditable);
-  props.forms.readonly.push(readonly as unknown as ISupporterReadonly);
+  props.forms.editable.items.push(editable as unknown as ISupporterEditable);
+  props.forms.readonly.items.push(readonly as unknown as ISupporterReadonly);
   emit('changed');
 }
 
 function removeSupporter(index: number): void {
-  if (props.forms.editable.length <= SUPPORTERS_CONFIG.items.min) return;
-  props.forms.editable.splice(index, 1);
-  props.forms.readonly.splice(index, 1);
+  if (props.forms.editable.items.length <= SUPPORTERS_CONFIG.items.min) return;
+  props.forms.editable.items.splice(index, 1);
+  props.forms.readonly.items.splice(index, 1);
   emit('changed');
 }
 
 function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
   const { oldIndex, newIndex } = evt;
   if (oldIndex == null || newIndex == null || oldIndex === newIndex) return;
-  const [item] = props.forms.readonly.splice(oldIndex, 1);
-  props.forms.readonly.splice(newIndex, 0, item);
+  const [item] = props.forms.readonly.items.splice(oldIndex, 1);
+  props.forms.readonly.items.splice(newIndex, 0, item);
   emit('changed');
 }
 </script>
 
 <template>
   <div class="supportersEditor">
+    <!-- Metadados da secao -->
+    <div class="supportersEditor__sectionFields">
+      <CBInput
+        :model-value="forms.editable.badge"
+        label="Badge"
+        :rules="createValidationRules(sectionRules.badge)"
+        @update:model-value="
+          forms.editable.badge = $event;
+          emit('changed');
+        "
+      />
+      <CBInput
+        :model-value="forms.editable.title"
+        label="Titulo da Secao"
+        :rules="createValidationRules(sectionRules.title)"
+        @update:model-value="
+          forms.editable.title = $event;
+          emit('changed');
+        "
+      />
+      <CBInput
+        :model-value="forms.editable.subtitle"
+        label="Subtitulo (opcional)"
+        @update:model-value="
+          forms.editable.subtitle = $event;
+          emit('changed');
+        "
+      />
+    </div>
+
+    <!-- Items -->
     <div class="supportersEditor__header">
       <CBLabel text="Apoiadores" weight="semibold" size="sm" />
       <CBLabel
-        :text="`${forms.editable.length}/${SUPPORTERS_CONFIG.items.max}`"
+        :text="`${forms.editable.items.length}/${SUPPORTERS_CONFIG.items.max}`"
         size="xs"
         class="supportersEditor__counter"
       />
     </div>
 
     <draggable
-      :model-value="forms.editable"
+      :model-value="forms.editable.items"
       item-key="_dragId"
       handle=".dragHandle"
       :animation="200"
       ghost-class="supportersEditor__ghost"
-      @update:model-value="forms.editable.splice(0, forms.editable.length, ...$event)"
+      @update:model-value="forms.editable.items.splice(0, forms.editable.items.length, ...$event)"
       @end="onDragEnd"
     >
       <template #item="{ element, index }: { element: ISupporterEditable; index: number }">
@@ -107,7 +145,7 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
               prepend-icon="luc-trash-2"
               :color="'var(--color-coral)'"
               :rounded="8"
-              :disabled="forms.editable.length <= SUPPORTERS_CONFIG.items.min"
+              :disabled="forms.editable.items.length <= SUPPORTERS_CONFIG.items.min"
               @click="removeSupporter(index)"
             />
           </div>
@@ -117,14 +155,20 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
               <CBInput
                 :model-value="element.name"
                 label="Nome"
-                :rules="createValidationRules(rules.name)"
-                @update:model-value="element.name = $event; emit('changed')"
+                :rules="createValidationRules(itemRules.name)"
+                @update:model-value="
+                  element.name = $event;
+                  emit('changed');
+                "
               />
               <CBSelect
                 :model-value="element.icon"
                 label="Icone"
                 :items="iconSelectOptions"
-                @update:model-value="element.icon = $event; emit('changed')"
+                @update:model-value="
+                  element.icon = $event;
+                  emit('changed');
+                "
               />
             </div>
 
@@ -132,13 +176,19 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
               <CBInput
                 :model-value="element.url"
                 label="Website (opcional)"
-                @update:model-value="element.url = $event; emit('changed')"
+                @update:model-value="
+                  element.url = $event;
+                  emit('changed');
+                "
               />
               <HomeImageUploader
                 :model-value="element.image"
                 category="supporters"
                 label="Logo (opcional)"
-                @update:model-value="element.image = $event; emit('changed')"
+                @update:model-value="
+                  element.image = $event;
+                  emit('changed');
+                "
                 @uploaded="emit('uploaded', $event)"
               />
             </div>
@@ -153,7 +203,7 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
       size="sm"
       prepend-icon="luc-plus"
       :rounded="10"
-      :disabled="forms.editable.length >= SUPPORTERS_CONFIG.items.max"
+      :disabled="forms.editable.items.length >= SUPPORTERS_CONFIG.items.max"
       @click="addSupporter"
     />
   </div>
@@ -164,6 +214,15 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+}
+
+.supportersEditor__sectionFields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-light);
+  margin-bottom: 0.5rem;
 }
 
 .supportersEditor__header {

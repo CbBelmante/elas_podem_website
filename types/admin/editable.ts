@@ -1,20 +1,11 @@
 /**
  * Editable/Readonly Types - Elas Podem Admin
  *
- * Camada 2: Tipos DERIVADOS automaticamente de sections.ts + sectionFields.ts.
+ * Camada 2: Tipos derivados de sections.ts + sectionFields.ts.
+ * Para mudar campo de editable para readonly → mude em definitions/sectionFields.ts.
  *
- * NAO edite tipos manualmente aqui. Para mudar um campo de editable para readonly:
- *   -> Mude em definitions/sectionFields.ts
- *   Os tipos aqui se recalculam automaticamente via FieldsByMode.
- *
- * Excecao: IContactEditable e IContactReadonly sao compostos manualmente
- * porque Contact tem estrutura aninhada (methods[] com split proprio).
- *
- * @module types/admin/editable
- *
- * @dependencias
- * - types/admin/sections (interfaces base)
- * - definitions/sectionFields (config de modos)
+ * Excecao: secoes com estrutura aninhada (Programs, Supporters, Contact) sao compostas
+ * manualmente porque items[] tem split proprio.
  */
 
 import type {
@@ -30,44 +21,17 @@ import type {
 import type { SECTION_FIELDS } from '~/definitions/sectionFields';
 
 // ============================================================
-// UTILITY TYPE
+// UTILITY TYPES
 // ============================================================
 
-/**
- * Extrai de T apenas os campos cujo mode no Config e igual a Mode.
- *
- * @example
- * ```typescript
- * type Editable = FieldsByMode<IProgram, typeof SECTION_FIELDS.programs, 'editable'>
- * // = { title: string, description: string, icon: string, link: string }
- * ```
- */
-export type FieldsByMode<
-  T,
-  Config extends Record<string, string>,
-  Mode extends string,
-> = Pick<
+/** Extrai de T apenas os campos cujo mode no Config e igual a Mode */
+export type FieldsByMode<T, Config extends Record<string, string>, Mode extends string> = Pick<
   T,
   { [K in keyof Config]: Config[K] extends Mode ? K : never }[keyof Config] & keyof T
 >;
 
-/**
- * Extrai de T todos os campos que NAO sao 'editable' (readonly + hidden).
- *
- * Usado para gerar os tipos *Readonly — que na verdade contem tanto
- * campos 'readonly' (visiveis no admin mas nao editaveis) quanto
- * 'hidden' (invisiveis no admin, preservados silenciosamente no save).
- *
- * @example
- * ```typescript
- * type Preserved = PreservedFields<IProgram, typeof SECTION_FIELDS.programs>
- * // = { color: string }  (color e 'hidden' — preservado no save)
- * ```
- */
-export type PreservedFields<
-  T,
-  Config extends Record<string, string>,
-> = Pick<
+/** Extrai de T campos nao-editaveis (readonly + hidden), preservados no save */
+export type PreservedFields<T, Config extends Record<string, string>> = Pick<
   T,
   {
     [K in keyof Config]: Config[K] extends 'readonly' | 'hidden' ? K : never;
@@ -76,17 +40,13 @@ export type PreservedFields<
 >;
 
 // ============================================================
-// HERO — tudo editavel
+// HERO
 // ============================================================
 
-export type IHeroEditable = FieldsByMode<
-  IHeroSection,
-  typeof SECTION_FIELDS.hero,
-  'editable'
->;
+export type IHeroEditable = FieldsByMode<IHeroSection, typeof SECTION_FIELDS.hero, 'editable'>;
 
 // ============================================================
-// MISSION — tudo editavel
+// MISSION
 // ============================================================
 
 export type IMissionEditable = FieldsByMode<
@@ -96,19 +56,28 @@ export type IMissionEditable = FieldsByMode<
 >;
 
 // ============================================================
-// PROGRAMS — color e readonly
+// PROGRAMS — estrutura aninhada (secao + items[])
 // ============================================================
 
-export type IProgramEditable = FieldsByMode<
-  IProgram,
-  typeof SECTION_FIELDS.programs,
-  'editable'
->;
+// Item-level (derivados automaticamente)
+export type IProgramEditable = FieldsByMode<IProgram, typeof SECTION_FIELDS.programs, 'editable'>;
 
 export type IProgramReadonly = PreservedFields<IProgram, typeof SECTION_FIELDS.programs>;
 
+// Section-level (compostos manualmente — badge/title/subtitle + items com split)
+export interface IProgramsEditable {
+  badge: string;
+  title: string;
+  subtitle: string;
+  items: IProgramEditable[];
+}
+
+export interface IProgramsReadonly {
+  items: IProgramReadonly[];
+}
+
 // ============================================================
-// TESTIMONIALS — tudo editavel
+// TESTIMONIALS
 // ============================================================
 
 export type ITestimonialEditable = FieldsByMode<
@@ -118,9 +87,10 @@ export type ITestimonialEditable = FieldsByMode<
 >;
 
 // ============================================================
-// SUPPORTERS — color e readonly
+// SUPPORTERS — estrutura aninhada (secao + items[])
 // ============================================================
 
+// Item-level (derivados automaticamente)
 export type ISupporterEditable = FieldsByMode<
   ISupporter,
   typeof SECTION_FIELDS.supporters,
@@ -129,30 +99,34 @@ export type ISupporterEditable = FieldsByMode<
 
 export type ISupporterReadonly = PreservedFields<ISupporter, typeof SECTION_FIELDS.supporters>;
 
+// Section-level (compostos manualmente — badge/title/subtitle + items com split)
+export interface ISupportersEditable {
+  badge: string;
+  title: string;
+  subtitle: string;
+  items: ISupporterEditable[];
+}
+
+export interface ISupportersReadonly {
+  items: ISupporterReadonly[];
+}
+
 // ============================================================
-// CONTACT — color dos metodos e readonly
+// CONTACT — estrutura aninhada (secao + methods[])
 // ============================================================
 
-/** Campos editaveis de um metodo de contato (derivado via FieldsByMode) */
 export type IContactMethodEditable = FieldsByMode<
   IContactMethod,
   typeof SECTION_FIELDS.contactMethod,
   'editable'
 >;
 
-/** Campos preservados de um metodo de contato (readonly + hidden) */
 export type IContactMethodReadonly = PreservedFields<
   IContactMethod,
   typeof SECTION_FIELDS.contactMethod
 >;
 
-/**
- * Campos editaveis da secao Contato.
- *
- * Composta manualmente porque Contact tem estrutura aninhada:
- * os campos top-level sao todos editaveis, e methods[] usa o split
- * derivado de contactMethod.
- */
+// Section-level (compostos manualmente — top-level editaveis + methods com split)
 export interface IContactEditable {
   badge: string;
   title: string;
@@ -161,23 +135,18 @@ export interface IContactEditable {
   formSubjects: string[];
 }
 
-/** Campos readonly da secao Contato (cores dos metodos) */
 export interface IContactReadonly {
   methods: IContactMethodReadonly[];
 }
 
 // ============================================================
-// CTA — tudo editavel
+// CTA
 // ============================================================
 
-export type ICtaEditable = FieldsByMode<
-  ICtaSection,
-  typeof SECTION_FIELDS.cta,
-  'editable'
->;
+export type ICtaEditable = FieldsByMode<ICtaSection, typeof SECTION_FIELDS.cta, 'editable'>;
 
 // ============================================================
-// SEO — og config e readonly
+// SEO
 // ============================================================
 
 export type ISeoEditable = FieldsByMode<ISeo, typeof SECTION_FIELDS.seo, 'editable'>;

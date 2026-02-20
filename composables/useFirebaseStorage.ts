@@ -16,12 +16,7 @@
 
 // ============== DEPENDENCIAS EXTERNAS ==============
 
-import {
-  ref as storageRef,
-  uploadBytes,
-  getDownloadURL,
-  deleteObject,
-} from 'firebase/storage';
+import { ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 
 // ============== DEPENDENCIAS INTERNAS ==============
 
@@ -95,7 +90,7 @@ export function useFirebaseStorage() {
    */
   const validateImageFile = (
     file: File,
-    maxSizeMB: number = IMAGE_UPLOAD_CONFIG.maxSizeMB,
+    maxSizeMB: number = IMAGE_UPLOAD_CONFIG.maxSizeMB
   ): IFileValidation => {
     if (!file.type.startsWith('image/')) {
       return { isValid: false, error: 'Arquivo precisa ser uma imagem' };
@@ -153,7 +148,7 @@ export function useFirebaseStorage() {
   const uploadImage = async (
     file: File,
     category: CompressionCategory,
-    customPath?: string,
+    customPath?: string
   ): Promise<string> => {
     const settings = COMPRESSION_SETTINGS[category];
     let fileToUpload = file;
