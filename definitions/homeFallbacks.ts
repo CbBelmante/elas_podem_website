@@ -34,6 +34,7 @@ export const HOME_FALLBACK: IHomePageData = {
         'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.',
       btnText: 'Lorem Ipsum Dolor',
       image: '',
+      imageAlt: 'Lorem ipsum dolor sit amet',
     },
 
     programs: {
@@ -84,6 +85,7 @@ export const HOME_FALLBACK: IHomePageData = {
         role: 'Lorem Dolor',
         initials: 'LI',
         image: '',
+        imageAlt: 'Foto de Lorem Ipsum',
       },
       {
         quote:
@@ -92,6 +94,7 @@ export const HOME_FALLBACK: IHomePageData = {
         role: 'Lorem Amet',
         initials: 'DS',
         image: '',
+        imageAlt: 'Foto de Dolor Sit',
       },
       {
         quote:
@@ -100,6 +103,7 @@ export const HOME_FALLBACK: IHomePageData = {
         role: 'Lorem Elit',
         initials: 'AC',
         image: '',
+        imageAlt: 'Foto de Amet Consectetur',
       },
     ],
 
@@ -108,11 +112,25 @@ export const HOME_FALLBACK: IHomePageData = {
       title: 'Lorem Ipsum Dolor Sit',
       subtitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor.',
       items: [
-        { name: 'Lorem 1', icon: 'luc-building-2', color: 'magenta', image: '', url: '' },
-        { name: 'Lorem 2', icon: 'luc-heart-handshake', color: 'coral', image: '', url: '' },
-        { name: 'Lorem 3', icon: 'luc-globe', color: 'rosa', image: '', url: '' },
-        { name: 'Lorem 4', icon: 'luc-star', color: 'oliva', image: '', url: '' },
-        { name: 'Lorem 5', icon: 'luc-award', color: 'laranja', image: '', url: '' },
+        {
+          name: 'Lorem 1',
+          icon: 'luc-building-2',
+          color: 'magenta',
+          image: '',
+          imageAlt: '',
+          url: '',
+        },
+        {
+          name: 'Lorem 2',
+          icon: 'luc-heart-handshake',
+          color: 'coral',
+          image: '',
+          imageAlt: '',
+          url: '',
+        },
+        { name: 'Lorem 3', icon: 'luc-globe', color: 'rosa', image: '', imageAlt: '', url: '' },
+        { name: 'Lorem 4', icon: 'luc-star', color: 'oliva', image: '', imageAlt: '', url: '' },
+        { name: 'Lorem 5', icon: 'luc-award', color: 'laranja', image: '', imageAlt: '', url: '' },
       ],
     },
 

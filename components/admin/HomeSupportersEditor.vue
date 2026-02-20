@@ -191,6 +191,15 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
                 "
                 @uploaded="emit('uploaded', $event)"
               />
+
+              <CBInput
+                :model-value="element.imageAlt"
+                label="Alt do logo (acessibilidade)"
+                @update:model-value="
+                  element.imageAlt = $event;
+                  emit('changed');
+                "
+              />
             </div>
           </div>
         </div>

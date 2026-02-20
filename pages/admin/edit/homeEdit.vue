@@ -21,6 +21,7 @@ import HomeContactEditor from '@components/admin/HomeContactEditor.vue';
 import HomeCtaEditor from '@components/admin/HomeCtaEditor.vue';
 import HomeSeoEditor from '@components/admin/HomeSeoEditor.vue';
 
+import type { Component } from 'vue';
 import type { ISaveResult } from '@appTypes/admin';
 
 // ============== PAGE META ==============
@@ -47,53 +48,53 @@ const { userData } = useAuth();
 
 // ============== STATE ==============
 
-/** Secoes expandidas (Set de sectionName) */
 const expandedSections = ref<Set<string>>(new Set(['hero']));
-
-/** Secoes com alteracoes nao salvas */
 const changedSections = ref<Set<string>>(new Set());
-
-/** Erros de validacao por secao */
 const sectionErrors = ref<Record<string, string[]>>({});
-
-/** URLs de imagens uploadadas temporariamente (para cleanup no exit) */
 const tempUploadedImages = ref<string[]>([]);
-
-/** Mensagem de sucesso apos save */
 const successMessage = ref('');
 
 // ============== SECTION CONFIG ==============
 
-const _sections = [
-  { name: 'hero', title: 'Hero', icon: 'luc-star' },
-  { name: 'mission', title: 'Missao', icon: 'luc-heart' },
-  { name: 'programs', title: 'Programas', icon: 'luc-layout-grid' },
-  { name: 'testimonials', title: 'Depoimentos', icon: 'luc-quote' },
-  { name: 'supporters', title: 'Apoiadores', icon: 'luc-heart-handshake' },
-  { name: 'contact', title: 'Contato', icon: 'luc-mail' },
-  { name: 'cta', title: 'CTA', icon: 'luc-megaphone' },
-  { name: 'seo', title: 'SEO', icon: 'luc-search' },
-] as const;
+interface ISectionConfig {
+  name: string;
+  title: string;
+  icon: string;
+  component: Component;
+}
+
+const sections: ISectionConfig[] = [
+  { name: 'hero', title: 'Hero', icon: 'luc-star', component: HomeHeroEditor },
+  { name: 'mission', title: 'Missao', icon: 'luc-heart', component: HomeMissionEditor },
+  { name: 'programs', title: 'Programas', icon: 'luc-layout-grid', component: HomeProgramsEditor },
+  {
+    name: 'testimonials',
+    title: 'Depoimentos',
+    icon: 'luc-quote',
+    component: HomeTestimonialsEditor,
+  },
+  {
+    name: 'supporters',
+    title: 'Apoiadores',
+    icon: 'luc-heart-handshake',
+    component: HomeSupportersEditor,
+  },
+  { name: 'contact', title: 'Contato', icon: 'luc-mail', component: HomeContactEditor },
+  { name: 'cta', title: 'CTA', icon: 'luc-megaphone', component: HomeCtaEditor },
+  { name: 'seo', title: 'SEO', icon: 'luc-search', component: HomeSeoEditor },
+];
 
 // ============== VALIDATORS MAP ==============
 
-const validators: Record<
-  string,
-  (data: Record<string, unknown>) => { isValid: boolean; errors: string[] }
-> = {
-  hero: (data) => validateHero(data),
-  mission: (data) => validateMission(data),
-  programs: () =>
-    validatePrograms(forms.value?.programs?.editable as unknown as Record<string, unknown>),
-  testimonials: () =>
-    validateTestimonials(
-      forms.value?.testimonials?.editable as unknown as Record<string, unknown>[]
-    ),
-  supporters: () =>
-    validateSupporters(forms.value?.supporters?.editable as unknown as Record<string, unknown>),
-  contact: (data) => validateContact(data),
-  cta: (data) => validateCta(data),
-  seo: (data) => validateSeo(data),
+const validators: Record<string, (data: any) => { isValid: boolean; errors: string[] }> = {
+  hero: validateHero,
+  mission: validateMission,
+  programs: validatePrograms,
+  testimonials: validateTestimonials,
+  supporters: validateSupporters,
+  contact: validateContact,
+  cta: validateCta,
+  seo: validateSeo,
 };
 
 // ============== METHODS ==============
@@ -241,166 +242,25 @@ onUnmounted(() => {
 
       <!-- Sections -->
       <div v-else class="homeEditSections">
-        <!-- Hero -->
         <HomeEditorSection
-          title="Hero"
-          icon="luc-star"
-          section-name="hero"
-          :expanded="expandedSections.has('hero')"
-          :errors="sectionErrors.hero ?? []"
+          v-for="section in sections"
+          :key="section.name"
+          :title="section.title"
+          :icon="section.icon"
+          :section-name="section.name"
+          :expanded="expandedSections.has(section.name)"
+          :errors="sectionErrors[section.name] ?? []"
           :is-saving="isSaving"
-          :has-changes="changedSections.has('hero')"
-          @toggle="toggleSection('hero')"
-          @save="handleSave('hero')"
-          @discard="handleDiscard('hero')"
+          :has-changes="changedSections.has(section.name)"
+          @toggle="toggleSection(section.name)"
+          @save="handleSave(section.name)"
+          @discard="handleDiscard(section.name)"
         >
-          <HomeHeroEditor
+          <component
+            :is="section.component"
             v-if="forms"
-            :forms="(forms as any).hero"
-            @changed="markSectionChanged('hero')"
-          />
-        </HomeEditorSection>
-
-        <!-- Missao -->
-        <HomeEditorSection
-          title="Missao"
-          icon="luc-heart"
-          section-name="mission"
-          :expanded="expandedSections.has('mission')"
-          :errors="sectionErrors.mission ?? []"
-          :is-saving="isSaving"
-          :has-changes="changedSections.has('mission')"
-          @toggle="toggleSection('mission')"
-          @save="handleSave('mission')"
-          @discard="handleDiscard('mission')"
-        >
-          <HomeMissionEditor
-            v-if="forms"
-            :forms="(forms as any).mission"
-            @changed="markSectionChanged('mission')"
-            @uploaded="handleImageUploaded"
-          />
-        </HomeEditorSection>
-
-        <!-- Programas -->
-        <HomeEditorSection
-          title="Programas"
-          icon="luc-layout-grid"
-          section-name="programs"
-          :expanded="expandedSections.has('programs')"
-          :errors="sectionErrors.programs ?? []"
-          :is-saving="isSaving"
-          :has-changes="changedSections.has('programs')"
-          @toggle="toggleSection('programs')"
-          @save="handleSave('programs')"
-          @discard="handleDiscard('programs')"
-        >
-          <HomeProgramsEditor
-            v-if="forms"
-            :forms="(forms as any).programs"
-            @changed="markSectionChanged('programs')"
-          />
-        </HomeEditorSection>
-
-        <!-- Depoimentos -->
-        <HomeEditorSection
-          title="Depoimentos"
-          icon="luc-quote"
-          section-name="testimonials"
-          :expanded="expandedSections.has('testimonials')"
-          :errors="sectionErrors.testimonials ?? []"
-          :is-saving="isSaving"
-          :has-changes="changedSections.has('testimonials')"
-          @toggle="toggleSection('testimonials')"
-          @save="handleSave('testimonials')"
-          @discard="handleDiscard('testimonials')"
-        >
-          <HomeTestimonialsEditor
-            v-if="forms"
-            :forms="(forms as any).testimonials"
-            @changed="markSectionChanged('testimonials')"
-            @uploaded="handleImageUploaded"
-          />
-        </HomeEditorSection>
-
-        <!-- Apoiadores -->
-        <HomeEditorSection
-          title="Apoiadores"
-          icon="luc-heart-handshake"
-          section-name="supporters"
-          :expanded="expandedSections.has('supporters')"
-          :errors="sectionErrors.supporters ?? []"
-          :is-saving="isSaving"
-          :has-changes="changedSections.has('supporters')"
-          @toggle="toggleSection('supporters')"
-          @save="handleSave('supporters')"
-          @discard="handleDiscard('supporters')"
-        >
-          <HomeSupportersEditor
-            v-if="forms"
-            :forms="(forms as any).supporters"
-            @changed="markSectionChanged('supporters')"
-            @uploaded="handleImageUploaded"
-          />
-        </HomeEditorSection>
-
-        <!-- Contato -->
-        <HomeEditorSection
-          title="Contato"
-          icon="luc-mail"
-          section-name="contact"
-          :expanded="expandedSections.has('contact')"
-          :errors="sectionErrors.contact ?? []"
-          :is-saving="isSaving"
-          :has-changes="changedSections.has('contact')"
-          @toggle="toggleSection('contact')"
-          @save="handleSave('contact')"
-          @discard="handleDiscard('contact')"
-        >
-          <HomeContactEditor
-            v-if="forms"
-            :forms="(forms as any).contact"
-            @changed="markSectionChanged('contact')"
-          />
-        </HomeEditorSection>
-
-        <!-- CTA -->
-        <HomeEditorSection
-          title="CTA"
-          icon="luc-megaphone"
-          section-name="cta"
-          :expanded="expandedSections.has('cta')"
-          :errors="sectionErrors.cta ?? []"
-          :is-saving="isSaving"
-          :has-changes="changedSections.has('cta')"
-          @toggle="toggleSection('cta')"
-          @save="handleSave('cta')"
-          @discard="handleDiscard('cta')"
-        >
-          <HomeCtaEditor
-            v-if="forms"
-            :forms="(forms as any).cta"
-            @changed="markSectionChanged('cta')"
-          />
-        </HomeEditorSection>
-
-        <!-- SEO -->
-        <HomeEditorSection
-          title="SEO"
-          icon="luc-search"
-          section-name="seo"
-          :expanded="expandedSections.has('seo')"
-          :errors="sectionErrors.seo ?? []"
-          :is-saving="isSaving"
-          :has-changes="changedSections.has('seo')"
-          @toggle="toggleSection('seo')"
-          @save="handleSave('seo')"
-          @discard="handleDiscard('seo')"
-        >
-          <HomeSeoEditor
-            v-if="forms"
-            :forms="(forms as any).seo"
-            @changed="markSectionChanged('seo')"
+            :forms="(forms as any)[section.name]"
+            @changed="markSectionChanged(section.name)"
             @uploaded="handleImageUploaded"
           />
         </HomeEditorSection>

@@ -309,7 +309,7 @@ onMounted(() => {
                   class="missionImageIcon"
                 />
                 <CBLabel
-                  :text="$t('mission.imageAlt')"
+                  :text="mission.imageAlt"
                   tag="span"
                   weight="semibold"
                   dense

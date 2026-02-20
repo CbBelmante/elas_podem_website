@@ -44,6 +44,7 @@ export const SECTION_FIELDS = {
     text2: 'editable',
     btnText: 'editable',
     image: 'editable',
+    imageAlt: 'editable',
   },
 
   programs: {
@@ -60,6 +61,7 @@ export const SECTION_FIELDS = {
     role: 'editable',
     initials: 'editable',
     image: 'editable',
+    imageAlt: 'editable',
   },
 
   supporters: {
@@ -67,6 +69,7 @@ export const SECTION_FIELDS = {
     icon: 'editable',
     color: 'hidden',
     image: 'editable',
+    imageAlt: 'editable',
     url: 'editable',
   },
 

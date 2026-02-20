@@ -96,6 +96,15 @@ const rules = MISSION_CONFIG.validationRules;
       "
       @uploaded="emit('uploaded', $event)"
     />
+
+    <CBInput
+      :model-value="forms.editable.imageAlt"
+      label="Texto alternativo da imagem (acessibilidade)"
+      @update:model-value="
+        forms.editable.imageAlt = $event;
+        emit('changed');
+      "
+    />
   </div>
 </template>
 

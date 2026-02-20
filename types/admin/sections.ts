@@ -35,6 +35,7 @@ export interface IMissionSection {
   text2: string;
   btnText: string;
   image: string; // Firebase Storage URL
+  imageAlt: string; // alt text para acessibilidade
 }
 
 // ============================================================
@@ -67,6 +68,7 @@ export interface ITestimonial {
   role: string;
   initials: string; // avatar fallback (ex: 'MG')
   image: string; // Firebase Storage URL (opcional)
+  imageAlt: string; // alt text para acessibilidade
 }
 
 // ============================================================
@@ -78,6 +80,7 @@ export interface ISupporter {
   icon: string; // fallback quando nao tem logo
   color: string; // nome do tema (THEME_COLOR_OPTIONS)
   image: string; // Firebase Storage URL (opcional)
+  imageAlt: string; // alt text para acessibilidade
   url: string;
 }
 

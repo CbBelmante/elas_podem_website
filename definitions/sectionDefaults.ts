@@ -39,6 +39,7 @@ export const MISSION_DEFAULTS = {
   text2: '',
   btnText: 'Conheca Nossa Historia',
   image: '',
+  imageAlt: '',
 } as const;
 
 // ============================================================
@@ -69,6 +70,7 @@ export const TESTIMONIAL_DEFAULTS = {
   role: '',
   initials: '',
   image: '',
+  imageAlt: '',
 } as const;
 
 // ============================================================
@@ -86,6 +88,7 @@ export const SUPPORTER_ITEM_DEFAULTS = {
   icon: 'luc-building-2',
   color: 'magenta',
   image: '',
+  imageAlt: '',
   url: '',
 } as const;
 
