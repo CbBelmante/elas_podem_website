@@ -668,7 +668,7 @@ TODO Fase 2: audit log real (admin_logs), cards de páginas adicionais,
 layouts/admin.vue com sidebar.
 ```
 
-### Home Editor (`pages/admin/edit/homeEdit.vue`) [PENDENTE — Fase 2]
+### Home Editor (`pages/admin/edit/homeEdit.vue`) [IMPLEMENTADO — Fase 2]
 
 **Layout:** Accordion/Tabs com cada seção expandível
 
@@ -825,17 +825,24 @@ service firebase.storage {
 - [x] `composables/useCache.ts` — cache 2 níveis (RAM + localStorage), usado pelo useAuth
 
 ### Fase 2: Editor da Home
-- [ ] `pages/admin/edit/homeEdit.vue` (editor com seções)
-- [ ] Seção Hero (textos + stats CRUD + validação inline)
-- [ ] Seção Missão (textos + image upload com compressão)
-- [ ] Seção Programas (CRUD de cards + seletor de ícones)
-- [ ] Seção Depoimentos (CRUD + image upload)
-- [ ] Seção Apoiadores (CRUD + image upload + URL)
-- [ ] Seção Contato (métodos CRUD + subjects CRUD)
-- [ ] Seção CTA (textos)
-- [ ] Seção SEO (meta tags + char counters + ogImage upload)
-- [ ] Navigation guard (unsaved changes warning)
-- [ ] Cleanup de imagens temporárias no cancel/exit
+- [x] `pages/admin/edit/homeEdit.vue` — orquestrador (~510 linhas)
+- [x] `HomeEditorSection.vue` — wrapper colapsavel generico (×8)
+- [x] `HomeImageUploader.vue` — upload compartilhado com preview e compressao
+- [x] Seção Hero (textos + stats CRUD + drag-and-drop + validação inline)
+- [x] Seção Missão (textos + image upload com compressão)
+- [x] Seção Programas (CRUD + drag + seletor de ícones + readonly pareado)
+- [x] Seção Depoimentos (CRUD + drag + image upload por item)
+- [x] Seção Apoiadores (CRUD + drag + image upload + readonly pareado)
+- [x] Seção Contato (campos + métodos CRUD/drag + subjects CRUD/drag)
+- [x] Seção CTA (4 campos de texto)
+- [x] Seção SEO (meta tags + char counters + keywords CRUD/drag + ogImage upload)
+- [x] Navigation guard (onBeforeRouteLeave + beforeunload)
+- [x] Cleanup de imagens temporárias no cancel/exit
+- [x] vuedraggable@next com animation:200, handle, ghost-class
+- [x] Validação 2 níveis (inline :rules + pre-save useValidation)
+- [x] Save/discard independente por seção (changedSections Set)
+- [x] `HomeEditor_GUIDE.md` — documentação completa
+- [x] `CODE_STYLE_GUIDE.md` v1.1 — seção Iteração e Simplicidade
 
 ### Fase 3: Conectar Site ao Firebase
 - [ ] Substituir i18n/hardcoded por dados do Firebase no index.vue
@@ -893,5 +900,5 @@ O padrão aguenta porque:
 
 ---
 
-**Status:** Fase 1 concluída (100%)
-**Próximos passos:** Fase 2 — pages/admin/edit/homeEdit.vue (editor das 8 seções da home)
+**Status:** Fase 2 concluída (100%)
+**Próximos passos:** Fase 3 — Conectar site público ao Firebase (substituir i18n/hardcoded por dados editáveis)
