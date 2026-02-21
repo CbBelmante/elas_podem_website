@@ -16,6 +16,7 @@ import type {
   ISupportersReadonly,
   IContactEditable,
   IContactReadonly,
+  IValueEditable,
   ICtaEditable,
   ISeoEditable,
   ISeoReadonly,
@@ -32,6 +33,7 @@ export interface IHomeFormsData {
   testimonials: { editable: ITestimonialEditable[] };
   supporters: { editable: ISupportersEditable; readonly: ISupportersReadonly };
   contact: { editable: IContactEditable; readonly: IContactReadonly };
+  values: { editable: IValueEditable[] };
   cta: { editable: ICtaEditable };
   seo: { editable: ISeoEditable; readonly: ISeoReadonly };
 }

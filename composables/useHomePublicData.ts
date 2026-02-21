@@ -64,6 +64,7 @@ export function useHomePublicData() {
   const testimonials = computed(() => data.value.content.testimonials);
   const supporters = computed(() => data.value.content.supporters);
   const contact = computed(() => data.value.content.contact);
+  const values = computed(() => data.value.content.values);
   const cta = computed(() => data.value.content.cta);
   const seo = computed(() => data.value.seo);
 
@@ -80,6 +81,7 @@ export function useHomePublicData() {
     testimonials,
     supporters,
     contact,
+    values,
     cta,
     seo,
   };

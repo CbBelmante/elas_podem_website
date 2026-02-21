@@ -23,11 +23,8 @@ import '../assets/css/theme.css';
 
 // ============== FIREBASE DATA ==============
 
-const { hero, mission, programs, testimonials, supporters, contact, cta, seo } =
+const { hero, mission, programs, testimonials, supporters, contact, values, cta, seo } =
   useHomePublicData();
-
-// Cores ciclicas para hero stats (IHeroStat nao tem campo color)
-const STAT_COLORS = ['magenta', 'coral', 'rosa', 'oliva', 'laranja'] as const;
 
 // Resolve nome do tema para CSS variable (passthrough se ja for hex/rgb/hsl/var)
 const toVar = (color: string) =>
@@ -48,6 +45,22 @@ const colorVars = (color: string) => {
   };
 };
 
+// Top-border gradient para program cards (baseado na cor do Firestore)
+const topBorderGradient = (color: string) => {
+  const colorMap: Record<string, string> = {
+    magenta: 'linear-gradient(90deg, var(--color-magenta), var(--color-coral))',
+    coral: 'linear-gradient(90deg, var(--color-coral), var(--color-laranja))',
+    rosa: 'linear-gradient(90deg, var(--color-rosa), var(--color-magenta))',
+    oliva: 'linear-gradient(90deg, var(--color-oliva), var(--color-verde-claro))',
+    laranja: 'linear-gradient(90deg, var(--color-laranja), var(--color-coral-claro))',
+    vinho: 'linear-gradient(90deg, var(--color-vinho), var(--color-vinho-medio))',
+    'vinho-medio': 'linear-gradient(90deg, var(--color-vinho-medio), var(--color-rosa))',
+    'roxo-noite': 'linear-gradient(90deg, var(--color-roxo-acento), var(--color-roxo-noite))',
+    'roxo-acento': 'linear-gradient(90deg, var(--color-roxo-acento), var(--color-roxo-noite))',
+  };
+  return colorMap[color] || 'linear-gradient(90deg, var(--color-magenta), var(--color-coral))';
+};
+
 // ============== SEO ==============
 
 useHead({
@@ -56,7 +69,7 @@ useHead({
     { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
     {
       rel: 'stylesheet',
-      href: 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Lato:wght@400;700&display=swap',
+      href: 'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800;9..144,900&family=DM+Sans:wght@300;400;500;600;700&display=swap',
     },
   ],
 });
@@ -130,7 +143,7 @@ onMounted(() => {
 
 <template>
   <div>
-    <!-- Navbar fora do pageWrapper para position:fixed funcionar com viewport -->
+    <!-- Navbar -->
     <CBNavbar
       :menu-items="menuItems"
       :current-path="currentPath"
@@ -156,186 +169,130 @@ onMounted(() => {
     </CBNavbar>
 
     <div class="pageWrapper">
-      <!-- Hero Section - REDESENHADO -->
+      <!-- ════════ HERO ════════ -->
       <section class="heroSection">
-        <div class="heroContent">
-          <!-- Badge superior -->
-          <CBBadge
-            :content="hero.badge"
-            variant="outline"
-            icon="luc-sparkles"
-            :icon-size="14"
-            weight="bold"
-            size="xs"
-            class="heroBadge animateOnScroll"
-          />
+        <div class="dotDecoration dot1"></div>
+        <div class="dotDecoration dot2"></div>
+        <div class="dotDecoration dot3"></div>
 
-          <CBLabel :text="hero.title" tag="h1" weight="black" class="heroTitle animateOnScroll" />
-
-          <CBLabel
-            :text="hero.subtitle"
-            size="lg"
-            color="secondary"
-            class="heroSubtitle animateOnScroll"
-          />
-
-          <div class="heroActions animateOnScroll">
-            <CBButton
-              :label="hero.btnDonate"
-              size="lg"
-              :bg-gradient="'var(--gradient-primary)'"
-              :rounded="14"
-              prepend-icon="luc-heart"
-              shine
-              glow
-              class="btnHero"
-            />
-
-            <CBButton
-              :label="hero.btnHistory"
-              size="lg"
+        <div class="heroContainer">
+          <div class="heroContent animateOnScroll">
+            <CBBadge
+              :content="hero.badge"
               variant="outline"
-              :color="'var(--cb-secondary)'"
-              :rounded="14"
-              append-icon="luc-arrow-right"
-              class="btnHeroSecondary"
+              :icon-size="14"
+              weight="bold"
+              size="xs"
+              bg-color="rgba(92, 26, 42, 0.06)"
+              text-color="var(--color-vinho-medio)"
+              class="heroBadge"
             />
+
+            <CBLabel :text="hero.title" tag="h1" weight="black" class="heroTitle animateOnScroll" />
+
+            <CBLabel
+              :text="hero.subtitle"
+              size="lg"
+              color="secondary"
+              class="heroSubtitle animateOnScroll"
+            />
+
+            <div class="heroActions animateOnScroll">
+              <CBButton
+                :label="hero.btnDonate"
+                size="lg"
+                :bg-gradient="'var(--gradient-primary)'"
+                :rounded="50"
+                prepend-icon="luc-heart"
+                shine
+                glow
+                class="btnHero"
+              />
+
+              <CBButton
+                :label="hero.btnHistory"
+                size="lg"
+                variant="outline"
+                :color="'var(--color-vinho-medio)'"
+                :rounded="50"
+                append-icon="luc-arrow-right"
+                class="btnHeroSecondary"
+              />
+            </div>
           </div>
 
-          <div class="heroStats animateOnScroll">
-            <CBCard
-              v-for="(stat, i) in hero.stats"
-              :key="i"
-              variant="outlined"
-              :rounded="20"
-              hover
-              bg-color="var(--glass-bg)"
-              border-color="var(--glass-border)"
-              :border-width="1"
-              class="heroStatCard"
-            >
-              <div class="heroStatInner">
-                <div
-                  class="heroStatIconWrapper"
-                  :style="colorVars(STAT_COLORS[i % STAT_COLORS.length])"
-                >
-                  <CBIcon :icon="stat.icon" size="1.75rem" color="#ffffff" />
-                </div>
-                <CBLabel
-                  :text="stat.number"
-                  tag="span"
-                  weight="extrabold"
-                  dense
-                  class="heroStatNumber"
-                />
-                <CBLabel
-                  :text="stat.label"
-                  tag="span"
-                  size="sm"
-                  weight="medium"
-                  dense
-                  class="heroStatLabel"
-                />
-              </div>
-            </CBCard>
+          <div class="heroVisual animateOnScroll">
+            <div class="blobShape"></div>
           </div>
         </div>
       </section>
 
-      <!-- Mission Section - MODERNIZADA -->
+      <!-- ════════ STATS BAR ════════ -->
+      <section class="statsBar">
+        <div v-for="(stat, i) in hero.stats" :key="i" class="statItem">
+          <CBLabel :text="stat.number" tag="span" weight="black" class="statNumber" />
+          <CBLabel :text="stat.label" tag="span" size="xs" class="statLabel" />
+        </div>
+      </section>
+
+      <!-- ════════ MISSION ════════ -->
       <section class="missionSection">
         <div class="missionContainer">
           <div class="missionContent animateOnScroll">
             <CBBadge
               :content="mission.badge"
               variant="outline"
-              icon="luc-target"
               :icon-size="14"
               weight="bold"
               size="xs"
+              bg-color="rgba(92, 26, 42, 0.06)"
+              text-color="var(--color-vinho-medio)"
               class="sectionBadge"
             />
 
-            <CBLabel :text="mission.title" tag="h2" weight="bold" class="sectionTitle" />
+            <CBLabel :text="mission.title" tag="h2" weight="black" class="sectionTitle" />
 
             <CBLabel :text="mission.text1" size="md" color="secondary" class="missionText" />
-
-            <CBLabel :text="mission.text2" size="md" color="secondary" class="missionText" />
 
             <CBButton
               :label="mission.btnText"
               size="lg"
               :bg-gradient="'var(--gradient-primary)'"
-              :rounded="12"
+              :rounded="50"
               append-icon="luc-arrow-right"
               class="btnMission"
             />
           </div>
 
           <div class="missionVisual animateOnScroll">
-            <div class="missionImageCard">
-              <!-- SVG Placeholder -->
-              <svg
-                width="100%"
-                height="100%"
-                viewBox="0 0 400 400"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                class="missionImageSvg"
-              >
-                <path
-                  d="M263.5 400C166.5 373.5 48.5 322 0 206C88 153.5 142.5 15.5 263.5 0.5C384.5 15.5 427 122 400 206C373 290 360.5 426.5 263.5 400Z"
-                  fill="url(#paint0_linear_101_2)"
-                />
-                <defs>
-                  <linearGradient
-                    id="paint0_linear_101_2"
-                    x1="0"
-                    y1="0"
-                    x2="400"
-                    y2="400"
-                    gradientUnits="userSpaceOnUse"
-                  >
-                    <stop stop-color="#E6346B" stop-opacity="0.3" />
-                    <stop offset="1" stop-color="#D42D5E" stop-opacity="0.1" />
-                  </linearGradient>
-                </defs>
-              </svg>
-              <div class="missionImageContent">
-                <CBIcon
-                  icon="luc-sparkles"
-                  size="3rem"
-                  color="var(--cb-primary)"
-                  class="missionImageIcon"
-                />
-                <CBLabel
-                  :text="mission.imageAlt"
-                  tag="span"
-                  weight="semibold"
-                  dense
-                  class="missionImageText"
-                />
-              </div>
-            </div>
+            <CBImage
+              :src="mission.image || 'https://picsum.photos/600/500?random=42'"
+              :alt="mission.imageAlt"
+              size="100%"
+              fit="cover"
+              :rounded="20"
+              class="missionImage"
+            />
           </div>
         </div>
       </section>
 
-      <!-- Programs Section - CARDS PREMIUM -->
+      <!-- ════════ PROGRAMS ════════ -->
       <section class="programsSection">
         <div class="programsContainer">
           <div class="programsHeader animateOnScroll">
             <CBBadge
               :content="programs.badge"
               variant="outline"
-              icon="luc-lightbulb"
               :icon-size="14"
               weight="bold"
               size="xs"
+              bg-color="rgba(92, 26, 42, 0.06)"
+              text-color="var(--color-vinho-medio)"
               class="sectionBadge"
             />
 
-            <CBLabel :text="programs.title" tag="h2" weight="bold" class="sectionTitle" />
+            <CBLabel :text="programs.title" tag="h2" weight="black" class="sectionTitle" />
 
             <CBLabel
               v-if="programs.subtitle"
@@ -353,11 +310,12 @@ onMounted(() => {
               variant="outlined"
               :rounded="20"
               hover
-              border-color="var(--border-light)"
+              border-color="rgba(92, 26, 42, 0.04)"
               class="programCard animateOnScroll"
+              :style="{ '--top-border-gradient': topBorderGradient(program.color) }"
             >
               <div class="programIconWrapper" :style="colorVars(program.color)">
-                <CBIcon :icon="program.icon" size="2rem" color="#ffffff" />
+                <CBIcon :icon="program.icon" size="1.5rem" color="#ffffff" />
               </div>
               <CBLabel
                 :text="program.title"
@@ -387,7 +345,7 @@ onMounted(() => {
         </div>
       </section>
 
-      <!-- Testimonial Section - CAROUSEL -->
+      <!-- ════════ TESTIMONIALS ════════ -->
       <section class="testimonialSection">
         <div class="testimonialContainer animateOnScroll">
           <CBCarousel
@@ -403,7 +361,7 @@ onMounted(() => {
             <template #slide="{ index }">
               <div class="testimonialCard">
                 <div class="testimonialCardGlow"></div>
-                <div class="testimonialQuoteIcon">"</div>
+                <div class="testimonialQuoteIcon">&ldquo;</div>
                 <blockquote class="testimonialQuote">
                   {{ testimonials[index].quote }}
                 </blockquote>
@@ -435,21 +393,22 @@ onMounted(() => {
         </div>
       </section>
 
-      <!-- Supporters Section - MODERNA -->
+      <!-- ════════ SUPPORTERS ════════ -->
       <section class="supportersSection">
         <div class="supportersContainer">
           <div class="supportersHeader animateOnScroll">
             <CBBadge
               :content="supporters.badge"
               variant="outline"
-              icon="luc-handshake"
               :icon-size="14"
               weight="bold"
               size="xs"
+              bg-color="rgba(92, 26, 42, 0.06)"
+              text-color="var(--color-vinho-medio)"
               class="sectionBadge"
             />
 
-            <CBLabel :text="supporters.title" tag="h2" weight="bold" class="sectionTitle" />
+            <CBLabel :text="supporters.title" tag="h2" weight="black" class="sectionTitle" />
 
             <CBLabel
               v-if="supporters.subtitle"
@@ -475,7 +434,7 @@ onMounted(() => {
               :rounded="16"
               hover
               bg-color="var(--bg-white)"
-              border-color="var(--border-light)"
+              border-color="rgba(92, 26, 42, 0.04)"
               :border-width="1"
               class="supporterCard"
             >
@@ -490,21 +449,35 @@ onMounted(() => {
         </div>
       </section>
 
-      <!-- Contact Section - REDESENHADA -->
+      <!-- ════════ VALUES STRIP ════════ -->
+      <section class="valuesStrip">
+        <div
+          v-for="value in values"
+          :key="value.title"
+          class="valueItem"
+          :style="{ background: toVar(value.color) }"
+        >
+          <CBLabel :text="value.title" tag="h3" weight="black" class="valueTitle" />
+          <CBLabel :text="value.subtitle" tag="p" size="sm" class="valueSubtitle" />
+        </div>
+      </section>
+
+      <!-- ════════ CONTACT ════════ -->
       <section class="contactSection">
         <div class="contactContainer">
           <div class="contactInfo animateOnScroll">
             <CBBadge
               :content="contact.badge"
               variant="outline"
-              icon="luc-mail"
               :icon-size="14"
               weight="bold"
               size="xs"
+              bg-color="rgba(92, 26, 42, 0.06)"
+              text-color="var(--color-vinho-medio)"
               class="sectionBadge"
             />
 
-            <CBLabel :text="contact.title" tag="h2" weight="bold" class="sectionTitle" />
+            <CBLabel :text="contact.title" tag="h2" weight="black" class="sectionTitle" />
 
             <CBLabel
               :text="contact.description"
@@ -521,7 +494,7 @@ onMounted(() => {
                 :rounded="16"
                 hover
                 bg-color="var(--bg-white)"
-                border-color="var(--border-light)"
+                border-color="rgba(92, 26, 42, 0.04)"
                 :border-width="1"
                 class="contactMethodCard"
               >
@@ -607,7 +580,7 @@ onMounted(() => {
                   type="submit"
                   size="lg"
                   :bg-gradient="'var(--gradient-primary)'"
-                  :rounded="12"
+                  :rounded="50"
                   append-icon="luc-arrow-right"
                   shine
                   block
@@ -619,46 +592,114 @@ onMounted(() => {
         </div>
       </section>
 
-      <!-- CTA Final - IMPACTANTE -->
+      <!-- ════════ CTA ════════ -->
       <section class="ctaSection">
-        <div class="ctaGradientBg"></div>
+        <div class="ctaDecorCircle"></div>
         <div class="ctaContainer animateOnScroll">
-          <div class="ctaContent">
-            <CBLabel :text="cta.title" tag="h2" weight="extrabold" class="ctaTitle" />
-            <CBLabel :text="cta.subtitle" size="lg" color="secondary" class="ctaSubtitle" />
-            <div class="ctaActions">
-              <CBButton
-                :label="cta.btnDonate"
-                size="lg"
-                :bg-gradient="'var(--gradient-primary)'"
-                :rounded="14"
-                prepend-icon="luc-heart"
-                shine
-                glow
-                pulse
-                class="btnCtaPrimary"
-              />
+          <CBLabel :text="cta.title" tag="h2" weight="black" class="ctaTitle" />
+          <CBLabel :text="cta.subtitle" size="lg" class="ctaSubtitle" />
+          <div class="ctaActions">
+            <CBButton
+              :label="cta.btnDonate"
+              size="lg"
+              bg-color="var(--color-branco)"
+              text-color="var(--color-vinho)"
+              :rounded="50"
+              prepend-icon="luc-heart"
+              class="btnCtaWhite"
+            />
 
-              <CBButton
-                :label="cta.btnProjects"
-                size="lg"
-                variant="outline"
-                :color="'var(--cb-secondary)'"
-                :rounded="14"
-                append-icon="luc-arrow-right"
-                class="btnCtaSecondary"
-              />
-            </div>
+            <CBButton
+              :label="cta.btnProjects"
+              size="lg"
+              variant="outline"
+              :color="'rgba(255,255,255,0.8)'"
+              :rounded="50"
+              append-icon="luc-arrow-right"
+              class="btnCtaOutline"
+            />
           </div>
         </div>
       </section>
+
+      <!-- ════════ FOOTER ════════ -->
+      <footer class="siteFooter">
+        <div class="footerContainer">
+          <div class="footerContent">
+            <div class="footerBrand">
+              <CBImage
+                src="/logo-elas-podem.png"
+                alt="Elas Podem"
+                size="auto"
+                :height="40"
+                fit="contain"
+                class="footerLogo"
+              />
+              <CBLabel
+                text="Movimento feminista de Campo Grande - MS. Equidade, liberdade, sororidade e respeito a dignidade humana desde 2020."
+                tag="p"
+                size="sm"
+                class="footerBrandText"
+              />
+            </div>
+
+            <div class="footerLinks">
+              <div class="footerColumn">
+                <h4>Eixos</h4>
+                <ul>
+                  <li><a href="#">Comunicacao</a></li>
+                  <li><a href="#">Educacao</a></li>
+                  <li><a href="#">Acao Social</a></li>
+                  <li><a href="#">Participacao Politica</a></li>
+                </ul>
+              </div>
+
+              <div class="footerColumn">
+                <h4>Valores</h4>
+                <ul>
+                  <li><a href="#">Equidade</a></li>
+                  <li><a href="#">Liberdade</a></li>
+                  <li><a href="#">Sororidade</a></li>
+                  <li><a href="#">Dignidade</a></li>
+                </ul>
+              </div>
+
+              <div class="footerColumn">
+                <h4>Contato</h4>
+                <ul>
+                  <li><a href="#">Campo Grande - MS</a></li>
+                  <li>
+                    <a href="https://instagram.com/coletivoelaspodem" target="_blank" rel="noopener">
+                      @coletivoelaspodem
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="footerBottom">
+            <span class="footerCopyright">&copy; 2025 Coletivo Elas Podem. Todos os direitos reservados.</span>
+            <div class="footerSocial">
+              <a
+                href="https://instagram.com/coletivoelaspodem"
+                target="_blank"
+                rel="noopener"
+                class="footerSocialLink"
+              >
+                <CBIcon icon="luc-instagram" size="1.25rem" color="rgba(255,255,255,0.35)" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   </div>
 </template>
 
 <style scoped>
 /* ============================================
-   COMPONENTE PRINCIPAL
+   PAGE WRAPPER
    ============================================ */
 .pageWrapper {
   min-height: 100vh;
@@ -668,23 +709,13 @@ onMounted(() => {
   overflow-x: hidden;
 }
 
-.hideOnMobile {
-  display: inline;
-}
-
-@media (max-width: 768px) {
-  .hideOnMobile {
-    display: none;
-  }
-}
-
 /* ============================================
-   ANIMAÇÕES DE SCROLL
+   SCROLL ANIMATIONS
    ============================================ */
 .animateOnScroll {
   opacity: 0;
   transform: translateY(30px);
-  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .animateOnScroll.isVisible {
@@ -693,11 +724,51 @@ onMounted(() => {
 }
 
 /* ============================================
-   NAVBAR CUSTOMIZAÇÃO
+   KEYFRAMES
+   ============================================ */
+@keyframes blobMorph {
+  0%,
+  100% {
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+  }
+  25% {
+    border-radius: 58% 42% 60% 40% / 45% 55% 45% 55%;
+  }
+  50% {
+    border-radius: 50% 50% 33% 67% / 55% 40% 60% 45%;
+  }
+  75% {
+    border-radius: 40% 60% 55% 45% / 60% 35% 65% 40%;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes slideRight {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ============================================
+   NAVBAR
    ============================================ */
 .customNavbar :deep(.cbNavbar) {
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
 .customNavbar :deep(.cbNavbar__logoSection) {
@@ -712,200 +783,216 @@ onMounted(() => {
   height: 48px;
   width: auto;
   cursor: pointer;
-  transition: transform 0.3s ease;
+  transition: transform 0.35s ease;
 }
 
 .navbarLogo:hover {
   transform: scale(1.05);
 }
 
-@media (max-width: 768px) {
-  .customNavbar :deep(.cbNavbar__logoSection) {
-    margin-left: 1rem;
-  }
-
-  .navbarLogo {
-    height: 40px;
-  }
-}
-
 /* ============================================
-   HERO SECTION - REDESENHADO
-   ============================================ */
-.heroSection {
-  position: relative;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8rem 2rem 6rem;
-  overflow: hidden;
-  background: var(--bg-hero);
-}
-
-@keyframes float {
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-  33% {
-    transform: translate(30px, -30px) scale(1.1);
-  }
-  66% {
-    transform: translate(-20px, 20px) scale(0.9);
-  }
-}
-
-/* Conteúdo do Hero */
-.heroContent {
-  position: relative;
-  z-index: 2;
-  max-width: 900px;
-  text-align: center;
-}
-
-/* Badge superior */
-.heroBadge {
-  margin-bottom: 2rem;
-  letter-spacing: 2px;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  transition: all 0.3s ease;
-}
-
-.heroBadge:hover {
-  transform: translateY(-2px);
-}
-
-/* Título com gradiente animado */
-.heroTitle {
-  font-family: var(--font-heading);
-  font-size: clamp(3.5rem, 10vw, 7rem);
-  font-weight: 900;
-  line-height: 0.95;
-  letter-spacing: -0.03em;
-  margin-bottom: 1.5rem;
-  color: var(--text-primary);
-  text-transform: uppercase;
-}
-
-/* Subtítulo */
-.heroSubtitle {
-  line-height: 1.7;
-  margin-bottom: 3rem;
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* Botões do Hero */
-.heroActions {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-bottom: 4rem;
-}
-
-/* Estatísticas com glassmorphism */
-.heroStats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-.heroStatCard {
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: var(--shadow-md);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-}
-
-.heroStatCard:hover {
-  transform: translateY(-5px);
-}
-
-.heroStatInner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-/* Icon wrappers com gradiente (cor via buildColorStyles) */
-.heroStatIconWrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 52px;
-  height: 52px;
-  border-radius: 16px;
-  margin-bottom: 1.25rem;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  background: var(--c-gradient);
-  box-shadow: var(--c-glow);
-}
-
-.heroStatCard:hover .heroStatIconWrapper {
-  transform: scale(1.1) rotate(5deg);
-  filter: brightness(1.1);
-  box-shadow: var(--c-glow-hover);
-}
-
-.heroStatNumber {
-  font-family: var(--font-heading);
-  font-size: 2.5rem;
-  font-weight: 800;
-  background: var(--gradient-accent);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 0.5rem;
-}
-
-.heroStatLabel {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-/* ============================================
-   COMPONENTES REUTILIZÁVEIS
+   SHARED: SECTION BADGE
    ============================================ */
 .sectionBadge {
-  margin-bottom: 1.5rem;
-  letter-spacing: 2px;
+  letter-spacing: 1.5px;
+  margin-bottom: 14px;
 }
 
 .sectionTitle {
   font-family: var(--font-heading);
   font-size: clamp(1.75rem, 4vw, 2.5rem);
-  font-weight: 700;
-  line-height: 1.2;
+  font-weight: 900;
+  line-height: 1.15;
   letter-spacing: -0.02em;
   color: var(--text-primary);
   margin-bottom: 1rem;
 }
 
 /* ============================================
-   MISSION SECTION
+   HERO — 2 COLUNAS + BLOB
+   ============================================ */
+.heroSection {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 140px 7% 80px;
+  overflow: hidden;
+  background: var(--bg-hero);
+}
+
+.heroSection::before {
+  content: '';
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(var(--color-vinho-rgb), 0.03) 0%, transparent 70%);
+  top: -150px;
+  left: -150px;
+  border-radius: 50%;
+}
+
+.heroContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  gap: 4rem;
+}
+
+.heroContent {
+  max-width: 560px;
+  position: relative;
+  z-index: 2;
+  animation: slideRight 0.8s ease-out;
+}
+
+/* Dots decorativos flutuantes */
+.dotDecoration {
+  position: absolute;
+  border-radius: 50%;
+  animation: float 4s ease-in-out infinite;
+  z-index: 1;
+}
+
+.dot1 {
+  width: 12px;
+  height: 12px;
+  background: var(--color-coral-claro);
+  top: 90px;
+  right: 16%;
+}
+
+.dot2 {
+  width: 8px;
+  height: 8px;
+  background: var(--color-vinho-medio);
+  bottom: 120px;
+  left: 46%;
+  animation-delay: 1s;
+}
+
+.dot3 {
+  width: 16px;
+  height: 16px;
+  background: var(--color-nude-quente);
+  top: 42%;
+  right: 9%;
+  animation-delay: 2s;
+}
+
+/* Hero badge */
+.heroBadge {
+  letter-spacing: 1.5px;
+  margin-bottom: 24px;
+}
+
+/* Titulo */
+.heroTitle {
+  font-family: var(--font-heading);
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  font-weight: 900;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  margin-bottom: 22px;
+  color: var(--text-primary);
+}
+
+.heroSubtitle {
+  line-height: 1.75;
+  margin-bottom: 36px;
+  max-width: 480px;
+}
+
+.heroActions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+/* Blob visual */
+.heroVisual {
+  position: relative;
+  z-index: 2;
+  animation: slideRight 1s ease-out 0.3s both;
+}
+
+.blobShape {
+  width: 400px;
+  height: 400px;
+  background: linear-gradient(
+    135deg,
+    var(--color-vinho) 0%,
+    var(--color-magenta) 40%,
+    var(--color-coral) 75%,
+    var(--color-coral-claro) 100%
+  );
+  animation: blobMorph 8s ease-in-out infinite;
+  box-shadow: 22px 22px 0px var(--color-nude-quente);
+}
+
+/* ============================================
+   STATS BAR — FAIXA ESCURA
+   ============================================ */
+.statsBar {
+  display: flex;
+  background: var(--gradient-stats-bar);
+}
+
+.statItem {
+  flex: 1;
+  text-align: center;
+  padding: 44px 30px;
+  border-right: 1px solid rgba(var(--color-magenta-rgb), 0.12);
+  transition: background 0.35s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.statItem:last-child {
+  border-right: none;
+}
+
+.statItem:hover {
+  background: rgba(var(--color-magenta-rgb), 0.08);
+}
+
+.statNumber {
+  font-family: var(--font-heading);
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: var(--color-coral-claro);
+  line-height: 1;
+}
+
+.statLabel {
+  font-size: 0.75rem;
+  color: rgba(247, 159, 193, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 500;
+}
+
+/* ============================================
+   MISSION — QUOTE CARD
    ============================================ */
 .missionSection {
-  padding: 3rem 2rem;
+  padding: 100px 7%;
   background: var(--bg-light);
   position: relative;
 }
 
 .missionContainer {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 4rem;
+  gap: 70px;
   align-items: center;
 }
 
@@ -914,70 +1001,20 @@ onMounted(() => {
   margin-bottom: 1.5rem;
 }
 
-.missionVisual {
-  position: relative;
+.btnMission {
+  margin-top: 0.5rem;
 }
 
-.missionImageCard {
-  position: relative;
-  height: 500px;
-  background: linear-gradient(
-    135deg,
-    rgba(var(--color-magenta-rgb), 0.2) 0%,
-    rgba(var(--color-coral-claro-rgb), 0.1) 50%,
-    rgba(var(--color-rosa-rgb), 0.2) 100%
-  );
-  border: 1px solid var(--border-light);
-  border-radius: 24px;
-  overflow: hidden;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-}
-
-/* CSS para o placeholder SVG da imagem */
-.missionImageCard .missionImageOverlay {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at center, transparent 0%, rgba(10, 10, 10, 0.5) 100%);
-}
-
-.missionImageCard .missionImageSvg {
-  position: absolute;
-  inset: -50%; /* Faz o SVG preencher e vazar para criar o efeito desejado */
-  width: 200%;
-  height: 200%;
-  object-fit: cover;
-  animation: float 30s ease-in-out infinite reverse; /* Reutilizando animação existente */
-}
-
-.missionImageCard .missionImageContent {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  background: rgba(255, 255, 255, 0.1); /* Suave sobreposição */
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  color: white;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-}
-.missionImageCard .missionImageIcon {
-  font-size: 3rem;
-}
-.missionImageCard .missionImageText {
-  font-family: var(--font-heading);
-  font-size: 1.5rem;
-  font-weight: 600;
+/* Imagem da missao */
+.missionImage {
+  box-shadow: var(--shadow-soft);
 }
 
 /* ============================================
-   PROGRAMS SECTION
+   PROGRAMS — TOP-BORDER HOVER
    ============================================ */
 .programsSection {
-  padding: 3rem 2rem;
+  padding: 100px 7%;
   background: var(--bg-white);
 }
 
@@ -988,74 +1025,93 @@ onMounted(() => {
 
 .programsHeader {
   text-align: center;
-  margin-bottom: 4rem;
+  margin-bottom: 50px;
 }
 
 .programsGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem;
+  gap: 22px;
 }
 
 .programCard {
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  overflow: hidden;
+}
+
+.programCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--top-border-gradient);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  z-index: 1;
 }
 
 .programCard:hover {
-  transform: translateY(-8px);
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-soft);
+}
+
+.programCard:hover::before {
+  opacity: 1;
 }
 
 .programIconWrapper {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 56px;
-  height: 56px;
-  border-radius: 16px;
-  margin-bottom: 1.25rem;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
+  width: 50px;
+  height: 50px;
+  border-radius: 14px;
+  margin-bottom: 18px;
+  transition: all 0.35s ease;
   background: var(--c-gradient);
   box-shadow: var(--c-glow);
 }
 
 .programCard:hover .programIconWrapper {
-  transform: scale(1.1) rotate(5deg);
+  transform: scale(1.08);
   filter: brightness(1.1);
   box-shadow: var(--c-glow-hover);
 }
 
 .programTitle {
-  margin-bottom: 0.75rem;
+  margin-bottom: 10px;
 }
 
 .programDescription {
-  line-height: 1.5;
+  line-height: 1.65;
   margin-bottom: 1rem;
 }
 
 .programCardFooter {
   padding-top: 1rem;
-  border-top: 1px solid var(--border-light);
+  border-top: 1px solid rgba(var(--color-vinho-rgb), 0.06);
 }
 
 .programCardLink {
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--cb-primary);
+  color: var(--color-magenta);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease;
 }
 
 .programCardLink:hover {
-  color: var(--cb-secondary);
+  color: var(--color-rosa);
 }
 
 /* ============================================
-   TESTIMONIAL SECTION
+   TESTIMONIALS
    ============================================ */
 .testimonialSection {
-  padding: 3rem 2rem;
+  padding: 100px 7%;
   background: var(--bg-light);
 }
 
@@ -1081,12 +1137,10 @@ onMounted(() => {
   flex-direction: column;
   justify-content: center;
   background: var(--bg-white);
-  border: 1px solid var(--border-light);
+  border: 1px solid rgba(var(--color-vinho-rgb), 0.06);
   border-radius: 32px;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
   overflow: hidden;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-soft);
 }
 
 .testimonialCardGlow {
@@ -1094,7 +1148,7 @@ onMounted(() => {
   inset: 0;
   background: radial-gradient(
     circle at top center,
-    rgba(var(--color-magenta-rgb), 0.15) 0%,
+    rgba(var(--color-magenta-rgb), 0.12) 0%,
     transparent 70%
   );
   opacity: 0.5;
@@ -1106,9 +1160,9 @@ onMounted(() => {
   top: 1.5rem;
   left: 2rem;
   font-family: var(--font-heading);
-  font-size: 7rem;
+  font-size: 8rem;
   font-weight: 900;
-  color: rgba(var(--color-magenta-rgb), 0.08);
+  color: rgba(var(--color-magenta-rgb), 0.1);
   line-height: 1;
   pointer-events: none;
   user-select: none;
@@ -1117,10 +1171,11 @@ onMounted(() => {
 .testimonialQuote {
   font-family: var(--font-heading);
   position: relative;
-  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-size: clamp(1.3rem, 3vw, 1.5rem);
+  font-weight: 700;
   font-style: italic;
-  line-height: 1.6;
-  color: var(--text-primary);
+  line-height: 1.4;
+  color: var(--color-vinho);
   margin: 0 0 2rem 0;
   padding-top: 0.5rem;
 }
@@ -1159,10 +1214,10 @@ onMounted(() => {
 }
 
 /* ============================================
-   SUPPORTERS SECTION
+   SUPPORTERS
    ============================================ */
 .supportersSection {
-  padding: 3rem 2rem;
+  padding: 100px 7%;
   background: var(--bg-white);
 }
 
@@ -1188,8 +1243,8 @@ onMounted(() => {
 .supporterCard {
   width: 180px;
   flex-shrink: 0;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: var(--shadow-sm);
+  transition: all 0.35s ease;
+  box-shadow: var(--shadow-soft);
   cursor: pointer;
 }
 
@@ -1206,7 +1261,6 @@ onMounted(() => {
   padding: 0.5rem 0;
 }
 
-/* Icon wrappers com gradiente (cor via buildColorStyles) */
 .supporterIconWrapper {
   display: flex;
   align-items: center;
@@ -1215,7 +1269,7 @@ onMounted(() => {
   height: 48px;
   border-radius: 14px;
   flex-shrink: 0;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.35s ease;
   background: var(--c-gradient);
   box-shadow: var(--c-glow);
 }
@@ -1231,10 +1285,55 @@ onMounted(() => {
 }
 
 /* ============================================
-   CONTACT SECTION
+   VALUES STRIP
+   ============================================ */
+.valuesStrip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.valueItem {
+  padding: 50px 30px;
+  text-align: center;
+  transition: filter 0.35s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.valueItem::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 20%;
+  right: 20%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 1px;
+}
+
+.valueItem:hover {
+  filter: brightness(1.15);
+}
+
+.valueTitle {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  color: white;
+  margin-bottom: 8px;
+}
+
+.valueSubtitle {
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.5;
+  max-width: 200px;
+  margin: 0 auto;
+}
+
+/* ============================================
+   CONTACT
    ============================================ */
 .contactSection {
-  padding: 3rem 2rem;
+  padding: 100px 7%;
   background: var(--bg-light);
 }
 
@@ -1259,8 +1358,8 @@ onMounted(() => {
 }
 
 .contactMethodCard {
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: var(--shadow-sm);
+  transition: all 0.35s ease;
+  box-shadow: var(--shadow-soft);
   cursor: pointer;
 }
 
@@ -1274,7 +1373,6 @@ onMounted(() => {
   gap: 1.25rem;
 }
 
-/* Icon wrappers com gradiente (cor via buildColorStyles) */
 .contactMethodIconWrapper {
   display: flex;
   align-items: center;
@@ -1283,7 +1381,7 @@ onMounted(() => {
   height: 48px;
   border-radius: 14px;
   flex-shrink: 0;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.35s ease;
   background: var(--c-gradient);
   box-shadow: var(--c-glow);
 }
@@ -1322,90 +1420,210 @@ onMounted(() => {
   transform: translateX(0);
 }
 
-/* Formulário */
+/* Form */
 .contactForm {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
 
-/* Efeito de mover seta para frente no hover */
+/* Arrow icon hover effect on buttons */
 .btnHeroSecondary :deep(.cbButton__icon),
 .btnMission :deep(.cbButton__icon),
-.btnCtaSecondary :deep(.cbButton__icon),
+.btnCtaOutline :deep(.cbButton__icon),
 .btnFormSubmit :deep(.cbButton__icon) {
   transition: transform 0.3s ease;
 }
 
 .btnHeroSecondary:hover :deep(.cbButton__icon),
 .btnMission:hover :deep(.cbButton__icon),
-.btnCtaSecondary:hover :deep(.cbButton__icon),
+.btnCtaOutline:hover :deep(.cbButton__icon),
 .btnFormSubmit:hover :deep(.cbButton__icon) {
   transform: translateX(4px);
 }
 
+/* Outline button hover: fill with vinho */
+.btnHeroSecondary:hover {
+  background: var(--color-vinho) !important;
+  border-color: var(--color-vinho) !important;
+  color: white !important;
+}
+
 /* ============================================
-   CTA SECTION
+   CTA — GRADIENT ESCURO
    ============================================ */
 .ctaSection {
   position: relative;
-  padding: 3rem 2rem;
-  background: var(--bg-white);
+  padding: 110px 7%;
+  background: var(--gradient-cta);
   overflow: hidden;
+  text-align: center;
 }
 
-.ctaGradientBg {
+.ctaDecorCircle {
   position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(var(--color-magenta-rgb), 0.15) 0%,
-    rgba(var(--color-coral-claro-rgb), 0.1) 50%,
-    rgba(var(--color-rosa-rgb), 0.15) 100%
-  );
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.03);
+  top: -200px;
+  right: -200px;
+  pointer-events: none;
 }
 
 .ctaContainer {
   position: relative;
-  max-width: 900px;
+  max-width: 600px;
   margin: 0 auto;
-}
-
-.ctaContent {
-  text-align: center;
-  padding: 4rem 3rem;
-  background: linear-gradient(135deg, var(--bg-tint) 0%, var(--cb-primary-10) 100%);
-  border: 1px solid var(--badge-border);
-  border-radius: 32px;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  box-shadow: var(--shadow-md);
+  z-index: 2;
 }
 
 .ctaTitle {
   font-family: var(--font-heading);
-  font-size: clamp(2rem, 5vw, 3rem);
-  font-weight: 800;
-  color: var(--text-primary);
-  margin-bottom: 1.5rem;
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  font-weight: 900;
+  color: white;
+  margin-bottom: 16px;
 }
 
 .ctaSubtitle {
-  line-height: 1.6;
-  margin-bottom: 3rem;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.65;
+  margin-bottom: 36px;
 }
 
 .ctaActions {
   display: flex;
-  gap: 1rem;
+  gap: 14px;
   justify-content: center;
   flex-wrap: wrap;
+}
+
+.btnCtaWhite {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  transition: all 0.35s ease;
+}
+
+.btnCtaWhite:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+.siteFooter {
+  background: var(--color-preto);
+  padding: 60px 7% 30px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.footerContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footerContent {
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+.footerBrand {
+  max-width: 300px;
+}
+
+.footerLogo {
+  margin-bottom: 12px;
+  filter: brightness(0) invert(1) opacity(0.8);
+}
+
+.footerBrandText {
+  color: rgba(255, 255, 255, 0.4);
+  line-height: 1.6;
+}
+
+.footerLinks {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.footerColumn h4 {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 16px;
+}
+
+.footerColumn ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footerColumn ul li {
+  margin-bottom: 10px;
+}
+
+.footerColumn ul li a {
+  font-size: 0.86rem;
+  color: rgba(255, 255, 255, 0.35);
+  text-decoration: none;
+  transition: color 0.35s ease;
+}
+
+.footerColumn ul li a:hover {
+  color: var(--color-coral-claro);
+}
+
+.footerBottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footerCopyright {
+  font-size: 0.78rem;
+}
+
+.footerSocial {
+  display: flex;
+  gap: 16px;
+}
+
+.footerSocialLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.35s ease;
+}
+
+.footerSocialLink:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.1);
 }
 
 /* ============================================
    RESPONSIVE
    ============================================ */
 @media (max-width: 1024px) {
+  .heroContainer {
+    gap: 2rem;
+  }
+
+  .blobShape {
+    width: 320px;
+    height: 320px;
+  }
+
   .missionContainer,
   .contactContainer {
     grid-template-columns: 1fr;
@@ -1415,31 +1633,79 @@ onMounted(() => {
   .programsGrid {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .valuesStrip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .footerContent {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .footerBrand {
+    max-width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .footerLinks {
+    justify-content: center;
+  }
 }
 
 @media (max-width: 768px) {
+  .customNavbar :deep(.cbNavbar__logoSection) {
+    margin-left: 1rem;
+  }
+
+  .navbarLogo {
+    height: 40px;
+  }
+
   .heroSection {
-    padding: 6rem 1.5rem 3rem;
+    padding: 120px 7% 60px;
   }
 
-  .heroTitle {
-    font-size: clamp(2.5rem, 10vw, 4rem);
+  .heroContainer {
+    flex-direction: column;
+    text-align: center;
+    gap: 40px;
   }
 
-  .heroStats {
-    grid-template-columns: 1fr;
+  .heroContent {
+    max-width: 100%;
+  }
+
+  .heroSubtitle {
+    max-width: 100%;
+  }
+
+  .heroActions {
+    justify-content: center;
+  }
+
+  .blobShape {
+    width: 260px;
+    height: 260px;
+  }
+
+  .statsBar {
+    flex-wrap: wrap;
+  }
+
+  .statItem {
+    flex: 1 1 50%;
   }
 
   .programsGrid {
     grid-template-columns: 1fr;
   }
 
-  .ctaContent {
-    padding: 3rem 2rem;
-  }
-
-  .contactFormCard {
-    padding: 2rem;
+  .valuesStrip {
+    grid-template-columns: 1fr;
   }
 
   .heroActions,
@@ -1452,6 +1718,115 @@ onMounted(() => {
   .ctaActions :deep(.cbButton),
   .btnMission {
     width: 100%;
+  }
+
+  .contactFormCard {
+    padding: 2rem;
+  }
+
+  .siteFooter {
+    padding: 40px 5% 24px;
+  }
+
+  .footerLinks {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .footerColumn h4 {
+    font-size: 0.65rem;
+    letter-spacing: 1.5px;
+    margin-bottom: 10px;
+  }
+
+  .footerColumn ul li {
+    margin-bottom: 7px;
+  }
+
+  .footerColumn ul li a {
+    font-size: 0.78rem;
+  }
+
+  .footerBottom {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .siteFooter {
+    padding: 32px 5% 20px;
+  }
+
+  .footerBrandText {
+    font-size: 0.78rem;
+  }
+
+  .footerLinks {
+    gap: 12px;
+  }
+
+  .footerColumn h4 {
+    font-size: 0.6rem;
+    margin-bottom: 8px;
+  }
+
+  .footerColumn ul li a {
+    font-size: 0.72rem;
+  }
+
+  .footerCopyright {
+    font-size: 0.68rem;
+  }
+
+  .statItem {
+    padding: 30px 16px;
+  }
+
+  .statNumber {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .footerLinks {
+    flex-direction: column;
+    gap: 0;
+    align-items: stretch;
+  }
+
+  .footerColumn {
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .footerColumn:last-child {
+    border-bottom: none;
+  }
+
+  .footerColumn h4 {
+    margin-bottom: 6px;
+  }
+
+  .footerColumn ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+  }
+
+  .footerColumn ul li {
+    margin-bottom: 0;
+  }
+
+  .footerCopyright {
+    font-size: 0.62rem;
+  }
+
+  .statItem {
+    flex: 1 1 100%;
   }
 }
 </style>

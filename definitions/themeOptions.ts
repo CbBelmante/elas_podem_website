@@ -27,6 +27,10 @@ export const THEME_COLOR_OPTIONS = [
   { value: 'rosa', label: 'Rosa' },
   { value: 'oliva', label: 'Oliva' },
   { value: 'laranja', label: 'Laranja' },
+  { value: 'vinho', label: 'Vinho' },
+  { value: 'vinho-medio', label: 'Vinho Medio' },
+  { value: 'roxo-noite', label: 'Roxo Noite' },
+  { value: 'roxo-acento', label: 'Roxo Acento' },
 ] as const;
 
 // ============================================================

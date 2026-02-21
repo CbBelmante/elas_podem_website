@@ -129,6 +129,20 @@ export const CONTACT_CONFIG = {
 } as const;
 
 // ============================================================
+// VALUES
+// ============================================================
+
+/** Regras de validacao e limites da secao Valores */
+export const VALUES_CONFIG = {
+  validationRules: {
+    title: { required: true, minLength: 3, maxLength: 60 },
+    subtitle: { required: true, minLength: 10, maxLength: 150 },
+  },
+  /** Min/max de valores */
+  items: { min: 1, max: 8 },
+} as const;
+
+// ============================================================
 // CTA
 // ============================================================
 

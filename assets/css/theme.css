@@ -14,9 +14,11 @@
 :root {
   /* ============================================
      TIPOGRAFIA
+     Originais: Migra Extrabold + Neue Montreal
+     Substitutas: Fraunces + DM Sans
      ============================================ */
-  --font-heading: 'Poppins', sans-serif;
-  --font-body: 'Lato', sans-serif;
+  --font-heading: 'Fraunces', serif;
+  --font-body: 'DM Sans', sans-serif;
 
   /* ============================================
      PALETA ELAS PODEM — CORES BASE
@@ -38,6 +40,21 @@
   --color-off-white: #F5F5EF;     /* Off-White Quente */
   --color-branco: #FFFFFF;
 
+  /* Escuros & Profundos (identidade visual oficial) */
+  --color-vinho: #5C1A2A;         /* Rosa principal escurecido */
+  --color-vinho-medio: #7A2843;   /* Tom intermediario */
+  --color-borgonha: #2E1413;      /* Encontrado nos PDFs */
+  --color-roxo-noite: #2D2258;    /* Roxo acento escurecido */
+  --color-roxo-acento: #4B39B5;   /* Do relatorio 23-24 */
+  --color-grafite: #1C1C1C;       /* Cinza mais escuro */
+  --color-carvao: #333333;        /* Cinza escuro suave */
+
+  /* Neutros quentes */
+  --color-nude-fundo: #FDF5F0;    /* Fundo nude */
+  --color-nude-quente: #F0E0D4;   /* Nude quente */
+  --color-creme: #EFE9CE;         /* Creme suave */
+  --color-verde-claro: #C5E083;   /* Verde claro (complementar) */
+
   /* Derivadas (tons calculados da paleta) */
   --color-rosa-pressed: #B8244F;
   --color-rosa-deep: #9A1D42;
@@ -50,6 +67,11 @@
   --color-laranja-rgb: 244, 89, 47;
   --color-coral-claro-rgb: 237, 102, 102;
   --color-oliva-rgb: 136, 162, 1;
+  --color-vinho-rgb: 92, 26, 42;
+  --color-vinho-medio-rgb: 122, 40, 67;
+  --color-borgonha-rgb: 46, 20, 19;
+  --color-roxo-noite-rgb: 45, 34, 88;
+  --color-roxo-acento-rgb: 75, 57, 181;
 
   /* ============================================
      GRADIENTES POR VARIANTE
@@ -60,11 +82,15 @@
   --gradient-rosa: linear-gradient(135deg, var(--color-rosa) 0%, var(--color-magenta) 100%);
   --gradient-laranja: linear-gradient(135deg, var(--color-laranja) 0%, var(--color-coral-claro) 100%);
   --gradient-oliva: linear-gradient(135deg, var(--color-oliva) 0%, var(--color-oliva-claro) 100%);
+  --gradient-vinho: linear-gradient(135deg, var(--color-vinho) 0%, var(--color-vinho-medio) 100%);
+  --gradient-roxo: linear-gradient(135deg, var(--color-roxo-acento) 0%, var(--color-roxo-noite) 100%);
 
   /* Gradientes globais */
   --gradient-primary: linear-gradient(135deg, var(--color-magenta) 0%, var(--color-coral) 100%);
   --gradient-accent: linear-gradient(135deg, var(--color-magenta) 0%, var(--color-rosa) 100%);
-  --gradient-hero: linear-gradient(135deg, var(--color-magenta) 0%, var(--color-coral-claro) 50%, var(--color-laranja) 100%);
+  --gradient-hero: linear-gradient(160deg, var(--color-branco) 50%, var(--color-nude-fundo) 100%);
+  --gradient-stats-bar: linear-gradient(135deg, var(--color-vinho) 0%, var(--color-borgonha) 100%);
+  --gradient-cta: linear-gradient(135deg, var(--color-magenta) 0%, var(--color-vinho-medio) 50%, var(--color-vinho) 100%);
 
   /* ============================================
      GLOW / SOMBRAS POR VARIANTE
@@ -99,6 +125,26 @@
   --glow-oliva-hover: 0 8px 24px rgba(var(--color-oliva-rgb), 0.45);
   --glow-oliva-card: 0 12px 32px rgba(var(--color-oliva-rgb), 0.12);
 
+  /* Vinho */
+  --glow-vinho: 0 4px 14px rgba(var(--color-vinho-rgb), 0.35);
+  --glow-vinho-hover: 0 8px 24px rgba(var(--color-vinho-rgb), 0.45);
+  --glow-vinho-card: 0 12px 32px rgba(var(--color-vinho-rgb), 0.12);
+
+  /* Vinho Medio */
+  --glow-vinho-medio: 0 4px 14px rgba(var(--color-vinho-medio-rgb), 0.35);
+  --glow-vinho-medio-hover: 0 8px 24px rgba(var(--color-vinho-medio-rgb), 0.45);
+  --glow-vinho-medio-card: 0 12px 32px rgba(var(--color-vinho-medio-rgb), 0.12);
+
+  /* Roxo Noite */
+  --glow-roxo-noite: 0 4px 14px rgba(var(--color-roxo-noite-rgb), 0.35);
+  --glow-roxo-noite-hover: 0 8px 24px rgba(var(--color-roxo-noite-rgb), 0.45);
+  --glow-roxo-noite-card: 0 12px 32px rgba(var(--color-roxo-noite-rgb), 0.12);
+
+  /* Roxo Acento */
+  --glow-roxo-acento: 0 4px 14px rgba(var(--color-roxo-acento-rgb), 0.35);
+  --glow-roxo-acento-hover: 0 8px 24px rgba(var(--color-roxo-acento-rgb), 0.45);
+  --glow-roxo-acento-card: 0 12px 32px rgba(var(--color-roxo-acento-rgb), 0.12);
+
   /* ============================================
      BORDAS POR VARIANTE
      ============================================ */
@@ -107,6 +153,10 @@
   --border-rosa: rgba(var(--color-rosa-rgb), 0.3);
   --border-laranja: rgba(var(--color-laranja-rgb), 0.3);
   --border-oliva: rgba(var(--color-oliva-rgb), 0.3);
+  --border-vinho: rgba(var(--color-vinho-rgb), 0.3);
+  --border-vinho-medio: rgba(var(--color-vinho-medio-rgb), 0.3);
+  --border-roxo-noite: rgba(var(--color-roxo-noite-rgb), 0.3);
+  --border-roxo-acento: rgba(var(--color-roxo-acento-rgb), 0.3);
 
   /* ============================================
      CB COMPONENTS OVERRIDES
@@ -161,15 +211,15 @@
   --accent-color: var(--color-coral);
 
   /* Cores de fundo */
-  --bg-light: #f9fafb;
+  --bg-light: var(--color-nude-fundo);
   --bg-white: var(--color-branco);
-  --bg-hero: linear-gradient(180deg, #FFF0F3 0%, var(--color-branco) 100%);
-  --bg-tint: #FFF0F3;
+  --bg-hero: var(--gradient-hero);
+  --bg-tint: var(--color-nude-fundo);
 
   /* Cores de texto */
   --text-primary: var(--color-preto);
-  --text-secondary: #64748b;
-  --text-tertiary: #94a3b8;
+  --text-secondary: #7A6060;
+  --text-tertiary: #A8A8A8;
 
   /* Bordas globais */
   --border-light: rgba(var(--color-magenta-rgb), 0.1);
@@ -191,6 +241,15 @@
   /* Glassmorphism */
   --glass-bg: rgba(255, 255, 255, 0.8);
   --glass-border: rgba(var(--color-magenta-rgb), 0.15);
+
+  /* Design tokens */
+  --radius-pill: 50px;
+  --radius-card: 20px;
+  --radius-sm: 12px;
+  --shadow-dark: 0 12px 40px rgba(25, 25, 25, 0.2);
+  --shadow-soft: 0 8px 30px rgba(var(--color-vinho-rgb), 0.08);
+  --shadow-btn: 0 10px 25px rgba(var(--color-magenta-rgb), 0.25);
+  --transition-smooth: 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
   /* Gradientes de fundo (orbs) */
   --gradient-orb-1: radial-gradient(circle, var(--color-magenta) 0%, transparent 70%);

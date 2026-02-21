@@ -24,6 +24,7 @@ import {
   combineTestimonialsData,
   combineSupportersData,
   combineContactData,
+  combineValuesData,
   combineCtaData,
   combineSeoData,
 } from '@utils/HomeFormUtils';
@@ -292,6 +293,9 @@ export const useHomePageData = createPageDataComposable<IHomePageData, IHomeForm
     }),
     contact: (forms) => ({
       'content.contact': combineContactData(forms.contact.editable, forms.contact.readonly),
+    }),
+    values: (forms) => ({
+      'content.values': combineValuesData(forms.values.editable),
     }),
     cta: (forms) => ({ 'content.cta': combineCtaData(forms.cta.editable) }),
     seo: (forms) => ({ seo: combineSeoData(forms.seo.editable, forms.seo.readonly) }),

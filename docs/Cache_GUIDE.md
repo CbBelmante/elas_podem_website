@@ -3,7 +3,7 @@
 <div align="center">
 
 ![Tipo](https://img.shields.io/badge/Tipo-ARQUITETURA-lightblue?style=for-the-badge)
-![Versão](https://img.shields.io/badge/Versão-1.0-blue?style=for-the-badge)
+![Versão](https://img.shields.io/badge/Versão-2.0-blue?style=for-the-badge)
 ![Status](https://img.shields.io/badge/Status-COMPLETO-green?style=for-the-badge)
 
 </div>
@@ -11,6 +11,7 @@
 **Sistema de cache automatico em 2 niveis com persistencia entre sessoes.**
 
 > Cache automatico com fallback inteligente — sem Pinia, sem scope multi-empresa, simples e direto.
+> Controle de cache em 2 niveis: global (features.enableCache) e per-key (CACHE_KEYS.*.hasCache).
 
 ---
 
@@ -18,12 +19,13 @@
 
 1. [Visao Geral](#-visao-geral)
 2. [Como Usar](#-como-usar-essencial) (Essencial)
-3. [Fluxo de Cache](#-fluxo-de-cache-importante) (Importante)
-4. [Arquitetura](#-arquitetura-importante) (Importante)
-5. [Como Funciona Por Dentro](#-como-funciona-por-dentro-tecnico) (Tecnico)
-6. [Como Escalar](#-como-escalar-tecnico) (Tecnico)
-7. [Referencia de Arquivos](#-referencia-de-arquivos-referencia) (Referencia)
-8. [FAQ](#-faq-suporte) (Suporte)
+3. [Controle de Cache](#-controle-de-cache-essencial) (Essencial)
+4. [Fluxo de Cache](#-fluxo-de-cache-importante) (Importante)
+5. [Arquitetura](#-arquitetura-importante) (Importante)
+6. [Como Funciona Por Dentro](#-como-funciona-por-dentro-tecnico) (Tecnico)
+7. [Como Escalar](#-como-escalar-tecnico) (Tecnico)
+8. [Referencia de Arquivos](#-referencia-de-arquivos-referencia) (Referencia)
+9. [FAQ](#-faq-suporte) (Suporte)
 
 ---
 
@@ -56,12 +58,12 @@ Nivel 3: Firestore              → ~150ms 🌐 fonte de verdade (atualiza depoi
 Browser recarrega
   │
   ├─ initAuthStateListener()
-  │     → cache.get('userData') → restaura do localStorage (~2ms)
+  │     → cache.get(CACHE_KEYS.USER_DATA) → restaura do localStorage (~2ms)
   │     → UI ja mostra nome/role do usuario ✅
   │
   └─ onAuthStateChanged dispara
         → fetchUserData() do Firestore (~150ms)
-        → cache.set('userData', fresh) → atualiza ambos os niveis
+        → cache.set(CACHE_KEYS.USER_DATA, fresh) → atualiza ambos os niveis
         → UI atualiza se mudou algo
 ```
 
@@ -80,6 +82,8 @@ Browser recarrega
 
 ## 🔧 Como Usar (Essencial)
 
+Cada metodo recebe um **`CacheKeyEntry`** (objeto `{ key, hasCache }` de `CACHE_KEYS`), nao uma string.
+
 ### Salvar e buscar dado
 
 ```typescript
@@ -88,20 +92,20 @@ import { CACHE_KEYS } from '@definitions/cacheKeys';
 
 const cache = useCache();
 
-// Salvar (RAM + localStorage)
+// Salvar (RAM + localStorage) — so salva se hasCache = true
 cache.set(CACHE_KEYS.USER_DATA, { role: 'admin', displayName: 'Margareth' });
 
-// Buscar (RAM → localStorage → null)
+// Buscar (RAM → localStorage → null) — retorna null se hasCache = false
 const user = cache.get<IUserData>(CACHE_KEYS.USER_DATA);
 ```
 
 ### Cache-first com fallback (getOrFetch)
 
 ```typescript
-// Busca do cache. Se nao tem, executa a funcao e cacheia o resultado.
+// Busca do cache. Se nao tem (ou cache desabilitado), executa a funcao.
 const userData = await cache.getOrFetch(
   CACHE_KEYS.USER_DATA,
-  () => fetchUserData(email),  // so executa se cache MISS
+  () => fetchUserData(email),  // so executa se cache MISS ou desabilitado
 );
 ```
 
@@ -123,9 +127,66 @@ cache.clearAll();
 
 ```typescript
 if (cache.has(CACHE_KEYS.USER_DATA)) {
-  // existe no cache (RAM ou localStorage)
+  // existe no cache (RAM ou localStorage) E cache esta habilitado
 }
 ```
+
+---
+
+## 🔒 Controle de Cache (Essencial)
+
+O cache tem **2 niveis de controle** (inspirado no `hasCache` do ApiCrudRepository do mneis_frontend):
+
+### Global: `features.enableCache`
+
+Desabilita **todo** o cache da aplicacao. Util para debug.
+
+```typescript
+// config/constants.ts
+features: {
+  enableCache: true,  // false → NENHUM cache funciona (RAM nem localStorage)
+}
+```
+
+### Per-key: `CACHE_KEYS.*.hasCache`
+
+Desabilita cache **individualmente** por chave. Util quando uma entidade muda frequentemente.
+
+```typescript
+// definitions/cacheKeys.ts
+export const CACHE_KEYS = {
+  USER_DATA: { key: 'userData', hasCache: true },   // cache normal
+  HOME_PAGE: { key: 'homePage', hasCache: true },   // cache normal
+  // Se precisar desabilitar temporariamente:
+  // HOME_PAGE: { key: 'homePage', hasCache: false }, // bypass total
+} as const;
+```
+
+### Como funciona
+
+```
+cache.get(CACHE_KEYS.USER_DATA)
+  │
+  ├─ enableCache = false?  → return null (bypass global)
+  ├─ hasCache = false?     → return null (bypass per-key)
+  └─ ambos true?           → busca RAM → localStorage → null
+```
+
+O helper interno `isCacheEnabled(entry)` checa ambos:
+
+```typescript
+function isCacheEnabled(entry: CacheKeyEntry): boolean {
+  if (!APP_CONSTANTS.features.enableCache) return false;  // global off
+  return entry.hasCache;                                   // per-key
+}
+```
+
+### Quando desabilitar
+
+- **Global off**: Debug de dados desatualizados, verificar se um bug e do cache
+- **Per-key off**: Entidade que muda a cada request (nao faz sentido cachear)
+
+> **Cuidado**: Desabilitar o cache do USER_DATA faz o flash de loading voltar no reload (~150ms de tela vazia).
 
 ---
 
@@ -157,7 +218,8 @@ Browser recarrega
   │     → useAuth().initAuthStateListener()
   │
   ├─ ANTES do Firebase responder:
-  │     cache.get('userData')
+  │     cache.get(CACHE_KEYS.USER_DATA)
+  │       ├─ isCacheEnabled? → checa global + hasCache
   │       ├─ RAM? → MISS (limpa no reload)
   │       └─ localStorage? → HIT! (~2ms)
   │           → state.userData = cached
@@ -167,7 +229,7 @@ Browser recarrega
         onAuthStateChanged(firebaseUser)
           → fetchUserData() do Firestore (~150ms)
           → state.userData = fresh (dados atualizados)
-          → cache.set('userData', fresh)
+          → cache.set(CACHE_KEYS.USER_DATA, fresh)
           → UI atualiza se mudou
 ```
 
@@ -193,7 +255,7 @@ signOut()
 ```
 /admin/dashboard → /admin/sections
   │
-  └─ cache.get('userData')
+  └─ cache.get(CACHE_KEYS.USER_DATA)
        └─ RAM? → HIT! (~0ms) ⚡
           → Nem toca o localStorage
 ```
@@ -238,26 +300,28 @@ signOut()
 
 ```
 definitions/
-├── cacheKeys.ts          ← CACHE_KEYS (chaves logicas centralizadas)
+├── cacheKeys.ts          ← CACHE_KEYS ({ key, hasCache } — controle per-key)
 
 composables/
-├── useCache.ts           ← cache 2 niveis (RAM + localStorage)
+├── useCache.ts           ← cache 2 niveis (RAM + localStorage) + isCacheEnabled()
 ├── useAuth.ts            ← consome useCache pra userData
+├── useHomePublicData.ts  ← consome useCache pra homePage
 
 utils/
 ├── LocalStorage.ts       ← wrapper Safari-safe do localStorage
 
 config/
-├── constants.ts          ← APP_CONSTANTS.app.localStoragePrefix ('ep_')
+├── constants.ts          ← APP_CONSTANTS.app.localStoragePrefix ('ep_') + features.enableCache
 ```
 
 ### Chaves no localStorage
 
-| Chave logica | Chave no localStorage | O que guarda |
-|-------------|----------------------|--------------|
-| `userData` | `ep_cache:userData` | `{ role, displayName, active, email, ... }` |
+| CACHE_KEYS entry | Chave no localStorage | hasCache | O que guarda |
+|------------------|----------------------|----------|--------------|
+| `USER_DATA` | `ep_cache:userData` | `true` | `{ role, displayName, active, email, ... }` |
+| `HOME_PAGE` | `ep_cache:homePage` | `true` | `IHomePageData (conteudo da home)` |
 
-O prefix `ep_cache:` e gerado automaticamente pelo `useCache`. Voce so trabalha com a chave logica (`CACHE_KEYS.USER_DATA`).
+O prefix `ep_cache:` e gerado automaticamente pelo `useCache`. Voce so trabalha com a chave logica (`CACHE_KEYS.USER_DATA`, `CACHE_KEYS.HOME_PAGE`).
 
 ---
 
@@ -294,16 +358,32 @@ O `LocalStorage` nao e `window.localStorage` direto. E um wrapper que:
 
 ```typescript
 // Por baixo do cache:
-cache.set('userData', { role: 'admin' });
+cache.set(CACHE_KEYS.USER_DATA, { role: 'admin' });
+// → isCacheEnabled({ key: 'userData', hasCache: true }) → true
 // → _ram['userData'] = { role: 'admin' }
 // → LocalStorage.setObj('ep_cache:userData', { role: 'admin' })
 //   → window.localStorage.setItem('ep_cache:userData', '{"role":"admin"}')
 ```
 
+### isCacheEnabled() — guarda de entrada
+
+Todos os metodos passam por este helper antes de acessar o cache:
+
+```typescript
+function isCacheEnabled(entry: CacheKeyEntry): boolean {
+  if (!APP_CONSTANTS.features.enableCache) return false;  // global off → tudo desabilitado
+  return entry.hasCache;                                   // per-key override
+}
+```
+
 ### get() busca em ordem
 
 ```typescript
-function get<T>(key: string): T | null {
+function get<T>(entry: CacheKeyEntry): T | null {
+  if (!isCacheEnabled(entry)) return null;  // cache desabilitado → bypass
+
+  const key = entry.key;
+
   // 1. RAM (~0ms)
   if (key in _ram) return _ram[key] as T;
 
@@ -324,17 +404,18 @@ Na segunda leitura: pega direto da RAM (0ms).
 ### getOrFetch() e o padrao cache-first
 
 ```typescript
-async function getOrFetch<T>(key: string, fetchFn: () => Promise<T>): Promise<T> {
-  const cached = get<T>(key);
+async function getOrFetch<T>(entry: CacheKeyEntry, fetchFn: () => Promise<T>): Promise<T> {
+  const cached = get<T>(entry);
   if (cached !== null) return cached;  // HIT → retorna instantaneo
 
-  const fresh = await fetchFn();       // MISS → busca fonte
-  set(key, fresh);                     // salva pra proxima vez
+  const fresh = await fetchFn();       // MISS → busca fonte (ou cache desabilitado)
+  set(entry, fresh);                   // salva pra proxima vez (se habilitado)
   return fresh;
 }
 ```
 
 Generico — funciona com objetos, arrays, qualquer tipo.
+Se `hasCache = false`, **sempre** executa `fetchFn` (sem cachear o resultado).
 
 ---
 
@@ -346,9 +427,10 @@ Generico — funciona com objetos, arrays, qualquer tipo.
 
 ```typescript
 export const CACHE_KEYS = {
-  USER_DATA: 'userData',
-  SECTIONS: 'sections',        // ← novo
-  PAGE_CONTENT: 'pageContent', // ← novo
+  USER_DATA: { key: 'userData', hasCache: true },
+  HOME_PAGE: { key: 'homePage', hasCache: true },
+  ABOUT_PAGE: { key: 'aboutPage', hasCache: true },   // ← novo
+  BLOG_POSTS: { key: 'blogPosts', hasCache: false },   // ← novo (sem cache — muda frequentemente)
 } as const;
 ```
 
@@ -357,19 +439,33 @@ export const CACHE_KEYS = {
 ```typescript
 const cache = useCache();
 
-// Cache-first: so busca Firestore se cache vazio
-const sections = await cache.getOrFetch(
-  CACHE_KEYS.SECTIONS,
-  () => fetchSectionsFromFirestore(pageId),
+// Cache-first: so busca Firestore se cache vazio (ou hasCache = false → sempre busca)
+const aboutData = await cache.getOrFetch(
+  CACHE_KEYS.ABOUT_PAGE,
+  () => fetchAboutFromFirestore(),
 );
 ```
 
 **Passo 3** — Invalide quando os dados mudarem:
 
 ```typescript
-// Apos editar sections
-await saveSections(pageId, updatedSections);
-cache.remove(CACHE_KEYS.SECTIONS);  // proxima leitura busca fresco
+// Apos editar a pagina
+await saveAboutPage(updatedData);
+cache.remove(CACHE_KEYS.ABOUT_PAGE);  // proxima leitura busca fresco
+```
+
+### Desabilitar cache para debug
+
+Duas opcoes:
+
+```typescript
+// Opcao 1: Desabilitar TUDO (global)
+// config/constants.ts
+features: { enableCache: false }
+
+// Opcao 2: Desabilitar uma chave especifica (per-key)
+// definitions/cacheKeys.ts
+HOME_PAGE: { key: 'homePage', hasCache: false },
 ```
 
 ### Adicionar metodos (se precisar no futuro)
@@ -378,8 +474,8 @@ Se o admin crescer e precisar de `updateItem` / `removeItem`, e so adicionar no 
 
 ```typescript
 // Exemplo: atualizar 1 item dentro de um array cacheado
-function updateItem<T>(key: string, item: T, idField: string = 'id'): void {
-  const cached = get<T[]>(key);
+function updateItem<T>(entry: CacheKeyEntry, item: T, idField: string = 'id'): void {
+  const cached = get<T[]>(entry);
   if (!cached) return;
 
   const itemRecord = item as Record<string, unknown>;
@@ -393,7 +489,7 @@ function updateItem<T>(key: string, item: T, idField: string = 'id'): void {
     cached.unshift(item);
   }
 
-  set(key, cached);
+  set(entry, cached);
 }
 ```
 
@@ -407,8 +503,9 @@ Zero refactor no codigo existente — so adiciona.
 
 | Export | Tipo | Descricao |
 |--------|------|-----------|
-| `CACHE_KEYS` | const | Chaves logicas do cache (`{ USER_DATA: 'userData' }`) |
-| `CacheKey` | type | Union type das chaves |
+| `CACHE_KEYS` | const | Chaves logicas do cache (`{ USER_DATA: { key: 'userData', hasCache: true } }`) |
+| `CacheKeyEntry` | type | Tipo de cada entrada (`{ key: string, hasCache: boolean }`) |
+| `CacheKey` | type | Union type dos valores de `key` (`'userData' \| 'homePage'`) |
 
 ### `composables/useCache.ts`
 
@@ -421,12 +518,12 @@ Zero refactor no codigo existente — so adiciona.
 
 | Metodo | Assinatura | Descricao |
 |--------|-----------|-----------|
-| `get` | `<T>(key: string) → T \| null` | Busca RAM → localStorage |
-| `set` | `<T>(key: string, data: T) → void` | Salva RAM + localStorage |
-| `getOrFetch` | `<T>(key: string, fetchFn) → Promise<T>` | Cache-first com fallback |
-| `remove` | `(key: string) → void` | Remove de ambos os niveis |
+| `get` | `<T>(entry: CacheKeyEntry) → T \| null` | Busca RAM → localStorage (null se desabilitado) |
+| `set` | `<T>(entry: CacheKeyEntry, data: T) → void` | Salva RAM + localStorage (noop se desabilitado) |
+| `getOrFetch` | `<T>(entry: CacheKeyEntry, fetchFn) → Promise<T>` | Cache-first com fallback |
+| `remove` | `(entry: CacheKeyEntry) → void` | Remove de ambos os niveis |
 | `clearAll` | `() → void` | Limpa todo o cache |
-| `has` | `(key: string) → boolean` | Verifica existencia |
+| `has` | `(entry: CacheKeyEntry) → boolean` | Verifica existencia (false se desabilitado) |
 
 ### `utils/LocalStorage.ts`
 
@@ -494,9 +591,34 @@ Use `useCache` pra dados da aplicacao. Use `LocalStorage` diretamente so se prec
 
 Nosso projeto tem 1 composable singleton (`useAuth`) com `reactive()` — que ja faz o mesmo papel de um store Pinia. Adicionar Pinia seria complexidade sem ganho.
 
+### Como desabilitar o cache pra debug?
+
+Duas opcoes:
+
+1. **Global**: Mude `enableCache: false` em `config/constants.ts > features`. Todo cache vira no-op.
+2. **Per-key**: Mude `hasCache: false` na entrada desejada em `definitions/cacheKeys.ts`. So essa chave e bypassed.
+
+### Qual a diferenca entre enableCache e hasCache?
+
+- `enableCache` (global): flag em `APP_CONSTANTS.features`. Quando `false`, **nenhum** cache funciona — todos os metodos retornam null/noop.
+- `hasCache` (per-key): flag em cada entrada de `CACHE_KEYS`. Quando `false`, **so aquela chave** e bypassed.
+
+Ambos precisam ser `true` para o cache funcionar. O `isCacheEnabled()` checa os dois.
+
+### O cache mostra dados antigos apos alterar o modelo (ex: adicionar campo)?
+
+Sim! Se voce adicionar um campo novo ao modelo (ex: `values` em `IHomePageData`), o cache antigo em localStorage **nao tera esse campo**. Solucao:
+
+1. **Limpar localStorage** no DevTools (Application > Local Storage > remover chave `ep_cache:*`)
+2. **Ou** desabilitar cache temporariamente (`hasCache: false`) para forcar fetch fresco
+3. **Ou** reiniciar o dev server para limpar o `_ram` singleton
+
+Este e um cenario comum durante desenvolvimento, nao afeta producao (onde o Firestore ja tem o modelo completo).
+
 ---
 
 *📅 Criado em*: 19 FEV 2026
-*📋 Versao*: 1.0
+*📅 Atualizado em*: 21 FEV 2026
+*📋 Versao*: 2.0
 *👥 Responsavel*: CbBelmante
 *🏷️ Tags*: [arquitetura, cache, localStorage, performance]

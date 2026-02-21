@@ -34,6 +34,7 @@ import type {
   ISupportersSection,
   IContactSection,
   IContactMethod,
+  IValue,
   // Camada 2: Editable/Readonly
   IHeroEditable,
   IMissionEditable,
@@ -50,6 +51,7 @@ import type {
   IContactReadonly,
   IContactMethodEditable,
   IContactMethodReadonly,
+  IValueEditable,
   ICtaEditable,
   ISeoEditable,
   ISeoReadonly,
@@ -70,6 +72,7 @@ import {
   SUPPORTER_ITEM_DEFAULTS,
   CONTACT_DEFAULTS,
   CONTACT_METHOD_DEFAULTS,
+  VALUE_ITEM_DEFAULTS,
   CTA_DEFAULTS,
   SEO_DEFAULTS,
   SEO_OG_DEFAULTS,
@@ -374,6 +377,30 @@ export function createNewContactMethod(): IContactMethod {
 }
 
 // ============================================================
+// VALUES
+// ============================================================
+
+export function separateValuesData(data: IValue[]) {
+  return separateArrayByFields(data, SECTION_FIELDS.values) as {
+    editable: IValueEditable[];
+    readonly: Record<string, never>[];
+  };
+}
+
+export function combineValuesData(editable: IValueEditable[]): IValue[] {
+  return combineArrayFromFields<IValue>(editable, [], { color: 'vinho' });
+}
+
+export function createDefaultValueEditable(): IValueEditable {
+  const { color: _, ...editableFields } = VALUE_ITEM_DEFAULTS;
+  return { ...editableFields };
+}
+
+export function createNewValue(): IValue {
+  return { ...VALUE_ITEM_DEFAULTS };
+}
+
+// ============================================================
 // CTA
 // ============================================================
 
@@ -431,6 +458,7 @@ export function separateAllSections(pageData: IHomePageData): IHomeFormsData {
     testimonials: separateTestimonialsData(c.testimonials),
     supporters: separateSupportersData(c.supporters),
     contact: separateContactData(c.contact),
+    values: separateValuesData(c.values),
     cta: separateCtaData(c.cta),
     seo: separateSeoData(pageData.seo),
   };
@@ -459,6 +487,7 @@ export function createDefaultHomeForms(): IHomeFormsData {
       editable: createDefaultContactEditable(),
       readonly: { methods: [] },
     },
+    values: { editable: [createDefaultValueEditable()] },
     cta: { editable: createDefaultCtaEditable() },
     seo: {
       editable: createDefaultSeoEditable(),

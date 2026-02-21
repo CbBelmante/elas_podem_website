@@ -19,6 +19,7 @@ import {
   TESTIMONIALS_CONFIG,
   SUPPORTERS_CONFIG,
   CONTACT_CONFIG,
+  VALUES_CONFIG,
   CTA_CONFIG,
   SEO_CONFIG,
 } from '@definitions/validationConfigs';
@@ -199,6 +200,13 @@ export function useValidation() {
     return { isValid: errors.length === 0, errors };
   };
 
+  const validateValues = (items: Record<string, unknown>[]): IValidationResult => {
+    const errors: string[] = [];
+    errors.push(...validateItemCount(items, VALUES_CONFIG.items, 'Valores'));
+    errors.push(...validateArrayItems(items, VALUES_CONFIG.validationRules, 'Valor'));
+    return { isValid: errors.length === 0, errors };
+  };
+
   const validateCta = (data: Record<string, unknown>): IValidationResult => {
     return validateFields(data, CTA_CONFIG.validationRules, 'CTA');
   };
@@ -233,6 +241,7 @@ export function useValidation() {
     validateTestimonials,
     validateSupporters,
     validateContact,
+    validateValues,
     validateCta,
     validateSeo,
   };

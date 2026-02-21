@@ -82,6 +82,12 @@ export const SECTION_FIELDS = {
     url: 'editable',
   },
 
+  values: {
+    title: 'editable',
+    subtitle: 'editable',
+    color: 'hidden',
+  },
+
   cta: {
     title: 'editable',
     subtitle: 'editable',

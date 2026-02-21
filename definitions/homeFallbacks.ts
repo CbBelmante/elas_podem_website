@@ -159,6 +159,25 @@ export const HOME_FALLBACK: IHomePageData = {
       formSubjects: ['Lorem ipsum', 'Dolor sit', 'Amet consectetur', 'Adipiscing elit'],
     },
 
+    values: [
+      { title: 'Lorem Ipsum', subtitle: 'Lorem ipsum dolor sit amet consectetur', color: 'vinho' },
+      {
+        title: 'Dolor Sit',
+        subtitle: 'Ut enim ad minim veniam quis nostrud',
+        color: 'magenta',
+      },
+      {
+        title: 'Amet Elit',
+        subtitle: 'Duis aute irure dolor in reprehenderit',
+        color: 'vinho-medio',
+      },
+      {
+        title: 'Consectetur',
+        subtitle: 'Excepteur sint occaecat cupidatat non',
+        color: 'roxo-noite',
+      },
+    ],
+
     cta: {
       title: 'Lorem Ipsum Dolor Sit',
       subtitle:

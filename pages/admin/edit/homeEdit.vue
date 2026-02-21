@@ -18,6 +18,7 @@ import HomeProgramsEditor from '@components/admin/HomeProgramsEditor.vue';
 import HomeTestimonialsEditor from '@components/admin/HomeTestimonialsEditor.vue';
 import HomeSupportersEditor from '@components/admin/HomeSupportersEditor.vue';
 import HomeContactEditor from '@components/admin/HomeContactEditor.vue';
+import HomeValuesEditor from '@components/admin/HomeValuesEditor.vue';
 import HomeCtaEditor from '@components/admin/HomeCtaEditor.vue';
 import HomeSeoEditor from '@components/admin/HomeSeoEditor.vue';
 
@@ -40,6 +41,7 @@ const {
   validateTestimonials,
   validateSupporters,
   validateContact,
+  validateValues,
   validateCta,
   validateSeo,
 } = useValidation();
@@ -80,6 +82,7 @@ const sections: ISectionConfig[] = [
     component: HomeSupportersEditor,
   },
   { name: 'contact', title: 'Contato', icon: 'luc-mail', component: HomeContactEditor },
+  { name: 'values', title: 'Valores', icon: 'luc-heart', component: HomeValuesEditor },
   { name: 'cta', title: 'CTA', icon: 'luc-megaphone', component: HomeCtaEditor },
   { name: 'seo', title: 'SEO', icon: 'luc-search', component: HomeSeoEditor },
 ];
@@ -93,6 +96,7 @@ const validators: Record<string, (data: any) => { isValid: boolean; errors: stri
   testimonials: validateTestimonials,
   supporters: validateSupporters,
   contact: validateContact,
+  values: validateValues,
   cta: validateCta,
   seo: validateSeo,
 };

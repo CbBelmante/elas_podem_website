@@ -48,9 +48,10 @@ config/
 composables/
 ├── useFirebase.ts               # Firebase init (app, db, auth, storage) — singleton
 ├── useAuth.ts                   # Autenticação multi-role (signIn, signOut, permissions)
-├── useCache.ts                  # Cache 2 níveis (RAM + localStorage) — get/set/getOrFetch
+├── useCache.ts                  # Cache 2 níveis (RAM + localStorage) — controle global + per-key
+├── useHomePublicData.ts         # Dados da home para o site público (cache + Firestore + fallback)
 ├── usePageData.ts               # Factory base + useHomePageData (instancia da home)
-├── useValidation.ts             # Validadores config-driven por seção
+├── useValidation.ts             # Validadores config-driven por seção (9 validadores)
 ├── useImageCompression.ts       # Compressão de imagens via Canvas API
 ├── useFirebaseStorage.ts        # Upload, delete, validação (usa compression)
 └── usePageEditor.ts             # Change tracking, image cleanup, navigation guard
@@ -66,10 +67,12 @@ definitions/
 ├── sectionFields.ts             # SECTION_FIELDS — fonte de verdade editable/readonly/hidden
 ├── validationConfigs.ts         # *_CONFIG com validationRules + items limits
 ├── validationRules.ts           # createValidationRules() + isValidUrl()
+├── sectionDefaults.ts           # *_DEFAULTS — valores iniciais por seção
+├── homeFallbacks.ts             # HOME_FALLBACK — fallback lorem ipsum para o site público
 ├── themeOptions.ts              # THEME_COLOR_OPTIONS, ICON_OPTIONS
 ├── firestoreCollections.ts      # FIRESTORE_COLLECTIONS + PAGE_DOCUMENTS (zero hardcoded)
 ├── adminRoles.ts                # ADMIN_ROLES, permissões, display names
-└── cacheKeys.ts                 # CACHE_KEYS — chaves lógicas centralizadas do cache
+└── cacheKeys.ts                 # CACHE_KEYS — { key, hasCache } com controle per-key
 
 utils/
 ├── HomeFormUtils.ts             # separate/combine/createDefault para cada seção da home
@@ -142,6 +145,13 @@ pages/admin/                     # [IMPLEMENTADO — Fase 1]
         { name: "Apoiador 2", icon: "luc-heart-handshake", color: "coral", image: "", url: "" }
       ]
 
+      values: [
+        { title: "Equidade", subtitle: "Justica e igualdade de oportunidades", color: "vinho" },
+        { title: "Liberdade", subtitle: "Autonomia sobre corpos e escolhas", color: "magenta" },
+        { title: "Sororidade", subtitle: "Uniao e apoio entre mulheres", color: "vinho-medio" },
+        { title: "Dignidade", subtitle: "Respeito a dignidade humana", color: "roxo-noite" }
+      ]
+
       contact:
         badge: "CONTATO"
         title: "Vamos Conversar?"
@@ -204,6 +214,7 @@ export interface IMissionSection { badge, title, text1, text2, btnText, image }
 export interface IProgram { title, description, icon, color, link }
 export interface ITestimonial { quote, name, role, initials, image }
 export interface ISupporter { name, icon, color, image, url }
+export interface IValue { title, subtitle, color }
 export interface IContactMethod { label, value, icon, color, url? }
 export interface IContactSection { badge, title, description, methods: IContactMethod[], formSubjects: string[] }
 export interface ICtaSection { title, subtitle, btnDonate, btnProjects }
@@ -211,7 +222,7 @@ export interface ISeoOg { type, siteName, locale }
 export interface ISeo { title, description, keywords: string[], ogImage, og: ISeoOg }
 
 export interface IHomePageData {
-  content: { hero, mission, programs[], testimonials[], supporters[], contact, cta }
+  content: { hero, mission, programs[], testimonials[], supporters[], values[], contact, cta }
   seo: ISeo
   lastUpdated: string
   updatedById: string       # ID do Firestore
@@ -225,6 +236,7 @@ export interface IHomePageData {
 export interface IHeroEditable { badge, title, subtitle, btnDonate, btnHistory, stats: IHeroStat[] }
 export interface IProgramEditable { title, description, icon, link }
 export interface IProgramReadonly { color }
+export interface IValueEditable { title, subtitle }   // color é hidden (preservado no save)
 export interface ISeoEditable { title, description, keywords[], ogImage }
 export interface ISeoReadonly { og: ISeoOg }
 // ... etc. Gerados de acordo com SECTION_FIELDS (fonte de verdade)
@@ -238,6 +250,7 @@ export interface IHomeFormsData {
   programs: { editable: IProgramEditable[]; readonly: IProgramReadonly[] }
   testimonials: { editable: ITestimonialEditable[] }
   supporters: { editable: ISupporterEditable[]; readonly: ISupporterReadonly[] }
+  values: { editable: IValueEditable[] }
   contact: { editable: IContactEditable; readonly: IContactReadonly }
   cta: { editable: ICtaEditable }
   seo: { editable: ISeoEditable; readonly: ISeoReadonly }
@@ -264,6 +277,7 @@ export interface IAdminLog { action, details, timestamp, user }
 export const SECTION_FIELDS = {
   hero: { editable: ['badge', 'title', 'subtitle', 'btnDonate', 'btnHistory', 'stats'] },
   programs: { editable: ['title', 'description', 'icon', 'link'], readonly: ['color'] },
+  values: { editable: ['title', 'subtitle'], hidden: ['color'] },
   seo: { editable: ['title', 'description', 'keywords', 'ogImage'], readonly: ['og'] },
   // ... etc
 }
@@ -282,8 +296,8 @@ export const HERO_CONFIG = {
   stats: { min: 1, max: 6 },
 }
 // ... MISSION_CONFIG, PROGRAMS_CONFIG, TESTIMONIALS_CONFIG,
-//     SUPPORTERS_CONFIG, CONTACT_CONFIG, CTA_CONFIG, SEO_CONFIG,
-//     COMPRESSION_SETTINGS
+//     SUPPORTERS_CONFIG, VALUES_CONFIG, CONTACT_CONFIG, CTA_CONFIG,
+//     SEO_CONFIG, COMPRESSION_SETTINGS
 ```
 
 ### `firestoreCollections.ts` — Collections centralizadas (zero hardcoded)
@@ -331,14 +345,17 @@ export function createValidationRules(rules: { required?, minLength?, maxLength?
 export function isValidUrl(url: string): boolean
 ```
 
-### `cacheKeys.ts` — Chaves lógicas do cache [IMPLEMENTADO]
+### `cacheKeys.ts` — Chaves lógicas do cache com controle per-key [IMPLEMENTADO]
 ```typescript
-// Chaves centralizadas para useCache. Novas chaves = adicionar aqui.
+// Chaves centralizadas para useCache. Cada entry tem { key, hasCache }.
+// hasCache: true → cache normal (RAM + localStorage)
+// hasCache: false → bypass total, sempre busca fresco
 export const CACHE_KEYS = {
-  USER_DATA: 'userData',
-  // futuro: PAGE_HOME: 'pageHome', etc.
+  USER_DATA: { key: 'userData', hasCache: true },
+  HOME_PAGE: { key: 'homePage', hasCache: true },
 } as const;
-export type CacheKey = (typeof CACHE_KEYS)[keyof typeof CACHE_KEYS];
+export type CacheKeyEntry = (typeof CACHE_KEYS)[keyof typeof CACHE_KEYS];
+export type CacheKey = CacheKeyEntry['key'];
 ```
 
 ---
@@ -377,20 +394,23 @@ export function useAuth() {
 }
 ```
 
-### `useCache.ts` — Cache 2 níveis [IMPLEMENTADO]
+### `useCache.ts` — Cache 2 níveis com controle global + per-key [IMPLEMENTADO]
 ```typescript
 // Cache lean com 2 níveis: RAM (~0ms) → localStorage (~2ms).
 // Singleton sem Pinia/Vue — plain object pra RAM, LocalStorage.ts pra disco.
 // Prefixo automático: ep_cache: (via APP_CONSTANTS.app.localStoragePrefix).
-// Usado pelo useAuth pra restaurar userData instantaneamente no boot.
+// Controle em 2 níveis (inspirado no hasCache do ApiCrudRepository do mneis_frontend):
+//   - Global: features.enableCache (desabilita TUDO)
+//   - Per-key: CACHE_KEYS.*.hasCache (desabilita individualmente)
+// Todos os métodos recebem CacheKeyEntry (não string).
 export function useCache() {
   return {
-    get<T>(key): T | null,          // RAM → localStorage → null
-    set<T>(key, data): void,        // grava nos 2 níveis
-    getOrFetch<T>(key, fetchFn): Promise<T>,  // cache-first, fetch se miss
-    remove(key): void,              // remove dos 2 níveis
-    clearAll(): void,               // limpa tudo com prefixo ep_cache:*
-    has(key): boolean,              // checa existência
+    get<T>(entry: CacheKeyEntry): T | null,         // RAM → localStorage → null (null se desabilitado)
+    set<T>(entry: CacheKeyEntry, data: T): void,    // grava nos 2 níveis (noop se desabilitado)
+    getOrFetch<T>(entry, fetchFn): Promise<T>,       // cache-first, fetch se miss ou desabilitado
+    remove(entry: CacheKeyEntry): void,              // remove dos 2 níveis
+    clearAll(): void,                                // limpa tudo com prefixo ep_cache:*
+    has(entry: CacheKeyEntry): boolean,              // checa existência (false se desabilitado)
   }
 }
 ```
@@ -464,6 +484,7 @@ export function useValidation() {
     validatePrograms(items): IValidationResult,
     validateTestimonials(items): IValidationResult,
     validateSupporters(items): IValidationResult,
+    validateValues(items): IValidationResult,
     validateContact(data): IValidationResult,
     validateCta(data): IValidationResult,
     validateSeo(data): IValidationResult,
@@ -579,6 +600,7 @@ export class LocalStorage {
 // ALIAS_DEFINITIONS — fonte única de path aliases (@composables, @definitions, etc.)
 // getAliases(baseUrl) — converte para formato Nuxt/Vite
 // APP_CONSTANTS — constantes da app (nome, versão, features flags)
+//   features.enableCache — flag global do cache (desabilita TUDO quando false)
 ```
 
 ---
@@ -615,9 +637,19 @@ export class LocalStorage {
 
 ### No Site (Público):
 ```
-Firebase Firestore → loadPageData() → separateAllSections() → Template
-                                              ↓
-                                     Fallback: createDefaultHomeForms() se vazio
+useHomePublicData()
+  │
+  ├─ useAsyncData('home-page', ...)
+  │     → cache.getOrFetch(CACHE_KEYS.HOME_PAGE, fetchFn)
+  │         ├─ isCacheEnabled? → checa global + hasCache
+  │         ├─ RAM? → HIT (~0ms) ⚡
+  │         ├─ localStorage? → HIT (~2ms) 💾
+  │         └─ MISS → getDoc('pages/home') → Firestore (~150ms) 🌐
+  │                    └─ !exists? → HOME_FALLBACK (lorem ipsum)
+  │
+  └─ default: () => HOME_FALLBACK (enquanto carrega)
+       → computed shortcuts: hero, mission, programs, testimonials,
+         supporters, values, contact, cta, seo
 ```
 
 ### Upload de Imagens:
@@ -688,6 +720,11 @@ layouts/admin.vue com sidebar.
 │  ▼ Apoiadores                                │
 │    [+Novo] Lista com drag/drop               │
 │    Card: [name] [icon] [image upload] [url]  │
+│                                              │
+│  ▼ Valores                                   │
+│    [+Novo] Lista com drag/drop               │
+│    Card: [title] [subtitle]                  │
+│    (color preservado mas hidden no editor)   │
 │                                              │
 │  ▶ Contato                                   │
 │  ▶ CTA                                       │
@@ -807,7 +844,7 @@ service firebase.storage {
 - [x] `composables/useFirebase.ts` — init singleton
 - [x] `composables/useAuth.ts` — login/logout/listener/multi-role
 - [x] `composables/usePageData.ts` — factory base + useHomePageData (instancia da home)
-- [x] `composables/useValidation.ts` — 8 validadores config-driven
+- [x] `composables/useValidation.ts` — 9 validadores config-driven (hero, mission, programs, testimonials, supporters, values, contact, cta, seo)
 - [x] `composables/useImageCompression.ts` — compressão Canvas API (responsabilidade separada)
 - [x] `composables/useFirebaseStorage.ts` — upload + delete + validação (lê IMAGE_UPLOAD_CONFIG)
 - [x] `composables/usePageEditor.ts` — change tracking + image cleanup + navigation guard
@@ -818,7 +855,8 @@ service firebase.storage {
 - [x] `scripts/seedAdmin.ts` — seed interativo com @inquirer/prompts (cria Auth + Firestore user)
 - [x] `utils/LocalStorage.ts` — wrapper Safari-safe com fallback in-memory
 - [x] `definitions/cacheKeys.ts` — chaves lógicas centralizadas (CACHE_KEYS)
-- [x] `composables/useCache.ts` — cache 2 níveis (RAM + localStorage), usado pelo useAuth
+- [x] `composables/useCache.ts` — cache 2 níveis (RAM + localStorage), controle global + per-key
+- [x] `composables/useHomePublicData.ts` — dados da home para o site público (cache + Firestore + fallback)
 
 ### Fase 2: Editor da Home
 - [x] `pages/admin/edit/homeEdit.vue` — orquestrador (~510 linhas)
@@ -829,6 +867,7 @@ service firebase.storage {
 - [x] Seção Programas (CRUD + drag + seletor de ícones + readonly pareado)
 - [x] Seção Depoimentos (CRUD + drag + image upload por item)
 - [x] Seção Apoiadores (CRUD + drag + image upload + readonly pareado)
+- [x] Seção Valores (CRUD + drag, title/subtitle editáveis, color hidden/preservado)
 - [x] Seção Contato (campos + métodos CRUD/drag + subjects CRUD/drag)
 - [x] Seção CTA (4 campos de texto)
 - [x] Seção SEO (meta tags + char counters + keywords CRUD/drag + ogImage upload)
@@ -841,10 +880,11 @@ service firebase.storage {
 - [x] `CODE_STYLE_GUIDE.md` v1.1 — seção Iteração e Simplicidade
 
 ### Fase 3: Conectar Site ao Firebase
-- [ ] Substituir i18n/hardcoded por dados do Firebase no index.vue
-- [ ] Fallback para defaults quando Firebase offline/vazio
-- [ ] Loading states com CBSkeleton
-- [ ] Testar fluxo completo: admin edita → Firebase atualiza → site reflete
+- [x] Substituir i18n/hardcoded por dados do Firebase no index.vue (useHomePublicData)
+- [x] Fallback para defaults quando Firebase offline/vazio (HOME_FALLBACK)
+- [x] Cache 2 níveis com controle global + per-key (useCache + CACHE_KEYS)
+- [x] useAsyncData com cache-first pattern (RAM → localStorage → Firestore → fallback)
+- [x] Testar fluxo completo: admin edita → Firebase atualiza → site reflete
 
 ---
 
@@ -896,5 +936,5 @@ O padrão aguenta porque:
 
 ---
 
-**Status:** Fase 2 concluída (100%)
-**Próximos passos:** Fase 3 — Conectar site público ao Firebase (substituir i18n/hardcoded por dados editáveis)
+**Status:** Fase 3 concluída (100%) — Admin + Editor + Site público conectado ao Firebase
+**Próximos passos:** Fase 4 — Redesign visual da homepage (paleta oficial + tipografia Fraunces/DM Sans)

@@ -15,6 +15,7 @@ import type {
   ITestimonial,
   ISupporter,
   IContactMethod,
+  IValue,
   ICtaSection,
   ISeo,
 } from './sections';
@@ -138,6 +139,12 @@ export interface IContactEditable {
 export interface IContactReadonly {
   methods: IContactMethodReadonly[];
 }
+
+// ============================================================
+// VALUES
+// ============================================================
+
+export type IValueEditable = FieldsByMode<IValue, typeof SECTION_FIELDS.values, 'editable'>;
 
 // ============================================================
 // CTA

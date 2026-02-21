@@ -114,6 +114,16 @@ export interface IContactSection {
 }
 
 // ============================================================
+// VALUES
+// ============================================================
+
+export interface IValue {
+  title: string;
+  subtitle: string;
+  color: string; // nome do tema (THEME_COLOR_OPTIONS)
+}
+
+// ============================================================
 // CTA (Call to Action)
 // ============================================================
 
@@ -155,6 +165,7 @@ export interface IHomePageData {
     testimonials: ITestimonial[];
     supporters: ISupportersSection;
     contact: IContactSection;
+    values: IValue[];
     cta: ICtaSection;
   };
   seo: ISeo;
