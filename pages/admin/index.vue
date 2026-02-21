@@ -87,6 +87,10 @@ onMounted(async () => {
 
 <template>
   <div class="dashboardPage">
+    <!-- Glows decorativos — mesmo padrao visual do site -->
+    <div class="dashboardPage__glow dashboardPage__glow--1" />
+    <div class="dashboardPage__glow dashboardPage__glow--2" />
+
     <div class="dashboardContainer">
       <!-- Header com welcome + logout -->
       <header class="dashboardHeader">
@@ -230,9 +234,34 @@ onMounted(async () => {
    ============================================ */
 .dashboardPage {
   min-height: 100vh;
-  background: var(--bg-light);
+  background: var(--bg-hero);
   font-family: var(--font-body);
   padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Glows decorativos — mesmo padrao visual do login/home */
+.dashboardPage__glow {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.dashboardPage__glow--1 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(var(--color-magenta-rgb), 0.10) 0%, transparent 70%);
+  top: -120px;
+  right: -100px;
+}
+
+.dashboardPage__glow--2 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(var(--color-coral-rgb), 0.07) 0%, transparent 70%);
+  bottom: -80px;
+  left: -80px;
 }
 
 .dashboardContainer {
@@ -241,6 +270,8 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  position: relative;
+  z-index: 1;
 }
 
 /* ============================================
@@ -305,12 +336,18 @@ onMounted(async () => {
    PAGE CARD
    ============================================ */
 .pageCard {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: var(--shadow-sm);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .pageCard:hover {
   transform: translateY(-3px);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--border-hover);
 }
 
 .pageCard__header {
@@ -371,6 +408,13 @@ onMounted(async () => {
 .dashboardAudit__title {
   font-family: var(--font-heading);
   color: var(--text-primary);
+}
+
+.dashboardAudit__placeholder {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-color: var(--glass-border);
 }
 
 .dashboardAudit__empty {

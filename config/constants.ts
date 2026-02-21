@@ -150,6 +150,6 @@ export const APP_CONSTANTS: Readonly<IConstants> = {
     enableNewsletter: false,
     enableBlog: false,
     enableDebugLogs: true,
-    enableCache: true,
+    enableCache: false,
   },
 };

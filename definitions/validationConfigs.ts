@@ -33,7 +33,7 @@ export const HERO_CONFIG = {
   validationRules: {
     badge: { required: true, minLength: 3, maxLength: 60 },
     title: { required: true, minLength: 3, maxLength: 30 },
-    subtitle: { required: true, minLength: 10, maxLength: 300 },
+    description: { required: true, minLength: 10, maxLength: 300 },
     btnDonate: { required: true, minLength: 2, maxLength: 30 },
     btnHistory: { required: true, minLength: 2, maxLength: 30 },
   },

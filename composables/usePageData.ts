@@ -7,7 +7,7 @@
 
 // ============== DEPENDENCIAS EXTERNAS ==============
 
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 
 // ============== DEPENDENCIAS INTERNAS ==============
 
@@ -30,6 +30,59 @@ import {
 } from '@utils/HomeFormUtils';
 
 import type { ISaveResult, IHomePageData, IHomeFormsData } from '@appTypes/admin';
+
+// ============== HELPERS ==============
+
+/**
+ * Converte chaves com dot notation em objetos aninhados.
+ * Ex: { 'content.hero': data } → { content: { hero: data } }
+ *
+ * Necessario para setDoc (que nao interpreta dot notation como path).
+ * updateDoc interpreta, mas setDoc nao.
+ */
+function expandDotKeys(obj: Record<string, unknown>): Record<string, unknown> {
+  const result: Record<string, unknown> = {};
+
+  for (const [key, value] of Object.entries(obj)) {
+    const parts = key.split('.');
+    let current = result;
+
+    for (let i = 0; i < parts.length - 1; i++) {
+      if (!(parts[i] in current)) current[parts[i]] = {};
+      current = current[parts[i]] as Record<string, unknown>;
+    }
+
+    current[parts[parts.length - 1]] = value;
+  }
+
+  return result;
+}
+
+/**
+ * Salva dados no Firestore com suporte a dot notation.
+ *
+ * Estrategia:
+ * 1. Tenta updateDoc (suporta dot notation nativamente)
+ * 2. Se documento nao existe, converte pra nested e usa setDoc
+ */
+async function safeWrite(
+  docRef: ReturnType<typeof doc>,
+  data: Record<string, unknown>
+): Promise<void> {
+  try {
+    await updateDoc(docRef, data);
+  } catch (error: unknown) {
+    const isNotFound =
+      error instanceof Error &&
+      (error.message.includes('No document to update') || error.message.includes('NOT_FOUND'));
+
+    if (isNotFound) {
+      await setDoc(docRef, expandDotKeys(data));
+    } else {
+      throw error;
+    }
+  }
+}
 
 // ============== INTERFACES ==============
 
@@ -140,7 +193,7 @@ export function createPageDataComposable<TPageData, TFormsData extends Record<st
         const combineFn = config.combineSections[section];
         const sectionData = combineFn(state.forms);
 
-        await updateDoc(docRef, {
+        await safeWrite(docRef, {
           ...sectionData,
           lastUpdated: new Date().toISOString(),
           updatedById: userData.value?.id ?? 'unknown',
@@ -188,7 +241,7 @@ export function createPageDataComposable<TPageData, TFormsData extends Record<st
           Object.assign(allData, combineFn(state.forms));
         }
 
-        await updateDoc(docRef, {
+        await safeWrite(docRef, {
           ...allData,
           lastUpdated: new Date().toISOString(),
           updatedById: userData.value?.id ?? 'unknown',

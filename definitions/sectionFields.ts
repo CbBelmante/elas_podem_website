@@ -31,7 +31,7 @@ export const SECTION_FIELDS = {
   hero: {
     badge: 'editable',
     title: 'editable',
-    subtitle: 'editable',
+    description: 'editable',
     btnDonate: 'editable',
     btnHistory: 'editable',
     heroImage: 'editable',

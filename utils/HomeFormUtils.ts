@@ -446,21 +446,27 @@ export function createDefaultSeoEditable(): ISeoEditable {
  * Converte o documento Firestore completo (IHomePageData) em
  * IHomeFormsData (formato do editor com editable/readonly split).
  *
+ * Fallback por secao: se o Firestore so tem hero salvo, as outras
+ * secoes usam defaults (nao crasha). Mesma logica do publico.
+ *
  * Usado no homeEdit.vue ao carregar dados do Firebase.
  */
 export function separateAllSections(pageData: IHomePageData): IHomeFormsData {
-  const c = pageData.content;
+  const c = (pageData.content ?? {}) as Partial<IHomePageData['content']>;
+  const defaults = createDefaultHomeForms();
 
   return {
-    hero: separateHeroData(c.hero),
-    mission: separateMissionData(c.mission),
-    programs: separateProgramsData(c.programs),
-    testimonials: separateTestimonialsData(c.testimonials),
-    supporters: separateSupportersData(c.supporters),
-    contact: separateContactData(c.contact),
-    values: separateValuesData(c.values),
-    cta: separateCtaData(c.cta),
-    seo: separateSeoData(pageData.seo),
+    hero: c.hero ? separateHeroData(c.hero) : defaults.hero,
+    mission: c.mission ? separateMissionData(c.mission) : defaults.mission,
+    programs: c.programs ? separateProgramsData(c.programs) : defaults.programs,
+    testimonials: c.testimonials
+      ? separateTestimonialsData(c.testimonials)
+      : defaults.testimonials,
+    supporters: c.supporters ? separateSupportersData(c.supporters) : defaults.supporters,
+    contact: c.contact ? separateContactData(c.contact) : defaults.contact,
+    values: c.values ? separateValuesData(c.values) : defaults.values,
+    cta: c.cta ? separateCtaData(c.cta) : defaults.cta,
+    seo: pageData.seo ? separateSeoData(pageData.seo) : defaults.seo,
   };
 }
 

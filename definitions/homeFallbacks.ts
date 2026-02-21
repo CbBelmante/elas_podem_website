@@ -14,7 +14,7 @@ export const HOME_FALLBACK: IHomePageData = {
     hero: {
       badge: 'LOREM IPSUM DOLOR SIT',
       title: 'LOREM IPSUM',
-      subtitle:
+      description:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
       btnDonate: 'Lorem Ipsum',
       btnHistory: 'Lorem Dolor',

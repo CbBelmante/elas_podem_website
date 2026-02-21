@@ -12,7 +12,7 @@
 export const HERO_DEFAULTS = {
   badge: 'MOVIMENTO NACIONAL DESDE 2020',
   title: 'ELAS PO+DEM',
-  subtitle: '',
+  description: '',
   btnDonate: 'Doe Agora',
   btnHistory: 'Nossa Historia',
   heroImage: '',

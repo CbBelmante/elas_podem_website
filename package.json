@@ -15,7 +15,7 @@
     "lintFix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "deploy": "npm run generate && firebase deploy --only hosting",
+    "deploy": "npm run generate && npx firebase-tools deploy --only hosting",
     "deployPreview": "npm run generate && npx serve .output/public",
     "seedAdmin": "npx tsx --no-deprecation scripts/seedAdmin.ts"
   },

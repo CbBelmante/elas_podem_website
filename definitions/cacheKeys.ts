@@ -4,12 +4,13 @@
  * Identificadores para useCache. A chave no localStorage
  * e gerada automaticamente com prefix 'ep_cache:'.
  *
- * Cada key tem `hasCache` (igual ao hasCache dos repositories do mneis_frontend).
- * - hasCache: true  → cache normal (RAM + localStorage)
- * - hasCache: false → bypass total, sempre busca fresco
+ * Hierarquia de controle:
+ * - enableCache global (features.enableCache) → pai. Se false, TUDO off (filho nao manda ligar).
+ * - hasCache por key → filho. So funciona se global for true. Pode desligar a si mesmo.
  *
- * O enableCache global (features.enableCache) desabilita TUDO.
- * O hasCache por key permite desabilitar individualmente mesmo com global true.
+ * Resumo:
+ *   global=false → tudo off (independente do filho)
+ *   global=true  → cada key decide por si (hasCache true/false)
  *
  * Ex: CACHE_KEYS.USER_DATA.key → 'userData' → localStorage: 'ep_cache:userData'
  */

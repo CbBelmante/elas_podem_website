@@ -103,15 +103,19 @@ defineEmits<{
 
 <style scoped>
 .editorSection {
-  background: var(--bg-white, #ffffff);
-  border: 1px solid var(--border-light);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
   border-radius: 16px;
   overflow: hidden;
-  transition: box-shadow 0.3s ease;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
 }
 
 .editorSection--expanded {
-  box-shadow: var(--shadow-md, 0 4px 12px rgba(0, 0, 0, 0.08));
+  box-shadow: var(--shadow-lg);
+  border-color: var(--border-hover);
 }
 
 /* Header */

@@ -23,7 +23,7 @@ import '../assets/css/theme.css';
 
 // ============== FIREBASE DATA ==============
 
-const { hero, mission, programs, testimonials, supporters, contact, values, cta, seo } =
+const { hero, mission, programs, testimonials, supporters, contact, values, cta, seo, status } =
   useHomePublicData();
 
 // Resolve nome do tema para CSS variable (passthrough se ja for hex/rgb/hsl/var)
@@ -143,6 +143,8 @@ onMounted(() => {
 
 <template>
   <div>
+    <LoadingOverlay :visible="status !== 'success'" />
+
     <!-- Navbar -->
     <CBNavbar
       :menu-items="menuItems"
@@ -198,10 +200,10 @@ onMounted(() => {
             <CBLabel :text="hero.title" tag="h1" weight="black" class="heroTitle animateOnScroll" />
 
             <CBLabel
-              :text="hero.subtitle"
+              :text="hero.description"
               size="lg"
               color="secondary"
-              class="heroSubtitle animateOnScroll"
+              class="heroDescription animateOnScroll"
             />
 
             <div class="heroActions animateOnScroll">
@@ -924,7 +926,7 @@ onMounted(() => {
   color: var(--text-primary);
 }
 
-.heroSubtitle {
+.heroDescription {
   line-height: 1.75;
   margin-bottom: 36px;
   max-width: 480px;
@@ -1688,7 +1690,7 @@ onMounted(() => {
     max-width: 100%;
   }
 
-  .heroSubtitle {
+  .heroDescription {
     max-width: 100%;
   }
 
@@ -1838,4 +1840,5 @@ onMounted(() => {
     flex: 1 1 100%;
   }
 }
+
 </style>

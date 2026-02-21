@@ -81,11 +81,11 @@ function removeStat(index: number): void {
     </div>
 
     <CBTextarea
-      :model-value="forms.editable.subtitle"
-      label="Subtitulo"
-      :rules="createValidationRules(rules.subtitle)"
+      :model-value="forms.editable.description"
+      label="Descricao"
+      :rules="createValidationRules(rules.description)"
       @update:model-value="
-        forms.editable.subtitle = $event;
+        forms.editable.description = $event;
         emit('changed');
       "
     />

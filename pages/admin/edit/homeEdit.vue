@@ -197,6 +197,10 @@ onUnmounted(() => {
 
 <template>
   <div class="homeEditPage">
+    <!-- Glows decorativos -->
+    <div class="homeEditPage__glow homeEditPage__glow--1" />
+    <div class="homeEditPage__glow homeEditPage__glow--2" />
+
     <div class="homeEditContainer">
       <!-- Header -->
       <header class="homeEditHeader">
@@ -284,9 +288,34 @@ onUnmounted(() => {
    ============================================ */
 .homeEditPage {
   min-height: 100vh;
-  background: var(--bg-light);
+  background: var(--bg-hero);
   font-family: var(--font-body);
   padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Glows decorativos */
+.homeEditPage__glow {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.homeEditPage__glow--1 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(var(--color-magenta-rgb), 0.10) 0%, transparent 70%);
+  top: -120px;
+  right: -100px;
+}
+
+.homeEditPage__glow--2 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(var(--color-coral-rgb), 0.07) 0%, transparent 70%);
+  bottom: -80px;
+  left: -80px;
 }
 
 .homeEditContainer {
@@ -295,6 +324,8 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  position: relative;
+  z-index: 1;
 }
 
 /* ============================================
