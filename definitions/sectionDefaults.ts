@@ -15,6 +15,7 @@ export const HERO_DEFAULTS = {
   subtitle: '',
   btnDonate: 'Doe Agora',
   btnHistory: 'Nossa Historia',
+  heroImage: '',
   stats: [
     { icon: 'luc-award', number: '2025', label: 'Sede Propria' },
     { icon: 'luc-megaphone', number: '5a', label: 'Conferencia Nacional' },

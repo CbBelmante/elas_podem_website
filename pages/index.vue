@@ -171,6 +171,13 @@ onMounted(() => {
     <div class="pageWrapper">
       <!-- ════════ HERO ════════ -->
       <section class="heroSection">
+        <CBImage
+          :src="hero.heroImage || 'https://picsum.photos/1920/1080?random=1'"
+          alt="Imagem de fundo do hero"
+          size="100%"
+          fit="cover"
+          class="heroBgImage"
+        />
         <div class="dotDecoration dot1"></div>
         <div class="dotDecoration dot2"></div>
         <div class="dotDecoration dot3"></div>
@@ -304,33 +311,30 @@ onMounted(() => {
           </div>
 
           <div class="programsGrid">
-            <CBCard
+            <div
               v-for="program in programs.items"
               :key="program.title"
-              variant="outlined"
-              :rounded="20"
-              hover
-              border-color="rgba(92, 26, 42, 0.04)"
               class="programCard animateOnScroll"
-              :style="{ '--top-border-gradient': topBorderGradient(program.color) }"
+              :style="{ '--program-color': toVar(program.color) }"
             >
-              <div class="programIconWrapper" :style="colorVars(program.color)">
-                <CBIcon :icon="program.icon" size="1.5rem" color="#ffffff" />
-              </div>
-              <CBLabel
-                :text="program.title"
-                tag="h3"
-                size="lg"
-                weight="bold"
-                class="programTitle"
-              />
-              <CBLabel
-                :text="program.description"
-                size="sm"
-                color="secondary"
-                class="programDescription"
-              />
-              <div class="programCardFooter">
+              <div class="programAccent"></div>
+              <div class="programBody">
+                <div class="programIconWrapper">
+                  <CBIcon :icon="program.icon" size="1.25rem" :color="toVar(program.color)" />
+                </div>
+                <CBLabel
+                  :text="program.title"
+                  tag="h3"
+                  size="lg"
+                  weight="bold"
+                  class="programTitle"
+                />
+                <CBLabel
+                  :text="program.description"
+                  size="sm"
+                  color="secondary"
+                  class="programDescription"
+                />
                 <CBLabel
                   :text="program.link"
                   tag="span"
@@ -340,7 +344,7 @@ onMounted(() => {
                   class="programCardLink"
                 />
               </div>
-            </CBCard>
+            </div>
           </div>
         </div>
       </section>
@@ -420,31 +424,39 @@ onMounted(() => {
           </div>
 
           <CBMarquee
-            :gap="24"
-            :speed="40"
+            :gap="0"
+            :speed="18"
             slow-on-hover
-            :slow-on-hover-rate="0.3"
-            :fade-size="60"
+            :slow-on-hover-rate="0.2"
+            :fade-size="100"
             class="supportersMarquee animateOnScroll"
           >
-            <CBCard
-              v-for="supporter in supporters.items"
-              :key="supporter.name"
-              variant="outlined"
-              :rounded="16"
-              hover
-              bg-color="var(--bg-white)"
-              border-color="rgba(92, 26, 42, 0.04)"
-              :border-width="1"
-              class="supporterCard"
-            >
-              <div class="supporterCardInner">
-                <div class="supporterIconWrapper" :style="colorVars(supporter.color)">
-                  <CBIcon :icon="supporter.icon" size="1.5rem" color="#ffffff" />
-                </div>
-                <CBLabel :text="supporter.name" size="md" weight="semibold" class="supporterName" />
-              </div>
-            </CBCard>
+            <template v-for="supporter in supporters.items" :key="supporter.name">
+              <a
+                :href="supporter.url || undefined"
+                :target="supporter.url ? '_blank' : undefined"
+                :rel="supporter.url ? 'noopener noreferrer' : undefined"
+                class="supporterItem"
+              >
+                <CBImage
+                  v-if="supporter.image"
+                  :src="supporter.image"
+                  :alt="supporter.imageAlt || supporter.name"
+                  size="auto"
+                  :height="32"
+                  fit="contain"
+                  class="supporterLogo"
+                />
+                <CBLabel
+                  v-else
+                  :text="supporter.name"
+                  size="lg"
+                  weight="bold"
+                  class="supporterName"
+                />
+              </a>
+              <span class="supporterDivider">·</span>
+            </template>
           </CBMarquee>
         </div>
       </section>
@@ -822,6 +834,17 @@ onMounted(() => {
   background: var(--bg-hero);
 }
 
+.heroBgImage {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+  opacity: 0.07;
+  z-index: 0;
+  pointer-events: none;
+}
+
 .heroSection::before {
   content: '';
   position: absolute;
@@ -1030,55 +1053,50 @@ onMounted(() => {
 
 .programsGrid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 22px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
 }
 
 .programCard {
-  transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  position: relative;
+  display: flex;
+  background: var(--bg-white);
+  border: 1px solid rgba(var(--color-vinho-rgb), 0.06);
+  border-radius: 20px;
   overflow: hidden;
-}
-
-.programCard::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: var(--top-border-gradient);
-  opacity: 0;
-  transition: opacity 0.35s ease;
-  z-index: 1;
+  transition: all 0.4s ease;
 }
 
 .programCard:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-soft);
+  border-color: rgba(var(--color-vinho-rgb), 0.12);
+  box-shadow: 0 8px 30px rgba(var(--color-vinho-rgb), 0.06);
 }
 
-.programCard:hover::before {
+.programAccent {
+  width: 4px;
+  flex-shrink: 0;
+  background: var(--program-color);
+  opacity: 0.4;
+  transition: opacity 0.4s ease;
+}
+
+.programCard:hover .programAccent {
   opacity: 1;
+}
+
+.programBody {
+  padding: 32px 28px;
+  flex: 1;
 }
 
 .programIconWrapper {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 50px;
-  height: 50px;
-  border-radius: 14px;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
   margin-bottom: 18px;
-  transition: all 0.35s ease;
-  background: var(--c-gradient);
-  box-shadow: var(--c-glow);
-}
-
-.programCard:hover .programIconWrapper {
-  transform: scale(1.08);
-  filter: brightness(1.1);
-  box-shadow: var(--c-glow-hover);
+  background: color-mix(in srgb, var(--program-color) 8%, transparent);
 }
 
 .programTitle {
@@ -1086,25 +1104,20 @@ onMounted(() => {
 }
 
 .programDescription {
-  line-height: 1.65;
-  margin-bottom: 1rem;
-}
-
-.programCardFooter {
-  padding-top: 1rem;
-  border-top: 1px solid rgba(var(--color-vinho-rgb), 0.06);
+  line-height: 1.7;
+  margin-bottom: 1.25rem;
 }
 
 .programCardLink {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 600;
-  color: var(--color-magenta);
+  color: var(--program-color);
   cursor: pointer;
-  transition: color 0.2s ease;
+  transition: opacity 0.25s ease;
 }
 
 .programCardLink:hover {
-  color: var(--color-rosa);
+  opacity: 0.65;
 }
 
 /* ============================================
@@ -1240,48 +1253,48 @@ onMounted(() => {
   margin-top: 1rem;
 }
 
-.supporterCard {
-  width: 180px;
-  flex-shrink: 0;
-  transition: all 0.35s ease;
-  box-shadow: var(--shadow-soft);
-  cursor: pointer;
-}
-
-.supporterCard:hover {
-  transform: translateY(-3px);
-}
-
-.supporterCardInner {
-  display: flex;
-  flex-direction: column;
+.supporterItem {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  padding: 0.5rem 0;
+  padding: 0 1.5rem;
+  text-decoration: none;
+  transition: opacity 0.3s ease;
 }
 
-.supporterIconWrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
-  flex-shrink: 0;
-  transition: all 0.35s ease;
-  background: var(--c-gradient);
-  box-shadow: var(--c-glow);
+.supporterItem:hover {
+  opacity: 0.6;
 }
 
-.supporterCard:hover .supporterIconWrapper {
-  transform: scale(1.08);
-  filter: brightness(1.1);
-  box-shadow: var(--c-glow-hover);
+.supporterLogo {
+  filter: grayscale(100%);
+  opacity: 0.5;
+  transition: all 0.3s ease;
+}
+
+.supporterItem:hover .supporterLogo {
+  filter: grayscale(0%);
+  opacity: 1;
 }
 
 .supporterName {
-  color: var(--text-primary);
+  color: var(--color-carvao);
+  opacity: 0.35;
+  white-space: nowrap;
+  font-family: var(--font-heading);
+  letter-spacing: -0.5px;
+  transition: opacity 0.3s ease;
+}
+
+.supporterItem:hover .supporterName {
+  opacity: 0.7;
+}
+
+.supporterDivider {
+  color: var(--color-carvao);
+  opacity: 0.15;
+  font-size: 2rem;
+  line-height: 1;
+  user-select: none;
 }
 
 /* ============================================
@@ -1628,10 +1641,6 @@ onMounted(() => {
   .contactContainer {
     grid-template-columns: 1fr;
     gap: 3rem;
-  }
-
-  .programsGrid {
-    grid-template-columns: repeat(2, 1fr);
   }
 
   .valuesStrip {

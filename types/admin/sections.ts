@@ -21,6 +21,7 @@ export interface IHeroSection {
   subtitle: string;
   btnDonate: string;
   btnHistory: string;
+  heroImage: string; // Firebase Storage URL — imagem de fundo do hero (opaca)
   stats: IHeroStat[];
 }
 

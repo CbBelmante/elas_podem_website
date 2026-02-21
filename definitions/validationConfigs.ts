@@ -201,6 +201,8 @@ export const IMAGE_UPLOAD_CONFIG = {
  * @property maxWidth/maxHeight - redimensiona se maior que esses valores
  */
 export const COMPRESSION_SETTINGS = {
+  /** Imagem de fundo do hero (grande, fullwidth) */
+  hero: { enabled: true, quality: 0.8, maxWidth: 1920, maxHeight: 1080 },
   /** Imagem da secao Missao */
   mission: { enabled: true, quality: 0.8, maxWidth: 800, maxHeight: 600 },
   /** Logos de apoiadores */

@@ -8,6 +8,7 @@
 
 import { CBButton, CBIcon, CBInput, CBLabel, CBSelect, CBTextarea } from '@cb/components';
 import draggable from 'vuedraggable';
+import HomeImageUploader from '@components/admin/HomeImageUploader.vue';
 import { HERO_CONFIG } from '@definitions/validationConfigs';
 import { createValidationRules } from '@utils/validationRules';
 import { ICON_OPTIONS } from '@definitions/themeOptions';
@@ -26,6 +27,7 @@ const props = defineProps<Props>();
 
 const emit = defineEmits<{
   changed: [];
+  uploaded: [url: string];
 }>();
 
 // ============== VALIDATION ==============
@@ -109,6 +111,18 @@ function removeStat(index: number): void {
         "
       />
     </div>
+
+    <!-- Imagem de fundo do hero -->
+    <HomeImageUploader
+      :model-value="forms.editable.heroImage"
+      category="hero"
+      label="Imagem de Fundo (aparece opaca atras do conteudo)"
+      @update:model-value="
+        forms.editable.heroImage = $event;
+        emit('changed');
+      "
+      @uploaded="emit('uploaded', $event)"
+    />
 
     <!-- Stats array -->
     <div class="heroEditor__statsSection">

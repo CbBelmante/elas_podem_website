@@ -18,6 +18,7 @@ export const HOME_FALLBACK: IHomePageData = {
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
       btnDonate: 'Lorem Ipsum',
       btnHistory: 'Lorem Dolor',
+      heroImage: 'https://picsum.photos/1920/1080?random=1',
       stats: [
         { icon: 'luc-award', number: '000', label: 'Lorem Ipsum' },
         { icon: 'luc-megaphone', number: '0a', label: 'Lorem Dolor' },

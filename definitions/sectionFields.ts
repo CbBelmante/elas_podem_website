@@ -34,6 +34,7 @@ export const SECTION_FIELDS = {
     subtitle: 'editable',
     btnDonate: 'editable',
     btnHistory: 'editable',
+    heroImage: 'editable',
     stats: 'editable',
   },
 
