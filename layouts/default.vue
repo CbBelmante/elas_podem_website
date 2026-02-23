@@ -1,10 +1,11 @@
+<script setup lang="ts">
+// Layout default — paginas publicas
+// Admin pages usam layout: false, nao passam por aqui
+</script>
+
 <template>
   <div>
     <slot />
+    <AppFooter />
   </div>
 </template>
-
-<script setup lang="ts">
-// Layout default para todas as páginas
-// Aqui podemos adicionar elementos comuns como header, footer, etc
-</script>

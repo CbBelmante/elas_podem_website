@@ -636,7 +636,6 @@ onMounted(() => {
         </div>
       </section>
 
-      <AppFooter />
     </div>
   </div>
 </template>
