@@ -18,8 +18,6 @@ import {
   type INavbarMenuItem,
 } from '@cb/components';
 import { useI18n } from 'vue-i18n';
-import '@cb/components/style.css';
-import '../assets/css/theme.css';
 
 // ============== FIREBASE DATA ==============
 
@@ -62,17 +60,6 @@ const topBorderGradient = (color: string) => {
 };
 
 // ============== SEO ==============
-
-useHead({
-  link: [
-    { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-    { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
-    {
-      rel: 'stylesheet',
-      href: 'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800;9..144,900&family=DM+Sans:wght@300;400;500;600;700&display=swap',
-    },
-  ],
-});
 
 useSeoMeta({
   title: () => seo.value.title,

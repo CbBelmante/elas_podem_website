@@ -7,8 +7,6 @@
 
 <script setup lang="ts">
 import { CBButton, CBCard, CBIcon, CBImage, CBInput, CBLabel } from '@cb/components';
-import '@cb/components/style.css';
-import '../../assets/css/theme.css';
 
 // ============== PAGE META ==============
 

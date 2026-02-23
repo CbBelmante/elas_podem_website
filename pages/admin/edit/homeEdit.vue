@@ -7,8 +7,6 @@
  */
 
 import { CBButton, CBIcon, CBLabel } from '@cb/components';
-import '@cb/components/style.css';
-import '@assets/css/theme.css';
 
 // Section editors
 import HomeEditorSection from '@components/admin/HomeEditorSection.vue';

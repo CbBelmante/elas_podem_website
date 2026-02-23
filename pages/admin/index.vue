@@ -15,8 +15,6 @@
 
 <script setup lang="ts">
 import { CBBadge, CBButton, CBCard, CBIcon, CBLabel } from '@cb/components';
-import '@cb/components/style.css';
-import '../../assets/css/theme.css';
 
 import { ADMIN_ROLE_DISPLAY_NAMES } from '@definitions/adminRoles';
 import type { AdminRole } from '@definitions/adminRoles';

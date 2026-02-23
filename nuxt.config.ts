@@ -27,6 +27,26 @@ export default defineNuxtConfig(() => {
     devtools: { enabled: true },
     modules: ['@nuxt/eslint'],
 
+    // CSS global — ordem importa (library primeiro, theme depois)
+    css: [
+      '@cb/components/style.css',
+      '~/assets/css/theme.css',
+    ],
+
+    // Head global — fontes carregam antes de qualquer page/layout renderizar
+    app: {
+      head: {
+        link: [
+          { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+          { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
+          {
+            rel: 'stylesheet',
+            href: 'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800;9..144,900&family=DM+Sans:wght@300;400;500;600;700&display=swap',
+          },
+        ],
+      },
+    },
+
     // Aliases centralizados (fonte: config/constants.ts ALIAS_DEFINITIONS)
     alias: ALIAS_DEFINITIONS,
 
