@@ -110,9 +110,10 @@ pages/admin/                     # [IMPLEMENTADO — Fase 1]
       hero:
         badge: "MOVIMENTO NACIONAL DESDE 2020"
         title: "ELAS PO+DEM"
-        subtitle: "..."
+        description: "..."
         btnDonate: "Doe Agora"
         btnHistory: "Nossa História"
+        heroImage: ""   # Firebase Storage URL — imagem de fundo do hero
         stats: [
           { icon: "luc-award", number: "2025", label: "Sede Própria" },
           { icon: "luc-megaphone", number: "5ª", label: "Conferência Nacional" },
@@ -209,7 +210,7 @@ Os types são organizados em **4 camadas**, cada uma em seu arquivo:
 ```typescript
 // Interfaces que espelham o formato exato dos dados no Firestore
 export interface IHeroStat { icon: string; number: string; label: string }
-export interface IHeroSection { badge, title, subtitle, btnDonate, btnHistory, stats: IHeroStat[] }
+export interface IHeroSection { badge, title, description, btnDonate, btnHistory, heroImage, stats: IHeroStat[] }
 export interface IMissionSection { badge, title, text1, text2, btnText, image }
 export interface IProgram { title, description, icon, color, link }
 export interface ITestimonial { quote, name, role, initials, image }
@@ -233,7 +234,7 @@ export interface IHomePageData {
 ### Camada 2: `editable.ts` — Separação editable/readonly
 ```typescript
 // Cada seção tem seu par editable/readonly (quando aplicável)
-export interface IHeroEditable { badge, title, subtitle, btnDonate, btnHistory, stats: IHeroStat[] }
+export interface IHeroEditable { badge, title, description, btnDonate, btnHistory, heroImage, stats: IHeroStat[] }
 export interface IProgramEditable { title, description, icon, link }
 export interface IProgramReadonly { color }
 export interface IValueEditable { title, subtitle }   // color é hidden (preservado no save)
@@ -275,7 +276,7 @@ export interface IAdminLog { action, details, timestamp, user }
 // Define quais campos de cada seção são editable, readonly ou hidden.
 // Usado para gerar types editable/readonly e guiar os FormUtils.
 export const SECTION_FIELDS = {
-  hero: { editable: ['badge', 'title', 'subtitle', 'btnDonate', 'btnHistory', 'stats'] },
+  hero: { editable: ['badge', 'title', 'description', 'btnDonate', 'btnHistory', 'heroImage', 'stats'] },
   programs: { editable: ['title', 'description', 'icon', 'link'], readonly: ['color'] },
   values: { editable: ['title', 'subtitle'], hidden: ['color'] },
   seo: { editable: ['title', 'description', 'keywords', 'ogImage'], readonly: ['og'] },
@@ -287,11 +288,11 @@ export const SECTION_FIELDS = {
 ```typescript
 export const HERO_CONFIG = {
   validationRules: {
-    badge:      { required: true, minLength: 3, maxLength: 60 },
-    title:      { required: true, minLength: 3, maxLength: 30 },
-    subtitle:   { required: true, minLength: 10, maxLength: 300 },
-    btnDonate:  { required: true, minLength: 2, maxLength: 30 },
-    btnHistory: { required: true, minLength: 2, maxLength: 30 },
+    badge:       { required: true, minLength: 3, maxLength: 60 },
+    title:       { required: true, minLength: 3, maxLength: 30 },
+    description: { required: true, minLength: 10, maxLength: 300 },
+    btnDonate:   { required: true, minLength: 2, maxLength: 30 },
+    btnHistory:  { required: true, minLength: 2, maxLength: 30 },
   },
   stats: { min: 1, max: 6 },
 }
@@ -706,8 +707,8 @@ layouts/admin.vue com sidebar.
 │  Editor - Página Home                        │
 │                                              │
 │  ▼ Hero Section                              │
-│    [badge] [title] [subtitle]                │
-│    [btnDonate] [btnHistory]                  │
+│    [badge] [title] [description]              │
+│    [btnDonate] [btnHistory] [heroImage]       │
 │    Stats: [+Novo] [edit] [delete]            │
 │    Validation: ✓ título (3-30 chars)         │
 │                                              │

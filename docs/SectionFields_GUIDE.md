@@ -142,9 +142,10 @@ export function createNewProgram(): IProgram {
 export interface IHeroSection {
   badge: string;
   title: string;
-  subtitle: string;
+  description: string;
   btnDonate: string;
   btnHistory: string;    // ← REMOVER
+  heroImage: string;
   stats: IHeroStat[];
 }
 
@@ -152,8 +153,9 @@ export interface IHeroSection {
 export interface IHeroSection {
   badge: string;
   title: string;
-  subtitle: string;
+  description: string;
   btnDonate: string;
+  heroImage: string;
   stats: IHeroStat[];
 }
 ```
@@ -165,9 +167,10 @@ export interface IHeroSection {
 hero: {
   badge: 'editable',
   title: 'editable',
-  subtitle: 'editable',
+  description: 'editable',
   btnDonate: 'editable',
   btnHistory: 'editable',    // ← REMOVER
+  heroImage: 'editable',
   stats: 'editable',
 },
 
@@ -175,8 +178,9 @@ hero: {
 hero: {
   badge: 'editable',
   title: 'editable',
-  subtitle: 'editable',
+  description: 'editable',
   btnDonate: 'editable',
+  heroImage: 'editable',
   stats: 'editable',
 },
 ```
@@ -363,12 +367,13 @@ Contact tem estrutura aninhada — campos top-level + methods[] com split propri
 
 | Secao | Editable | Hidden | Readonly |
 |-------|----------|--------|----------|
-| **hero** | badge, title, subtitle, btnDonate, btnHistory, stats | — | — |
-| **mission** | badge, title, text1, text2, btnText, image | — | — |
+| **hero** | badge, title, description, btnDonate, btnHistory, heroImage, stats | — | — |
+| **mission** | badge, title, text1, text2, btnText, image, imageAlt | — | — |
 | **programs** | title, description, icon, link | color | — |
-| **testimonials** | quote, name, role, initials, image | — | — |
-| **supporters** | name, icon, image, url | color | — |
+| **testimonials** | quote, name, role, initials, image, imageAlt | — | — |
+| **supporters** | name, icon, image, imageAlt, url | color | — |
 | **contactMethod** | label, value, icon, url | color | — |
+| **values** | title, subtitle | color | — |
 | **cta** | title, subtitle, btnDonate, btnProjects | — | — |
 | **seo** | title, description, keywords, ogImage | og | — |
 

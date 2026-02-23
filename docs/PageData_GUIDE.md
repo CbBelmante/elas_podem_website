@@ -126,7 +126,7 @@ resetAll();
 <template>
   <!-- Editable: admin pode mudar -->
   <CBInput v-model="forms.hero.editable.title" label="Titulo" />
-  <CBInput v-model="forms.hero.editable.subtitle" label="Subtitulo" />
+  <CBInput v-model="forms.hero.editable.description" label="Descricao" />
 
   <!-- Readonly: exibir mas nao editar -->
   <span>{{ forms.seo.readonly.og.siteName }}</span>

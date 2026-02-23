@@ -84,7 +84,7 @@ const handleSave = async () => {
   if (!result.isValid) {
     // Mostra erros pro usuario
     console.error(result.errors);
-    // → ["Erros em Hero:", '"title" e obrigatorio', '"subtitle" precisa ter no minimo 10 caracteres']
+    // → ["Erros em Hero:", '"title" e obrigatorio', '"description" precisa ter no minimo 10 caracteres']
     return;
   }
 
@@ -141,12 +141,12 @@ Basta adicionar a regra no config. O validador ja le automaticamente.
 // definitions/validationConfigs.ts
 export const HERO_CONFIG = {
   validationRules: {
-    badge:      { required: true, minLength: 3, maxLength: 60 },
-    title:      { required: true, minLength: 3, maxLength: 30 },
-    subtitle:   { required: true, minLength: 10, maxLength: 300 },
-    btnDonate:  { required: true, minLength: 2, maxLength: 30 },
-    btnHistory: { required: true, minLength: 2, maxLength: 30 },
-    videoUrl:   { required: false, maxLength: 200 },   // ← NOVO CAMPO
+    badge:       { required: true, minLength: 3, maxLength: 60 },
+    title:       { required: true, minLength: 3, maxLength: 30 },
+    description: { required: true, minLength: 10, maxLength: 300 },
+    btnDonate:   { required: true, minLength: 2, maxLength: 30 },
+    btnHistory:  { required: true, minLength: 2, maxLength: 30 },
+    videoUrl:    { required: false, maxLength: 200 },   // ← NOVO CAMPO
   },
 };
 ```
@@ -233,7 +233,7 @@ export const SECTION_CONFIG = {
 
 | Config | Secao | Campos validados | Arrays |
 |--------|-------|-----------------|--------|
-| `HERO_CONFIG` | Hero | badge, title, subtitle, btnDonate, btnHistory | stats: 1-6 |
+| `HERO_CONFIG` | Hero | badge, title, description, btnDonate, btnHistory | stats: 1-6 |
 | `MISSION_CONFIG` | Missao | badge, title, text1, text2, btnText | — |
 | `PROGRAMS_CONFIG` | Programas | title, description, link | items: 1-8 |
 | `TESTIMONIALS_CONFIG` | Depoimentos | quote, name, role | items: 1-12 |
