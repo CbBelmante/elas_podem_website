@@ -130,7 +130,9 @@ onMounted(() => {
 
 <template>
   <div>
-    <LoadingOverlay :visible="status !== 'success'" />
+    <ClientOnly>
+      <LoadingOverlay :visible="status !== 'success'" />
+    </ClientOnly>
 
     <!-- Navbar -->
     <CBNavbar
@@ -163,13 +165,17 @@ onMounted(() => {
         <CBImage
           :src="hero.heroImage || 'https://picsum.photos/1920/1080?random=1'"
           alt="Imagem de fundo do hero"
-          size="100%"
+          size="auto"
           fit="cover"
           class="heroBgImage"
         />
         <div class="dotDecoration dot1"></div>
         <div class="dotDecoration dot2"></div>
         <div class="dotDecoration dot3"></div>
+        <div class="dotDecoration dot4"></div>
+        <div class="dotDecoration dot5"></div>
+        <div class="dotDecoration dot6"></div>
+        <div class="dotDecoration dot7"></div>
 
         <div class="heroContainer">
           <div class="heroContent animateOnScroll">
@@ -261,10 +267,13 @@ onMounted(() => {
           </div>
 
           <div class="missionVisual animateOnScroll">
+            <div class="missionDot mDot1"></div>
+            <div class="missionDot mDot2"></div>
+            <div class="missionDot mDot3"></div>
             <CBImage
               :src="mission.image || 'https://picsum.photos/600/500?random=42'"
               :alt="mission.imageAlt"
-              size="100%"
+              size="auto"
               fit="cover"
               :rounded="20"
               class="missionImage"
@@ -300,22 +309,27 @@ onMounted(() => {
           </div>
 
           <div class="programsGrid">
-            <div
+            <CBCard
               v-for="program in programs.items"
               :key="program.title"
+              variant="outlined"
+              :rounded="24"
+              hover
+              bg-color="var(--bg-white)"
+              border-color="rgba(92, 26, 42, 0.06)"
+              :border-width="1"
               class="programCard animateOnScroll"
               :style="{ '--program-color': toVar(program.color) }"
             >
-              <div class="programAccent"></div>
               <div class="programBody">
                 <div class="programIconWrapper">
-                  <CBIcon :icon="program.icon" size="1.25rem" :color="toVar(program.color)" />
+                  <CBIcon :icon="program.icon" size="1.5rem" :color="toVar(program.color)" />
                 </div>
                 <CBLabel
                   :text="program.title"
                   tag="h3"
                   size="lg"
-                  weight="bold"
+                  weight="black"
                   class="programTitle"
                 />
                 <CBLabel
@@ -324,16 +338,24 @@ onMounted(() => {
                   color="secondary"
                   class="programDescription"
                 />
-                <CBLabel
-                  :text="program.link"
-                  tag="span"
-                  size="sm"
-                  weight="semibold"
-                  dense
-                  class="programCardLink"
-                />
+                <div class="programFooter">
+                  <CBLabel
+                    :text="program.link"
+                    tag="span"
+                    size="sm"
+                    weight="bold"
+                    dense
+                    class="programCardLink"
+                  />
+                  <CBIcon
+                    icon="luc-arrow-right"
+                    size="1rem"
+                    :color="toVar(program.color)"
+                    class="programLinkIcon"
+                  />
+                </div>
               </div>
-            </div>
+            </CBCard>
           </div>
         </div>
       </section>
@@ -494,9 +516,8 @@ onMounted(() => {
                 variant="outlined"
                 :rounded="16"
                 hover
-                bg-color="var(--bg-white)"
+                bg-color="#FFFFFF"
                 border-color="rgba(92, 26, 42, 0.04)"
-                :border-width="1"
                 class="contactMethodCard"
               >
                 <div class="contactMethodInner">
@@ -534,7 +555,13 @@ onMounted(() => {
           </div>
 
           <div class="contactFormWrapper animateOnScroll">
-            <CBCard variant="elevated" :rounded="24" class="contactFormCard">
+            <CBCard
+              variant="outlined"
+              :rounded="24"
+              bg-color="#FFFFFF"
+              border-color="rgba(92, 26, 42, 0.08)"
+              class="contactFormCard"
+            >
               <form class="contactForm">
                 <CBInput
                   v-model="formName"
@@ -825,6 +852,46 @@ onMounted(() => {
   animation-delay: 2s;
 }
 
+.dot4 {
+  width: 40px;
+  height: 40px;
+  background: var(--color-magenta);
+  opacity: 0.1;
+  top: 15%;
+  left: 8%;
+  animation-delay: 0.5s;
+}
+
+.dot5 {
+  width: 10px;
+  height: 10px;
+  background: var(--color-vinho);
+  bottom: 25%;
+  left: 52%;
+  opacity: 0.6;
+  animation-delay: 3.5s;
+}
+
+.dot6 {
+  width: 24px;
+  height: 24px;
+  background: var(--color-coral);
+  opacity: 0.2;
+  bottom: 15%;
+  left: 5%;
+  animation-delay: 1.2s;
+}
+
+.dot7 {
+  width: 14px;
+  height: 14px;
+  background: var(--color-roxo-acento);
+  top: 22%;
+  right: 25%;
+  opacity: 0.4;
+  animation-delay: 2.8s;
+}
+
 /* Hero badge */
 .heroBadge {
   letter-spacing: 1.5px;
@@ -947,8 +1014,50 @@ onMounted(() => {
 }
 
 /* Imagem da missao */
+.missionVisual {
+  position: relative;
+}
+
 .missionImage {
   box-shadow: var(--shadow-soft);
+  position: relative;
+  z-index: 2;
+}
+
+/* Dots decorativos na Missão */
+.missionDot {
+  position: absolute;
+  border-radius: 50%;
+  animation: float 5s ease-in-out infinite;
+  z-index: 1;
+}
+
+.mDot1 {
+  width: 20px;
+  height: 20px;
+  background: var(--color-coral);
+  top: -10px;
+  left: -10px;
+  opacity: 0.6;
+}
+
+.mDot2 {
+  width: 14px;
+  height: 14px;
+  background: var(--color-vinho-medio);
+  bottom: 20px;
+  right: -7px;
+  animation-delay: 1.5s;
+}
+
+.mDot3 {
+  width: 32px;
+  height: 32px;
+  background: var(--color-nude-quente);
+  bottom: -15px;
+  left: 40px;
+  opacity: 0.4;
+  animation-delay: 3s;
 }
 
 /* ============================================
@@ -972,70 +1081,159 @@ onMounted(() => {
 .programsGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
+  gap: 32px; /* Aumentei o gap para mais respiro */
 }
 
 .programCard {
-  display: flex;
-  background: var(--bg-white);
-  border: 1px solid rgba(var(--color-vinho-rgb), 0.06);
-  border-radius: 20px;
+  position: relative;
   overflow: hidden;
-  transition: all 0.4s ease;
+  transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  /* Background e Border definidos via Props do CBCard */
 }
 
 .programCard:hover {
-  border-color: rgba(var(--color-vinho-rgb), 0.12);
-  box-shadow: 0 8px 30px rgba(var(--color-vinho-rgb), 0.06);
+  transform: translateY(-5px);
+  border-color: rgba(var(--color-vinho-rgb), 0.15);
+  box-shadow: 0 15px 35px rgba(var(--color-vinho-rgb), 0.08);
 }
 
-.programAccent {
-  width: 4px;
-  flex-shrink: 0;
+/* Blob Orgânico de Fundo - Variação Padrão (1, 5, 9...) */
+.programCard::before {
+  content: '';
+  position: absolute;
+  top: -60px;
+  right: -60px;
+  width: 240px;
+  height: 240px;
   background: var(--program-color);
-  opacity: 0.4;
-  transition: opacity 0.4s ease;
+  opacity: 0.06;
+  border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%;
+  transition: all 0.7s ease-in-out;
+  z-index: 0;
+  pointer-events: none;
 }
 
-.programCard:hover .programAccent {
-  opacity: 1;
+/* Variação 2 (Pares: 2, 4, 6...) - Blob no Canto Inferior Esquerdo */
+.programCard:nth-child(2n)::before {
+  border-radius: 58% 42% 38% 62% / 50% 50% 50% 50%;
+  top: auto;
+  right: auto;
+  bottom: -70px;
+  left: -70px;
+}
+
+/* Variação 3 (3, 6, 9...) - Blob no Canto Superior Esquerdo e Forma Diferente */
+.programCard:nth-child(3n)::before {
+  border-radius: 30% 70% 50% 50% / 30% 30% 70% 70%;
+  top: -50px;
+  left: -50px;
+  right: auto;
+}
+
+/* Variação 4 (4, 8, 12...) - Blob no Canto Inferior Direito e Forma mais Esticada */
+.programCard:nth-child(4n)::before {
+  border-radius: 70% 30% 30% 70% / 60% 40% 60% 40%;
+  top: auto;
+  left: auto;
+  bottom: -60px;
+  right: -60px;
+}
+
+.programCard:hover::before {
+  transform: scale(1.35) rotate(10deg);
+  opacity: 0.12;
 }
 
 .programBody {
-  padding: 32px 28px;
-  flex: 1;
+  position: relative;
+  z-index: 1; /* Conteúdo acima do blob */
+  padding: 42px 36px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .programIconWrapper {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  margin-bottom: 18px;
-  background: color-mix(in srgb, var(--program-color) 8%, transparent);
+  width: 56px;
+  height: 56px;
+  border-radius: 50%; /* Círculo perfeito agora */
+  margin-bottom: 24px;
+  background: var(--bg-white);
+  border: 1px solid color-mix(in srgb, var(--program-color) 20%, transparent);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  transition: all 0.4s ease;
+}
+
+.programCard:hover .programIconWrapper {
+  background: var(--program-color);
+  border-color: var(--program-color);
+  transform: scale(1.1);
+}
+
+.programCard:hover .programIconWrapper :deep(svg) {
+  color: white !important;
+  transition: color 0.3s ease;
 }
 
 .programTitle {
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+  font-family: var(--font-heading); /* Garante a fonte do título */
+  color: var(--text-primary);
+  font-size: 1.5rem; /* Um pouco maior */
+  letter-spacing: -0.02em;
 }
 
 .programDescription {
-  line-height: 1.7;
-  margin-bottom: 1.25rem;
+  line-height: 1.75; /* Leitura mais confortável */
+  margin-bottom: 2.5rem;
+  color: var(--text-secondary);
+  flex-grow: 1;
+}
+
+.programFooter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
 }
 
 .programCardLink {
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: 0.9rem;
+  font-weight: 700;
   color: var(--program-color);
-  cursor: pointer;
-  transition: opacity 0.25s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px; /* Espaçamento elegante */
+  position: relative;
 }
 
-.programCardLink:hover {
-  opacity: 0.65;
+/* Linha decorativa no link */
+.programCardLink::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background: var(--program-color);
+  transition: width 0.3s ease;
+  opacity: 0.4;
+}
+
+.programCard:hover .programCardLink::after {
+  width: 100%;
+}
+
+.programLinkIcon {
+  transition: transform 0.3s ease;
+  opacity: 0.7;
+}
+
+.programCard:hover .programLinkIcon {
+  transform: translateX(6px);
+  opacity: 1;
 }
 
 /* ============================================
@@ -1071,7 +1269,6 @@ onMounted(() => {
   border: 1px solid rgba(var(--color-vinho-rgb), 0.06);
   border-radius: 32px;
   overflow: hidden;
-  box-shadow: var(--shadow-soft);
 }
 
 .testimonialCardGlow {
@@ -1102,10 +1299,10 @@ onMounted(() => {
 .testimonialQuote {
   font-family: var(--font-heading);
   position: relative;
-  font-size: clamp(1.3rem, 3vw, 1.5rem);
-  font-weight: 700;
+  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+  font-weight: 500;
   font-style: italic;
-  line-height: 1.4;
+  line-height: 1.5;
   color: var(--color-vinho);
   margin: 0 0 2rem 0;
   padding-top: 0.5rem;
@@ -1289,13 +1486,15 @@ onMounted(() => {
 }
 
 .contactMethodCard {
-  transition: all 0.35s ease;
-  box-shadow: var(--shadow-soft);
-  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  box-shadow: none; /* Remove sombra pesada inicial */
+  /* Background e Border definidos via Props do CBCard */
 }
 
 .contactMethodCard:hover {
-  transform: translateY(-3px);
+  transform: translateY(-4px);
+  border-color: rgba(var(--color-vinho-rgb), 0.15);
+  box-shadow: 0 12px 24px rgba(var(--color-vinho-rgb), 0.06); /* Sombra leve apenas no hover */
 }
 
 .contactMethodInner {
@@ -1529,7 +1728,33 @@ onMounted(() => {
   }
 
   .contactFormCard {
-    padding: 2rem;
+    padding: 40px;
+    box-shadow: 0 20px 40px -10px rgba(var(--color-vinho-rgb), 0.06);
+  }
+
+  .testimonialSection {
+    padding: 60px 5%;
+  }
+
+  .testimonialCard {
+    padding: 3rem 2rem 1.5rem;
+    min-height: auto;
+  }
+
+  .testimonialQuoteIcon {
+    font-size: 5rem;
+    top: 1rem;
+    left: 1.5rem;
+  }
+
+  .testimonialAuthorAvatar {
+    width: 48px;
+    height: 48px;
+    font-size: 1.2rem;
+  }
+
+  .testimonialAuthorName {
+    font-size: 1rem;
   }
 }
 
@@ -1540,6 +1765,31 @@ onMounted(() => {
 
   .statNumber {
     font-size: 2rem;
+  }
+
+  .testimonialCard {
+    padding: 2.5rem 1.25rem 1.25rem;
+    border-radius: 20px;
+  }
+
+  .testimonialQuoteIcon {
+    font-size: 4rem;
+    top: 0.5rem;
+    left: 1rem;
+  }
+
+  .testimonialQuote {
+    margin-bottom: 1.5rem;
+  }
+
+  .testimonialAuthorAvatar {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+
+  .testimonialAuthor {
+    gap: 0.75rem;
   }
 }
 
