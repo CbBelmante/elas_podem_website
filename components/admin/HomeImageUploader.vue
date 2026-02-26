@@ -58,7 +58,7 @@ const compressionQuality = ref(compressionSettings.value.quality);
 
 const PRESETS = [
   { label: 'Alta (90%)', value: 0.9, color: 'var(--color-oliva)' },
-  { label: 'Media (80%)', value: 0.8, color: 'var(--color-magenta)' },
+  { label: 'Media (80%)', value: 0.8, color: 'var(--color-vinho-medio)' },
   { label: 'Baixa (60%)', value: 0.6, color: 'var(--color-coral)' },
 ] as const;
 
@@ -155,7 +155,7 @@ async function handleDrop(event: DragEvent): Promise<void> {
       <!-- Estado: sem imagem -->
       <div v-if="!modelValue" class="imgUp__empty">
         <div class="imgUp__iconCircle">
-          <CBIcon icon="luc-cloud-upload" size="1.75rem" color="var(--color-magenta)" />
+          <CBIcon icon="luc-cloud-upload" size="1.75rem" color="var(--color-rosa)" />
         </div>
         <span class="imgUp__title">Arraste ou clique para enviar</span>
         <span class="imgUp__meta">{{ formatsText }} &middot; max {{ maxSizeText }}</span>
@@ -249,7 +249,7 @@ async function handleDrop(event: DragEvent): Promise<void> {
   position: relative;
   border: 2px dashed var(--border-hover);
   border-radius: 12px;
-  background: rgba(var(--color-magenta-rgb), 0.03);
+  background: rgba(var(--color-vinho-rgb), 0.03);
   transition: all 0.3s ease;
   cursor: pointer;
   overflow: hidden;
@@ -260,10 +260,10 @@ async function handleDrop(event: DragEvent): Promise<void> {
 }
 
 .imgUp__zone:hover:not(.imgUp__zone--has-image) {
-  border-color: var(--color-magenta);
-  background: rgba(var(--color-magenta-rgb), 0.06);
+  border-color: var(--color-rosa);
+  background: rgba(var(--color-rosa-rgb), 0.06);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(var(--color-magenta-rgb), 0.12);
+  box-shadow: 0 8px 24px rgba(var(--color-rosa-rgb), 0.12);
 }
 
 .imgUp__zone--dragging {
@@ -296,7 +296,7 @@ async function handleDrop(event: DragEvent): Promise<void> {
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: rgba(var(--color-magenta-rgb), 0.08);
+  background: rgba(var(--color-rosa-rgb), 0.08);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -367,8 +367,8 @@ async function handleDrop(event: DragEvent): Promise<void> {
 }
 
 .imgUp__action--edit {
-  background: var(--color-magenta);
-  box-shadow: var(--glow-magenta);
+  background: var(--color-rosa);
+  box-shadow: var(--glow-rosa);
 }
 
 .imgUp__action--delete {
@@ -436,7 +436,7 @@ async function handleDrop(event: DragEvent): Promise<void> {
   flex-direction: column;
   gap: 0.5rem;
   padding: 0.625rem 0.75rem;
-  background: rgba(var(--color-magenta-rgb), 0.03);
+  background: rgba(var(--color-vinho-rgb), 0.03);
   border: 1px solid var(--border-light);
   border-radius: 10px;
 }
@@ -471,7 +471,7 @@ async function handleDrop(event: DragEvent): Promise<void> {
 }
 
 .imgUp__toggle--active {
-  background: var(--color-magenta);
+  background: var(--color-rosa);
 }
 
 .imgUp__toggleDot {

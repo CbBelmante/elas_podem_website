@@ -6,37 +6,25 @@
 
   TODO (Fase 2):
   - Audit log: secao com ultimas acoes lidas de admin_logs.
-    Adiado porque ainda nao existem acoes logadas (homeEdit nao existe).
-    Quando homeEdit for implementado e acoes reais forem salvas,
-    adicionar secao de audit log aqui com query em FIRESTORE_COLLECTIONS.ADMIN_LOGS.
   - Cards de paginas adicionais (sobre, contato, etc.) conforme forem criadas.
-  - Layout admin (layouts/admin.vue) com sidebar — por agora usa layout false.
 -->
 
 <script setup lang="ts">
-import { CBBadge, CBButton, CBCard, CBIcon, CBLabel } from '@cb/components';
-
-import { ADMIN_ROLE_DISPLAY_NAMES } from '@definitions/adminRoles';
-import type { AdminRole } from '@definitions/adminRoles';
+import { CBBadge, CBCard, CBIcon, CBLabel } from '@cb/components';
+import AdminPageCard from '@components/admin/AdminPageCard.vue';
 
 // ============== PAGE META ==============
 
 definePageMeta({
-  layout: false,
+  layout: 'admin',
 });
 
 // ============== COMPOSABLES ==============
 
-const { userData, permissions, signOut } = useAuth();
+const { permissions, userData } = useAuth();
 const { originalData, isLoading, loadPageData } = useHomePageData();
 
 // ============== COMPUTED ==============
-
-/** Display name da role do usuario */
-const roleDisplayName = computed(() => {
-  if (!userData.value?.role) return '';
-  return ADMIN_ROLE_DISPLAY_NAMES[userData.value.role as AdminRole] ?? userData.value.role;
-});
 
 /** Metadados de status do documento home (lastUpdated, updatedByName) */
 const homeStatus = computed(() => {
@@ -66,15 +54,7 @@ const lastEditFormatted = computed(() => {
   }
 });
 
-// ============== METHODS ==============
-
-const handleLogout = async (): Promise<void> => {
-  await signOut();
-};
-
-const navigateToHomeEdit = (): void => {
-  navigateTo('/admin/edit/homeEdit');
-};
+const userName = computed(() => userData.value?.displayName ?? 'Admin');
 
 // ============== LIFECYCLE ==============
 
@@ -84,44 +64,35 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="dashboardPage">
-    <!-- Glows decorativos — mesmo padrao visual do site -->
-    <div class="dashboardPage__glow dashboardPage__glow--1" />
-    <div class="dashboardPage__glow dashboardPage__glow--2" />
+  <div class="dashboardContainer">
+    <!-- Header -->
+    <header class="dashboardHeader">
+      <CBBadge
+        content="PAINEL ADMINISTRATIVO"
+        variant="outline"
+        :icon-size="14"
+        weight="bold"
+        size="xs"
+        bg-color="rgba(92, 26, 42, 0.06)"
+        text-color="var(--color-vinho-medio)"
+        class="dashboardHeader__badge"
+      />
+      <CBLabel
+        text="Dashboard"
+        tag="h1"
+        weight="black"
+        class="dashboardHeader__title"
+      />
+      <CBLabel
+        :text="`Bem-vinda de volta, ${userName}`"
+        size="md"
+        color="secondary"
+        class="dashboardHeader__subtitle"
+      />
+    </header>
 
-    <div class="dashboardContainer">
-      <!-- Header com welcome + logout -->
-      <header class="dashboardHeader">
-        <div class="dashboardHeader__info">
-          <CBLabel
-            :text="`Ola, ${userData?.displayName ?? 'Admin'}`"
-            tag="h1"
-            size="xl"
-            weight="bold"
-            class="dashboardHeader__title"
-          />
-          <CBBadge
-            v-if="roleDisplayName"
-            :content="roleDisplayName"
-            variant="outline"
-            size="xs"
-            weight="bold"
-          />
-        </div>
-
-        <CBButton
-          label="Sair"
-          variant="outline"
-          size="sm"
-          :color="'var(--text-tertiary)'"
-          prepend-icon="luc-log-out"
-          :rounded="10"
-          @click="handleLogout"
-        />
-      </header>
-
-      <!-- Loading -->
-      <div v-if="isLoading" class="dashboardLoading">
+    <!-- Loading -->
+    <div v-if="isLoading" class="dashboardLoading">
         <CBIcon
           icon="luc-loader-2"
           size="1.5rem"
@@ -133,143 +104,89 @@ onMounted(async () => {
 
       <!-- Cards de paginas -->
       <section v-else class="dashboardPages">
-        <CBLabel
-          text="Paginas"
-          tag="h2"
-          size="lg"
-          weight="semibold"
-          class="dashboardPages__title"
-        />
+        <div class="dashboardPages__header">
+          <CBBadge
+            content="CONTEUDO"
+            variant="outline"
+            :icon-size="14"
+            weight="bold"
+            size="xs"
+            bg-color="rgba(92, 26, 42, 0.06)"
+            text-color="var(--color-vinho-medio)"
+            class="sectionBadge"
+          />
+          <CBLabel
+            text="Paginas"
+            tag="h2"
+            weight="black"
+            class="dashboardPages__title"
+          />
+        </div>
 
         <!-- Card: Home Page -->
-        <CBCard
-          variant="outlined"
-          :rounded="20"
-          hover
-          border-color="var(--border-light)"
-          class="pageCard"
-        >
-          <div class="pageCard__header">
-            <div class="pageCard__iconWrapper pageCard__iconWrapper--magenta">
-              <CBIcon icon="luc-home" size="1.25rem" color="#ffffff" />
-            </div>
-            <div class="pageCard__titleGroup">
-              <CBLabel text="Home Page" tag="h3" weight="bold" />
-              <CBLabel
-                text="Pagina principal do site — 8 secoes editaveis"
-                size="sm"
-                color="secondary"
-              />
-            </div>
-          </div>
-
-          <!-- Status: quem editou, quando -->
-          <div v-if="homeStatus" class="pageCard__status">
-            <div v-if="homeStatus.updatedByName" class="pageCard__statusItem">
-              <CBIcon icon="luc-user" size="0.875rem" color="var(--text-tertiary)" />
-              <CBLabel :text="homeStatus.updatedByName" size="xs" color="tertiary" />
-            </div>
-            <div v-if="lastEditFormatted" class="pageCard__statusItem">
-              <CBIcon icon="luc-clock" size="0.875rem" color="var(--text-tertiary)" />
-              <CBLabel :text="lastEditFormatted" size="xs" color="tertiary" />
-            </div>
-          </div>
-
-          <!-- Acao: so aparece se tem permissao canEdit -->
-          <div class="pageCard__actions">
-            <CBButton
-              v-if="permissions?.canEdit"
-              label="Editar Pagina"
-              size="md"
-              :bg-gradient="'var(--gradient-primary)'"
-              :rounded="12"
-              prepend-icon="luc-pencil"
-              @click="navigateToHomeEdit"
-            />
-            <CBBadge v-else content="Sem permissao para editar" variant="outline" size="xs" />
-          </div>
-        </CBCard>
+        <AdminPageCard
+          title="Home Page"
+          description="Pagina principal do site — 8 secoes editaveis"
+          icon="luc-home"
+          color="rosa"
+          edit-url="/admin/edit/homeEdit"
+          :can-edit="permissions?.canEdit ?? false"
+          :last-editor-name="homeStatus?.updatedByName"
+          :last-edit-date="lastEditFormatted"
+        />
       </section>
 
-      <!-- Audit Log placeholder (TODO Fase 2) -->
-      <section v-if="permissions?.canViewLogs" class="dashboardAudit">
+    <!-- Audit Log placeholder (TODO Fase 2) -->
+    <section v-if="permissions?.canViewLogs" class="dashboardAudit">
+      <div class="dashboardAudit__header">
+        <CBBadge
+          content="ATIVIDADE"
+          variant="outline"
+          :icon-size="14"
+          weight="bold"
+          size="xs"
+          bg-color="rgba(92, 26, 42, 0.06)"
+          text-color="var(--color-vinho-medio)"
+          class="sectionBadge"
+        />
         <CBLabel
           text="Atividade Recente"
           tag="h2"
-          size="lg"
-          weight="semibold"
+          weight="black"
           class="dashboardAudit__title"
         />
-        <CBCard
-          variant="outlined"
-          :rounded="16"
-          border-color="var(--border-light)"
-          class="dashboardAudit__placeholder"
-        >
-          <div class="dashboardAudit__empty">
-            <CBIcon icon="luc-scroll-text" size="2rem" color="var(--text-tertiary)" />
-            <CBLabel
-              text="Audit log disponivel na Fase 2 — quando acoes de edicao forem implementadas"
-              size="sm"
-              color="tertiary"
-              class="dashboardAudit__emptyText"
-            />
-          </div>
-        </CBCard>
-      </section>
-
-      <!-- Footer -->
-      <footer class="dashboardFooter">
-        <CBLabel text="Elas Podem — Painel Admin" size="xs" color="tertiary" />
-      </footer>
-    </div>
+      </div>
+      <CBCard
+        variant="outlined"
+        :rounded="20"
+        bg-color="#FFFFFF"
+        border-color="rgba(92, 26, 42, 0.06)"
+        class="dashboardAudit__placeholder"
+      >
+        <div class="dashboardAudit__empty">
+          <CBIcon icon="luc-scroll-text" size="2rem" color="var(--color-nude-quente)" />
+          <CBLabel
+            text="Audit log disponivel na Fase 2 — quando acoes de edicao forem implementadas"
+            size="sm"
+            color="tertiary"
+            class="dashboardAudit__emptyText"
+          />
+        </div>
+      </CBCard>
+    </section>
   </div>
 </template>
 
 <style scoped>
 /* ============================================
-   DASHBOARD PAGE — LAYOUT
+   DASHBOARD CONTAINER
    ============================================ */
-.dashboardPage {
-  min-height: 100vh;
-  background: var(--bg-hero);
-  font-family: var(--font-body);
-  padding: 2rem;
-  position: relative;
-  overflow: hidden;
-}
-
-/* Glows decorativos — mesmo padrao visual do login/home */
-.dashboardPage__glow {
-  position: absolute;
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-.dashboardPage__glow--1 {
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(var(--color-magenta-rgb), 0.10) 0%, transparent 70%);
-  top: -120px;
-  right: -100px;
-}
-
-.dashboardPage__glow--2 {
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(var(--color-coral-rgb), 0.07) 0%, transparent 70%);
-  bottom: -80px;
-  left: -80px;
-}
-
 .dashboardContainer {
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-  position: relative;
-  z-index: 1;
+  gap: 2.5rem;
 }
 
 /* ============================================
@@ -277,19 +194,33 @@ onMounted(async () => {
    ============================================ */
 .dashboardHeader {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
 }
 
-.dashboardHeader__info {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+.dashboardHeader__badge {
+  letter-spacing: 1.5px;
+  margin-bottom: 14px;
 }
 
 .dashboardHeader__title {
   font-family: var(--font-heading);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
   color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.dashboardHeader__subtitle {
+  line-height: 1.6;
+}
+
+/* ============================================
+   SHARED SECTION BADGE
+   ============================================ */
+.sectionBadge {
+  letter-spacing: 1.5px;
+  margin-bottom: 10px;
 }
 
 /* ============================================
@@ -322,97 +253,46 @@ onMounted(async () => {
 .dashboardPages {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.25rem;
+}
+
+.dashboardPages__header {
+  display: flex;
+  flex-direction: column;
 }
 
 .dashboardPages__title {
   font-family: var(--font-heading);
+  font-size: clamp(1.25rem, 3vw, 1.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
   color: var(--text-primary);
 }
 
 /* ============================================
-   PAGE CARD
-   ============================================ */
-.pageCard {
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  box-shadow: var(--shadow-sm);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.pageCard:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-lg);
-  border-color: var(--border-hover);
-}
-
-.pageCard__header {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.pageCard__iconWrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  flex-shrink: 0;
-}
-
-.pageCard__iconWrapper--magenta {
-  background: var(--gradient-magenta);
-  box-shadow: var(--glow-magenta);
-}
-
-.pageCard__titleGroup {
-  flex: 1;
-}
-
-.pageCard__status {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  margin-bottom: 1rem;
-  padding: 0.5rem 0;
-  border-top: 1px solid var(--border-light);
-}
-
-.pageCard__statusItem {
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-}
-
-.pageCard__actions {
-  display: flex;
-  justify-content: flex-end;
-}
-
-/* ============================================
-   AUDIT LOG PLACEHOLDER
+   AUDIT LOG
    ============================================ */
 .dashboardAudit {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.25rem;
+}
+
+.dashboardAudit__header {
+  display: flex;
+  flex-direction: column;
 }
 
 .dashboardAudit__title {
   font-family: var(--font-heading);
+  font-size: clamp(1.25rem, 3vw, 1.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
   color: var(--text-primary);
 }
 
 .dashboardAudit__placeholder {
-  background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-color: var(--glass-border);
+  box-shadow: var(--shadow-sm);
 }
 
 .dashboardAudit__empty {
@@ -420,7 +300,7 @@ onMounted(async () => {
   flex-direction: column;
   align-items: center;
   gap: 0.75rem;
-  padding: 2rem;
+  padding: 2.5rem;
 }
 
 .dashboardAudit__emptyText {
@@ -429,32 +309,11 @@ onMounted(async () => {
 }
 
 /* ============================================
-   FOOTER
-   ============================================ */
-.dashboardFooter {
-  text-align: center;
-  padding-top: 1rem;
-  opacity: 0.6;
-}
-
-/* ============================================
    RESPONSIVE
    ============================================ */
 @media (max-width: 640px) {
-  .dashboardPage {
-    padding: 1.5rem 1rem;
-  }
-
-  .dashboardHeader {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
-
-  .pageCard__status {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
+  .dashboardHeader__title {
+    font-size: 1.75rem;
   }
 }
 </style>

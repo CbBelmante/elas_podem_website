@@ -165,7 +165,7 @@ function removeValue(index: number): void {
 
 .valuesEditor__ghost {
   opacity: 0.4;
-  background: var(--bg-tint, rgba(230, 52, 107, 0.05));
+  background: rgba(var(--color-vinho-rgb), 0.05);
 }
 
 .dragHandle {

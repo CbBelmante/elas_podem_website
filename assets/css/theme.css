@@ -28,7 +28,7 @@
   /* Relatório 2025 */
   --color-magenta: #E6346B;       /* Rosa Magenta — Principal */
   --color-coral: #EE4A55;         /* Vermelho Coral */
-  --color-rosa: #D42D5E;          /* Rosa Escuro */
+  --color-rosa: #A82850;          /* Rosa Vinho */
   --color-preto: #191919;         /* Preto Grafite */
   --color-oliva: #88A201;         /* Verde Oliva */
   --color-azul-ceu: #EAF9FE;      /* Azul Céu */
@@ -63,7 +63,7 @@
   /* RGB channels — para uso com rgba() */
   --color-magenta-rgb: 230, 52, 107;
   --color-coral-rgb: 238, 74, 85;
-  --color-rosa-rgb: 212, 45, 94;
+  --color-rosa-rgb: 168, 40, 80;
   --color-laranja-rgb: 244, 89, 47;
   --color-coral-claro-rgb: 237, 102, 102;
   --color-oliva-rgb: 136, 162, 1;
@@ -79,14 +79,14 @@
      ============================================ */
   --gradient-magenta: linear-gradient(135deg, var(--color-magenta) 0%, var(--color-coral) 100%);
   --gradient-coral: linear-gradient(135deg, var(--color-coral) 0%, var(--color-laranja) 100%);
-  --gradient-rosa: linear-gradient(135deg, var(--color-rosa) 0%, var(--color-magenta) 100%);
+  --gradient-rosa: linear-gradient(135deg, var(--color-vinho-medio) 0%, var(--color-rosa) 100%);
   --gradient-laranja: linear-gradient(135deg, var(--color-laranja) 0%, var(--color-coral-claro) 100%);
   --gradient-oliva: linear-gradient(135deg, var(--color-oliva) 0%, var(--color-oliva-claro) 100%);
   --gradient-vinho: linear-gradient(135deg, var(--color-vinho) 0%, var(--color-vinho-medio) 100%);
   --gradient-roxo: linear-gradient(135deg, var(--color-roxo-acento) 0%, var(--color-roxo-noite) 100%);
 
   /* Gradientes globais */
-  --gradient-primary: linear-gradient(135deg, var(--color-magenta) 0%, var(--color-coral) 100%);
+  --gradient-primary: linear-gradient(135deg, var(--color-rosa) 0%, var(--color-magenta) 100%);
   --gradient-accent: linear-gradient(135deg, var(--color-magenta) 0%, var(--color-rosa) 100%);
   --gradient-hero: linear-gradient(160deg, var(--color-branco) 50%, var(--color-nude-fundo) 100%);
   --gradient-stats-bar: linear-gradient(135deg, var(--color-vinho) 0%, var(--color-borgonha) 100%);
@@ -203,6 +203,17 @@
   --cb-carousel-indicator-bg-active: var(--color-magenta);
   --cb-carousel-indicator-bg-hover: rgba(var(--color-magenta-rgb), 0.5);
 
+  /* Sidebar */
+  --cb-sidebar-border: var(--glass-border);
+  --cb-sidebar-header-bg: transparent;
+  --cb-sidebar-header-border: var(--border-light);
+  --cb-sidebar-footer-bg: transparent;
+  --cb-sidebar-footer-border: var(--border-light);
+  --cb-sidebar-item-active-bg: rgba(var(--color-vinho-medio-rgb), 0.1);
+  --cb-sidebar-item-active-text: var(--color-vinho-medio);
+  --cb-sidebar-item-hover-bg: rgba(var(--color-vinho-medio-rgb), 0.06);
+  --cb-sidebar-group-label: var(--text-tertiary);
+
   /* ============================================
      VARIÁVEIS DO SITE
      ============================================ */
@@ -222,25 +233,25 @@
   --text-tertiary: #A8A8A8;
 
   /* Bordas globais */
-  --border-light: rgba(var(--color-magenta-rgb), 0.1);
-  --border-hover: rgba(var(--color-magenta-rgb), 0.3);
-  --border-focus: rgba(var(--color-magenta-rgb), 0.5);
+  --border-light: rgba(var(--color-vinho-rgb), 0.08);
+  --border-hover: rgba(var(--color-vinho-rgb), 0.2);
+  --border-focus: rgba(var(--color-vinho-rgb), 0.35);
 
   /* Sombras globais */
-  --shadow-sm: 0 2px 10px rgba(var(--color-magenta-rgb), 0.04);
-  --shadow-md: 0 4px 20px rgba(var(--color-magenta-rgb), 0.06);
-  --shadow-lg: 0 15px 40px rgba(var(--color-magenta-rgb), 0.1);
-  --shadow-xl: 0 30px 80px rgba(var(--color-magenta-rgb), 0.15);
+  --shadow-sm: 0 2px 10px rgba(var(--color-vinho-rgb), 0.04);
+  --shadow-md: 0 4px 20px rgba(var(--color-vinho-rgb), 0.06);
+  --shadow-lg: 0 15px 40px rgba(var(--color-vinho-rgb), 0.1);
+  --shadow-xl: 0 30px 80px rgba(var(--color-vinho-rgb), 0.15);
 
   /* Badges */
   --cb-badge-primary: rgba(var(--color-rosa-rgb), 0.4);
   --cb-badge-primary-foreground: var(--color-branco);
   --cb-badge-primary-hover: rgba(var(--color-rosa-rgb), 0.5);
-  --cb-badge-outline-bg: rgba(var(--color-magenta-rgb), 0.12);
+  --cb-badge-outline-bg: rgba(var(--color-vinho-rgb), 0.08);
 
   /* Glassmorphism */
   --glass-bg: rgba(255, 255, 255, 0.8);
-  --glass-border: rgba(var(--color-magenta-rgb), 0.15);
+  --glass-border: rgba(var(--color-vinho-rgb), 0.1);
 
   /* Design tokens */
   --radius-pill: 50px;

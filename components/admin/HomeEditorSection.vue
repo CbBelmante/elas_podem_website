@@ -90,7 +90,7 @@ defineEmits<{
         <CBButton
           label="Salvar Secao"
           size="sm"
-          :bg-gradient="'var(--gradient-primary)'"
+          :bg-gradient="'var(--gradient-vinho)'"
           :rounded="10"
           :loading="isSaving"
           :disabled="!hasChanges"
@@ -132,7 +132,7 @@ defineEmits<{
 }
 
 .editorSection__header:hover {
-  background: var(--bg-tint, rgba(230, 52, 107, 0.03));
+  background: rgba(var(--color-vinho-rgb), 0.03);
 }
 
 .editorSection__headerLeft {
@@ -148,7 +148,7 @@ defineEmits<{
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background: var(--gradient-magenta, linear-gradient(135deg, #e6346b, #d42d5e));
+  background: var(--gradient-rosa);
   flex-shrink: 0;
 }
 

@@ -6,7 +6,7 @@
  * Cada secao e um componente independente dentro de HomeEditorSection (accordion).
  */
 
-import { CBButton, CBIcon, CBLabel } from '@cb/components';
+import { CBBadge, CBIcon, CBLabel } from '@cb/components';
 
 // Section editors
 import HomeEditorSection from '@components/admin/HomeEditorSection.vue';
@@ -26,7 +26,7 @@ import type { ISaveResult } from '@appTypes/admin';
 // ============== PAGE META ==============
 
 definePageMeta({
-  layout: false,
+  layout: 'admin',
 });
 
 // ============== COMPOSABLES ==============
@@ -44,7 +44,6 @@ const {
   validateSeo,
 } = useValidation();
 const { hasChanges, markAsChanged, resetChanges, canExit } = usePageEditor();
-const { userData } = useAuth();
 
 // ============== STATE ==============
 
@@ -165,10 +164,6 @@ function handleImageUploaded(url: string): void {
   tempUploadedImages.value.push(url);
 }
 
-function navigateBack(): void {
-  navigateTo('/admin');
-}
-
 // ============== NAVIGATION GUARD ==============
 
 onBeforeRouteLeave(async () => {
@@ -194,42 +189,33 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="homeEditPage">
-    <!-- Glows decorativos -->
-    <div class="homeEditPage__glow homeEditPage__glow--1" />
-    <div class="homeEditPage__glow homeEditPage__glow--2" />
+  <div class="homeEditContainer">
+    <!-- Header -->
+    <header class="homeEditHeader">
+      <CBBadge
+        content="EDITOR DE PAGINA"
+        variant="outline"
+        :icon-size="14"
+        weight="bold"
+        size="xs"
+        bg-color="rgba(92, 26, 42, 0.06)"
+        text-color="var(--color-vinho-medio)"
+        class="homeEditHeader__badge"
+      />
+      <CBLabel
+        text="Home Page"
+        tag="h1"
+        weight="black"
+        class="homeEditHeader__title"
+      />
+      <CBLabel
+        text="8 secoes editaveis — hero, missao, programas e mais"
+        size="md"
+        color="secondary"
+      />
+    </header>
 
-    <div class="homeEditContainer">
-      <!-- Header -->
-      <header class="homeEditHeader">
-        <div class="homeEditHeader__left">
-          <CBButton
-            variant="outline"
-            size="sm"
-            prepend-icon="luc-arrow-left"
-            :rounded="10"
-            :color="'var(--text-tertiary)'"
-            @click="navigateBack"
-          />
-          <div>
-            <CBLabel
-              text="Editar Home"
-              tag="h1"
-              size="xl"
-              weight="bold"
-              class="homeEditHeader__title"
-            />
-            <CBLabel
-              v-if="userData?.displayName"
-              :text="`Editando como ${userData.displayName}`"
-              size="xs"
-              color="tertiary"
-            />
-          </div>
-        </div>
-      </header>
-
-      <!-- Success message -->
+    <!-- Success message -->
       <div v-if="successMessage" class="homeEditSuccess">
         <CBIcon icon="luc-check-circle" size="1rem" color="var(--color-oliva)" />
         <span class="homeEditSuccess__text">{{ successMessage }}</span>
@@ -272,58 +258,19 @@ onUnmounted(() => {
         </HomeEditorSection>
       </div>
 
-      <!-- Footer -->
-      <footer class="homeEditFooter">
-        <CBLabel text="Elas Podem — Editor de Pagina" size="xs" color="tertiary" />
-      </footer>
-    </div>
   </div>
 </template>
 
 <style scoped>
 /* ============================================
-   HOME EDIT PAGE — LAYOUT
+   CONTAINER
    ============================================ */
-.homeEditPage {
-  min-height: 100vh;
-  background: var(--bg-hero);
-  font-family: var(--font-body);
-  padding: 2rem;
-  position: relative;
-  overflow: hidden;
-}
-
-/* Glows decorativos */
-.homeEditPage__glow {
-  position: absolute;
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-.homeEditPage__glow--1 {
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(var(--color-magenta-rgb), 0.10) 0%, transparent 70%);
-  top: -120px;
-  right: -100px;
-}
-
-.homeEditPage__glow--2 {
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(var(--color-coral-rgb), 0.07) 0%, transparent 70%);
-  bottom: -80px;
-  left: -80px;
-}
-
 .homeEditContainer {
   max-width: 900px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
-  position: relative;
-  z-index: 1;
+  gap: 1.5rem;
 }
 
 /* ============================================
@@ -331,19 +278,22 @@ onUnmounted(() => {
    ============================================ */
 .homeEditHeader {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  margin-bottom: 0.5rem;
 }
 
-.homeEditHeader__left {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+.homeEditHeader__badge {
+  letter-spacing: 1.5px;
+  margin-bottom: 14px;
 }
 
 .homeEditHeader__title {
   font-family: var(--font-heading);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
   color: var(--text-primary);
+  margin-bottom: 0.5rem;
 }
 
 /* ============================================
@@ -398,27 +348,4 @@ onUnmounted(() => {
   gap: 0.75rem;
 }
 
-/* ============================================
-   FOOTER
-   ============================================ */
-.homeEditFooter {
-  text-align: center;
-  padding-top: 1rem;
-  opacity: 0.6;
-}
-
-/* ============================================
-   RESPONSIVE
-   ============================================ */
-@media (max-width: 640px) {
-  .homeEditPage {
-    padding: 1.5rem 1rem;
-  }
-
-  .homeEditHeader {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
-}
 </style>
