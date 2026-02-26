@@ -8,6 +8,7 @@
 
 import { CBButton, CBIcon, CBInput, CBLabel, CBSelect, CBTextarea } from '@cb/components';
 import draggable from 'vuedraggable';
+import AdminColorPicker from '@components/admin/AdminColorPicker.vue';
 import HomeImageUploader from '@components/admin/HomeImageUploader.vue';
 import { HERO_CONFIG } from '@definitions/validationConfigs';
 import { createValidationRules } from '@utils/validationRules';
@@ -107,6 +108,25 @@ function removeStat(index: number): void {
         :rules="createValidationRules(rules.btnHistory)"
         @update:model-value="
           forms.editable.btnHistory = $event;
+          emit('changed');
+        "
+      />
+    </div>
+
+    <div class="heroEditor__row">
+      <AdminColorPicker
+        :model-value="forms.editable.btnDonateColor"
+        label="Cor/Gradiente Botao Doar"
+        @update:model-value="
+          forms.editable.btnDonateColor = $event;
+          emit('changed');
+        "
+      />
+      <AdminColorPicker
+        :model-value="forms.editable.btnHistoryColor"
+        label="Cor/Gradiente Botao Historia"
+        @update:model-value="
+          forms.editable.btnHistoryColor = $event;
           emit('changed');
         "
       />
@@ -254,7 +274,7 @@ function removeStat(index: number): void {
 
 .heroEditor__ghost {
   opacity: 0.4;
-  background: var(--bg-tint, rgba(230, 52, 107, 0.05));
+  background: rgba(var(--color-vinho-rgb), 0.05);
 }
 
 .dragHandle {

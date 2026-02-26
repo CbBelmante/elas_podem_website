@@ -14,7 +14,9 @@ export const HERO_DEFAULTS = {
   title: 'ELAS PO+DEM',
   description: '',
   btnDonate: 'Doe Agora',
+  btnDonateColor: 'gradient:primary',
   btnHistory: 'Nossa Historia',
+  btnHistoryColor: 'vinho-medio',
   heroImage: '',
   stats: [
     { icon: 'luc-award', number: '2025', label: 'Sede Propria' },
@@ -39,6 +41,7 @@ export const MISSION_DEFAULTS = {
   text1: '',
   text2: '',
   btnText: 'Conheca Nossa Historia',
+  btnColor: 'gradient:primary',
   image: '',
   imageAlt: '',
 } as const;

@@ -20,7 +20,9 @@ export interface IHeroSection {
   title: string;
   description: string;
   btnDonate: string;
+  btnDonateColor: string; // cor, gradiente preset ou custom (ver AdminColorPicker)
   btnHistory: string;
+  btnHistoryColor: string; // cor, gradiente preset ou custom
   heroImage: string; // Firebase Storage URL — imagem de fundo do hero (opaca)
   stats: IHeroStat[];
 }
@@ -35,6 +37,7 @@ export interface IMissionSection {
   text1: string;
   text2: string;
   btnText: string;
+  btnColor: string; // cor, gradiente preset ou custom (ver AdminColorPicker)
   image: string; // Firebase Storage URL
   imageAlt: string; // alt text para acessibilidade
 }

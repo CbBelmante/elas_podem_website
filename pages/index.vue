@@ -18,6 +18,7 @@ import {
   type INavbarMenuItem,
 } from '@cb/components';
 import { useI18n } from 'vue-i18n';
+import { resolveColorValue, isGradientValue } from '@utils/colorResolver';
 
 // ============== FIREBASE DATA ==============
 
@@ -58,6 +59,11 @@ const topBorderGradient = (color: string) => {
   };
   return colorMap[color] || 'linear-gradient(90deg, var(--color-magenta), var(--color-coral))';
 };
+
+// ============== BUTTON COLOR RESOLUTION ==============
+
+// Hero History: outline para cor solida, filled para gradiente
+const heroHistoryIsGradient = computed(() => isGradientValue(hero.value.btnHistoryColor));
 
 // ============== SEO ==============
 
@@ -203,7 +209,7 @@ onMounted(() => {
               <CBButton
                 :label="hero.btnDonate"
                 size="lg"
-                :bg-gradient="'var(--gradient-primary)'"
+                :bg-gradient="resolveColorValue(hero.btnDonateColor, 'gradient:primary')"
                 :rounded="50"
                 prepend-icon="luc-heart"
                 shine
@@ -214,8 +220,9 @@ onMounted(() => {
               <CBButton
                 :label="hero.btnHistory"
                 size="lg"
-                variant="outline"
-                :color="'var(--color-vinho-medio)'"
+                :variant="heroHistoryIsGradient ? undefined : 'outline'"
+                :bg-gradient="heroHistoryIsGradient ? resolveColorValue(hero.btnHistoryColor) : undefined"
+                :color="heroHistoryIsGradient ? undefined : resolveColorValue(hero.btnHistoryColor, 'vinho-medio')"
                 :rounded="50"
                 append-icon="luc-arrow-right"
                 class="btnHeroSecondary"
@@ -259,7 +266,7 @@ onMounted(() => {
             <CBButton
               :label="mission.btnText"
               size="lg"
-              :bg-gradient="'var(--gradient-primary)'"
+              :bg-gradient="resolveColorValue(mission.btnColor, 'gradient:primary')"
               :rounded="50"
               append-icon="luc-arrow-right"
               class="btnMission"

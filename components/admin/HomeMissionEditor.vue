@@ -7,6 +7,7 @@
  */
 
 import { CBInput, CBTextarea } from '@cb/components';
+import AdminColorPicker from '@components/admin/AdminColorPicker.vue';
 import HomeImageUploader from '@components/admin/HomeImageUploader.vue';
 import { MISSION_CONFIG } from '@definitions/validationConfigs';
 import { createValidationRules } from '@utils/validationRules';
@@ -82,6 +83,15 @@ const rules = MISSION_CONFIG.validationRules;
       :rules="createValidationRules(rules.btnText)"
       @update:model-value="
         forms.editable.btnText = $event;
+        emit('changed');
+      "
+    />
+
+    <AdminColorPicker
+      :model-value="forms.editable.btnColor"
+      label="Cor/Gradiente do Botao"
+      @update:model-value="
+        forms.editable.btnColor = $event;
         emit('changed');
       "
     />

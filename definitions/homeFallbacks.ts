@@ -17,7 +17,9 @@ export const HOME_FALLBACK: IHomePageData = {
       description:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
       btnDonate: 'Lorem Ipsum',
+      btnDonateColor: 'gradient:primary',
       btnHistory: 'Lorem Dolor',
+      btnHistoryColor: 'vinho-medio',
       heroImage: 'https://picsum.photos/1920/1080?random=1',
       stats: [
         { icon: 'luc-award', number: '000', label: 'Lorem Ipsum' },
@@ -34,6 +36,7 @@ export const HOME_FALLBACK: IHomePageData = {
       text2:
         'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.',
       btnText: 'Lorem Ipsum Dolor',
+      btnColor: 'gradient:primary',
       image: '',
       imageAlt: 'Lorem ipsum dolor sit amet',
     },
