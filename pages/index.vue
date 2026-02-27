@@ -44,27 +44,6 @@ const colorVars = (color: string) => {
   };
 };
 
-// Top-border gradient para program cards (baseado na cor do Firestore)
-const topBorderGradient = (color: string) => {
-  const colorMap: Record<string, string> = {
-    magenta: 'linear-gradient(90deg, var(--color-magenta), var(--color-coral))',
-    coral: 'linear-gradient(90deg, var(--color-coral), var(--color-laranja))',
-    rosa: 'linear-gradient(90deg, var(--color-rosa), var(--color-magenta))',
-    oliva: 'linear-gradient(90deg, var(--color-oliva), var(--color-verde-claro))',
-    laranja: 'linear-gradient(90deg, var(--color-laranja), var(--color-coral-claro))',
-    vinho: 'linear-gradient(90deg, var(--color-vinho), var(--color-vinho-medio))',
-    'vinho-medio': 'linear-gradient(90deg, var(--color-vinho-medio), var(--color-rosa))',
-    'roxo-noite': 'linear-gradient(90deg, var(--color-roxo-acento), var(--color-roxo-noite))',
-    'roxo-acento': 'linear-gradient(90deg, var(--color-roxo-acento), var(--color-roxo-noite))',
-  };
-  return colorMap[color] || 'linear-gradient(90deg, var(--color-magenta), var(--color-coral))';
-};
-
-// ============== BUTTON COLOR RESOLUTION ==============
-
-// Hero History: outline para cor solida, filled para gradiente
-const heroHistoryIsGradient = computed(() => isGradientValue(hero.value.btnHistoryColor));
-
 // ============== SEO ==============
 
 useSeoMeta({
@@ -209,7 +188,9 @@ onMounted(() => {
               <CBButton
                 :label="hero.btnDonate"
                 size="lg"
-                :bg-gradient="resolveColorValue(hero.btnDonateColor, 'gradient:primary')"
+                :variant="hero.btnDonateVariant"
+                :bg-gradient="isGradientValue(hero.btnDonateColor) ? resolveColorValue(hero.btnDonateColor, 'gradient:primary') : undefined"
+                :color="!isGradientValue(hero.btnDonateColor) ? resolveColorValue(hero.btnDonateColor, 'gradient:primary') : undefined"
                 :rounded="50"
                 prepend-icon="luc-heart"
                 shine
@@ -220,9 +201,9 @@ onMounted(() => {
               <CBButton
                 :label="hero.btnHistory"
                 size="lg"
-                :variant="heroHistoryIsGradient ? undefined : 'outline'"
-                :bg-gradient="heroHistoryIsGradient ? resolveColorValue(hero.btnHistoryColor) : undefined"
-                :color="heroHistoryIsGradient ? undefined : resolveColorValue(hero.btnHistoryColor, 'vinho-medio')"
+                :variant="hero.btnHistoryVariant"
+                :bg-gradient="isGradientValue(hero.btnHistoryColor) ? resolveColorValue(hero.btnHistoryColor) : undefined"
+                :color="!isGradientValue(hero.btnHistoryColor) ? resolveColorValue(hero.btnHistoryColor, 'vinho-medio') : undefined"
                 :rounded="50"
                 append-icon="luc-arrow-right"
                 class="btnHeroSecondary"
@@ -266,7 +247,9 @@ onMounted(() => {
             <CBButton
               :label="mission.btnText"
               size="lg"
-              :bg-gradient="resolveColorValue(mission.btnColor, 'gradient:primary')"
+              :variant="mission.btnVariant"
+              :bg-gradient="isGradientValue(mission.btnColor) ? resolveColorValue(mission.btnColor, 'gradient:primary') : undefined"
+              :color="!isGradientValue(mission.btnColor) ? resolveColorValue(mission.btnColor, 'gradient:primary') : undefined"
               :rounded="50"
               append-icon="luc-arrow-right"
               class="btnMission"
@@ -330,7 +313,7 @@ onMounted(() => {
             >
               <div class="programBody">
                 <div class="programIconWrapper">
-                  <CBIcon :icon="program.icon" size="1.5rem" :color="toVar(program.color)" />
+                  <CBIcon :icon="program.icon" size="1.5rem" />
                 </div>
                 <CBLabel
                   :text="program.title"
@@ -786,11 +769,11 @@ onMounted(() => {
   background: var(--bg-hero);
 }
 
-.heroBgImage {
+.heroSection .heroBgImage {
   position: absolute;
   inset: 0;
-  width: 100% !important;
-  height: 100% !important;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   opacity: 0.07;
   z-index: 0;
@@ -1166,9 +1149,10 @@ onMounted(() => {
   justify-content: center;
   width: 56px;
   height: 56px;
-  border-radius: 50%; /* Círculo perfeito agora */
+  border-radius: 50%;
   margin-bottom: 24px;
   background: var(--bg-white);
+  color: var(--program-color);
   border: 1px solid color-mix(in srgb, var(--program-color) 20%, transparent);
   box-shadow: 0 4px 12px rgba(0,0,0,0.03);
   transition: all 0.4s ease;
@@ -1177,12 +1161,8 @@ onMounted(() => {
 .programCard:hover .programIconWrapper {
   background: var(--program-color);
   border-color: var(--program-color);
+  color: white;
   transform: scale(1.1);
-}
-
-.programCard:hover .programIconWrapper :deep(svg) {
-  color: white !important;
-  transition: color 0.3s ease;
 }
 
 .programTitle {
@@ -1579,12 +1559,6 @@ onMounted(() => {
   transform: translateX(4px);
 }
 
-/* Outline button hover: fill with vinho */
-.btnHeroSecondary:hover {
-  background: var(--color-vinho) !important;
-  border-color: var(--color-vinho) !important;
-  color: white !important;
-}
 
 /* ============================================
    CTA — GRADIENT ESCURO

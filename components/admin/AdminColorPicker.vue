@@ -1,9 +1,11 @@
 <script setup lang="ts">
 /**
- * 🧩 AdminColorPicker - Seletor visual de cor/gradiente
+ * 🧩 AdminColorPicker — Seletor visual de cor/gradiente
  *
  * Suporta cor solida, gradiente preset e gradiente custom (2-3 cores).
  * Valor armazenado: 'rosa' | 'gradient:primary' | 'custom:rosa,magenta'
+ *
+ * Use `unavailableModes` para esconder abas que nao fazem sentido no contexto.
  */
 
 import { CBIcon, CBLabel } from '@cb/components';
@@ -12,13 +14,17 @@ import { parseColorValue, resolveColorValue } from '@utils/colorResolver';
 
 // ============== PROPS ==============
 
+type PickerMode = 'colors' | 'gradients' | 'custom';
+
 interface Props {
   modelValue: string;
   label?: string;
+  unavailableModes?: PickerMode[];
 }
 
 const props = withDefaults(defineProps<Props>(), {
   label: 'Cor',
+  unavailableModes: () => [],
 });
 
 // ============== EMITS ==============
@@ -29,10 +35,27 @@ const emit = defineEmits<{
 
 // ============== STATE ==============
 
-const activeTab = ref<'colors' | 'gradients' | 'custom'>('colors');
+const activeTab = ref<PickerMode>('colors');
 const customStart = ref('');
 const customMiddle = ref('');
 const customEnd = ref('');
+
+// ============== AVAILABLE MODES ==============
+
+const allModes: PickerMode[] = ['colors', 'gradients', 'custom'];
+
+const availableModes = computed(() =>
+  allModes.filter((m) => !props.unavailableModes.includes(m)),
+);
+
+function isAvailable(mode: PickerMode): boolean {
+  return availableModes.value.includes(mode);
+}
+
+/** Retorna a aba desejada se disponivel, senao a primeira disponivel */
+function safeTab(desired: PickerMode): PickerMode {
+  return isAvailable(desired) ? desired : availableModes.value[0];
+}
 
 // Sincronizar aba ativa e custom fields com o modelValue
 watch(
@@ -40,15 +63,15 @@ watch(
   (val) => {
     const parsed = parseColorValue(val);
     if (parsed.type === 'custom') {
-      activeTab.value = 'custom';
+      activeTab.value = safeTab('custom');
       const parts = parsed.raw.split(',');
       customStart.value = parts[0] ?? '';
       customMiddle.value = parts.length === 3 ? parts[1] : '';
       customEnd.value = parts[parts.length - 1] ?? '';
     } else if (parsed.type === 'gradient') {
-      activeTab.value = 'gradients';
+      activeTab.value = safeTab('gradients');
     } else {
-      activeTab.value = 'colors';
+      activeTab.value = safeTab('colors');
     }
   },
   { immediate: true },
@@ -126,9 +149,10 @@ function gradientBg(value: string): string {
   <div class="picker">
     <CBLabel v-if="label" :text="label" weight="semibold" size="sm" class="picker__label" />
 
-    <!-- Abas -->
-    <div class="picker__tabs">
+    <!-- Abas (esconde quando so tem 1 modo) -->
+    <div v-if="availableModes.length > 1" class="picker__tabs">
       <button
+        v-if="isAvailable('colors')"
         type="button"
         class="picker__tab"
         :class="{ 'picker__tab--active': activeTab === 'colors' }"
@@ -137,6 +161,7 @@ function gradientBg(value: string): string {
         Cores
       </button>
       <button
+        v-if="isAvailable('gradients')"
         type="button"
         class="picker__tab"
         :class="{ 'picker__tab--active': activeTab === 'gradients' }"
@@ -145,6 +170,7 @@ function gradientBg(value: string): string {
         Gradientes
       </button>
       <button
+        v-if="isAvailable('custom')"
         type="button"
         class="picker__tab"
         :class="{ 'picker__tab--active': activeTab === 'custom' }"
@@ -179,7 +205,7 @@ function gradientBg(value: string): string {
     </div>
 
     <!-- Aba: Gradientes preset -->
-    <div v-if="activeTab === 'gradients'" class="picker__panel">
+    <div v-if="activeTab === 'gradients' && isAvailable('gradients')" class="picker__panel">
       <div class="picker__swatches">
         <button
           v-for="opt in THEME_GRADIENT_OPTIONS"
@@ -203,7 +229,7 @@ function gradientBg(value: string): string {
     </div>
 
     <!-- Aba: Personalizado (montar gradiente) -->
-    <div v-if="activeTab === 'custom'" class="picker__panel">
+    <div v-if="activeTab === 'custom' && isAvailable('custom')" class="picker__panel">
       <!-- Cor Inicial -->
       <div class="picker__customGroup">
         <CBLabel text="Cor Inicial" size="xs" class="picker__customLabel" />

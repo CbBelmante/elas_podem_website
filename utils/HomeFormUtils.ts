@@ -239,13 +239,12 @@ export function combineProgramsData(
     badge: editable.badge,
     title: editable.title,
     subtitle: editable.subtitle,
-    items: combineArrayFromFields<IProgram>(editable.items, readonly.items, { color: 'magenta' }),
+    items: combineArrayFromFields<IProgram>(editable.items, readonly.items),
   };
 }
 
 export function createDefaultProgramsEditable(): IProgramsEditable {
-  const { color: _, ...editableFields } = PROGRAM_ITEM_DEFAULTS;
-  return { ...PROGRAMS_SECTION_DEFAULTS, items: [{ ...editableFields }] };
+  return { ...PROGRAMS_SECTION_DEFAULTS, items: [{ ...PROGRAM_ITEM_DEFAULTS }] };
 }
 
 export function createNewProgram(): IProgram {
@@ -309,13 +308,12 @@ export function combineSupportersData(
     badge: editable.badge,
     title: editable.title,
     subtitle: editable.subtitle,
-    items: combineArrayFromFields<ISupporter>(editable.items, readonly.items, { color: 'magenta' }),
+    items: combineArrayFromFields<ISupporter>(editable.items, readonly.items),
   };
 }
 
 export function createDefaultSupportersEditable(): ISupportersEditable {
-  const { color: _, ...editableFields } = SUPPORTER_ITEM_DEFAULTS;
-  return { ...SUPPORTERS_SECTION_DEFAULTS, items: [{ ...editableFields }] };
+  return { ...SUPPORTERS_SECTION_DEFAULTS, items: [{ ...SUPPORTER_ITEM_DEFAULTS }] };
 }
 
 export function createNewSupporter(): ISupporter {
@@ -361,9 +359,7 @@ export function combineContactData(
     badge: editable.badge,
     title: editable.title,
     description: editable.description,
-    methods: combineArrayFromFields<IContactMethod>(editable.methods, readonly.methods, {
-      color: 'magenta',
-    }),
+    methods: combineArrayFromFields<IContactMethod>(editable.methods, readonly.methods),
     formSubjects: [...editable.formSubjects],
   };
 }
@@ -388,12 +384,11 @@ export function separateValuesData(data: IValue[]) {
 }
 
 export function combineValuesData(editable: IValueEditable[]): IValue[] {
-  return combineArrayFromFields<IValue>(editable, [], { color: 'vinho' });
+  return combineArrayFromFields<IValue>(editable, []);
 }
 
 export function createDefaultValueEditable(): IValueEditable {
-  const { color: _, ...editableFields } = VALUE_ITEM_DEFAULTS;
-  return { ...editableFields };
+  return { ...VALUE_ITEM_DEFAULTS };
 }
 
 export function createNewValue(): IValue {

@@ -52,6 +52,18 @@ export const THEME_GRADIENT_OPTIONS = [
 ] as const;
 
 // ============================================================
+// VARIANTES DE BOTAO
+// ============================================================
+
+/** Variantes visuais do CBButton para selects do admin */
+export const BUTTON_VARIANT_OPTIONS = [
+  { value: 'solid', label: 'Solid (Padrao)' },
+  { value: 'outline', label: 'Outline' },
+  { value: 'ghost', label: 'Ghost' },
+  { value: 'link', label: 'Link' },
+] as const;
+
+// ============================================================
 // ICONES DISPONIVEIS
 // ============================================================
 

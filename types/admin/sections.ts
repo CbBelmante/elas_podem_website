@@ -6,6 +6,20 @@
  */
 
 // ============================================================
+// BUTTON (reutilizavel por qualquer secao)
+// ============================================================
+
+/** Variantes visuais do CBButton */
+export type ButtonVariant = 'solid' | 'outline' | 'ghost' | 'link';
+
+/** Campos padrao de um botao editavel no admin */
+export interface ISectionButton {
+  label: string;
+  color: string; // cor, gradiente preset ou custom (ver AdminColorPicker)
+  variant: ButtonVariant;
+}
+
+// ============================================================
 // HERO
 // ============================================================
 
@@ -20,9 +34,11 @@ export interface IHeroSection {
   title: string;
   description: string;
   btnDonate: string;
-  btnDonateColor: string; // cor, gradiente preset ou custom (ver AdminColorPicker)
+  btnDonateColor: string;
+  btnDonateVariant: ButtonVariant;
   btnHistory: string;
-  btnHistoryColor: string; // cor, gradiente preset ou custom
+  btnHistoryColor: string;
+  btnHistoryVariant: ButtonVariant;
   heroImage: string; // Firebase Storage URL — imagem de fundo do hero (opaca)
   stats: IHeroStat[];
 }
@@ -37,7 +53,8 @@ export interface IMissionSection {
   text1: string;
   text2: string;
   btnText: string;
-  btnColor: string; // cor, gradiente preset ou custom (ver AdminColorPicker)
+  btnColor: string;
+  btnVariant: ButtonVariant;
   image: string; // Firebase Storage URL
   imageAlt: string; // alt text para acessibilidade
 }
@@ -82,7 +99,6 @@ export interface ITestimonial {
 export interface ISupporter {
   name: string;
   icon: string; // fallback quando nao tem logo
-  color: string; // nome do tema (THEME_COLOR_OPTIONS)
   image: string; // Firebase Storage URL (opcional)
   imageAlt: string; // alt text para acessibilidade
   url: string;

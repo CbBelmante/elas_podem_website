@@ -1,15 +1,15 @@
 <script setup lang="ts">
 /* eslint-disable vue/no-mutating-props -- editors mutam forms via ref do parent */
 /**
- * HomeValuesEditor — Editor da secao Valores.
+ * 🧩 HomeValuesEditor — Editor da secao Valores.
  *
- * Array CRUD + drag-and-drop. Color e hidden (preservado no save).
+ * Array CRUD + drag-and-drop.
  */
 
-import { CBButton, CBIcon, CBInput, CBLabel, CBSelect } from '@cb/components';
+import { CBButton, CBIcon, CBInput, CBLabel } from '@cb/components';
 import draggable from 'vuedraggable';
+import AdminColorPicker from '@components/admin/AdminColorPicker.vue';
 import { VALUES_CONFIG } from '@definitions/validationConfigs';
-import { THEME_COLOR_OPTIONS } from '@definitions/themeOptions';
 import { createValidationRules } from '@utils/validationRules';
 import { createNewValue } from '@utils/HomeFormUtils';
 import type { IValueEditable } from '@appTypes/admin';
@@ -101,6 +101,16 @@ function removeValue(index: number): void {
               :rules="createValidationRules(rules.subtitle)"
               @update:model-value="
                 element.subtitle = $event;
+                emit('changed');
+              "
+            />
+
+            <AdminColorPicker
+              :model-value="element.color"
+              label="Cor"
+              :unavailable-modes="['gradients', 'custom']"
+              @update:model-value="
+                element.color = $event;
                 emit('changed');
               "
             />

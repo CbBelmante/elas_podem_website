@@ -34,8 +34,10 @@ export const SECTION_FIELDS = {
     description: 'editable',
     btnDonate: 'editable',
     btnDonateColor: 'editable',
+    btnDonateVariant: 'editable',
     btnHistory: 'editable',
     btnHistoryColor: 'editable',
+    btnHistoryVariant: 'editable',
     heroImage: 'editable',
     stats: 'editable',
   },
@@ -47,6 +49,7 @@ export const SECTION_FIELDS = {
     text2: 'editable',
     btnText: 'editable',
     btnColor: 'editable',
+    btnVariant: 'editable',
     image: 'editable',
     imageAlt: 'editable',
   },
@@ -55,7 +58,7 @@ export const SECTION_FIELDS = {
     title: 'editable',
     description: 'editable',
     icon: 'editable',
-    color: 'hidden',
+    color: 'editable',
     link: 'editable',
   },
 
@@ -71,7 +74,6 @@ export const SECTION_FIELDS = {
   supporters: {
     name: 'editable',
     icon: 'editable',
-    color: 'hidden',
     image: 'editable',
     imageAlt: 'editable',
     url: 'editable',
@@ -82,14 +84,14 @@ export const SECTION_FIELDS = {
     label: 'editable',
     value: 'editable',
     icon: 'editable',
-    color: 'hidden',
+    color: 'editable',
     url: 'editable',
   },
 
   values: {
     title: 'editable',
     subtitle: 'editable',
-    color: 'hidden',
+    color: 'editable',
   },
 
   cta: {

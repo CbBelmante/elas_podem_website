@@ -12,6 +12,7 @@ import draggable from 'vuedraggable';
 import { CONTACT_CONFIG } from '@definitions/validationConfigs';
 import { createValidationRules } from '@utils/validationRules';
 import { ICON_OPTIONS } from '@definitions/themeOptions';
+import AdminColorPicker from '@components/admin/AdminColorPicker.vue';
 import { createNewContactMethod } from '@utils/HomeFormUtils';
 import { SECTION_FIELDS } from '@definitions/sectionFields';
 import type {
@@ -201,15 +202,24 @@ function updateSubject(index: number, value: string): void {
                     emit('changed');
                   "
                 />
-                <CBInput
-                  :model-value="element.url"
-                  label="URL (opcional)"
+                <AdminColorPicker
+                  :model-value="element.color"
+                  label="Cor"
+                  :unavailable-modes="['gradients', 'custom']"
                   @update:model-value="
-                    element.url = $event;
+                    element.color = $event;
                     emit('changed');
                   "
                 />
               </div>
+              <CBInput
+                :model-value="element.url"
+                label="URL (opcional)"
+                @update:model-value="
+                  element.url = $event;
+                  emit('changed');
+                "
+              />
             </div>
           </div>
         </template>

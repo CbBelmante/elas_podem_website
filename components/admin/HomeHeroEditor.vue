@@ -9,6 +9,7 @@
 import { CBButton, CBIcon, CBInput, CBLabel, CBSelect, CBTextarea } from '@cb/components';
 import draggable from 'vuedraggable';
 import AdminColorPicker from '@components/admin/AdminColorPicker.vue';
+import AdminButtonVariantSelect from '@components/admin/AdminButtonVariantSelect.vue';
 import HomeImageUploader from '@components/admin/HomeImageUploader.vue';
 import { HERO_CONFIG } from '@definitions/validationConfigs';
 import { createValidationRules } from '@utils/validationRules';
@@ -61,86 +62,75 @@ function removeStat(index: number): void {
   <div class="heroEditor">
     <div class="heroEditor__row">
       <CBInput
-        :model-value="forms.editable.badge"
+        v-model="forms.editable.badge"
         label="Badge"
         :rules="createValidationRules(rules.badge)"
-        @update:model-value="
-          forms.editable.badge = $event;
-          emit('changed');
-        "
+        @update:model-value="emit('changed')"
       />
 
       <CBInput
-        :model-value="forms.editable.title"
+        v-model="forms.editable.title"
         label="Titulo"
         :rules="createValidationRules(rules.title)"
-        @update:model-value="
-          forms.editable.title = $event;
-          emit('changed');
-        "
+        @update:model-value="emit('changed')"
       />
     </div>
 
     <CBTextarea
-      :model-value="forms.editable.description"
+      v-model="forms.editable.description"
       label="Descricao"
       :rules="createValidationRules(rules.description)"
-      @update:model-value="
-        forms.editable.description = $event;
-        emit('changed');
-      "
+      @update:model-value="emit('changed')"
     />
 
     <div class="heroEditor__row">
       <CBInput
-        :model-value="forms.editable.btnDonate"
+        v-model="forms.editable.btnDonate"
         label="Botao Doar"
         :rules="createValidationRules(rules.btnDonate)"
-        @update:model-value="
-          forms.editable.btnDonate = $event;
-          emit('changed');
-        "
+        @update:model-value="emit('changed')"
       />
 
       <CBInput
-        :model-value="forms.editable.btnHistory"
+        v-model="forms.editable.btnHistory"
         label="Botao Historia"
         :rules="createValidationRules(rules.btnHistory)"
-        @update:model-value="
-          forms.editable.btnHistory = $event;
-          emit('changed');
-        "
+        @update:model-value="emit('changed')"
       />
     </div>
 
     <div class="heroEditor__row">
       <AdminColorPicker
-        :model-value="forms.editable.btnDonateColor"
+        v-model="forms.editable.btnDonateColor"
         label="Cor/Gradiente Botao Doar"
-        @update:model-value="
-          forms.editable.btnDonateColor = $event;
-          emit('changed');
-        "
+        @update:model-value="emit('changed')"
       />
+      <AdminButtonVariantSelect
+        v-model="forms.editable.btnDonateVariant"
+        label="Variante Botao Doar"
+        @update:model-value="emit('changed')"
+      />
+    </div>
+
+    <div class="heroEditor__row">
       <AdminColorPicker
-        :model-value="forms.editable.btnHistoryColor"
+        v-model="forms.editable.btnHistoryColor"
         label="Cor/Gradiente Botao Historia"
-        @update:model-value="
-          forms.editable.btnHistoryColor = $event;
-          emit('changed');
-        "
+        @update:model-value="emit('changed')"
+      />
+      <AdminButtonVariantSelect
+        v-model="forms.editable.btnHistoryVariant"
+        label="Variante Botao Historia"
+        @update:model-value="emit('changed')"
       />
     </div>
 
     <!-- Imagem de fundo do hero -->
     <HomeImageUploader
-      :model-value="forms.editable.heroImage"
+      v-model="forms.editable.heroImage"
       category="hero"
       label="Imagem de Fundo (aparece opaca atras do conteudo)"
-      @update:model-value="
-        forms.editable.heroImage = $event;
-        emit('changed');
-      "
+      @update:model-value="emit('changed')"
       @uploaded="emit('uploaded', $event)"
     />
 
@@ -171,29 +161,20 @@ function removeStat(index: number): void {
 
             <div class="heroEditor__statFields">
               <CBSelect
-                :model-value="element.icon"
+                v-model="element.icon"
                 label="Icone"
                 :items="iconSelectOptions"
-                @update:model-value="
-                  element.icon = $event;
-                  emit('changed');
-                "
+                @update:model-value="emit('changed')"
               />
               <CBInput
-                :model-value="element.number"
+                v-model="element.number"
                 label="Numero"
-                @update:model-value="
-                  element.number = $event;
-                  emit('changed');
-                "
+                @update:model-value="emit('changed')"
               />
               <CBInput
-                :model-value="element.label"
+                v-model="element.label"
                 label="Label"
-                @update:model-value="
-                  element.label = $event;
-                  emit('changed');
-                "
+                @update:model-value="emit('changed')"
               />
             </div>
 

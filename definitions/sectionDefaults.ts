@@ -15,8 +15,10 @@ export const HERO_DEFAULTS = {
   description: '',
   btnDonate: 'Doe Agora',
   btnDonateColor: 'gradient:primary',
+  btnDonateVariant: 'solid',
   btnHistory: 'Nossa Historia',
   btnHistoryColor: 'vinho-medio',
+  btnHistoryVariant: 'outline',
   heroImage: '',
   stats: [
     { icon: 'luc-award', number: '2025', label: 'Sede Propria' },
@@ -42,6 +44,7 @@ export const MISSION_DEFAULTS = {
   text2: '',
   btnText: 'Conheca Nossa Historia',
   btnColor: 'gradient:primary',
+  btnVariant: 'solid',
   image: '',
   imageAlt: '',
 } as const;
@@ -90,7 +93,6 @@ export const SUPPORTERS_SECTION_DEFAULTS = {
 export const SUPPORTER_ITEM_DEFAULTS = {
   name: '',
   icon: 'luc-building-2',
-  color: 'magenta',
   image: '',
   imageAlt: '',
   url: '',

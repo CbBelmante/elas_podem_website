@@ -3,7 +3,7 @@
 /**
  * 🧩 HomeProgramsEditor — Editor da secao Programas.
  *
- * Array CRUD + drag-and-drop. Tem readonly pareado (color).
+ * Array CRUD + drag-and-drop com readonly pareado.
  */
 
 import { CBButton, CBIcon, CBInput, CBLabel, CBSelect, CBTextarea } from '@cb/components';
@@ -11,6 +11,7 @@ import draggable from 'vuedraggable';
 import { PROGRAMS_CONFIG } from '@definitions/validationConfigs';
 import { createValidationRules } from '@utils/validationRules';
 import { ICON_OPTIONS } from '@definitions/themeOptions';
+import AdminColorPicker from '@components/admin/AdminColorPicker.vue';
 import { createNewProgram } from '@utils/HomeFormUtils';
 import { SECTION_FIELDS } from '@definitions/sectionFields';
 import type {
@@ -168,6 +169,16 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
                 "
               />
             </div>
+
+            <AdminColorPicker
+              :model-value="element.color"
+              label="Cor"
+              :unavailable-modes="['gradients', 'custom']"
+              @update:model-value="
+                element.color = $event;
+                emit('changed');
+              "
+            />
 
             <CBTextarea
               :model-value="element.description"

@@ -8,6 +8,7 @@
 
 import { CBInput, CBTextarea } from '@cb/components';
 import AdminColorPicker from '@components/admin/AdminColorPicker.vue';
+import AdminButtonVariantSelect from '@components/admin/AdminButtonVariantSelect.vue';
 import HomeImageUploader from '@components/admin/HomeImageUploader.vue';
 import { MISSION_CONFIG } from '@definitions/validationConfigs';
 import { createValidationRules } from '@utils/validationRules';
@@ -31,89 +32,73 @@ const emit = defineEmits<{
 // ============== VALIDATION RULES ==============
 
 const rules = MISSION_CONFIG.validationRules;
+
 </script>
 
 <template>
   <div class="missionEditor">
     <div class="missionEditor__row">
       <CBInput
-        :model-value="forms.editable.badge"
+        v-model="forms.editable.badge"
         label="Badge"
         :rules="createValidationRules(rules.badge)"
-        @update:model-value="
-          forms.editable.badge = $event;
-          emit('changed');
-        "
+        @update:model-value="emit('changed')"
       />
 
       <CBInput
-        :model-value="forms.editable.title"
+        v-model="forms.editable.title"
         label="Titulo"
         :rules="createValidationRules(rules.title)"
-        @update:model-value="
-          forms.editable.title = $event;
-          emit('changed');
-        "
+        @update:model-value="emit('changed')"
       />
     </div>
 
     <CBTextarea
-      :model-value="forms.editable.text1"
+      v-model="forms.editable.text1"
       label="Texto 1"
       :rules="createValidationRules(rules.text1)"
-      @update:model-value="
-        forms.editable.text1 = $event;
-        emit('changed');
-      "
+      @update:model-value="emit('changed')"
     />
 
     <CBTextarea
-      :model-value="forms.editable.text2"
+      v-model="forms.editable.text2"
       label="Texto 2"
       :rules="createValidationRules(rules.text2)"
-      @update:model-value="
-        forms.editable.text2 = $event;
-        emit('changed');
-      "
+      @update:model-value="emit('changed')"
     />
 
     <CBInput
-      :model-value="forms.editable.btnText"
+      v-model="forms.editable.btnText"
       label="Texto do Botao"
       :rules="createValidationRules(rules.btnText)"
-      @update:model-value="
-        forms.editable.btnText = $event;
-        emit('changed');
-      "
+      @update:model-value="emit('changed')"
     />
 
-    <AdminColorPicker
-      :model-value="forms.editable.btnColor"
-      label="Cor/Gradiente do Botao"
-      @update:model-value="
-        forms.editable.btnColor = $event;
-        emit('changed');
-      "
-    />
+    <div class="missionEditor__row">
+      <AdminColorPicker
+        v-model="forms.editable.btnColor"
+        label="Cor/Gradiente do Botao"
+        @update:model-value="emit('changed')"
+      />
+      <AdminButtonVariantSelect
+        v-model="forms.editable.btnVariant"
+        label="Variante do Botao"
+        @update:model-value="emit('changed')"
+      />
+    </div>
 
     <HomeImageUploader
-      :model-value="forms.editable.image"
+      v-model="forms.editable.image"
       category="mission"
       label="Imagem da Missao"
-      @update:model-value="
-        forms.editable.image = $event;
-        emit('changed');
-      "
+      @update:model-value="emit('changed')"
       @uploaded="emit('uploaded', $event)"
     />
 
     <CBInput
-      :model-value="forms.editable.imageAlt"
+      v-model="forms.editable.imageAlt"
       label="Texto alternativo da imagem (acessibilidade)"
-      @update:model-value="
-        forms.editable.imageAlt = $event;
-        emit('changed');
-      "
+      @update:model-value="emit('changed')"
     />
   </div>
 </template>
