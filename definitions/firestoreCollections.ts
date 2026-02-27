@@ -23,3 +23,16 @@ export const PAGE_DOCUMENTS = {
 } as const satisfies Record<string, string>;
 
 export type PageDocument = (typeof PAGE_DOCUMENTS)[keyof typeof PAGE_DOCUMENTS];
+
+// ============== UTILS ==============
+
+export function isValidCollection(name: string): name is FirestoreCollection {
+  return Object.values(FIRESTORE_COLLECTIONS).includes(name as FirestoreCollection);
+}
+
+export function isValidPageDocument(name: string): name is PageDocument {
+  return Object.values(PAGE_DOCUMENTS).includes(name as PageDocument);
+}
+
+export const ALL_COLLECTIONS = Object.values(FIRESTORE_COLLECTIONS) as FirestoreCollection[];
+export const ALL_PAGE_DOCUMENTS = Object.values(PAGE_DOCUMENTS) as PageDocument[];

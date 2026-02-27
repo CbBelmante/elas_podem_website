@@ -16,8 +16,13 @@
  * @module definitions
  */
 
-// ---- Opcoes de tema (cores, icones) ----
-export { THEME_COLOR_OPTIONS, ICON_OPTIONS } from './themeOptions';
+// ---- Opcoes de tema (cores, gradientes, icones, variantes) ----
+export {
+  THEME_COLOR_OPTIONS,
+  THEME_GRADIENT_OPTIONS,
+  BUTTON_VARIANT_OPTIONS,
+  ICON_OPTIONS,
+} from './themeOptions';
 
 // ---- Configs de validacao por secao ----
 export {
@@ -38,7 +43,14 @@ export { SECTION_FIELDS } from './sectionFields';
 export type { FieldMode } from './sectionFields';
 
 // ---- Firestore collections e documentos ----
-export { FIRESTORE_COLLECTIONS, PAGE_DOCUMENTS } from './firestoreCollections';
+export {
+  FIRESTORE_COLLECTIONS,
+  PAGE_DOCUMENTS,
+  isValidCollection,
+  isValidPageDocument,
+  ALL_COLLECTIONS,
+  ALL_PAGE_DOCUMENTS,
+} from './firestoreCollections';
 export type { FirestoreCollection, PageDocument } from './firestoreCollections';
 
 // ---- Defaults por secao (valores iniciais quando Firestore vazio) ----
@@ -57,6 +69,13 @@ export {
   SEO_DEFAULTS,
   SEO_OG_DEFAULTS,
 } from './sectionDefaults';
+
+// ---- Cache keys ----
+export { CACHE_KEYS } from './cacheKeys';
+export type { CacheKeyEntry, CacheKey } from './cacheKeys';
+
+// ---- Fallbacks da home (dados iniciais/lorem quando Firestore vazio) ----
+export { HOME_FALLBACK } from './homeFallbacks';
 
 // ---- Admin roles ----
 export {
