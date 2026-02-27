@@ -25,6 +25,7 @@ export default defineNuxtConfig(() => {
   return {
     compatibilityDate: '2025-07-15',
     devtools: { enabled: true },
+    devServer: { port: 3333 },
     modules: ['@nuxt/eslint'],
 
     // CSS global — ordem importa (library primeiro, theme depois)

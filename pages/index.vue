@@ -1708,8 +1708,23 @@ onMounted(() => {
     width: 100%;
   }
 
+  .missionSection,
+  .programsSection,
+  .supportersSection,
+  .contactSection {
+    padding: 70px 5%;
+  }
+
+  .ctaSection {
+    padding: 80px 5%;
+  }
+
+  .programBody {
+    padding: 32px 24px;
+  }
+
   .contactFormCard {
-    padding: 40px;
+    padding: 28px 20px;
     box-shadow: 0 20px 40px -10px rgba(var(--color-vinho-rgb), 0.06);
   }
 
@@ -1740,12 +1755,63 @@ onMounted(() => {
 }
 
 @media (max-width: 480px) {
+  .heroSection {
+    padding: 100px 5% 50px;
+  }
+
+  .blobShape {
+    width: 200px;
+    height: 200px;
+    box-shadow: 14px 14px 0px var(--color-nude-quente);
+  }
+
   .statItem {
     padding: 30px 16px;
   }
 
   .statNumber {
     font-size: 2rem;
+  }
+
+  .missionSection,
+  .programsSection,
+  .supportersSection,
+  .contactSection {
+    padding: 60px 5%;
+  }
+
+  .ctaSection {
+    padding: 70px 5%;
+  }
+
+  .programBody {
+    padding: 28px 20px;
+  }
+
+  .programIconWrapper {
+    width: 44px;
+    height: 44px;
+    margin-bottom: 16px;
+  }
+
+  .programTitle {
+    font-size: 1.25rem;
+  }
+
+  .contactFormCard {
+    padding: 20px 14px;
+  }
+
+  .contactDescription {
+    margin-bottom: 2rem;
+  }
+
+  .valueItem {
+    padding: 36px 20px;
+  }
+
+  .valueTitle {
+    font-size: 1.25rem;
   }
 
   .testimonialCard {

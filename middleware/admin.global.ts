@@ -17,8 +17,14 @@ export default defineNuxtRouteMiddleware(async (to) => {
     return;
   }
 
-  // Checa autenticacao via Firebase Auth
+  // Auth check so faz sentido no client (no SSR, Firebase Auth nao tem sessao persistida)
+  if (import.meta.server) {
+    return;
+  }
+
+  // Aguarda Firebase restaurar sessao antes de checar (evita race condition)
   const { $auth } = useFirebase();
+  await $auth.authStateReady();
 
   if (!$auth.currentUser) {
     return navigateTo('/admin/login');
