@@ -3,7 +3,7 @@
  * 🧩 HomeImageUploader — Upload de imagem com drag&drop, preview e compressao.
  *
  * Reutilizado em Hero, Mission, Testimonials, Supporters e SEO.
- * Usa useFirebaseStorage internamente. Compressao automatica por categoria.
+ * Usa useStorage internamente (adapter agnostico). Compressao automatica por categoria.
  *
  * Features:
  * - Drag & drop com visual feedback
@@ -14,10 +14,10 @@
  */
 
 import { CBIcon, CBLabel } from '@cb/components';
-import { useFirebaseStorage } from '@composables/useFirebaseStorage';
+import { useStorage } from '@composables/useStorage';
 import { useImageCompression } from '@composables/useImageCompression';
 import { COMPRESSION_SETTINGS, IMAGE_UPLOAD_CONFIG } from '@definitions/validationConfigs';
-import type { CompressionCategory } from '@composables/useFirebaseStorage';
+import type { CompressionCategory } from '@/types/storage';
 
 // ============== PROPS ==============
 
@@ -40,7 +40,7 @@ const emit = defineEmits<{
 
 // ============== COMPOSABLES ==============
 
-const { validateImageFile, uploadImage } = useFirebaseStorage();
+const { validateImageFile, uploadImage } = useStorage();
 const { compressImage } = useImageCompression();
 
 // ============== STATE ==============

@@ -11,13 +11,13 @@
  * - Prevenir saida com mudancas nao salvas (canExit)
  *
  * @dependencias
- * - composables/useFirebaseStorage (deleteFile)
+ * - composables/useStorage (deleteFile — adapter agnostico)
  * - utils/Logger
  */
 
 // ============== DEPENDENCIAS INTERNAS ==============
 
-import { useFirebaseStorage } from '@composables/useFirebaseStorage';
+import { useStorage } from '@composables/useStorage';
 import { Logger } from '@utils/Logger';
 
 // ============== CONSTANTS ==============
@@ -27,7 +27,7 @@ const logger = Logger.child({ composable: 'usePageEditor' });
 // ============== COMPOSABLE ==============
 
 export function usePageEditor() {
-  const { deleteFile } = useFirebaseStorage();
+  const { deleteFile } = useStorage();
 
   // ===== STATE =====
 
@@ -53,14 +53,14 @@ export function usePageEditor() {
    * So deleta se:
    * 1. oldUrl existe
    * 2. oldUrl e diferente de newUrl (realmente mudou)
-   * 3. oldUrl e do Firebase Storage (contem 'firebase')
+   * 3. oldUrl e uma URL HTTP valida (nao data URI, nao path local)
    *
    * Silent fail — loga warning se falhar mas nao lanca erro.
    */
   const cleanupOldImage = async (oldUrl?: string, newUrl?: string): Promise<void> => {
     if (!oldUrl) return;
     if (oldUrl === newUrl) return;
-    if (!oldUrl.includes('firebase')) return;
+    if (oldUrl.startsWith('data:') || !oldUrl.startsWith('http')) return;
 
     await deleteFile(oldUrl);
     logger.debug('Imagem antiga removida', { oldUrl });

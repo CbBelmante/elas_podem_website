@@ -60,7 +60,7 @@ import type {
   IHomePageData,
 } from '~/types/admin';
 
-import { SECTION_FIELDS } from '~/definitions/sectionFields';
+import { SECTION_FIELDS, type FieldMode } from '~/definitions/sectionFields';
 import {
   HERO_DEFAULTS,
   HERO_STAT_DEFAULTS,
@@ -102,17 +102,17 @@ function cloneValue(value: unknown): unknown {
  * @param fields - Config de campos (ex: SECTION_FIELDS.programs)
  * @returns { editable, readonly } com os campos separados
  */
-function separateByFields<T extends Record<string, unknown>>(
+function separateByFields<T extends object>(
   data: T,
-  fields: Record<string, 'editable' | 'readonly'>
+  fields: Record<string, FieldMode>
 ): { editable: Partial<T>; readonly: Partial<T> } {
   const editable: Record<string, unknown> = {};
   const readonly: Record<string, unknown> = {};
 
   for (const [key, mode] of Object.entries(fields)) {
-    if (!(key in data)) continue;
+    if (!(key in data) || mode === 'hidden') continue;
     const target = mode === 'editable' ? editable : readonly;
-    target[key] = cloneValue(data[key]);
+    target[key] = cloneValue((data as Record<string, unknown>)[key]);
   }
 
   return { editable: editable as Partial<T>, readonly: readonly as Partial<T> };
@@ -136,9 +136,9 @@ function combineFromFields<T>(editable: Partial<T>, readonly: Partial<T>): T {
  * @param fields - Config de campos
  * @returns { editable[], readonly[] }
  */
-function separateArrayByFields<T extends Record<string, unknown>>(
+function separateArrayByFields<T extends object>(
   data: T[],
-  fields: Record<string, 'editable' | 'readonly'>
+  fields: Record<string, FieldMode>
 ): { editable: Partial<T>[]; readonly: Partial<T>[] } {
   const results = data.map((item) => separateByFields(item, fields));
   return {

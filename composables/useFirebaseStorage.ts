@@ -1,6 +1,7 @@
 /**
- * 🎣 useFirebaseStorage - Upload e gerenciamento de arquivos no Firebase Storage
+ * 🔥 useFirebaseStorage - Adapter de Storage para Firebase
  *
+ * Implementa IStorageAdapter (types/storage.ts).
  * Upload generico, upload com compressao por categoria,
  * delete com silent fail, e validacao de imagens.
  *
@@ -24,19 +25,7 @@ import { useFirebase } from '@composables/useFirebase';
 import { useImageCompression } from '@composables/useImageCompression';
 import { COMPRESSION_SETTINGS, IMAGE_UPLOAD_CONFIG } from '@definitions/validationConfigs';
 import { Logger } from '@utils/Logger';
-
-// ============== INTERFACES ==============
-
-/** Resultado de validacao de arquivo */
-export interface IFileValidation {
-  readonly isValid: boolean;
-  readonly error?: string;
-}
-
-// ============== TYPES ==============
-
-/** Categorias de compressao disponiveis (keys de COMPRESSION_SETTINGS) */
-export type CompressionCategory = keyof typeof COMPRESSION_SETTINGS;
+import type { IStorageAdapter, IFileValidation, CompressionCategory } from '@/types/storage';
 
 // ============== CONSTANTS ==============
 
@@ -75,7 +64,7 @@ function extractPathFromUrl(url: string): string | null {
 
 // ============== COMPOSABLE ==============
 
-export function useFirebaseStorage() {
+export function useFirebaseStorage(): IStorageAdapter {
   const { $storage } = useFirebase();
   const { compressImage } = useImageCompression();
 

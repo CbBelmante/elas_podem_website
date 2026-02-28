@@ -4,38 +4,85 @@ Website oficial da ONG **Elas Podem** - Projeto acadêmico focado em capacitaç�
 
 ## 📖 Sobre o Projeto
 
-Landing page institucional desenvolvida com **Nuxt 4 + Vue 3** e **@cb/components**, biblioteca customizada de componentes. Site estático focado em apresentação da ONG e suas ações.
+Website institucional desenvolvido com **Nuxt 4 + Vue 3** e **@cb/components**, biblioteca customizada de componentes. Inclui landing page pública (SSG) e painel administrativo (SPA) para edição de conteúdo em tempo real via Firebase.
 
 ## 🛠️ Tecnologias e Dependências
 
 - **⚡ Vue 3**: Framework progressivo para construção de interfaces
 - **🏗️ Nuxt 4**: Framework Vue.js full-stack moderno
 - **📦 @cb/components**: Biblioteca customizada de componentes UI
+- **🔥 Firebase**: Auth, Firestore, Storage, Hosting
 - **🎯 Reka UI**: Primitivos headless para componentes acessíveis
 - **🎨 Lucide Icons**: Biblioteca moderna de ícones
+- **🌐 vue-i18n**: Internacionalização (pt-BR, en, es)
 - **✨ Prettier**: Formatador de código
 - **🔍 ESLint**: Linter para manter qualidade do código
 
 ### Stack Completa
 
-- **Framework**: Nuxt 4 + Vue 3 (Composition API)
+- **Framework**: Nuxt 4 + Vue 3 (Composition API, `<script setup>`)
+- **Backend**: Firebase (Auth + Firestore + Storage)
 - **Componentes**: @cb/components (customizados) + Reka UI (primitivos)
 - **Ícones**: Lucide Vue Next
-- **Estilo**: CSS Variables + CSS Modules
+- **i18n**: vue-i18n (pt-BR, en, es)
+- **Estilo**: CSS Variables + tema customizado
+- **Fontes**: Fraunces (headings) + DM Sans (body)
 - **Qualidade**: ESLint + Prettier
 
 ## 📂 Estrutura do Projeto
 
 ```text
 elas_podem_website/
-├── pages/                 # Páginas/Rotas (Nuxt auto-routing)
-│   └── index.vue         # Landing page principal
-├── assets/                # Recursos estáticos
-│   └── css/              # Estilos globais e temas
-├── public/                # Arquivos públicos (imagens, fonts)
-├── docs/                  # Documentação do projeto
-├── nuxt.config.ts         # Configuração Nuxt
-└── package.json           # Dependências do projeto
+├── pages/
+│   ├── index.vue              # Landing page pública
+│   └── admin/
+│       ├── index.vue          # Dashboard admin
+│       ├── login.vue          # Login Firebase Auth
+│       └── edit/              # Editors por seção
+├── components/
+│   ├── admin/                 # Editors (HomeHeroEditor, AdminColorPicker, etc.)
+│   ├── AppFooter.vue
+│   ├── LanguageSwitcher.vue
+│   └── LoadingOverlay.vue
+├── composables/               # Lógica reutilizável
+│   ├── useAuth.ts             # Autenticação Firebase
+│   ├── useFirebase.ts         # Instâncias Firebase (app, auth, db, storage)
+│   ├── useFirebaseStorage.ts  # Upload de imagens
+│   ├── useHomePublicData.ts   # Dados da home (Firestore + cache)
+│   ├── usePageData.ts         # CRUD genérico Firestore
+│   ├── usePageEditor.ts       # Lógica do editor (forms, save, dirty state)
+│   ├── useCache.ts            # Cache layer
+│   ├── useImageCompression.ts # Compressão de imagens antes do upload
+│   └── useValidation.ts       # Validação de formulários
+├── layouts/
+│   ├── default.vue            # Layout público
+│   └── admin.vue              # Layout admin (sidebar + topbar)
+├── middleware/
+│   └── admin.global.ts        # Proteção de rotas /admin/*
+├── plugins/
+│   ├── auth.client.ts         # Init Firebase Auth (client-only)
+│   └── i18n.ts                # Config vue-i18n
+├── definitions/               # Constantes, defaults, configs de validação
+│   ├── themeOptions.ts        # Cores, gradientes, ícones, variantes
+│   ├── sectionFields.ts       # Campos editable/readonly por seção
+│   ├── sectionDefaults.ts     # Valores default quando Firestore vazio
+│   ├── validationConfigs.ts   # Limites e regras por seção
+│   ├── firestoreCollections.ts
+│   ├── adminRoles.ts
+│   ├── homeFallbacks.ts
+│   ├── cacheKeys.ts
+│   └── index.ts               # Barrel export
+├── types/admin/               # Interfaces das seções (IHeroSection, etc.)
+├── config/                    # Aliases e configurações
+├── utils/                     # Funções utilitárias
+├── locales/                   # Traduções (pt-BR, en, es)
+├── assets/css/                # CSS variables do tema
+├── public/                    # Assets estáticos
+├── scripts/                   # Scripts utilitários (seed admin, link local)
+├── docs/                      # Documentação técnica
+├── nuxt.config.ts
+├── firebase.json
+└── package.json
 ```
 
 ## ⚙️ Desenvolvimento
@@ -51,7 +98,7 @@ elas_podem_website/
 # 1. Instalar dependências
 npm install
 
-# 2. Iniciar servidor de desenvolvimento (localhost:3000)
+# 2. Iniciar servidor de desenvolvimento (localhost:3333)
 npm run dev
 ```
 
@@ -59,15 +106,28 @@ npm run dev
 
 ```bash
 # Desenvolvimento
-npm run dev              # Servidor local
-npm run build           # Build produção
-npm run preview         # Preview build local
+npm run dev              # Dev server (porta 3333)
+npm run build            # Build produção
+npm run generate         # SSG — gera HTML estático
+npm run preview          # Preview do build local
+
+# Deploy
+npm run deploy           # generate + firebase deploy
+npm run deployPreview    # generate + serve local
+
+# Admin
+npm run seedAdmin        # Criar usuário admin no Firebase
+
+# @cb/components (desenvolvimento local)
+npm run cbcomponentsLinkLocal   # Linkar versão local via npm link
+npm run cbcomponentsLinkRemote  # Voltar pra versão do registry
+npm run cleanViteCache          # Limpar caches (.nuxt, .vite, .cache)
 
 # Qualidade de Código
-npm run lint            # Verificar lint
-npm run lintFix         # Corrigir automaticamente
-npm run format          # Formatar código
-npm run format:check    # Verificar formatação
+npm run lint             # Verificar lint
+npm run lintFix          # Corrigir automaticamente
+npm run format           # Formatar código
+npm run format:check     # Verificar formatação
 ```
 
 ## 🎨 Bibliotecas UI
@@ -80,9 +140,10 @@ npm run format:check    # Verificar formatação
 
 ### Sistema de Design
 
-- **CSS Variables**: Design tokens customizáveis (cores, espaçamentos, sombras)
-- **CSS Modules**: Estilos escopados por componente
-- **Fontes**: Poppins (headings) + Lato (body text)
+- **CSS Variables**: Design tokens customizáveis em `assets/css/theme.css` (cores, gradientes, espaçamentos)
+- **Tema**: `@cb/components/style.css` (base) + `theme.css` (overrides) — ordem importa
+- **Fontes**: Fraunces (headings) + DM Sans (body text) via Google Fonts
+- **Responsivo**: Breakpoints em 768px e 480px
 
 ## 📝 Convenções de Código
 
@@ -118,10 +179,11 @@ const props = defineProps<{
 
 ### 📦 Tecnologia de Deploy
 
-- **Estratégia**: SSG (Static Site Generation)
+- **Estratégia**: SSG (Static Site Generation) + SPA híbrido
 - **Hosting**: Firebase Hosting
 - **Build**: Nuxt 4 `generate` command
-- **SEO**: ✅ 100% otimizado (HTML pré-renderizado)
+- **Páginas públicas**: SSG — HTML pré-renderizado, SEO otimizado
+- **Páginas admin** (`/admin/**`): SPA — excluídas do pre-render via `routeRules`
 - **Performance**: ⚡ ~0.5s First Contentful Paint
 
 ### 🔨 Como Fazer Deploy
@@ -174,22 +236,61 @@ Vue Components → npm run generate → HTML Files → Firebase Hosting
 
 - ✅ Landing page institucional completa
 - ✅ Hero section com animações e gradientes
-- ✅ Seções: Missão, Programas, Depoimentos, Parceiros, Contato
+- ✅ Seções: Missão, Programas, Depoimentos, Parceiros, Contato, CTA
 - ✅ Componentes reutilizáveis (@cb/components)
-- ✅ Design responsivo mobile-first
+- ✅ Design responsivo mobile-first (breakpoints 768px / 480px)
 - ✅ Animações on-scroll com IntersectionObserver
+- ✅ **Painel Admin** — edição de conteúdo em tempo real (Firebase Auth + Firestore)
+- ✅ **Upload de imagens** com compressão automática (Firebase Storage)
+- ✅ **Cores/gradientes customizáveis** nos botões via AdminColorPicker
+- ✅ **Internacionalização** (pt-BR, en, es) com vue-i18n
+- ✅ **SSG + SPA híbrido** — páginas públicas pré-renderizadas, admin client-side
+- ✅ **Deploy automatizado** Firebase Hosting
 - ✅ ESLint + Prettier configurados
-- ✅ **Deploy automatizado Firebase Hosting**
-- ✅ **SSG para SEO perfeito**
 
 ### Planejadas
 
 - 🚧 Páginas adicionais (Sobre, Projetos, Blog)
-- 🚧 Sistema de CMS para conteúdo dinâmico
-- 🚧 Integração com formulários (backend)
 - 🚧 Domínio customizado (elaspodem.org)
 - 🚧 CI/CD com GitHub Actions
 - 🚧 Analytics e tracking
+
+## 🛡️ Painel Administrativo
+
+Painel para edição de conteúdo da home em tempo real, acessível em `/admin`.
+
+- **Autenticação**: Firebase Authentication (email/password)
+- **Dados**: Firestore — cada seção da home é um documento separado
+- **Imagens**: Firebase Storage com compressão automática antes do upload
+- **Editors**: Um editor por seção (Hero, Missão, Programas, Depoimentos, Parceiros, Contato, CTA, SEO)
+- **Cores**: AdminColorPicker permite escolher gradientes e cores dos botões visualmente
+- **Proteção**: Middleware `admin.global.ts` protege todas as rotas `/admin/*`
+- **Rendering**: Rotas admin excluídas do SSG via `routeRules` — rodam como SPA puro
+
+### Rotas Admin
+
+| Rota | Descrição |
+|------|-----------|
+| `/admin/login` | Login (única rota admin sem proteção) |
+| `/admin` | Dashboard com cards de navegação |
+| `/admin/edit/homeEdit` | Editor completo da home (todas as seções) |
+
+## 📚 Documentação Técnica
+
+A pasta `docs/` contém guias detalhados:
+
+| Guia | Conteúdo |
+|------|----------|
+| [AdminPages_GUIDE](./docs/AdminPages_GUIDE.md) | Estrutura das páginas admin |
+| [HomeEditor_GUIDE](./docs/HomeEditor_GUIDE.md) | Como funcionam os editors |
+| [PageEditor_GUIDE](./docs/PageEditor_GUIDE.md) | Composable usePageEditor |
+| [PageData_GUIDE](./docs/PageData_GUIDE.md) | Composable usePageData |
+| [Auth_GUIDE](./docs/Auth_GUIDE.md) | Autenticação Firebase |
+| [Cache_GUIDE](./docs/Cache_GUIDE.md) | Sistema de cache |
+| [Storage_GUIDE](./docs/Storage_GUIDE.md) | Upload de imagens |
+| [Validation_GUIDE](./docs/Validation_GUIDE.md) | Validação de formulários |
+| [SectionFields_GUIDE](./docs/SectionFields_GUIDE.md) | Campos editable/readonly |
+| [DEPLOYMENT](./docs/DEPLOYMENT.md) | Deploy e Firebase Hosting |
 
 ## 🔧 Configurações
 

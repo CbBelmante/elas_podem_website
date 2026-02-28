@@ -16,7 +16,7 @@
  * Esses valores sao consumidos por:
  * - useValidation.ts → validacao de formularios
  * - createValidationRules() → regras inline para CBInput :rules
- * - useFirebaseStorage.ts → compressao de imagens no upload
+ * - storage adapters (useCloudinaryStorage, useFirebaseStorage) → compressao de imagens no upload
  *
  * @module definitions/validationConfigs
  *
@@ -177,7 +177,7 @@ export const SEO_CONFIG = {
 /**
  * Config global de upload de imagens.
  *
- * Consumido pelo useFirebaseStorage.ts na validacao de arquivos.
+ * Consumido pelos storage adapters na validacao de arquivos.
  */
 export const IMAGE_UPLOAD_CONFIG = {
   /** Tamanho maximo em MB */
@@ -193,7 +193,7 @@ export const IMAGE_UPLOAD_CONFIG = {
 /**
  * Configuracoes de compressao por categoria de imagem.
  *
- * Consumido pelo useFirebaseStorage.ts no upload de imagens.
+ * Consumido pelos storage adapters no upload de imagens.
  * Valores passados para useImageCompression.compressImage().
  *
  * @property enabled - se compressao esta ativa pra essa categoria

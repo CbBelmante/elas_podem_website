@@ -14,7 +14,7 @@
 // ============== DEPENDÊNCIAS EXTERNAS ==============
 
 import { ref } from 'vue';
-import { config as appConfig } from '@config';
+import { config as appConfig } from '~/config';
 import dayjs from 'dayjs';
 
 // ============== CONSTANTES DE CONFIGURAÇÃO DE NÍVEIS DE LOG ==============
@@ -128,13 +128,33 @@ const getLogLevel = () => {
  * @returns {string} Timestamp no formato HH:MM:SS
  */
 const getTimestamp = () => {
-  return new Date().toISOString().split('T')[1].split('.')[0];
+  return new Date().toISOString().split('T')[1]!.split('.')[0];
 };
+
+/** Tipos internos do Logger */
+type EmojiSetName = keyof typeof EMOJI_SETS;
+type LogLevel = keyof typeof LOG_LEVELS;
+
+interface ILoggerConfig {
+  emojis: boolean;
+  emojiSet: EmojiSetName;
+  redact: string[];
+  censor: string;
+  structuredMode: boolean;
+  asyncMode: boolean;
+}
+
+interface IDomainHelperConfig {
+  idField?: string;
+  category?: string;
+  level?: string;
+  message?: string;
+}
 
 /**
  * 🔧 Configuração global do Logger
  */
-const config = {
+const config: ILoggerConfig = {
   // 🎨 Configurações visuais
   emojis: false,
   emojiSet: 'default',
@@ -151,8 +171,8 @@ const config = {
 };
 
 // 🗂️ Buffer assíncrono para performance
-let logBuffer = [];
-let bufferTimeout = null;
+let logBuffer: Array<{ method: string; args: unknown[] }> = [];
+let bufferTimeout: ReturnType<typeof setTimeout> | null = null;
 
 /**
  * 🛡️ Redação de dados sensíveis
@@ -174,7 +194,7 @@ let bufferTimeout = null;
  * const safe = redactSensitiveData(userData, ['password', 'user.email'])
  * // Retorna: { user: { name: 'João', email: '**PROTECTED**' }, password: '**PROTECTED**', token: 'abc123' }
  */
-const redactSensitiveData = (obj, redactPaths = config.redact) => {
+const redactSensitiveData = (obj: Record<string, unknown>, redactPaths: string[] = config.redact): Record<string, unknown> => {
   // Proteção contra tipos inválidos
   if (!obj || typeof obj !== 'object' || Array.isArray(obj)) {
     return obj;
@@ -186,17 +206,18 @@ const redactSensitiveData = (obj, redactPaths = config.redact) => {
   }
 
   // Clona o objeto para evitar mutação
-  const result = { ...obj };
+  const result: Record<string, unknown> = { ...obj };
 
   redactPaths.forEach((path) => {
     const keys = path.split('.');
-    let current = result;
+    let current: Record<string, unknown> = result;
 
     // Navega até o penúltimo nível
     for (let i = 0; i < keys.length - 1; i++) {
-      if (current[keys[i]] && typeof current[keys[i]] === 'object') {
-        current[keys[i]] = { ...current[keys[i]] };
-        current = current[keys[i]];
+      const key = keys[i]!;
+      if (current[key] && typeof current[key] === 'object') {
+        current[key] = { ...(current[key] as Record<string, unknown>) };
+        current = current[key] as Record<string, unknown>;
       } else {
         // Caminho não existe, pula
         return;
@@ -204,7 +225,7 @@ const redactSensitiveData = (obj, redactPaths = config.redact) => {
     }
 
     // Censura o campo final se existe
-    const finalKey = keys[keys.length - 1];
+    const finalKey = keys[keys.length - 1]!;
     if (current && Object.prototype.hasOwnProperty.call(current, finalKey)) {
       current[finalKey] = config.censor;
     }
@@ -249,7 +270,7 @@ const getOutputMode = () => {
  * formatOutput('INFO', 'User login', { userId: 123 })
  * // Retorna: { level: 'info', time: '2025-01-28T14:30:25.000Z', msg: 'User login', userId: 123 }
  */
-const formatOutput = (level, message, context = {}, isTiming = false) => {
+const formatOutput = (level: string, message: string, context: Record<string, unknown> = {}, isTiming = false): string | Record<string, unknown> => {
   const outputMode = getOutputMode();
 
   // 🎯 Extrai badge ANTES de aplicar redação (badge não vai pro contexto)
@@ -282,8 +303,8 @@ const formatOutput = (level, message, context = {}, isTiming = false) => {
  * @param {Object} context - Contexto original
  * @returns {{ badge: string|null, cleanContext: Object }} Badge extraído e contexto limpo
  */
-const extractBadge = (context) => {
-  const badge = context.badge || null;
+const extractBadge = (context: Record<string, unknown>): { badge: string | null; cleanContext: Record<string, unknown> } => {
+  const badge = (context.badge as string) || null;
 
   // Se não tem badge, retorna contexto original
   if (!badge) {
@@ -307,7 +328,7 @@ const extractBadge = (context) => {
  * @param {boolean} [isTiming=false] - Se é log de timing
  * @returns {string} Mensagem formatada
  */
-const formatLogMessage = (level, message, context = {}, isTiming = false) => {
+const formatLogMessage = (level: string, message: string, context: Record<string, unknown> = {}, isTiming = false): string => {
   const timestamp = getTimestamp();
   const shouldShowEmoji = config.emojis || context.emoji;
 
@@ -319,7 +340,7 @@ const formatLogMessage = (level, message, context = {}, isTiming = false) => {
     return `[${timestamp}] [${level}] ${customBadge}${message}`;
   }
 
-  const emojiSet = EMOJI_SETS[config.emojiSet] || EMOJI_SETS.default;
+  const emojiSet = EMOJI_SETS[config.emojiSet];
   let emoji = '';
 
   if (isTiming) {
@@ -356,7 +377,7 @@ const formatLogMessage = (level, message, context = {}, isTiming = false) => {
  * @param {Object} [context={}] - Contexto adicional
  * @returns {string} Mensagem formatada apenas com timestamp
  */
-const formatMessageForGroup = (message, context = {}) => {
+const formatMessageForGroup = (message: string, context: Record<string, unknown> = {}): string => {
   const timestamp = getTimestamp();
   const { badge } = extractBadge(context);
   const customBadge = badge ? `[${badge}] ` : '';
@@ -399,8 +420,8 @@ const captureCallerInfo = (): { function: string; file: string; line: number; co
     return {
       function: match[1] ?? 'anonymous',
       file: match[2]?.split('/').pop() ?? 'unknown',
-      line: parseInt(match[3]) ?? 0,
-      column: parseInt(match[4]) ?? 0,
+      line: parseInt(match[3]!) || 0,
+      column: parseInt(match[4]!) || 0,
     };
   }
 
@@ -425,7 +446,7 @@ const flushLogs = () => {
 
         logsToProcess.forEach((logEntry) => {
           const { method, args } = logEntry;
-          console[method](...args);
+          (console as unknown as Record<string, (...a: unknown[]) => void>)[method]!(...args);
         });
       },
       { timeout: 100 }
@@ -438,7 +459,7 @@ const flushLogs = () => {
 
       logsToProcess.forEach((logEntry) => {
         const { method, args } = logEntry;
-        console[method](...args);
+        (console as unknown as Record<string, (...a: unknown[]) => void>)[method]!(...args);
       });
     }, 0);
   }
@@ -496,10 +517,10 @@ export class Logger {
   static configure(options: Record<string, any> = {}): void {
     // ✅ Configurações v1.x (compatibilidade)
     config.emojis = options.emojis ?? config.emojis;
-    config.emojiSet = options.emojiSet ?? config.emojiSet;
+    config.emojiSet = (options.emojiSet as EmojiSetName) ?? config.emojiSet;
 
     // ✅ Configurações v2.0 (novas funcionalidades)
-    config.redact = options.redact ?? config.redact;
+    config.redact = (options.redact as string[]) ?? config.redact;
     config.censor = options.censor ?? config.censor;
     config.structuredMode = options.structuredMode ?? config.structuredMode;
     config.asyncMode = options.asyncMode ?? config.asyncMode;
@@ -608,8 +629,8 @@ export class Logger {
     childLogger._context = childContext;
 
     // Define nível mínimo se especificado
-    if (minLevel && LOG_LEVELS[minLevel] !== undefined) {
-      childLogger._minLevel = LOG_LEVELS[minLevel];
+    if (minLevel && LOG_LEVELS[minLevel as LogLevel] !== undefined) {
+      childLogger._minLevel = LOG_LEVELS[minLevel as LogLevel];
     } else {
       childLogger._minLevel = this._minLevel; // Herda do pai
     }
@@ -636,23 +657,27 @@ export class Logger {
    * userHelpers.login('user123', 'success', { ip: '192.168.1.1' })
    * userHelpers.dataAccess('user123', 'cpf_view')
    */
-  static createDomainHelpers(domain, helpers = {}) {
+  static createDomainHelpers(domain: string, helpers: Record<string, IDomainHelperConfig> = {}): Record<string, (id: string, action: string, context?: Record<string, unknown>) => void> {
     const domainLogger = this.child({ domain });
-    const domainHelpers = {};
+    const domainHelpers: Record<string, (id: string, action: string, context?: Record<string, unknown>) => void> = {};
 
-    Object.entries(helpers).forEach(([helperName, config]) => {
-      domainHelpers[helperName] = (id, action, context = {}) => {
+    Object.entries(helpers).forEach(([helperName, helperConfig]) => {
+      domainHelpers[helperName] = (id: string, action: string, context: Record<string, unknown> = {}) => {
         const helperContext = {
-          [config.idField || 'id']: id,
+          [helperConfig.idField || 'id']: id,
           action,
-          category: config.category,
+          category: helperConfig.category,
           ...context,
         };
 
-        const message = config.message || `${action} executed`;
-        const level = config.level || 'info';
+        const message = helperConfig.message || `${action} executed`;
+        const level = helperConfig.level || 'info';
 
-        domainLogger[level](message, helperContext);
+        if (level === 'error') {
+          domainLogger.error(message, null, helperContext);
+        } else {
+          domainLogger[level as 'debug' | 'info' | 'warn'](message, helperContext);
+        }
       };
     });
 
@@ -908,18 +933,18 @@ export class Logger {
    * @param {string} componentName - Nome do componente
    * @returns {Object} Logger com contexto do componente
    */
-  static createComponentLogger(componentName) {
+  static createComponentLogger(componentName: string) {
     // Usa o novo sistema child internamente para manter compatibilidade
     const componentLogger = this.child({ component: componentName });
 
     return {
-      debug: (message, context = {}) => componentLogger.debug(message, context),
+      debug: (message: string, context: Record<string, unknown> = {}) => componentLogger.debug(message, context),
 
-      info: (message, context = {}) => componentLogger.info(message, context),
+      info: (message: string, context: Record<string, unknown> = {}) => componentLogger.info(message, context),
 
-      warn: (message, context = {}) => componentLogger.warn(message, context),
+      warn: (message: string, context: Record<string, unknown> = {}) => componentLogger.warn(message, context),
 
-      error: (message, error = null, context = {}) =>
+      error: (message: string, error: Error | null = null, context: Record<string, unknown> = {}) =>
         componentLogger.error(message, error, context),
     };
   }
@@ -942,7 +967,7 @@ export class Logger {
    * endTiming({ recordsProcessed: 150, status: 'success' })
    * // Log: "Completed: userProcessing" com duração automática
    */
-  static startTiming(operation) {
+  static startTiming(operation: string) {
     const startTime = performance.now();
     const finalContext = { ...this._context };
 
