@@ -15,6 +15,7 @@
 
 // ============== DEPENDENCIAS INTERNAS ==============
 
+import { useConfig } from '@config/index';
 import { useImageCompression } from '@composables/useImageCompression';
 import { COMPRESSION_SETTINGS, IMAGE_UPLOAD_CONFIG } from '@definitions/validationConfigs';
 import { Logger } from '@utils/Logger';
@@ -34,9 +35,9 @@ function getExtension(fileName: string): string {
 // ============== COMPOSABLE ==============
 
 export function useCloudinaryStorage(): IStorageAdapter {
-  const config = useRuntimeConfig();
-  const cloudName = config.public.cloudinaryCloudName as string;
-  const uploadPreset = config.public.cloudinaryUploadPreset as string;
+  const { storage } = useConfig();
+  const cloudName = storage.cloudinaryCloudName;
+  const uploadPreset = storage.cloudinaryUploadPreset;
   const { compressImage } = useImageCompression();
 
   // ===== VALIDACAO =====

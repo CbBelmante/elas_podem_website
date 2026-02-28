@@ -43,20 +43,24 @@ Alem disso:
 
 ### A Solucao
 
-2 composables com responsabilidades separadas:
+3 composables com responsabilidades separadas:
 
 ```
 useImageCompression    →  comprimir (Canvas API, client-side)
-useFirebaseStorage     →  armazenar (Firebase Storage, upload/delete/validate)
+useStorage             →  factory — retorna o adapter ativo (Cloudinary ou Firebase)
+useCloudinaryStorage   →  adapter Cloudinary (provider atual)
+useFirebaseStorage     →  adapter Firebase (alternativo)
 ```
 
-O storage usa o compression internamente — o caller so diz a categoria:
+O provider ativo e definido em `config/constants.ts` (`storage.provider: 'cloudinary'`). Os consumers usam `useStorage()` que retorna o adapter correto via `useConfig()`:
 
 ```typescript
+const { uploadImage, validateImageFile } = useStorage();
+
 const url = await uploadImage(file, 'mission');
 // Comprime automaticamente com COMPRESSION_SETTINGS.mission
-// Faz upload pro Firebase Storage
-// Retorna a download URL
+// Faz upload pro provider ativo (Cloudinary)
+// Retorna a URL publica
 ```
 
 ### Quando Usar
@@ -79,7 +83,7 @@ const url = await uploadImage(file, 'mission');
 ### Upload com compressao automatica (mais comum)
 
 ```typescript
-const { uploadImage, validateImageFile } = useFirebaseStorage();
+const { uploadImage, validateImageFile } = useStorage();
 
 const handleUpload = async (file: File) => {
   // 1. Valida
@@ -92,8 +96,8 @@ const handleUpload = async (file: File) => {
   // 2. Upload (comprime automaticamente)
   const url = await uploadImage(file, 'mission');
   // → Comprimiu: 800x600, quality 0.8
-  // → Fez upload: images/mission/mission-1708345678901_compressed.jpg
-  // → Retornou: https://firebasestorage.googleapis.com/...
+  // → Fez upload pro provider ativo (Cloudinary)
+  // → Retornou: URL publica (secure_url)
 
   // 3. Usa a URL
   forms.value.mission.editable.image = url;
@@ -112,7 +116,7 @@ const handleUpload = async (file: File) => {
 ### Upload generico (sem compressao)
 
 ```typescript
-const { uploadFile } = useFirebaseStorage();
+const { uploadFile } = useStorage();
 
 // Qualquer arquivo, qualquer path
 const url = await uploadFile(file, 'documents/relatorio.pdf');
@@ -139,7 +143,7 @@ const compressed = await compressImage(file, {
 ### Validar antes do upload
 
 ```typescript
-const { validateImageFile } = useFirebaseStorage();
+const { validateImageFile } = useStorage();
 
 const validation = validateImageFile(file);
 // Checa: tipo MIME (image/*), tamanho (5MB), extensao (jpg/jpeg/png/webp)
@@ -162,7 +166,7 @@ const validation = validateImageFile(file, 2);
 ### Deletar arquivo
 
 ```typescript
-const { deleteFile } = useFirebaseStorage();
+const { deleteFile } = useStorage();
 
 // Deleta pela URL do Firebase
 await deleteFile('https://firebasestorage.googleapis.com/v0/b/.../o/images%2Fmission%2Fimg.jpg?alt=media');
@@ -225,29 +229,43 @@ const url = await uploadImage(file, 'gallery');
 
 ```
 composables/
+├── useStorage.ts             ← factory — retorna adapter ativo via useConfig()
+├── useCloudinaryStorage.ts   ← adapter Cloudinary (fetch puro, unsigned upload)
+├── useFirebaseStorage.ts     ← adapter Firebase Storage (alternativo)
 ├── useImageCompression.ts    ← Canvas API (comprime)
-├── useFirebaseStorage.ts     ← Firebase Storage (upload/delete/validate)
+
+config/
+├── constants.ts              ← storage.provider: 'cloudinary' (decisao do projeto)
+├── index.ts                  ← useConfig() — provider + credenciais (.env)
 
 definitions/
 ├── validationConfigs.ts      ← IMAGE_UPLOAD_CONFIG + COMPRESSION_SETTINGS
+
+types/
+├── storage.ts                ← IStorageAdapter (contrato dos adapters)
 ```
 
 ### Diagrama de dependencias
 
 ```
-definitions/validationConfigs.ts
-    │  IMAGE_UPLOAD_CONFIG, COMPRESSION_SETTINGS
+config/constants.ts
+    │  storage.provider = 'cloudinary'
     │
     ▼
-useFirebaseStorage()
-    │  uploadImage() → usa settings por categoria
-    │  validateImageFile() → usa limites do config
+useConfig()                          ← junta constants + .env
+    │  provider + cloudinaryCloudName + cloudinaryUploadPreset
     │
-    ├── useFirebase().$storage     ← Firebase Storage instance
+    ▼
+useStorage()                         ← factory — switch(provider)
     │
-    └── useImageCompression()
-         │  compressImage()        ← Canvas API pura
-         └── Logger                ← logs estruturados
+    ├── useCloudinaryStorage()       ← adapter ativo (fetch + FormData)
+    │     ├── useImageCompression()  ← comprime antes do upload
+    │     └── validationConfigs      ← limites e settings
+    │
+    └── useFirebaseStorage()         ← adapter alternativo (Firebase SDK)
+          ├── useFirebase().$storage
+          ├── useImageCompression()
+          └── validationConfigs
 ```
 
 ### Pipeline completo de upload
@@ -272,11 +290,9 @@ File original (2MB, 3000x2000, PNG)
   │   │   ├─ canvasToBlob(0.8) → JPEG ~150KB
   │   │   └─ new File → "foto_compressed.jpg" (150KB)
   │   │
-  │   ├─ gera path: "images/mission/mission-1708345678901_compressed.jpg"
-  │   │
-  │   ├─ uploadFile(compressed, path)
-  │   │   ├─ uploadBytes → Firebase Storage
-  │   │   └─ getDownloadURL → URL publica
+  │   ├─ uploadFile(compressed, folder)
+  │   │   ├─ FormData + fetch → Cloudinary API (unsigned upload)
+  │   │   └─ secure_url → URL publica (HTTPS)
   │   │
   │   └─ return URL
   │
@@ -290,16 +306,16 @@ File original (2MB, 3000x2000, PNG)
 ### Separacao de responsabilidades
 
 ```
-useImageCompression     useFirebaseStorage
-─────────────────       ──────────────────
-Compressao              Armazenamento
-Canvas API              Firebase SDK
-Puro (sem deps)         Usa compression
-Client-side only        Client-side only
-Fallback seguro         Silent fail no delete
+useImageCompression     useStorage          useCloudinaryStorage / useFirebaseStorage
+─────────────────       ──────────          ────────────────────────────────────────
+Compressao              Factory             Adapter de armazenamento
+Canvas API              Switch(provider)    Cloudinary fetch / Firebase SDK
+Puro (sem deps)         Retorna adapter     Usa compression internamente
+Client-side only        Le useConfig()      Client-side only
+Fallback seguro                             Silent fail no delete (Cloudinary)
 ```
 
-O user pediu essa separacao porque "comprimir e uma coisa, subir pro Firebase e outra — sao responsabilidades diferentes".
+A separacao segue o padrao adapter: `IStorageAdapter` define o contrato (validate, upload, delete), e cada adapter implementa pro seu provider. O `useStorage()` e a factory que decide qual adapter usar baseado em `config/constants.ts`.
 
 ### Canvas API — como a compressao funciona
 
@@ -346,7 +362,11 @@ isCompressed = compressed !== file;
 // Se nao comprimiu, usa extensao original e nao adiciona "_compressed" no nome
 ```
 
-### extractPathFromUrl — como deleta por URL
+### Delete por URL — depende do provider
+
+**Cloudinary:** `deleteFile` e no-op (Cloudinary nao suporta delete client-side). Se no futuro precisar, criar server route `/api/storage/delete` com Admin API + api_secret.
+
+**Firebase:** usa `extractPathFromUrl` para extrair o path do Storage da URL:
 
 ```typescript
 // URL Firebase:
@@ -385,23 +405,42 @@ Adicionar key no `COMPRESSION_SETTINGS` = automaticamente aceita como categoria.
 | `compressImage(file, options?)` | `async` | Comprime imagem, retorna File (ou original se falhar) |
 | `isCompressionSupported()` | `function` | Checa se Canvas API esta disponivel |
 
-### `composables/useFirebaseStorage.ts`
+### `composables/useStorage.ts`
 
 | Export | Tipo | Descricao |
 |--------|------|-----------|
-| `useFirebaseStorage()` | composable | Retorna funcoes de storage |
+| `useStorage()` | composable | Factory — retorna adapter ativo via `useConfig()` |
+
+Retorna `IStorageAdapter` (mesma interface dos adapters).
+
+### `composables/useCloudinaryStorage.ts` (adapter ativo)
+
+| Export | Tipo | Descricao |
+|--------|------|-----------|
+| `useCloudinaryStorage()` | composable | Adapter Cloudinary (fetch puro, unsigned upload) |
+
+### `composables/useFirebaseStorage.ts` (adapter alternativo)
+
+| Export | Tipo | Descricao |
+|--------|------|-----------|
+| `useFirebaseStorage()` | composable | Adapter Firebase Storage |
+
+### `types/storage.ts`
+
+| Export | Tipo | Descricao |
+|--------|------|-----------|
+| `IStorageAdapter` | interface | Contrato dos adapters (validateImageFile, uploadFile, uploadImage, deleteFile) |
 | `IFileValidation` | interface | `{ isValid, error? }` |
 | `CompressionCategory` | type | Keys do COMPRESSION_SETTINGS |
-| `UseFirebaseStorage` | type | ReturnType do composable |
 
-#### Retorno do useFirebaseStorage()
+#### Retorno de qualquer adapter (IStorageAdapter)
 
 | Retorno | Tipo | Descricao |
 |---------|------|-----------|
 | `validateImageFile(file, maxSizeMB?)` | `function` | Valida tipo + tamanho + extensao |
 | `uploadFile(file, path)` | `async` | Upload generico, retorna URL |
 | `uploadImage(file, category, customPath?)` | `async` | Comprime + upload por categoria |
-| `deleteFile(url)` | `async` | Deleta por URL (silent fail) |
+| `deleteFile(url)` | `async` | Deleta por URL (silent fail no Cloudinary, real delete no Firebase) |
 
 ### `definitions/validationConfigs.ts` (storage-related)
 
@@ -414,9 +453,9 @@ Adicionar key no `COMPRESSION_SETTINGS` = automaticamente aceita como categoria.
 
 ## 💡 FAQ (Suporte)
 
-### Por que dois composables ao inves de um?
+### Por que tantos composables ao inves de um?
 
-Responsabilidades separadas: comprimir e armazenar sao coisas diferentes. `useImageCompression` funciona sem Firebase (pode usar pra preview local). `useFirebaseStorage` funciona sem compressao (pode subir PDF, por exemplo).
+Responsabilidades separadas: comprimir, armazenar e decidir o provider sao coisas diferentes. `useImageCompression` funciona sem storage (pode usar pra preview local). `useStorage()` e a factory que decide qual adapter usar. Os adapters (`useCloudinaryStorage`, `useFirebaseStorage`) implementam o contrato `IStorageAdapter`. Trocar de provider = mudar 1 linha em `config/constants.ts`.
 
 ### O que acontece se a compressao falhar?
 
@@ -424,7 +463,7 @@ Retorna o arquivo original e loga warning. O upload continua normalmente — so 
 
 ### O deleteFile pode falhar silenciosamente?
 
-Sim. Se a URL for invalida, o arquivo nao existir, ou o Firebase retornar erro, o `deleteFile` loga warning mas nao lanca excecao. Isso evita que cleanup de imagens quebre o fluxo de save.
+Sim. No adapter Cloudinary, `deleteFile` e um **no-op** (Cloudinary nao suporta delete client-side sem api_secret). No adapter Firebase, deleta de fato mas loga warning se falhar. Em ambos os casos, o fluxo de save nao e interrompido.
 
 ### Posso mudar o tamanho maximo sem mexer no composable?
 
@@ -432,14 +471,14 @@ Sim. Mude `IMAGE_UPLOAD_CONFIG.maxSizeMB` em `definitions/validationConfigs.ts`.
 
 ### Como o path do upload e gerado?
 
+Depende do provider:
+
+**Cloudinary** — usa `folder` no FormData. O path e `images/{category}`. O Cloudinary gera o nome do arquivo automaticamente (public_id).
+
+**Firebase** — gera path completo:
 ```
 images/{category}/{category}-{timestamp}{_compressed}.{ext}
 ```
-
-Exemplos:
-- `images/mission/mission-1708345678901_compressed.jpg`
-- `images/seo/seo-1708345678902_compressed.jpg`
-- `images/supporters/supporters-1708345678903.png` (se compressao desabilitada)
 
 ### Posso fazer upload de nao-imagem?
 

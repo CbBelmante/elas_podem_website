@@ -26,6 +26,12 @@ export interface IFirebaseConfig {
   appId: string;
 }
 
+export interface IStorageConfig {
+  provider: 'cloudinary' | 'firebase'; // vem de constants (decisao do projeto)
+  cloudinaryCloudName: string;         // vem do .env (credencial)
+  cloudinaryUploadPreset: string;      // vem do .env (credencial)
+}
+
 export interface IAnalyticsConfig {
   googleAnalyticsId: string;
   facebookPixelId: string;
@@ -37,6 +43,7 @@ export interface IElasPODEMConfig extends IConstants {
   isProduction: boolean;
   baseUrl: string;
   firebase: IFirebaseConfig;
+  storage: IStorageConfig;
   analytics: IAnalyticsConfig;
 }
 
@@ -73,6 +80,13 @@ export function useConfig(): IElasPODEMConfig {
       storageBucket: pub.firebaseStorageBucket as string,
       messagingSenderId: pub.firebaseMessagingSenderId as string,
       appId: pub.firebaseAppId as string,
+    },
+
+    // Storage (provider do constants + credenciais do .env)
+    storage: {
+      provider: APP_CONSTANTS.storage.provider,
+      cloudinaryCloudName: (pub.cloudinaryCloudName as string) || '',
+      cloudinaryUploadPreset: (pub.cloudinaryUploadPreset as string) || '',
     },
 
     // Analytics (runtime - vem do .env, opcional)

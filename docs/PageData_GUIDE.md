@@ -188,8 +188,8 @@ export const PAGE_DOCUMENTS = {
 ```typescript
 import { createPageDataComposable } from '@composables/usePageData';
 import { FIRESTORE_COLLECTIONS, PAGE_DOCUMENTS } from '@definitions/firestoreCollections';
-import { separateAllSections, createDefaultAboutForms, ... } from '~/utils/AboutFormUtils';
-import type { IAboutPageData, IAboutFormsData } from '~/types/admin';
+import { separateAllSections, createDefaultAboutForms, ... } from '@utils/AboutFormUtils';
+import type { IAboutPageData, IAboutFormsData } from '@appTypes/admin';
 
 export const useAboutPageData = createPageDataComposable<IAboutPageData, IAboutFormsData>({
   collection: FIRESTORE_COLLECTIONS.PAGES,

@@ -80,7 +80,7 @@ programs: {
   title:       'editable',
   description: 'editable',
   icon:        'hidden',      // ← era 'editable', agora 'hidden'
-  color:       'hidden',
+  color:       'editable',
   link:        'editable',
 },
 ```
@@ -112,7 +112,7 @@ programs: {
   description: 'editable',
   subtitle:    'editable',  // ← NOVO
   icon:        'editable',
-  color:       'hidden',
+  color:       'editable',
   link:        'editable',
 },
 ```
@@ -225,9 +225,8 @@ Corrija cada erro removendo a referencia. O TypeScript te guia — **voce nunca 
 - Exemplo futuro: data de criacao, ID do documento
 - Aparece no form como texto/badge desabilitado
 
-**`hidden`** — Dados de design/config que o admin nao precisa saber:
-- Cores do tema (magenta, coral) — decisao de design
-- Config Open Graph (type, siteName, locale) — config tecnica
+**`hidden`** — Dados de config tecnica que o admin nao precisa saber:
+- Config Open Graph (type, siteName, locale) — `seo.og` e o unico campo hidden atualmente
 
 ### Fluxo de dados
 
@@ -325,7 +324,8 @@ Contact tem estrutura aninhada — campos top-level + methods[] com split propri
 ```typescript
 // IContactSection = { badge, title, description, methods[], formSubjects[] }
 // Os campos top-level sao TODOS editaveis
-// Os methods[] tem split proprio (color e hidden)
+// Os methods[] tem split proprio via SECTION_FIELDS.contactMethod
+// (atualmente todos os campos de method sao editaveis)
 
 // Entao Contact usa:
 // - SECTION_FIELDS.contactMethod para o split dos methods
@@ -367,13 +367,13 @@ Contact tem estrutura aninhada — campos top-level + methods[] com split propri
 
 | Secao | Editable | Hidden | Readonly |
 |-------|----------|--------|----------|
-| **hero** | badge, title, description, btnDonate, btnHistory, heroImage, stats | — | — |
-| **mission** | badge, title, text1, text2, btnText, image, imageAlt | — | — |
-| **programs** | title, description, icon, link | color | — |
+| **hero** | badge, title, description, btnDonate, btnDonateColor, btnDonateVariant, btnHistory, btnHistoryColor, btnHistoryVariant, heroImage, stats | — | — |
+| **mission** | badge, title, text1, text2, btnText, btnColor, btnVariant, image, imageAlt | — | — |
+| **programs** | title, description, icon, color, link | — | — |
 | **testimonials** | quote, name, role, initials, image, imageAlt | — | — |
-| **supporters** | name, icon, image, imageAlt, url | color | — |
-| **contactMethod** | label, value, icon, url | color | — |
-| **values** | title, subtitle | color | — |
+| **supporters** | name, icon, image, imageAlt, url | — | — |
+| **contactMethod** | label, value, icon, color, url | — | — |
+| **values** | title, subtitle, color | — | — |
 | **cta** | title, subtitle, btnDonate, btnProjects | — | — |
 | **seo** | title, description, keywords, ogImage | og | — |
 

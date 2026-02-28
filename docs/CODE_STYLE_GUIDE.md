@@ -121,25 +121,22 @@ export const SERVICE_STATUS = { ... }
 
 ### **Aliases Disponíveis**
 
-Veja `nuxt.config.ts:32-48` para a lista completa:
+Fonte unica: `config/constants.ts` (`ALIAS_DEFINITIONS`) + `tsconfig.json` (paths para TypeScript).
 
 | Alias | Caminho | Uso |
 |-------|---------|-----|
 | `@` | `.` (raiz do projeto) | Raramente usado |
-| `@app` | `./app` | Raiz da aplicação |
-| `@config` | `./config.ts` | Configurações |
-| `@components` | `./app/components` | Componentes Vue |
-| `@composables` | `./app/composables` | Composables |
-| `@utils` | `./app/utils` | Utilitários |
-| `@assets` | `./app/assets` | Assets (CSS, imagens) |
-| `@definitions` | `./app/definitions` | Constantes e definições |
-| `@data` | `./app/data` | Dados estáticos |
-| `@types` | `./app/types` | Types e interfaces |
-| `@services` | `./app/services` | Services (API, Supabase) |
-| `@stores` | `./app/stores` | Pinia stores |
-| `@plugins` | `./app/plugins` | Plugins |
-| `@shadcn` | `./components/shadcn` | Componentes shadcn |
-| `@chat` | `./app/chat` | Sistema de chat/fluxos |
+| `@config` | `./config` | Sistema de configuracao (`useConfig`, `constants`) |
+| `@components` | `./components` | Componentes Vue |
+| `@composables` | `./composables` | Composables |
+| `@utils` | `./utils` | Utilitarios |
+| `@assets` | `./assets` | Assets (CSS, imagens) |
+| `@definitions` | `./definitions` | Constantes e definicoes |
+| `@data` | `./data` | Dados estaticos |
+| `@appTypes` | `./types` | Types e interfaces |
+| `@plugins` | `./plugins` | Plugins |
+
+> **NUNCA** use `~/` — sempre use os aliases `@` acima.
 
 ### **Exemplos Corretos vs Incorretos**
 

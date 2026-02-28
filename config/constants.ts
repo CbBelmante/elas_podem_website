@@ -96,11 +96,16 @@ export interface IFeaturesConstants {
   enableCache: boolean;
 }
 
+export interface IStorageConstants {
+  provider: 'cloudinary' | 'firebase';
+}
+
 export interface IConstants {
   app: IAppConstants;
   contact: IContactConstants;
   stats: IStatsConstants;
   features: IFeaturesConstants;
+  storage: IStorageConstants;
 }
 
 // ============== CONSTANTES ==============
@@ -151,5 +156,9 @@ export const APP_CONSTANTS: Readonly<IConstants> = {
     enableBlog: false,
     enableDebugLogs: true,
     enableCache: false,
+  },
+
+  storage: {
+    provider: 'cloudinary',
   },
 };

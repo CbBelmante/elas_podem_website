@@ -14,20 +14,20 @@
  * - types/storage (IStorageAdapter)
  */
 
+import { useConfig } from '@config/index';
 import { useCloudinaryStorage } from '@composables/useCloudinaryStorage';
 import { useFirebaseStorage } from '@composables/useFirebaseStorage';
 import type { IStorageAdapter } from '@/types/storage';
 
 export function useStorage(): IStorageAdapter {
-  const config = useRuntimeConfig();
-  const provider = (config.public.storageProvider as string) || 'cloudinary';
+  const { storage } = useConfig();
 
-  switch (provider) {
+  switch (storage.provider) {
     case 'firebase':
       return useFirebaseStorage();
     case 'cloudinary':
       return useCloudinaryStorage();
     default:
-      throw new Error(`Storage provider desconhecido: "${provider}". Use 'cloudinary' ou 'firebase'.`);
+      throw new Error(`Storage provider desconhecido: "${storage.provider}". Use 'cloudinary' ou 'firebase'.`);
   }
 }

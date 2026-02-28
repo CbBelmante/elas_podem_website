@@ -144,7 +144,7 @@ Desabilita **todo** o cache da aplicacao. Util para debug.
 ```typescript
 // config/constants.ts
 features: {
-  enableCache: true,  // false → NENHUM cache funciona (RAM nem localStorage)
+  enableCache: false,  // true → habilita cache; false → NENHUM cache funciona
 }
 ```
 

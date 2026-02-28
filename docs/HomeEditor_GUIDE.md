@@ -32,7 +32,7 @@
 
 ### O Problema
 
-A home tem 8 secoes editaveis (Hero, Missao, Programas, Depoimentos, Apoiadores, Contato, CTA, SEO). Cada uma precisa de:
+A home tem 9 secoes editaveis (Hero, Missao, Programas, Valores, Depoimentos, Apoiadores, Contato, CTA, SEO). Cada uma precisa de:
 - Formulario com campos tipados
 - CRUD de arrays (add/remove) com drag-and-drop
 - Upload de imagem com preview
@@ -44,23 +44,26 @@ Se tudo ficasse em 1 arquivo: 3500+ linhas. Impossivel de manter.
 
 ### A Solucao
 
-11 componentes com responsabilidades claras:
+14 componentes com responsabilidades claras:
 
 ```
 pages/admin/edit/
-  homeEdit.vue                 ← orquestrador (~510 linhas)
+  homeEdit.vue                      ← orquestrador (~510 linhas)
 
 components/admin/
-  HomeEditorSection.vue        ← wrapper colapsavel generico
-  HomeImageUploader.vue        ← upload compartilhado
-  HomeHeroEditor.vue           ← Hero: textos + stats CRUD + drag
-  HomeMissionEditor.vue        ← Missao: textos + image upload
-  HomeProgramsEditor.vue       ← Programas: CRUD + drag + readonly pareado
-  HomeTestimonialsEditor.vue   ← Depoimentos: CRUD + image + drag
-  HomeSupportersEditor.vue     ← Apoiadores: CRUD + image + drag + readonly pareado
-  HomeContactEditor.vue        ← Contato: campos + 2 arrays (methods + subjects)
-  HomeCtaEditor.vue            ← CTA: 4 campos de texto (mais simples)
-  HomeSeoEditor.vue            ← SEO: campos + keywords + char counter + image
+  HomeEditorSection.vue             ← wrapper colapsavel generico
+  HomeImageUploader.vue             ← upload compartilhado
+  AdminColorPicker.vue              ← seletor de cor (cores/gradientes/custom)
+  AdminButtonVariantSelect.vue      ← seletor de variante de botao
+  HomeHeroEditor.vue                ← Hero: textos + stats CRUD + drag
+  HomeMissionEditor.vue             ← Missao: textos + image upload
+  HomeProgramsEditor.vue            ← Programas: CRUD + drag + cor por item
+  HomeValuesEditor.vue              ← Valores: CRUD + drag + cor por item
+  HomeTestimonialsEditor.vue        ← Depoimentos: CRUD + image + drag
+  HomeSupportersEditor.vue          ← Apoiadores: CRUD + image + drag
+  HomeContactEditor.vue             ← Contato: campos + 2 arrays (methods + subjects)
+  HomeCtaEditor.vue                 ← CTA: 4 campos de texto (mais simples)
+  HomeSeoEditor.vue                 ← SEO: campos + keywords + char counter + image
 ```
 
 Cada arquivo fica entre 80-250 linhas. O dev abre e entende.
@@ -102,7 +105,7 @@ export type IHeroEditable = FieldsByMode<typeof SECTION_FIELDS.hero, IHero, 'edi
 export const HERO_CONFIG = {
   validationRules: {
     // ... campos existentes ...
-    videoUrl: { required: false, maxLength: 200 },  // ← NOVO
+    videoUrl: { required: false, maxLength: 200 },
   },
 };
 ```
@@ -131,9 +134,9 @@ programs: {
   title: 'editable',
   description: 'editable',
   icon: 'editable',
+  color: 'editable',
   link: 'editable',
-  color: 'readonly',
-  highlight: 'editable',  // ← NOVO
+  highlight: 'editable',
 },
 ```
 
@@ -141,7 +144,7 @@ programs: {
 
 ```typescript
 export function createNewProgram() {
-  return { title: '', description: '', icon: 'luc-book-open', link: '', color: '#E6346B', highlight: false };
+  return { title: '', description: '', icon: 'luc-book-open', color: 'magenta', link: '', highlight: false };
 }
 ```
 
@@ -172,7 +175,7 @@ Se uma nova secao for adicionada a home (ex: "Parceiros"):
 
 ## 🧩 Anatomia de um Editor de Secao (Essencial)
 
-Todos os 8 editores seguem o mesmo pattern. A diferenca e o que tem dentro.
+Todos os 9 editores seguem o mesmo pattern. A diferenca e o que tem dentro.
 
 ### Estrutura de um editor
 
@@ -213,8 +216,8 @@ const rules = XXX_CONFIG.validationRules;
 | Tipo | Exemplos | Caracteristicas |
 |------|----------|----------------|
 | **Campos simples** | CTA, Mission | So inputs/textareas, sem arrays |
-| **Array sem readonly** | Testimonials | CRUD + drag, tudo editavel |
-| **Array com readonly pareado** | Programs, Supporters, Contact | CRUD + drag, editable[] e readonly[] em sync |
+| **Array de objetos** | Programs, Testimonials, Supporters, Contact methods, Values | CRUD + drag, tudo editavel |
+| **Array de strings** | SEO keywords, Contact formSubjects | CRUD + drag, strings simples |
 
 ### Comunicacao: Props down, Emits up
 
@@ -362,15 +365,16 @@ Toda secao com array usa o mesmo pattern:
 - `:animation="200"` — transicao suave de 200ms
 - `ghost-class` — estilo do item fantasma durante drag
 
-### Readonly pareado: sync de 2 arrays
+### Editable/Readonly split: arquitetura de 2 arrays
 
-Secoes com campos readonly (Programs, Supporters, Contact methods) mantem **2 arrays** pareados por index:
+A arquitetura mantém **2 arrays** pareados por index (`editable[]` + `readonly[]`), gerados pela funcao `addItem()` que itera sobre `SECTION_FIELDS` e separa campos por modo:
 
 ```
-editable[0] ↔ readonly[0]   // Programa 1
-editable[1] ↔ readonly[1]   // Programa 2
-editable[2] ↔ readonly[2]   // Programa 3
+editable[0] ↔ readonly[0]   // Item 1
+editable[1] ↔ readonly[1]   // Item 2
 ```
+
+> **Nota:** Atualmente todos os campos de programs, supporters, contact methods e values sao `'editable'` — os arrays `readonly[]` existem mas contem objetos vazios `{}`. Se no futuro algum campo mudar para `'readonly'`, a separacao ja funciona automaticamente.
 
 **Add:** push em ambos arrays.
 
@@ -477,7 +481,7 @@ homeEdit.vue (orquestrador)
   ├── usePageEditor()      → hasChanges, markAsChanged, canExit
   ├── useAuth()            → userData.displayName (header)
   │
-  ├── HomeEditorSection × 8  (wrapper colapsavel generico)
+  ├── HomeEditorSection × 9  (wrapper colapsavel generico)
   │     │
   │     ├── HomeHeroEditor
   │     │     └── CBInput, CBTextarea, CBSelect, draggable (stats)
@@ -487,19 +491,22 @@ homeEdit.vue (orquestrador)
   │     │     └── HomeImageUploader → useFirebaseStorage
   │     │
   │     ├── HomeProgramsEditor
-  │     │     └── CBInput, CBTextarea, CBSelect, draggable (readonly pareado)
+  │     │     └── CBInput, CBTextarea, CBSelect, AdminColorPicker, draggable
+  │     │
+  │     ├── HomeValuesEditor
+  │     │     └── CBInput, AdminColorPicker, draggable
   │     │
   │     ├── HomeTestimonialsEditor
   │     │     ├── CBInput, CBTextarea, draggable
   │     │     └── HomeImageUploader × N (1 por depoimento)
   │     │
   │     ├── HomeSupportersEditor
-  │     │     ├── CBInput, CBSelect, draggable (readonly pareado)
+  │     │     ├── CBInput, CBSelect, draggable
   │     │     └── HomeImageUploader × N (1 por apoiador)
   │     │
   │     ├── HomeContactEditor
-  │     │     ├── CBInput, CBTextarea, CBSelect
-  │     │     ├── draggable (methods, readonly pareado)
+  │     │     ├── CBInput, CBTextarea, CBSelect, AdminColorPicker
+  │     │     ├── draggable (methods)
   │     │     └── draggable (formSubjects, strings simples)
   │     │
   │     ├── HomeCtaEditor
@@ -509,6 +516,10 @@ homeEdit.vue (orquestrador)
   │           ├── CBInput, CBTextarea (com char counter)
   │           ├── draggable (keywords, strings simples)
   │           └── HomeImageUploader (ogImage)
+  │
+  ├── components/admin/ (compartilhados):
+  │     ├── AdminColorPicker.vue       ← seletor de cor (3 modos: cores, gradientes, custom)
+  │     └── AdminButtonVariantSelect.vue ← seletor de variante de botao
   │
   └── @cb/components: CBButton, CBIcon, CBLabel, CBInput, CBTextarea,
                       CBSelect, CBBadge, CBCard
@@ -520,7 +531,7 @@ homeEdit.vue (orquestrador)
 definitions/                          composables/
 ├── validationConfigs.ts ─────────►  useValidation.ts ──┐
 ├── validationRules.ts ───────────►  (CBInput :rules)   │
-├── themeOptions.ts ──────────────►  (CBSelect :items)   │
+├── themeOptions.ts ──────────────►  (CBSelect + AdminColorPicker)  │
 ├── sectionFields.ts ─────────────►  (addItem: split)   │
 │                                                        │
 utils/                                                   │
@@ -531,7 +542,7 @@ composables/                                             │
 │     (useHomePageData)                   │
 ├── usePageEditor.ts ─────────────►       │
 ├── useAuth.ts ───────────────────►       │
-├── useFirebaseStorage.ts ────────►  HomeImageUploader.vue
+├── useStorage.ts ───────────────►  HomeImageUploader.vue
 │
 types/admin/
 ├── editable.ts ──────────────────►  (Props dos editors)
@@ -540,14 +551,15 @@ types/admin/
 
 ### Secoes e suas capacidades
 
-| Secao | Campos | Array | Drag | Image | Readonly Pareado |
-|-------|--------|-------|------|-------|-----------------|
-| Hero | 5 | stats (1-6) | ✅ | - | - |
-| Missao | 5 | - | - | ✅ 1 | - |
-| Programas | - | programs (1-8) | ✅ | - | ✅ color |
+| Secao | Campos | Array | Drag | Image | Color Picker |
+|-------|--------|-------|------|-------|-------------|
+| Hero | 5 + botoes (cor/variante) | stats (1-6) | ✅ | ✅ 1 (heroImage) | ✅ botoes (AdminColorPicker) |
+| Missao | 5 + botao (cor/variante) | - | - | ✅ 1 | ✅ botao (AdminColorPicker) |
+| Programas | - | programs (1-8) | ✅ | - | ✅ por item (AdminColorPicker) |
+| Valores | - | values (1-10) | ✅ | - | ✅ por item (AdminColorPicker) |
 | Depoimentos | - | testimonials (1-12) | ✅ | ✅ por item | - |
-| Apoiadores | - | supporters (1-20) | ✅ | ✅ por item | ✅ color |
-| Contato | 3 | methods (1-8) + subjects (1-10) | ✅ ambos | - | ✅ methods |
+| Apoiadores | - | supporters (1-20) | ✅ | ✅ por item | - |
+| Contato | 3 | methods (1-8) + subjects (1-10) | ✅ ambos | - | ✅ por metodo (AdminColorPicker) |
 | CTA | 4 | - | - | - | - |
 | SEO | 2 (+counter) | keywords (1-20) | ✅ | ✅ 1 (og) | - |
 
@@ -576,7 +588,7 @@ const validators: Record<string, (data) => IValidationResult> = {
   hero: (data) => validateHero(data),
   mission: (data) => validateMission(data),
   programs: () => validatePrograms(forms.value?.programs?.editable),
-  // ... 8 secoes
+  // ... 9 secoes
 };
 ```
 
@@ -638,7 +650,7 @@ window.addEventListener('beforeunload', (e) => {
 
 ### HomeEditorSection.vue — o wrapper generico
 
-Renderizado 8 vezes no template, uma por secao:
+Renderizado 9 vezes no template, uma por secao:
 
 ```vue
 <HomeEditorSection
@@ -693,12 +705,15 @@ O `category` (ex: `'mission'`, `'testimonials'`) define o preset de compressao e
 | `components/admin/HomeImageUploader.vue` | ~180 | Upload com preview, validacao e compressao |
 | `components/admin/HomeHeroEditor.vue` | ~245 | Hero: textos + stats CRUD/drag |
 | `components/admin/HomeMissionEditor.vue` | ~100 | Missao: textos + image upload |
-| `components/admin/HomeProgramsEditor.vue` | ~225 | Programas: CRUD/drag + readonly pareado |
+| `components/admin/HomeProgramsEditor.vue` | ~225 | Programas: CRUD/drag + AdminColorPicker por item |
+| `components/admin/HomeValuesEditor.vue` | ~180 | Valores: CRUD/drag + AdminColorPicker por item |
 | `components/admin/HomeTestimonialsEditor.vue` | ~210 | Depoimentos: CRUD/drag + image por item |
-| `components/admin/HomeSupportersEditor.vue` | ~230 | Apoiadores: CRUD/drag + image + readonly pareado |
-| `components/admin/HomeContactEditor.vue` | ~345 | Contato: campos + methods + formSubjects |
+| `components/admin/HomeSupportersEditor.vue` | ~230 | Apoiadores: CRUD/drag + image |
+| `components/admin/HomeContactEditor.vue` | ~345 | Contato: campos + methods (com AdminColorPicker) + formSubjects |
 | `components/admin/HomeSeoEditor.vue` | ~210 | SEO: campos + keywords + char counter + ogImage |
 | `components/admin/HomeCtaEditor.vue` | ~85 | CTA: 4 campos de texto |
+| `components/admin/AdminColorPicker.vue` | ~250 | Seletor de cor: 3 modos (cores, gradientes, custom) |
+| `components/admin/AdminButtonVariantSelect.vue` | ~50 | Seletor de variante de botao (solid/outline/ghost/link) |
 
 ### Dependencia externa
 
@@ -730,13 +745,18 @@ O `forms` vem tipado como `Ref<IHomeFormsData | null>` do composable. No templat
 
 No Vue 3, props de objetos/arrays passam por **referencia reativa**. Quando o pai passa `forms.hero`, o filho recebe a mesma referencia. Mutar `element.title = $event` no filho atualiza o estado do pai automaticamente. O `emit('changed')` so serve pra notificar — nao pra passar dados.
 
-### Por que nao usar v-model no lugar de :model-value + @update:model-value?
+### Por que `:model-value` + `@update:model-value` ao inves de `v-model`?
 
-O `v-model` simplificaria, mas teriamos 2 problemas:
-1. Nao poderiamos emitir `changed` junto com a atualizacao
-2. Em campos de arrays (element.title), o `v-model` com expressao inline fica ambiguo
+Nos editors, usamos o pattern explicito para poder emitir `changed` junto com a atualizacao:
 
-O pattern `:model-value` + `@update:model-value` com `emit('changed')` inline e explicito e previsivel.
+```vue
+<CBInput
+  :model-value="element.title"
+  @update:model-value="element.title = $event; emit('changed')"
+/>
+```
+
+Se usassemos `v-model="element.title"`, a mutacao funcionaria (Vue 3 passa objetos por referencia reativa), mas nao teriamos como emitir `changed` ao mesmo tempo. O `emit('changed')` e essencial para o orquestrador saber qual secao foi alterada.
 
 ### Posso ter mais de uma secao aberta ao mesmo tempo?
 

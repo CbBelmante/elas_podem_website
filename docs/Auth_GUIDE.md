@@ -281,7 +281,7 @@ plugins/
 ├── auth.client.ts        ← inicializa listener no boot (client-only)
 
 middleware/
-├── admin.ts              ← protege rotas /admin/*
+├── admin.global.ts       ← protege rotas /admin/*
 
 utils/
 ├── Logger.ts             ← logs estruturados

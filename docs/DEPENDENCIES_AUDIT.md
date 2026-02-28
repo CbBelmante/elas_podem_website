@@ -1,7 +1,7 @@
 # 🔍 Auditoria de Dependências - Elas Podem Website
 
-**Data:** 02 FEV 2026
-**Versão:** 2.0
+**Data:** 28 FEV 2026
+**Versão:** 3.0
 **Status:** Atualizado e Limpo
 
 ---
@@ -19,13 +19,13 @@
 
 | Métrica | Status |
 |---------|--------|
-| **Total de dependências** | 5 production + 4 dev |
+| **Total de dependências** | 9 production + 5 dev |
 | **Dependências saudáveis** | ✅ 100% |
 | **Problemas encontrados** | ✅ Nenhum |
 | **Segurança** | ✅ Sem vulnerabilidades |
 | **Versões desatualizadas** | ✅ Todas atualizadas |
 
-**Veredito:** Projeto minimalista e saudável. Apenas dependências essenciais instaladas.
+**Veredito:** Projeto enxuto e saudável. Dependências essenciais instaladas.
 
 ---
 
@@ -35,51 +35,68 @@
 
 #### `nuxt: ^4.3.0`
 - **Status:** ✅ Excelente
-- **Última versão:** 4.3.0 (mais recente)
-- **Tamanho:** Framework completo
 - **Uso:** Framework principal da aplicação
 - **Motivo:** Essencial - base do projeto
 
 #### `vue: ^3.5.27`
 - **Status:** ✅ Excelente
-- **Última versão:** 3.5.x (stable)
-- **Tamanho:** ~100kb (runtime)
 - **Uso:** Biblioteca de UI
 - **Motivo:** Essencial - dependência do Nuxt
 
 #### `vue-router: ^4.6.4`
 - **Status:** ✅ Excelente
-- **Última versão:** 4.6.x (stable)
-- **Tamanho:** ~20kb
 - **Uso:** Roteamento de páginas
 - **Motivo:** Essencial - integração Nuxt
 
 ---
 
-### **UI Components & Icons (2 pacotes)**
+### **Firebase (1 pacote)**
+
+#### `firebase: ^12.9.0`
+- **Status:** ✅ Excelente
+- **Uso:** Auth (login/logout), Firestore (dados), Storage (uploads)
+- **Motivo:** Essencial - backend do projeto
+- **Nota:** Usar via `npx firebase-tools` para CLI (sem install global)
+
+---
+
+### **UI Components & Icons (3 pacotes)**
 
 #### `lucide-vue-next: ^0.563.0`
 - **Status:** ✅ Excelente
-- **Última versão:** 0.563.x
-- **Tamanho:** ~5kb (tree-shakeable)
-- **Uso:** Biblioteca de ícones (16.000+ ícones)
-- **Motivo:** Necessário - usado em toda landing page
-- **Alternativas:** heroicons, phosphor-icons
-- **Por que manter:** Leve, moderno, fácil de usar
+- **Uso:** Biblioteca de ícones (tree-shakeable)
+- **Motivo:** Necessário - usado em toda landing page e admin
 
 #### `reka-ui: ^2.7.0`
 - **Status:** ✅ Excelente
-- **Última versão:** 2.7.x
-- **Tamanho:** ~15kb
 - **Uso:** Primitivos headless (base do @cb/components)
-- **Motivo:** Necessário - primitivos acessíveis
-- **Nota:** Fornece components como Dialog, Dropdown, etc. com acessibilidade
+- **Motivo:** Necessário - primitivos acessíveis (Dialog, Dropdown, etc.)
+
+#### `@cb/components` (link local)
+- **Status:** ✅ Excelente
+- **Uso:** Biblioteca de componentes propria (CBInput, CBButton, CBSelect, CBCard, etc.)
+- **Motivo:** Essencial - usada em todo o admin e landing page
+- **Nota:** Linkada localmente via `npm run cbcomponentsLinkLocal` (pasta `/home/belmante/Workspaces/cbcomponents/`)
+
+---
+
+### **Internacionalizacao e Drag-and-Drop (2 pacotes)**
+
+#### `vue-i18n: ^9.14.5`
+- **Status:** ✅ Excelente
+- **Uso:** Internacionalizacao (preparado para pt-BR, en, es)
+- **Motivo:** Necessário - suporte a multiplos idiomas
+
+#### `vuedraggable: ^4.1.0`
+- **Status:** ✅ Excelente
+- **Uso:** Drag-and-drop em arrays (stats, programs, supporters, etc.)
+- **Motivo:** Necessário - wrapper oficial SortableJS para Vue 3
 
 ---
 
 ## 🛠️ Dependências de Desenvolvimento
 
-### **Code Quality (4 pacotes)**
+### **Code Quality (5 pacotes)**
 
 #### `@nuxt/eslint: ^1.13.0`
 - **Status:** ✅ Excelente
@@ -100,6 +117,11 @@
 - **Status:** ✅ Excelente
 - **Uso:** Integração ESLint + Prettier
 - **Motivo:** Evita conflitos entre linter e formatter
+
+#### `vue-tsc: ^3.2.5`
+- **Status:** ✅ Excelente
+- **Uso:** Type-checker TypeScript para Vue SFC
+- **Motivo:** Verificação de tipos em arquivos `.vue`
 
 ---
 
@@ -143,7 +165,7 @@ Este projeto está seguindo o princípio YAGNI (You Aren't Gonna Need It) corret
 - **Instalar apenas quando precisar**
 - **Não antecipar features futuras** com deps pesadas
 
-### 📦 Se Precisar Adicionar no Futuro:
+### Se Precisar Adicionar no Futuro:
 
 #### **Para Blog/CMS:**
 ```bash
@@ -151,19 +173,9 @@ npm install marked        # Markdown parser (20kb, rápido)
 npm install dompurify     # Sanitização HTML (XSS protection)
 ```
 
-#### **Para Backend/Auth:**
-```bash
-npm install @supabase/supabase-js  # Backend completo
-```
-
 #### **Para Estado Global Complexo:**
 ```bash
 npm install pinia         # State management oficial Vue
-```
-
-#### **Para Formulários Avançados:**
-```bash
-npm install vee-validate yup  # Validação de forms
 ```
 
 ---
@@ -185,5 +197,5 @@ npm install vee-validate yup  # Validação de forms
 ---
 
 **Responsável:** CbBelmante
-**Última atualização:** 02 FEV 2026
-**Próxima revisão:** MAR 2026
+**Última atualização:** 28 FEV 2026
+**Próxima revisão:** ABR 2026
