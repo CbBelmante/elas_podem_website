@@ -31,7 +31,8 @@ export function parseColorValue(value: string): IParsedColorValue {
   }
 
   if (value.startsWith('custom:')) return { type: 'custom', raw: value.replace('custom:', '') };
-  if (value.startsWith('gradient:')) return { type: 'gradient', raw: value.replace('gradient:', '') };
+  if (value.startsWith('gradient:'))
+    return { type: 'gradient', raw: value.replace('gradient:', '') };
 
   return { type: 'color', raw: value };
 }

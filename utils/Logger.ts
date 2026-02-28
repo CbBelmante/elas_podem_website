@@ -194,7 +194,10 @@ let bufferTimeout: ReturnType<typeof setTimeout> | null = null;
  * const safe = redactSensitiveData(userData, ['password', 'user.email'])
  * // Retorna: { user: { name: 'João', email: '**PROTECTED**' }, password: '**PROTECTED**', token: 'abc123' }
  */
-const redactSensitiveData = (obj: Record<string, unknown>, redactPaths: string[] = config.redact): Record<string, unknown> => {
+const redactSensitiveData = (
+  obj: Record<string, unknown>,
+  redactPaths: string[] = config.redact
+): Record<string, unknown> => {
   // Proteção contra tipos inválidos
   if (!obj || typeof obj !== 'object' || Array.isArray(obj)) {
     return obj;
@@ -270,7 +273,12 @@ const getOutputMode = () => {
  * formatOutput('INFO', 'User login', { userId: 123 })
  * // Retorna: { level: 'info', time: '2025-01-28T14:30:25.000Z', msg: 'User login', userId: 123 }
  */
-const formatOutput = (level: string, message: string, context: Record<string, unknown> = {}, isTiming = false): string | Record<string, unknown> => {
+const formatOutput = (
+  level: string,
+  message: string,
+  context: Record<string, unknown> = {},
+  isTiming = false
+): string | Record<string, unknown> => {
   const outputMode = getOutputMode();
 
   // 🎯 Extrai badge ANTES de aplicar redação (badge não vai pro contexto)
@@ -303,7 +311,9 @@ const formatOutput = (level: string, message: string, context: Record<string, un
  * @param {Object} context - Contexto original
  * @returns {{ badge: string|null, cleanContext: Object }} Badge extraído e contexto limpo
  */
-const extractBadge = (context: Record<string, unknown>): { badge: string | null; cleanContext: Record<string, unknown> } => {
+const extractBadge = (
+  context: Record<string, unknown>
+): { badge: string | null; cleanContext: Record<string, unknown> } => {
   const badge = (context.badge as string) || null;
 
   // Se não tem badge, retorna contexto original
@@ -328,7 +338,12 @@ const extractBadge = (context: Record<string, unknown>): { badge: string | null;
  * @param {boolean} [isTiming=false] - Se é log de timing
  * @returns {string} Mensagem formatada
  */
-const formatLogMessage = (level: string, message: string, context: Record<string, unknown> = {}, isTiming = false): string => {
+const formatLogMessage = (
+  level: string,
+  message: string,
+  context: Record<string, unknown> = {},
+  isTiming = false
+): string => {
   const timestamp = getTimestamp();
   const shouldShowEmoji = config.emojis || context.emoji;
 
@@ -657,12 +672,22 @@ export class Logger {
    * userHelpers.login('user123', 'success', { ip: '192.168.1.1' })
    * userHelpers.dataAccess('user123', 'cpf_view')
    */
-  static createDomainHelpers(domain: string, helpers: Record<string, IDomainHelperConfig> = {}): Record<string, (id: string, action: string, context?: Record<string, unknown>) => void> {
+  static createDomainHelpers(
+    domain: string,
+    helpers: Record<string, IDomainHelperConfig> = {}
+  ): Record<string, (id: string, action: string, context?: Record<string, unknown>) => void> {
     const domainLogger = this.child({ domain });
-    const domainHelpers: Record<string, (id: string, action: string, context?: Record<string, unknown>) => void> = {};
+    const domainHelpers: Record<
+      string,
+      (id: string, action: string, context?: Record<string, unknown>) => void
+    > = {};
 
     Object.entries(helpers).forEach(([helperName, helperConfig]) => {
-      domainHelpers[helperName] = (id: string, action: string, context: Record<string, unknown> = {}) => {
+      domainHelpers[helperName] = (
+        id: string,
+        action: string,
+        context: Record<string, unknown> = {}
+      ) => {
         const helperContext = {
           [helperConfig.idField || 'id']: id,
           action,
@@ -938,11 +963,14 @@ export class Logger {
     const componentLogger = this.child({ component: componentName });
 
     return {
-      debug: (message: string, context: Record<string, unknown> = {}) => componentLogger.debug(message, context),
+      debug: (message: string, context: Record<string, unknown> = {}) =>
+        componentLogger.debug(message, context),
 
-      info: (message: string, context: Record<string, unknown> = {}) => componentLogger.info(message, context),
+      info: (message: string, context: Record<string, unknown> = {}) =>
+        componentLogger.info(message, context),
 
-      warn: (message: string, context: Record<string, unknown> = {}) => componentLogger.warn(message, context),
+      warn: (message: string, context: Record<string, unknown> = {}) =>
+        componentLogger.warn(message, context),
 
       error: (message: string, error: Error | null = null, context: Record<string, unknown> = {}) =>
         componentLogger.error(message, error, context),

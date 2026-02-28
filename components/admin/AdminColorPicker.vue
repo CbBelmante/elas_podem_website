@@ -44,9 +44,7 @@ const customEnd = ref('');
 
 const allModes: PickerMode[] = ['colors', 'gradients', 'custom'];
 
-const availableModes = computed(() =>
-  allModes.filter((m) => !props.unavailableModes.includes(m)),
-);
+const availableModes = computed(() => allModes.filter((m) => !props.unavailableModes.includes(m)));
 
 function isAvailable(mode: PickerMode): boolean {
   return availableModes.value.includes(mode);
@@ -74,7 +72,7 @@ watch(
       activeTab.value = safeTab('colors');
     }
   },
-  { immediate: true },
+  { immediate: true }
 );
 
 // ============== COMPUTED ==============

@@ -454,9 +454,7 @@ export function separateAllSections(pageData: IHomePageData): IHomeFormsData {
     hero: c.hero ? separateHeroData(c.hero) : defaults.hero,
     mission: c.mission ? separateMissionData(c.mission) : defaults.mission,
     programs: c.programs ? separateProgramsData(c.programs) : defaults.programs,
-    testimonials: c.testimonials
-      ? separateTestimonialsData(c.testimonials)
-      : defaults.testimonials,
+    testimonials: c.testimonials ? separateTestimonialsData(c.testimonials) : defaults.testimonials,
     supporters: c.supporters ? separateSupportersData(c.supporters) : defaults.supporters,
     contact: c.contact ? separateContactData(c.contact) : defaults.contact,
     values: c.values ? separateValuesData(c.values) : defaults.values,

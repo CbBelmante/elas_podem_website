@@ -34,15 +34,11 @@ const userName = computed(() => userData.value?.displayName ?? 'Admin');
 const sidebarItems: ISidebarMenuGroup[] = [
   {
     label: 'Geral',
-    items: [
-      { label: 'Dashboard', icon: 'luc-layout-dashboard', to: '/admin' },
-    ],
+    items: [{ label: 'Dashboard', icon: 'luc-layout-dashboard', to: '/admin' }],
   },
   {
     label: 'Paginas',
-    items: [
-      { label: 'Home Page', icon: 'luc-home', to: '/admin/edit/homeEdit' },
-    ],
+    items: [{ label: 'Home Page', icon: 'luc-home', to: '/admin/edit/homeEdit' }],
   },
 ];
 
@@ -274,8 +270,13 @@ const handleLogout = async (): Promise<void> => {
    DOTS DECORATIVOS (padrao home)
    ============================================ */
 @keyframes adminFloat {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 .adminLayout__dot {

@@ -28,8 +28,8 @@ export interface IFirebaseConfig {
 
 export interface IStorageConfig {
   provider: 'cloudinary' | 'firebase'; // vem de constants (decisao do projeto)
-  cloudinaryCloudName: string;         // vem do .env (credencial)
-  cloudinaryUploadPreset: string;      // vem do .env (credencial)
+  cloudinaryCloudName: string; // vem do .env (credencial)
+  cloudinaryUploadPreset: string; // vem do .env (credencial)
 }
 
 export interface IAnalyticsConfig {

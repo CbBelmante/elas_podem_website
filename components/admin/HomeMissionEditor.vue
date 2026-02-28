@@ -32,7 +32,6 @@ const emit = defineEmits<{
 // ============== VALIDATION RULES ==============
 
 const rules = MISSION_CONFIG.validationRules;
-
 </script>
 
 <template>

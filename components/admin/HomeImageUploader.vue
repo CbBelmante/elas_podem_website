@@ -165,10 +165,18 @@ async function handleDrop(event: DragEvent): Promise<void> {
       <div v-else class="imgUp__preview">
         <img :src="modelValue" :alt="label" class="imgUp__image" />
         <div class="imgUp__overlay">
-          <button type="button" class="imgUp__action imgUp__action--edit" @click.stop="triggerFileInput">
+          <button
+            type="button"
+            class="imgUp__action imgUp__action--edit"
+            @click.stop="triggerFileInput"
+          >
             <CBIcon icon="luc-pencil" size="1rem" color="#ffffff" />
           </button>
-          <button type="button" class="imgUp__action imgUp__action--delete" @click.stop="removeImage">
+          <button
+            type="button"
+            class="imgUp__action imgUp__action--delete"
+            @click.stop="removeImage"
+          >
             <CBIcon icon="luc-trash-2" size="1rem" color="#ffffff" />
           </button>
         </div>
@@ -359,7 +367,9 @@ async function handleDrop(event: DragEvent): Promise<void> {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .imgUp__action:hover {
@@ -398,8 +408,12 @@ async function handleDrop(event: DragEvent): Promise<void> {
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .imgUp__loadingText {

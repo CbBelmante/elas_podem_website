@@ -202,12 +202,7 @@ onUnmounted(() => {
         text-color="var(--color-vinho-medio)"
         class="homeEditHeader__badge"
       />
-      <CBLabel
-        text="Home Page"
-        tag="h1"
-        weight="black"
-        class="homeEditHeader__title"
-      />
+      <CBLabel text="Home Page" tag="h1" weight="black" class="homeEditHeader__title" />
       <CBLabel
         text="8 secoes editaveis — hero, missao, programas e mais"
         size="md"
@@ -216,48 +211,47 @@ onUnmounted(() => {
     </header>
 
     <!-- Success message -->
-      <div v-if="successMessage" class="homeEditSuccess">
-        <CBIcon icon="luc-check-circle" size="1rem" color="var(--color-oliva)" />
-        <span class="homeEditSuccess__text">{{ successMessage }}</span>
-      </div>
+    <div v-if="successMessage" class="homeEditSuccess">
+      <CBIcon icon="luc-check-circle" size="1rem" color="var(--color-oliva)" />
+      <span class="homeEditSuccess__text">{{ successMessage }}</span>
+    </div>
 
-      <!-- Loading -->
-      <div v-if="isLoading" class="homeEditLoading">
-        <CBIcon
-          icon="luc-loader-2"
-          size="1.5rem"
-          color="var(--text-tertiary)"
-          class="homeEditLoading__spinner"
+    <!-- Loading -->
+    <div v-if="isLoading" class="homeEditLoading">
+      <CBIcon
+        icon="luc-loader-2"
+        size="1.5rem"
+        color="var(--text-tertiary)"
+        class="homeEditLoading__spinner"
+      />
+      <CBLabel text="Carregando dados da pagina..." size="sm" color="tertiary" />
+    </div>
+
+    <!-- Sections -->
+    <div v-else class="homeEditSections">
+      <HomeEditorSection
+        v-for="section in sections"
+        :key="section.name"
+        :title="section.title"
+        :icon="section.icon"
+        :section-name="section.name"
+        :expanded="expandedSections.has(section.name)"
+        :errors="sectionErrors[section.name] ?? []"
+        :is-saving="isSaving"
+        :has-changes="changedSections.has(section.name)"
+        @toggle="toggleSection(section.name)"
+        @save="handleSave(section.name)"
+        @discard="handleDiscard(section.name)"
+      >
+        <component
+          :is="section.component"
+          v-if="forms"
+          :forms="(forms as any)[section.name]"
+          @changed="markSectionChanged(section.name)"
+          @uploaded="handleImageUploaded"
         />
-        <CBLabel text="Carregando dados da pagina..." size="sm" color="tertiary" />
-      </div>
-
-      <!-- Sections -->
-      <div v-else class="homeEditSections">
-        <HomeEditorSection
-          v-for="section in sections"
-          :key="section.name"
-          :title="section.title"
-          :icon="section.icon"
-          :section-name="section.name"
-          :expanded="expandedSections.has(section.name)"
-          :errors="sectionErrors[section.name] ?? []"
-          :is-saving="isSaving"
-          :has-changes="changedSections.has(section.name)"
-          @toggle="toggleSection(section.name)"
-          @save="handleSave(section.name)"
-          @discard="handleDiscard(section.name)"
-        >
-          <component
-            :is="section.component"
-            v-if="forms"
-            :forms="(forms as any)[section.name]"
-            @changed="markSectionChanged(section.name)"
-            @uploaded="handleImageUploaded"
-          />
-        </HomeEditorSection>
-      </div>
-
+      </HomeEditorSection>
+    </div>
   </div>
 </template>
 
@@ -347,5 +341,4 @@ onUnmounted(() => {
   flex-direction: column;
   gap: 0.75rem;
 }
-
 </style>

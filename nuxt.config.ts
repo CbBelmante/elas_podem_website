@@ -29,10 +29,7 @@ export default defineNuxtConfig(() => {
     modules: ['@nuxt/eslint'],
 
     // CSS global — ordem importa (library primeiro, theme depois)
-    css: [
-      '@cb/components/style.css',
-      '~/assets/css/theme.css',
-    ],
+    css: ['@cb/components/style.css', '~/assets/css/theme.css'],
 
     // Head global — fontes carregam antes de qualquer page/layout renderizar
     app: {

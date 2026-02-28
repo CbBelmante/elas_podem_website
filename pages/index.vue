@@ -189,8 +189,16 @@ onMounted(() => {
                 :label="hero.btnDonate"
                 size="lg"
                 :variant="hero.btnDonateVariant"
-                :bg-gradient="isGradientValue(hero.btnDonateColor) ? resolveColorValue(hero.btnDonateColor, 'gradient:primary') : undefined"
-                :color="!isGradientValue(hero.btnDonateColor) ? resolveColorValue(hero.btnDonateColor, 'gradient:primary') : undefined"
+                :bg-gradient="
+                  isGradientValue(hero.btnDonateColor)
+                    ? resolveColorValue(hero.btnDonateColor, 'gradient:primary')
+                    : undefined
+                "
+                :color="
+                  !isGradientValue(hero.btnDonateColor)
+                    ? resolveColorValue(hero.btnDonateColor, 'gradient:primary')
+                    : undefined
+                "
                 :rounded="50"
                 prepend-icon="luc-heart"
                 shine
@@ -202,8 +210,16 @@ onMounted(() => {
                 :label="hero.btnHistory"
                 size="lg"
                 :variant="hero.btnHistoryVariant"
-                :bg-gradient="isGradientValue(hero.btnHistoryColor) ? resolveColorValue(hero.btnHistoryColor) : undefined"
-                :color="!isGradientValue(hero.btnHistoryColor) ? resolveColorValue(hero.btnHistoryColor, 'vinho-medio') : undefined"
+                :bg-gradient="
+                  isGradientValue(hero.btnHistoryColor)
+                    ? resolveColorValue(hero.btnHistoryColor)
+                    : undefined
+                "
+                :color="
+                  !isGradientValue(hero.btnHistoryColor)
+                    ? resolveColorValue(hero.btnHistoryColor, 'vinho-medio')
+                    : undefined
+                "
                 :rounded="50"
                 append-icon="luc-arrow-right"
                 class="btnHeroSecondary"
@@ -248,8 +264,16 @@ onMounted(() => {
               :label="mission.btnText"
               size="lg"
               :variant="mission.btnVariant"
-              :bg-gradient="isGradientValue(mission.btnColor) ? resolveColorValue(mission.btnColor, 'gradient:primary') : undefined"
-              :color="!isGradientValue(mission.btnColor) ? resolveColorValue(mission.btnColor, 'gradient:primary') : undefined"
+              :bg-gradient="
+                isGradientValue(mission.btnColor)
+                  ? resolveColorValue(mission.btnColor, 'gradient:primary')
+                  : undefined
+              "
+              :color="
+                !isGradientValue(mission.btnColor)
+                  ? resolveColorValue(mission.btnColor, 'gradient:primary')
+                  : undefined
+              "
               :rounded="50"
               append-icon="luc-arrow-right"
               class="btnMission"
@@ -639,7 +663,6 @@ onMounted(() => {
           </div>
         </div>
       </section>
-
     </div>
   </div>
 </template>
@@ -1154,7 +1177,7 @@ onMounted(() => {
   background: var(--bg-white);
   color: var(--program-color);
   border: 1px solid color-mix(in srgb, var(--program-color) 20%, transparent);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
   transition: all 0.4s ease;
 }
 
@@ -1559,7 +1582,6 @@ onMounted(() => {
   transform: translateX(4px);
 }
 
-
 /* ============================================
    CTA — GRADIENT ESCURO
    ============================================ */
@@ -1845,5 +1867,4 @@ onMounted(() => {
     flex: 1 1 100%;
   }
 }
-
 </style>

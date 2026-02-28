@@ -87,10 +87,10 @@ export function useCloudinaryStorage(): IStorageAdapter {
     formData.append('upload_preset', uploadPreset);
     formData.append('folder', path);
 
-    const response = await fetch(
-      `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-      { method: 'POST', body: formData }
-    );
+    const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+      method: 'POST',
+      body: formData,
+    });
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
@@ -99,7 +99,7 @@ export function useCloudinaryStorage(): IStorageAdapter {
       );
     }
 
-    const data = await response.json() as { secure_url: string; public_id: string };
+    const data = (await response.json()) as { secure_url: string; public_id: string };
 
     logger.info('Arquivo enviado (Cloudinary)', {
       folder: path,

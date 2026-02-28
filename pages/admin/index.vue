@@ -77,12 +77,7 @@ onMounted(async () => {
         text-color="var(--color-vinho-medio)"
         class="dashboardHeader__badge"
       />
-      <CBLabel
-        text="Dashboard"
-        tag="h1"
-        weight="black"
-        class="dashboardHeader__title"
-      />
+      <CBLabel text="Dashboard" tag="h1" weight="black" class="dashboardHeader__title" />
       <CBLabel
         :text="`Bem-vinda de volta, ${userName}`"
         size="md"
@@ -93,48 +88,43 @@ onMounted(async () => {
 
     <!-- Loading -->
     <div v-if="isLoading" class="dashboardLoading">
-        <CBIcon
-          icon="luc-loader-2"
-          size="1.5rem"
-          color="var(--text-tertiary)"
-          class="dashboardLoading__spinner"
+      <CBIcon
+        icon="luc-loader-2"
+        size="1.5rem"
+        color="var(--text-tertiary)"
+        class="dashboardLoading__spinner"
+      />
+      <CBLabel text="Carregando dados..." size="sm" color="tertiary" />
+    </div>
+
+    <!-- Cards de paginas -->
+    <section v-else class="dashboardPages">
+      <div class="dashboardPages__header">
+        <CBBadge
+          content="CONTEUDO"
+          variant="outline"
+          :icon-size="14"
+          weight="bold"
+          size="xs"
+          bg-color="rgba(92, 26, 42, 0.06)"
+          text-color="var(--color-vinho-medio)"
+          class="sectionBadge"
         />
-        <CBLabel text="Carregando dados..." size="sm" color="tertiary" />
+        <CBLabel text="Paginas" tag="h2" weight="black" class="dashboardPages__title" />
       </div>
 
-      <!-- Cards de paginas -->
-      <section v-else class="dashboardPages">
-        <div class="dashboardPages__header">
-          <CBBadge
-            content="CONTEUDO"
-            variant="outline"
-            :icon-size="14"
-            weight="bold"
-            size="xs"
-            bg-color="rgba(92, 26, 42, 0.06)"
-            text-color="var(--color-vinho-medio)"
-            class="sectionBadge"
-          />
-          <CBLabel
-            text="Paginas"
-            tag="h2"
-            weight="black"
-            class="dashboardPages__title"
-          />
-        </div>
-
-        <!-- Card: Home Page -->
-        <AdminPageCard
-          title="Home Page"
-          description="Pagina principal do site — 8 secoes editaveis"
-          icon="luc-home"
-          color="rosa"
-          edit-url="/admin/edit/homeEdit"
-          :can-edit="permissions?.canEdit ?? false"
-          :last-editor-name="homeStatus?.updatedByName"
-          :last-edit-date="lastEditFormatted"
-        />
-      </section>
+      <!-- Card: Home Page -->
+      <AdminPageCard
+        title="Home Page"
+        description="Pagina principal do site — 8 secoes editaveis"
+        icon="luc-home"
+        color="rosa"
+        edit-url="/admin/edit/homeEdit"
+        :can-edit="permissions?.canEdit ?? false"
+        :last-editor-name="homeStatus?.updatedByName"
+        :last-edit-date="lastEditFormatted"
+      />
+    </section>
 
     <!-- Audit Log placeholder (TODO Fase 2) -->
     <section v-if="permissions?.canViewLogs" class="dashboardAudit">
@@ -149,12 +139,7 @@ onMounted(async () => {
           text-color="var(--color-vinho-medio)"
           class="sectionBadge"
         />
-        <CBLabel
-          text="Atividade Recente"
-          tag="h2"
-          weight="black"
-          class="dashboardAudit__title"
-        />
+        <CBLabel text="Atividade Recente" tag="h2" weight="black" class="dashboardAudit__title" />
       </div>
       <CBCard
         variant="outlined"

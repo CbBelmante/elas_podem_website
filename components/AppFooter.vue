@@ -59,7 +59,9 @@ import { CBImage, CBLabel, CBIcon } from '@cb/components';
       </div>
 
       <div class="footerBottom">
-        <span class="footerCopyright">&copy; 2025 Coletivo Elas Podem. Todos os direitos reservados.</span>
+        <span class="footerCopyright"
+          >&copy; 2025 Coletivo Elas Podem. Todos os direitos reservados.</span
+        >
         <div class="footerSocial">
           <a
             href="https://instagram.com/coletivoelaspodem"

@@ -28,6 +28,8 @@ export function useStorage(): IStorageAdapter {
     case 'cloudinary':
       return useCloudinaryStorage();
     default:
-      throw new Error(`Storage provider desconhecido: "${storage.provider}". Use 'cloudinary' ou 'firebase'.`);
+      throw new Error(
+        `Storage provider desconhecido: "${storage.provider}". Use 'cloudinary' ou 'firebase'.`
+      );
   }
 }
