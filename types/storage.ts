@@ -7,7 +7,7 @@
  * @module types/storage
  */
 
-import type { COMPRESSION_SETTINGS } from '~/definitions/validationConfigs';
+import type { COMPRESSION_SETTINGS } from '@definitions/validationConfigs';
 
 // ============== INTERFACES ==============
 

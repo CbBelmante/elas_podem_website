@@ -58,9 +58,9 @@ import type {
   // Camada 3: FormsData
   IHomeFormsData,
   IHomePageData,
-} from '~/types/admin';
+} from '@appTypes/admin';
 
-import { SECTION_FIELDS, type FieldMode } from '~/definitions/sectionFields';
+import { SECTION_FIELDS, type FieldMode } from '@definitions/sectionFields';
 import {
   HERO_DEFAULTS,
   HERO_STAT_DEFAULTS,
@@ -76,7 +76,7 @@ import {
   CTA_DEFAULTS,
   SEO_DEFAULTS,
   SEO_OG_DEFAULTS,
-} from '~/definitions/sectionDefaults';
+} from '@definitions/sectionDefaults';
 
 // ============================================================
 // HELPERS GENERICOS

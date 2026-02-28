@@ -23,7 +23,7 @@ import type { FirebaseStorage } from 'firebase/storage';
 
 // ============== DEPENDENCIAS INTERNAS ==============
 
-import { useConfig } from '@config';
+import { useConfig } from '@config/index';
 
 // ============== INTERFACES ==============
 

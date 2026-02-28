@@ -19,7 +19,7 @@ import type {
   ICtaSection,
   ISeo,
 } from './sections';
-import type { SECTION_FIELDS } from '~/definitions/sectionFields';
+import type { SECTION_FIELDS } from '@definitions/sectionFields';
 
 // ============================================================
 // UTILITY TYPES

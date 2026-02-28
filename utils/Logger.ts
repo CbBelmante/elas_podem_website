@@ -14,7 +14,7 @@
 // ============== DEPENDÊNCIAS EXTERNAS ==============
 
 import { ref } from 'vue';
-import { config as appConfig } from '~/config';
+import { config as appConfig } from '@config/index';
 import dayjs from 'dayjs';
 
 // ============== CONSTANTES DE CONFIGURAÇÃO DE NÍVEIS DE LOG ==============
