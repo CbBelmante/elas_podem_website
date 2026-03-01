@@ -9,7 +9,7 @@
 
 import { CBButton, CBIcon, CBInput, CBLabel, CBTextarea } from '@cb/components';
 import draggable from 'vuedraggable';
-import HomeImageUploader from '@components/admin/HomeImageUploader.vue';
+import AdminImageUploader from '@components/admin/AdminImageUploader.vue';
 import { TESTIMONIALS_CONFIG } from '@definitions/validationConfigs';
 import { createValidationRules } from '@utils/validationRules';
 import { createNewTestimonial } from '@utils/HomeFormUtils';
@@ -129,7 +129,7 @@ function removeTestimonial(index: number): void {
                 "
               />
 
-              <HomeImageUploader
+              <AdminImageUploader
                 :model-value="element.image"
                 category="testimonials"
                 label="Foto (opcional)"

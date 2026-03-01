@@ -20,6 +20,7 @@ export const HERO_DEFAULTS = {
   btnHistoryColor: 'vinho-medio',
   btnHistoryVariant: 'outline',
   heroImage: '',
+  heroImageOpacity: 100,
   stats: [
     { icon: 'luc-award', number: '2025', label: 'Sede Propria' },
     { icon: 'luc-megaphone', number: '5a', label: 'Conferencia Nacional' },
@@ -46,6 +47,7 @@ export const MISSION_DEFAULTS = {
   btnColor: 'gradient:primary',
   btnVariant: 'solid',
   image: '',
+  imageOpacity: 100,
   imageAlt: '',
 } as const;
 

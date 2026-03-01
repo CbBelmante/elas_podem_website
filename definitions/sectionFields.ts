@@ -39,6 +39,7 @@ export const SECTION_FIELDS = {
     btnHistoryColor: 'editable',
     btnHistoryVariant: 'editable',
     heroImage: 'editable',
+    heroImageOpacity: 'editable',
     stats: 'editable',
   },
 
@@ -51,6 +52,7 @@ export const SECTION_FIELDS = {
     btnColor: 'editable',
     btnVariant: 'editable',
     image: 'editable',
+    imageOpacity: 'editable',
     imageAlt: 'editable',
   },
 

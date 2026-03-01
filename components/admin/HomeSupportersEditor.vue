@@ -9,7 +9,7 @@
 
 import { CBButton, CBIcon, CBInput, CBLabel, CBSelect } from '@cb/components';
 import draggable from 'vuedraggable';
-import HomeImageUploader from '@components/admin/HomeImageUploader.vue';
+import AdminImageUploader from '@components/admin/AdminImageUploader.vue';
 import { SUPPORTERS_CONFIG } from '@definitions/validationConfigs';
 import { createValidationRules } from '@utils/validationRules';
 import { ICON_OPTIONS } from '@definitions/themeOptions';
@@ -181,7 +181,7 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
                   emit('changed');
                 "
               />
-              <HomeImageUploader
+              <AdminImageUploader
                 :model-value="element.image"
                 category="supporters"
                 label="Logo (opcional)"

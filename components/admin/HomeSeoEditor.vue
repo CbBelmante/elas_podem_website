@@ -9,7 +9,7 @@
 
 import { CBButton, CBIcon, CBInput, CBLabel, CBTextarea } from '@cb/components';
 import draggable from 'vuedraggable';
-import HomeImageUploader from '@components/admin/HomeImageUploader.vue';
+import AdminImageUploader from '@components/admin/AdminImageUploader.vue';
 import { SEO_CONFIG } from '@definitions/validationConfigs';
 import { createValidationRules } from '@utils/validationRules';
 import type { ISeoEditable, ISeoReadonly } from '@appTypes/admin';
@@ -147,7 +147,7 @@ function updateKeyword(index: number, value: string): void {
     </div>
 
     <!-- OG Image -->
-    <HomeImageUploader
+    <AdminImageUploader
       :model-value="forms.editable.ogImage"
       category="seo"
       label="Imagem OG (Open Graph)"

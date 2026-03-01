@@ -146,7 +146,10 @@ onMounted(() => {
 
     <div class="pageWrapper">
       <!-- ════════ HERO ════════ -->
-      <section class="heroSection">
+      <section
+        class="heroSection"
+        :style="{ '--hero-image-opacity': (hero.heroImageOpacity ?? 100) / 100 }"
+      >
         <CBImage
           :src="hero.heroImage || 'https://picsum.photos/1920/1080?random=1'"
           alt="Imagem de fundo do hero"
@@ -291,6 +294,7 @@ onMounted(() => {
               fit="cover"
               :rounded="20"
               class="missionImage"
+              :style="{ opacity: (mission.imageOpacity ?? 100) / 100 }"
             />
           </div>
         </div>
@@ -798,7 +802,7 @@ onMounted(() => {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.07;
+  opacity: var(--hero-image-opacity, 1);
   z-index: 0;
   pointer-events: none;
 }

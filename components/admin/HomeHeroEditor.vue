@@ -10,7 +10,7 @@ import { CBButton, CBIcon, CBInput, CBLabel, CBSelect, CBTextarea } from '@cb/co
 import draggable from 'vuedraggable';
 import AdminColorPicker from '@components/admin/AdminColorPicker.vue';
 import AdminButtonVariantSelect from '@components/admin/AdminButtonVariantSelect.vue';
-import HomeImageUploader from '@components/admin/HomeImageUploader.vue';
+import AdminImageUploader from '@components/admin/AdminImageUploader.vue';
 import { HERO_CONFIG } from '@definitions/validationConfigs';
 import { createValidationRules } from '@utils/validationRules';
 import { ICON_OPTIONS } from '@definitions/themeOptions';
@@ -126,11 +126,14 @@ function removeStat(index: number): void {
     </div>
 
     <!-- Imagem de fundo do hero -->
-    <HomeImageUploader
+    <AdminImageUploader
       v-model="forms.editable.heroImage"
+      v-model:opacity="forms.editable.heroImageOpacity"
       category="hero"
       label="Imagem de Fundo (aparece opaca atras do conteudo)"
+      opacity-editable
       @update:model-value="emit('changed')"
+      @update:opacity="emit('changed')"
       @uploaded="emit('uploaded', $event)"
     />
 

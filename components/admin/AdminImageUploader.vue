@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * 🧩 HomeImageUploader — Upload de imagem com drag&drop, preview e compressao.
+ * 🧩 AdminImageUploader — Upload de imagem com drag&drop, preview e compressao.
  *
  * Reutilizado em Hero, Mission, Testimonials, Supporters e SEO.
  * Usa useStorage internamente (adapter agnostico). Compressao automatica por categoria.
@@ -13,7 +13,8 @@
  * - Presets de compressao visiveis (Alta/Media/Baixa)
  */
 
-import { CBIcon, CBLabel } from '@cb/components';
+import type { PropType } from 'vue';
+import { CBIcon, CBLabel, CBSlider } from '@cb/components';
 import { useStorage } from '@composables/useStorage';
 import { useImageCompression } from '@composables/useImageCompression';
 import { COMPRESSION_SETTINGS, IMAGE_UPLOAD_CONFIG } from '@definitions/validationConfigs';
@@ -21,20 +22,35 @@ import type { CompressionCategory } from '@/types/storage';
 
 // ============== PROPS ==============
 
-interface Props {
-  modelValue: string;
-  category: CompressionCategory;
-  label?: string;
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  label: 'Imagem',
+const props = defineProps({
+  modelValue: {
+    type: String,
+    required: true,
+  },
+  category: {
+    type: String as PropType<CompressionCategory>,
+    required: true,
+  },
+  label: {
+    type: String,
+    default: 'Imagem',
+  },
+  /** Habilita slider de opacidade (0-100%). Requer v-model:opacity. */
+  opacityEditable: {
+    type: Boolean,
+    default: false,
+  },
+  opacity: {
+    type: Number,
+    default: 100,
+  },
 });
 
 // ============== EMITS ==============
 
 const emit = defineEmits<{
   'update:modelValue': [url: string];
+  'update:opacity': [value: number];
   uploaded: [url: string];
 }>();
 
@@ -163,6 +179,7 @@ async function handleDrop(event: DragEvent): Promise<void> {
 
       <!-- Estado: com imagem (preview) -->
       <div v-else class="imgUp__preview">
+        <img :src="modelValue" alt="" class="imgUp__blur" aria-hidden="true" />
         <img :src="modelValue" :alt="label" class="imgUp__image" />
         <div class="imgUp__overlay">
           <button
@@ -224,6 +241,19 @@ async function handleDrop(event: DragEvent): Promise<void> {
         </button>
       </div>
     </div>
+
+    <!-- Opacidade -->
+    <CBSlider
+      v-if="opacityEditable"
+      :model-value="opacity"
+      label="Opacidade (%)"
+      :min="0"
+      :max="100"
+      :step="1"
+      color="primary"
+      thumb-label="always"
+      @update:model-value="emit('update:opacity', $event as number)"
+    />
 
     <!-- Input hidden -->
     <input
@@ -330,13 +360,27 @@ async function handleDrop(event: DragEvent): Promise<void> {
 .imgUp__preview {
   position: relative;
   width: 100%;
+  max-height: 220px;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.imgUp__blur {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(20px) saturate(1.2);
+  opacity: 0.5;
+  transform: scale(1.1);
 }
 
 .imgUp__image {
+  position: relative;
   width: 100%;
-  max-height: 220px;
-  object-fit: cover;
-  border-radius: 10px;
+  height: 220px;
+  object-fit: contain;
   display: block;
 }
 

@@ -40,6 +40,7 @@ export interface IHeroSection {
   btnHistoryColor: string;
   btnHistoryVariant: ButtonVariant;
   heroImage: string; // Firebase Storage URL — imagem de fundo do hero (opaca)
+  heroImageOpacity: number; // 0-100 (%) — opacidade da imagem de fundo
   stats: IHeroStat[];
 }
 
@@ -56,6 +57,7 @@ export interface IMissionSection {
   btnColor: string;
   btnVariant: ButtonVariant;
   image: string; // Firebase Storage URL
+  imageOpacity: number; // 0-100 (%) — opacidade da imagem
   imageAlt: string; // alt text para acessibilidade
 }
 

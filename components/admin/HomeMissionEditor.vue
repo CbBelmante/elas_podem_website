@@ -9,7 +9,7 @@
 import { CBInput, CBTextarea } from '@cb/components';
 import AdminColorPicker from '@components/admin/AdminColorPicker.vue';
 import AdminButtonVariantSelect from '@components/admin/AdminButtonVariantSelect.vue';
-import HomeImageUploader from '@components/admin/HomeImageUploader.vue';
+import AdminImageUploader from '@components/admin/AdminImageUploader.vue';
 import { MISSION_CONFIG } from '@definitions/validationConfigs';
 import { createValidationRules } from '@utils/validationRules';
 import type { IMissionEditable } from '@appTypes/admin';
@@ -86,11 +86,14 @@ const rules = MISSION_CONFIG.validationRules;
       />
     </div>
 
-    <HomeImageUploader
+    <AdminImageUploader
       v-model="forms.editable.image"
+      v-model:opacity="forms.editable.imageOpacity"
       category="mission"
       label="Imagem da Missao"
+      opacity-editable
       @update:model-value="emit('changed')"
+      @update:opacity="emit('changed')"
       @uploaded="emit('uploaded', $event)"
     />
 
