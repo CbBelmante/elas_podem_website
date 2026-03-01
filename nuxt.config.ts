@@ -63,6 +63,10 @@ export default defineNuxtConfig(() => {
         firebaseMessagingSenderId: '', // NUXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
         firebaseAppId: '', // NUXT_PUBLIC_FIREBASE_APP_ID
 
+        // Cloudinary (storage de imagens)
+        cloudinaryCloudName: '', // NUXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+        cloudinaryUploadPreset: '', // NUXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
+
         // Analytics (opcional)
         googleAnalyticsId: '', // NUXT_PUBLIC_GOOGLE_ANALYTICS_ID
         facebookPixelId: '', // NUXT_PUBLIC_FACEBOOK_PIXEL_ID
