@@ -299,7 +299,7 @@ const formatOutput = (
 
   // Formato visual para desenvolvimento (v1.x compatível)
   // Passa o contexto ORIGINAL (com badge) para formatLogMessage extrair o badge
-  return formatLogMessage(level, message, context, isTiming);
+  return formatLogMessage({ level, message, context, isTiming });
 };
 
 /**
@@ -332,18 +332,19 @@ const extractBadge = (
  *
  * Função mantida para compatibilidade com v1.x. Use formatOutput para funcionalidades v2.0.
  *
- * @param {string} level - Nível do log (DEBUG, INFO, WARN, ERROR)
- * @param {string} message - Mensagem do log
- * @param {Object} [context={}] - Contexto adicional
- * @param {boolean} [isTiming=false] - Se é log de timing
+ * @param opts.level - Nível do log (DEBUG, INFO, WARN, ERROR)
+ * @param opts.message - Mensagem do log
+ * @param opts.context - Contexto adicional
+ * @param opts.isTiming - Se é log de timing
  * @returns {string} Mensagem formatada
  */
-const formatLogMessage = (
-  level: string,
-  message: string,
-  context: Record<string, unknown> = {},
-  isTiming = false
-): string => {
+const formatLogMessage = (opts: {
+  level: string;
+  message: string;
+  context?: Record<string, unknown>;
+  isTiming?: boolean;
+}): string => {
+  const { level, message, context = {}, isTiming = false } = opts;
   const timestamp = getTimestamp();
   const shouldShowEmoji = config.emojis || context.emoji;
 
@@ -726,7 +727,7 @@ export class Logger {
 
       if (config.asyncMode) {
         // Modo assíncrono: buffer simples (com badge de nível)
-        const mainMsg = formatLogMessage('DEBUG', message, finalContext);
+        const mainMsg = formatLogMessage({ level: 'DEBUG', message, context: finalContext });
         logBuffer.push({ method: 'log', args: [mainMsg, cleanContext] });
         if (bufferTimeout) clearTimeout(bufferTimeout);
         bufferTimeout = setTimeout(flushLogs, 0);
@@ -778,7 +779,7 @@ export class Logger {
 
       if (config.asyncMode) {
         // Modo assíncrono: buffer simples (com badge de nível)
-        const mainMsg = formatLogMessage('INFO', message, finalContext);
+        const mainMsg = formatLogMessage({ level: 'INFO', message, context: finalContext });
         logBuffer.push({ method: 'info', args: [mainMsg, cleanContext] });
         if (bufferTimeout) clearTimeout(bufferTimeout);
         bufferTimeout = setTimeout(flushLogs, 0);
@@ -830,7 +831,7 @@ export class Logger {
 
       if (config.asyncMode) {
         // Modo assíncrono: buffer simples (com badge de nível)
-        const mainMsg = formatLogMessage('WARN', message, finalContext);
+        const mainMsg = formatLogMessage({ level: 'WARN', message, context: finalContext });
         logBuffer.push({ method: 'warn', args: [mainMsg, cleanContext] });
         if (bufferTimeout) clearTimeout(bufferTimeout);
         bufferTimeout = setTimeout(flushLogs, 0);
@@ -902,7 +903,7 @@ export class Logger {
 
       if (config.asyncMode) {
         // Modo assíncrono: buffer simples (com badge de nível)
-        const mainMsg = formatLogMessage('ERROR', message, finalContext);
+        const mainMsg = formatLogMessage({ level: 'ERROR', message, context: finalContext });
         logBuffer.push({
           method: 'error',
           args: error instanceof Error ? [mainMsg, error, cleanContext] : [mainMsg, cleanContext],

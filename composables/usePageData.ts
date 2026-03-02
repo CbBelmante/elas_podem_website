@@ -8,6 +8,7 @@
 // ============== DEPENDENCIAS EXTERNAS ==============
 
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { useI18n } from 'vue-i18n';
 
 // ============== DEPENDENCIAS INTERNAS ==============
 
@@ -138,6 +139,7 @@ export function createPageDataComposable<TPageData, TFormsData extends Record<st
   // ===== COMPOSABLE =====
 
   return function () {
+    const { t } = useI18n();
     const { $db } = useFirebase();
     const { userData } = useAuth();
     const state = getState();
@@ -173,7 +175,7 @@ export function createPageDataComposable<TPageData, TFormsData extends Record<st
           });
         }
       } catch (error: unknown) {
-        const message = error instanceof Error ? error.message : 'Erro ao carregar dados';
+        const message = error instanceof Error ? error.message : t('admin.pageEditor.loadError');
         state.error = message;
         logger.error('Falha ao carregar', error instanceof Error ? error : null);
       } finally {
@@ -206,11 +208,11 @@ export function createPageDataComposable<TPageData, TFormsData extends Record<st
 
         return {
           success: true,
-          message: `Secao "${section}" salva com sucesso`,
+          message: t('admin.pageEditor.sectionSaved', { section }),
           savedSections: [section],
         };
       } catch (error: unknown) {
-        const message = error instanceof Error ? error.message : 'Erro ao salvar';
+        const message = error instanceof Error ? error.message : t('admin.pageEditor.saveError');
         state.error = message;
         logger.error('Falha ao salvar secao', error instanceof Error ? error : null, { section });
 
@@ -257,11 +259,11 @@ export function createPageDataComposable<TPageData, TFormsData extends Record<st
 
         return {
           success: true,
-          message: 'Todas as secoes salvas com sucesso',
+          message: t('admin.pageEditor.allSaved'),
           savedSections: [...allSections],
         };
       } catch (error: unknown) {
-        const message = error instanceof Error ? error.message : 'Erro ao salvar';
+        const message = error instanceof Error ? error.message : t('admin.pageEditor.saveError');
         state.error = message;
         logger.error('Falha ao salvar todas as secoes', error instanceof Error ? error : null);
 

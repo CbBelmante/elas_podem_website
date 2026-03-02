@@ -125,6 +125,17 @@
       "invalidFile": "Arquivo inválido",
       "uploadError": "Erro ao enviar imagem"
     },
+    "storage": {
+      "notAnImage": "Arquivo precisa ser uma imagem",
+      "tooLarge": "Imagem excede {max}MB",
+      "unsupportedExt": "Extensão \".{ext}\" não suportada. Use: {formats}"
+    },
+    "pageEditor": {
+      "loadError": "Erro ao carregar dados",
+      "saveError": "Erro ao salvar",
+      "sectionSaved": "Seção \"{section}\" salva com sucesso",
+      "allSaved": "Todas as seções salvas com sucesso"
+    },
     "paragraphList": {
       "label": "Parágrafos",
       "itemLabel": "Parágrafo",

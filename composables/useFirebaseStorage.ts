@@ -21,6 +21,7 @@ import { ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from 'fi
 
 // ============== DEPENDENCIAS INTERNAS ==============
 
+import { useI18n } from 'vue-i18n';
 import { useFirebase } from '@composables/useFirebase';
 import { useImageCompression } from '@composables/useImageCompression';
 import { COMPRESSION_SETTINGS, IMAGE_UPLOAD_CONFIG } from '@definitions/validationConfigs';
@@ -65,6 +66,7 @@ function extractPathFromUrl(url: string): string | null {
 // ============== COMPOSABLE ==============
 
 export function useFirebaseStorage(): IStorageAdapter {
+  const { t } = useI18n();
   const { $storage } = useFirebase();
   const { compressImage } = useImageCompression();
 
@@ -82,19 +84,22 @@ export function useFirebaseStorage(): IStorageAdapter {
     maxSizeMB: number = IMAGE_UPLOAD_CONFIG.maxSizeMB
   ): IFileValidation => {
     if (!file.type.startsWith('image/')) {
-      return { isValid: false, error: 'Arquivo precisa ser uma imagem' };
+      return { isValid: false, error: t('admin.storage.notAnImage') };
     }
 
     const maxBytes = maxSizeMB * 1024 * 1024;
     if (file.size > maxBytes) {
-      return { isValid: false, error: `Imagem excede ${maxSizeMB}MB` };
+      return { isValid: false, error: t('admin.storage.tooLarge', { max: maxSizeMB }) };
     }
 
     const ext = getExtension(file.name);
     if (!(IMAGE_UPLOAD_CONFIG.validExtensions as readonly string[]).includes(ext)) {
       return {
         isValid: false,
-        error: `Extensao ".${ext}" nao suportada. Use: ${IMAGE_UPLOAD_CONFIG.validExtensions.join(', ')}`,
+        error: t('admin.storage.unsupportedExt', {
+          ext,
+          formats: IMAGE_UPLOAD_CONFIG.validExtensions.join(', '),
+        }),
       };
     }
 

@@ -64,23 +64,23 @@ function loadImage(file: File): Promise<HTMLImageElement> {
  * Calcula dimensoes finais mantendo aspect ratio.
  * Reduz so se ultrapassar maxWidth ou maxHeight.
  */
-function calculateDimensions(
-  originalWidth: number,
-  originalHeight: number,
-  maxWidth: number,
-  maxHeight: number
-): { width: number; height: number } {
-  let width = originalWidth;
-  let height = originalHeight;
+function calculateDimensions(opts: {
+  originalWidth: number;
+  originalHeight: number;
+  maxWidth: number;
+  maxHeight: number;
+}): { width: number; height: number } {
+  let width = opts.originalWidth;
+  let height = opts.originalHeight;
 
-  if (width > maxWidth) {
-    height = Math.round(height * (maxWidth / width));
-    width = maxWidth;
+  if (width > opts.maxWidth) {
+    height = Math.round(height * (opts.maxWidth / width));
+    width = opts.maxWidth;
   }
 
-  if (height > maxHeight) {
-    width = Math.round(width * (maxHeight / height));
-    height = maxHeight;
+  if (height > opts.maxHeight) {
+    width = Math.round(width * (opts.maxHeight / height));
+    height = opts.maxHeight;
   }
 
   return { width, height };
@@ -157,12 +157,12 @@ export function useImageCompression() {
     try {
       const img = await loadImage(file);
 
-      const { width, height } = calculateDimensions(
-        img.width,
-        img.height,
-        opts.maxWidth,
-        opts.maxHeight
-      );
+      const { width, height } = calculateDimensions({
+        originalWidth: img.width,
+        originalHeight: img.height,
+        maxWidth: opts.maxWidth,
+        maxHeight: opts.maxHeight,
+      });
 
       const canvas = document.createElement('canvas');
       canvas.width = width;
