@@ -52,11 +52,12 @@ pages/admin/edit/
 
 components/admin/
   HomeEditorSection.vue             ← wrapper colapsavel generico
-  HomeImageUploader.vue             ← upload compartilhado
+  AdminImageUploader.vue            ← upload compartilhado (usa useStorage → Cloudinary/Firebase)
   AdminColorPicker.vue              ← seletor de cor (cores/gradientes/custom)
   AdminButtonVariantSelect.vue      ← seletor de variante de botao
   HomeHeroEditor.vue                ← Hero: textos + stats CRUD + drag
-  HomeMissionEditor.vue             ← Missao: textos + image upload
+  HomeMissionEditor.vue             ← Missao: paragrafos dinamicos + image upload
+  AdminParagraphList.vue            ← lista de paragrafos reutilizavel (drag + CRUD)
   HomeProgramsEditor.vue            ← Programas: CRUD + drag + cor por item
   HomeValuesEditor.vue              ← Valores: CRUD + drag + cor por item
   HomeTestimonialsEditor.vue        ← Depoimentos: CRUD + image + drag
@@ -300,9 +301,9 @@ Os editores **mutam os forms diretamente** (mesma referencia reativa do Vue) e *
 
 ```
 1. Usuario faz upload de foto no depoimento
-   HomeImageUploader → handleFileSelect()
+   AdminImageUploader → handleFileSelect()
    ├─ validateImageFile(file) → ok
-   ├─ uploadImage(file, 'testimonials') → URL no Firebase Storage
+   ├─ uploadImage(file, 'testimonials') → URL no Storage (Cloudinary/Firebase)
    ├─ emit('update:modelValue', url) → forms.editable.image = url
    └─ emit('uploaded', url) → homeEdit.vue → tempUploadedImages.push(url)
 
@@ -310,7 +311,7 @@ Os editores **mutam os forms diretamente** (mesma referencia reativa do Vue) e *
    onBeforeRouteLeave → canExit(tempUploadedImages)
    ├─ hasChanges = true → confirm("Alteracoes nao salvas...")
    ├─ Usuario confirma → cleanupTempUploads()
-   │    → deleteFile(url) → remove do Firebase Storage
+   │    → deleteFile(url) → remove do Storage
    └─ return true → navigateTo('/admin')
    Nenhum lixo no Storage.
 ```
@@ -487,8 +488,8 @@ homeEdit.vue (orquestrador)
   │     │     └── CBInput, CBTextarea, CBSelect, draggable (stats)
   │     │
   │     ├── HomeMissionEditor
-  │     │     ├── CBInput, CBTextarea
-  │     │     └── HomeImageUploader → useFirebaseStorage
+  │     │     ├── CBInput, AdminParagraphList (paragrafos dinamicos)
+  │     │     └── AdminImageUploader → useStorage()
   │     │
   │     ├── HomeProgramsEditor
   │     │     └── CBInput, CBTextarea, CBSelect, AdminColorPicker, draggable
@@ -498,11 +499,11 @@ homeEdit.vue (orquestrador)
   │     │
   │     ├── HomeTestimonialsEditor
   │     │     ├── CBInput, CBTextarea, draggable
-  │     │     └── HomeImageUploader × N (1 por depoimento)
+  │     │     └── AdminImageUploader × N (1 por depoimento)
   │     │
   │     ├── HomeSupportersEditor
   │     │     ├── CBInput, CBSelect, draggable
-  │     │     └── HomeImageUploader × N (1 por apoiador)
+  │     │     └── AdminImageUploader × N (1 por apoiador)
   │     │
   │     ├── HomeContactEditor
   │     │     ├── CBInput, CBTextarea, CBSelect, AdminColorPicker
@@ -515,7 +516,7 @@ homeEdit.vue (orquestrador)
   │     └── HomeSeoEditor
   │           ├── CBInput, CBTextarea (com char counter)
   │           ├── draggable (keywords, strings simples)
-  │           └── HomeImageUploader (ogImage)
+  │           └── AdminImageUploader (ogImage)
   │
   ├── components/admin/ (compartilhados):
   │     ├── AdminColorPicker.vue       ← seletor de cor (3 modos: cores, gradientes, custom)
@@ -542,7 +543,7 @@ composables/                                             │
 │     (useHomePageData)                   │
 ├── usePageEditor.ts ─────────────►       │
 ├── useAuth.ts ───────────────────►       │
-├── useStorage.ts ───────────────►  HomeImageUploader.vue
+├── useStorage.ts ───────────────►  AdminImageUploader.vue
 │
 types/admin/
 ├── editable.ts ──────────────────►  (Props dos editors)
@@ -671,7 +672,7 @@ Renderizado 9 vezes no template, uma por secao:
 
 O wrapper cuida de: expand/collapse, badge de erros, badge "Alterado", botoes Save/Discard. O conteudo vem via slot.
 
-### HomeImageUploader.vue — upload compartilhado
+### AdminImageUploader.vue — upload compartilhado
 
 Fluxo interno:
 
@@ -702,9 +703,10 @@ O `category` (ex: `'mission'`, `'testimonials'`) define o preset de compressao e
 |---------|--------|-----------|
 | `pages/admin/edit/homeEdit.vue` | ~510 | Orquestrador: load, save, discard, validation, guard |
 | `components/admin/HomeEditorSection.vue` | ~220 | Wrapper colapsavel generico (×8) |
-| `components/admin/HomeImageUploader.vue` | ~180 | Upload com preview, validacao e compressao |
+| `components/admin/AdminImageUploader.vue` | ~180 | Upload com preview, validacao e compressao |
 | `components/admin/HomeHeroEditor.vue` | ~245 | Hero: textos + stats CRUD/drag |
-| `components/admin/HomeMissionEditor.vue` | ~100 | Missao: textos + image upload |
+| `components/admin/AdminParagraphList.vue` | ~120 | Lista reutilizavel de paragrafos (drag + CRUD) |
+| `components/admin/HomeMissionEditor.vue` | ~120 | Missao: paragrafos dinamicos + image upload |
 | `components/admin/HomeProgramsEditor.vue` | ~225 | Programas: CRUD/drag + AdminColorPicker por item |
 | `components/admin/HomeValuesEditor.vue` | ~180 | Valores: CRUD/drag + AdminColorPicker por item |
 | `components/admin/HomeTestimonialsEditor.vue` | ~210 | Depoimentos: CRUD/drag + image por item |
@@ -728,7 +730,7 @@ O `category` (ex: `'mission'`, `'testimonials'`) define o preset de compressao e
 | `PageData_GUIDE.md` | Factory que gera `useHomePageData` (load/save/reset) |
 | `PageEditor_GUIDE.md` | `usePageEditor` — change tracking, cleanup, navigation guard |
 | `Validation_GUIDE.md` | `useValidation` + `validationConfigs` — regras pre-save |
-| `Storage_GUIDE.md` | `useFirebaseStorage` — upload, compressao, delete |
+| `Storage_GUIDE.md` | `useStorage` — upload, compressao, delete (Cloudinary/Firebase) |
 | `SectionFields_GUIDE.md` | `SECTION_FIELDS` — define quais campos sao editable/readonly |
 | `AdminPages_GUIDE.md` | Login + Dashboard — porta de entrada antes do editor |
 | `Auth_GUIDE.md` | `useAuth` — permissoes e dados do usuario logado |
@@ -777,7 +779,7 @@ Sao 2 instancias de `<draggable>` no mesmo componente, cada uma com CRUD indepen
 
 ### Posso reutilizar esses componentes pra outra pagina?
 
-O `HomeEditorSection` e `HomeImageUploader` sao genericos — podem ser reutilizados. Os editores de secao (HomeHeroEditor, etc.) sao especificos da home. Para outra pagina, criaria editores novos seguindo o mesmo pattern.
+O `HomeEditorSection` e `AdminImageUploader` sao genericos — podem ser reutilizados. Os editores de secao (HomeHeroEditor, etc.) sao especificos da home. Para outra pagina, criaria editores novos seguindo o mesmo pattern.
 
 ### Por que vuedraggable@next e nao SortableJS puro?
 

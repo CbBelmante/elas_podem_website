@@ -815,16 +815,24 @@ Acesse: https://console.firebase.google.com/project/elas-podem-website
 
 ### Analytics (Opcional)
 
-Para adicionar Google Analytics:
+Para adicionar Google Analytics, usar script direto no `nuxt.config.ts` (sem modulo externo):
 
 ```typescript
 // nuxt.config.ts
 export default defineNuxtConfig({
-  modules: ['@nuxtjs/google-analytics'],
-
-  googleAnalytics: {
-    id: 'G-XXXXXXXXXX'
-  }
+  app: {
+    head: {
+      script: [
+        {
+          src: 'https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX',
+          async: true,
+        },
+        {
+          innerHTML: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');`,
+        },
+      ],
+    },
+  },
 })
 ```
 

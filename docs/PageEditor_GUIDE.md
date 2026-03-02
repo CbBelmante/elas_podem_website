@@ -45,7 +45,7 @@ usePageEditor()
 
 **Nao faz save** — save esta no `usePageData` factory (`saveSection`, `saveAll`).
 **Nao faz validacao** — validacao esta no `useValidation`.
-**Nao faz upload** — upload esta no `useFirebaseStorage`.
+**Nao faz upload** — upload esta no `useStorage()` (factory → Cloudinary/Firebase).
 
 ### Quando Usar
 
@@ -91,7 +91,7 @@ const handleSave = async () => {
 const { cleanupOldImage } = usePageEditor();
 
 // Quando o usuario troca a imagem da missao:
-// A URL antiga precisa ser deletada do Firebase Storage
+// A URL antiga precisa ser deletada do Storage
 
 const handleSave = async () => {
   const oldUrl = originalData.value?.content.mission.image;
@@ -214,8 +214,8 @@ const handleBack = async () => {
 ### Cenario 4: Usuario faz upload e cancela
 
 ```
-1. Usuario faz upload (imagem vai pro Firebase Storage)
-   tempUploadedImages = ['https://firebase.../nova.jpg']
+1. Usuario faz upload (imagem vai pro Storage via useStorage)
+   tempUploadedImages = ['https://res.cloudinary.com/.../nova.jpg']
 
 2. Usuario clica "Voltar"
    canExit(tempImages)
@@ -223,7 +223,7 @@ const handleBack = async () => {
    Usuario confirma saida
 
 3. cleanupTempUploads()
-   → deleteFile('https://firebase.../nova.jpg')
+   → deleteFile('https://res.cloudinary.com/.../nova.jpg')
    → tempUploadedImages = []
 
 4. Resultado:
@@ -240,7 +240,9 @@ const handleBack = async () => {
 ```
 composables/
 ├── usePageEditor.ts         ← change tracking + cleanup + guard
-├── useFirebaseStorage.ts    ← deleteFile() (usado pelo cleanup)
+├── useStorage.ts            ← factory → adapter ativo (Cloudinary/Firebase)
+├── useCloudinaryStorage.ts  ← adapter Cloudinary (default)
+├── useFirebaseStorage.ts    ← adapter Firebase (alternativo)
 ├── usePageData.ts           ← saveSection/saveAll (dados)
 ├── useValidation.ts         ← validacao (pre-save)
 ```
@@ -248,7 +250,7 @@ composables/
 ### Diagrama: quem faz o que
 
 ```
-usePageEditor           usePageData           useFirebaseStorage    useValidation
+usePageEditor           usePageData           useStorage()          useValidation
 ─────────────           ───────────           ──────────────────    ─────────────
 hasChanges              loadPageData()        uploadImage()         validateHero()
 markAsChanged()         saveSection()         uploadFile()          validateSeo()
@@ -312,7 +314,7 @@ Sim. Apos cada save bem-sucedido, chame `resetChanges()`. A factory `usePageData
 
 ### E se eu esquecer de chamar cleanupTempUploads?
 
-As imagens temporarias ficam "penduradas" no Firebase Storage — lixo. O `canExit()` limpa automaticamente se o usuario confirmar saida. Mas se o browser fechar abruptamente, nao da pra limpar. Uma estrategia futura seria TTL no Storage Rules.
+As imagens temporarias ficam "penduradas" no Storage — lixo. O `canExit()` limpa automaticamente se o usuario confirmar saida. Mas se o browser fechar abruptamente, nao da pra limpar. Uma estrategia futura seria TTL no provider de storage.
 
 ### canExit e async — por que?
 

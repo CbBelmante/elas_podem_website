@@ -261,7 +261,14 @@ onMounted(() => {
 
             <CBLabel :text="mission.title" tag="h2" weight="black" class="sectionTitle" />
 
-            <CBLabel :text="mission.text1" size="md" color="secondary" class="missionText" />
+            <CBLabel
+              v-for="(para, idx) in mission.paragraphs"
+              :key="idx"
+              :text="para"
+              size="md"
+              color="secondary"
+              class="missionText"
+            />
 
             <CBButton
               :label="mission.btnText"

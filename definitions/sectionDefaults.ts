@@ -41,8 +41,7 @@ export const HERO_STAT_DEFAULTS = {
 export const MISSION_DEFAULTS = {
   badge: 'NOSSA MISSAO',
   title: 'Elas Podem Amar, Elas Podem Ser, Elas Podem TUDO!',
-  text1: '',
-  text2: '',
+  paragraphs: [''],
   btnText: 'Conheca Nossa Historia',
   btnColor: 'gradient:primary',
   btnVariant: 'solid',

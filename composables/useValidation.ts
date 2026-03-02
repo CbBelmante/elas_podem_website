@@ -147,7 +147,22 @@ export function useValidation() {
   };
 
   const validateMission = (data: Record<string, unknown>): IValidationResult => {
-    return validateFields(data, MISSION_CONFIG.validationRules, 'Missao');
+    const result = validateFields(data, MISSION_CONFIG.validationRules, 'Missao');
+    const errors = [...result.errors];
+
+    if (Array.isArray(data.paragraphs)) {
+      errors.push(...validateItemCount(data.paragraphs, MISSION_CONFIG.paragraphs, 'Paragrafos'));
+      for (let i = 0; i < data.paragraphs.length; i++) {
+        const paraErrors = validateField(
+          `Paragrafo ${i + 1}`,
+          data.paragraphs[i],
+          MISSION_CONFIG.paragraphRule
+        );
+        errors.push(...paraErrors);
+      }
+    }
+
+    return { isValid: errors.length === 0, errors };
   };
 
   const validatePrograms = (data: Record<string, unknown>): IValidationResult => {

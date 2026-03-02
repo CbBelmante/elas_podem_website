@@ -234,7 +234,7 @@ export const SECTION_CONFIG = {
 | Config | Secao | Campos validados | Arrays |
 |--------|-------|-----------------|--------|
 | `HERO_CONFIG` | Hero | badge, title, description, btnDonate, btnHistory | stats: 1-6 |
-| `MISSION_CONFIG` | Missao | badge, title, text1, text2, btnText | — |
+| `MISSION_CONFIG` | Missao | badge, title, btnText | paragraphs: 1-6 (paragraphRule por item) |
 | `PROGRAMS_CONFIG` | Programas | title, description, link | items: 1-8 |
 | `TESTIMONIALS_CONFIG` | Depoimentos | quote, name, role | items: 1-12 |
 | `SUPPORTERS_CONFIG` | Apoiadores | name | items: 1-20 |

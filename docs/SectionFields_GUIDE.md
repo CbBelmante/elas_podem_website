@@ -218,7 +218,7 @@ Corrija cada erro removendo a referencia. O TypeScript te guia — **voce nunca 
 
 **`editable`** — Conteudo que o admin precisa mudar:
 - Textos (titulos, descricoes, botoes)
-- Imagens (URLs do Firebase Storage)
+- Imagens (URLs do Storage — Cloudinary/Firebase)
 - Arrays editaveis (stats, keywords, formSubjects)
 
 **`readonly`** — Dados que o admin deve VER mas nao editar:
@@ -368,7 +368,7 @@ Contact tem estrutura aninhada — campos top-level + methods[] com split propri
 | Secao | Editable | Hidden | Readonly |
 |-------|----------|--------|----------|
 | **hero** | badge, title, description, btnDonate, btnDonateColor, btnDonateVariant, btnHistory, btnHistoryColor, btnHistoryVariant, heroImage, stats | — | — |
-| **mission** | badge, title, text1, text2, btnText, btnColor, btnVariant, image, imageAlt | — | — |
+| **mission** | badge, title, paragraphs, btnText, btnColor, btnVariant, image, imageOpacity, imageAlt | — | — |
 | **programs** | title, description, icon, color, link | — | — |
 | **testimonials** | quote, name, role, initials, image, imageAlt | — | — |
 | **supporters** | name, icon, image, imageAlt, url | — | — |

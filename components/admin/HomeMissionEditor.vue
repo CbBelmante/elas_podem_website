@@ -6,10 +6,11 @@
  * Campos de texto + upload de imagem.
  */
 
-import { CBInput, CBTextarea } from '@cb/components';
+import { CBInput } from '@cb/components';
 import AdminColorPicker from '@components/admin/AdminColorPicker.vue';
 import AdminButtonVariantSelect from '@components/admin/AdminButtonVariantSelect.vue';
 import AdminImageUploader from '@components/admin/AdminImageUploader.vue';
+import AdminParagraphList from '@components/admin/AdminParagraphList.vue';
 import { MISSION_CONFIG } from '@definitions/validationConfigs';
 import { createValidationRules } from '@utils/validationRules';
 import type { IMissionEditable } from '@appTypes/admin';
@@ -52,18 +53,12 @@ const rules = MISSION_CONFIG.validationRules;
       />
     </div>
 
-    <CBTextarea
-      v-model="forms.editable.text1"
-      label="Texto 1"
-      :rules="createValidationRules(rules.text1)"
-      @update:model-value="emit('changed')"
-    />
-
-    <CBTextarea
-      v-model="forms.editable.text2"
-      label="Texto 2"
-      :rules="createValidationRules(rules.text2)"
-      @update:model-value="emit('changed')"
+    <AdminParagraphList
+      v-model="forms.editable.paragraphs"
+      :min="MISSION_CONFIG.paragraphs.min"
+      :max="MISSION_CONFIG.paragraphs.max"
+      :rules="createValidationRules(MISSION_CONFIG.paragraphRule)"
+      @changed="emit('changed')"
     />
 
     <CBInput

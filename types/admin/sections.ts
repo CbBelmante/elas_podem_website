@@ -51,8 +51,7 @@ export interface IHeroSection {
 export interface IMissionSection {
   badge: string;
   title: string;
-  text1: string;
-  text2: string;
+  paragraphs: string[];
   btnText: string;
   btnColor: string;
   btnVariant: ButtonVariant;

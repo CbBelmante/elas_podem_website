@@ -46,8 +46,7 @@ export const SECTION_FIELDS = {
   mission: {
     badge: 'editable',
     title: 'editable',
-    text1: 'editable',
-    text2: 'editable',
+    paragraphs: 'editable',
     btnText: 'editable',
     btnColor: 'editable',
     btnVariant: 'editable',

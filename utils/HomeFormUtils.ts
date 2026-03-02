@@ -191,6 +191,12 @@ export function createNewHeroStat(): IHeroStat {
 // ============================================================
 
 export function separateMissionData(data: IHomePageData['content']['mission']) {
+  // Normaliza dados antigos do Firestore (text1/text2 → paragraphs)
+  const raw = data as Record<string, unknown>;
+  if (!raw.paragraphs && (raw.text1 || raw.text2)) {
+    raw.paragraphs = [raw.text1, raw.text2].filter(Boolean);
+  }
+
   return separateByFields(data, SECTION_FIELDS.mission) as {
     editable: IMissionEditable;
     readonly: Record<string, never>;
@@ -202,7 +208,7 @@ export function combineMissionData(editable: IMissionEditable) {
 }
 
 export function createDefaultMissionEditable(): IMissionEditable {
-  return { ...MISSION_DEFAULTS };
+  return { ...MISSION_DEFAULTS, paragraphs: [...MISSION_DEFAULTS.paragraphs] };
 }
 
 // ============================================================

@@ -50,10 +50,11 @@ export const MISSION_CONFIG = {
   validationRules: {
     badge: { required: true, minLength: 3, maxLength: 60 },
     title: { required: true, minLength: 5, maxLength: 100 },
-    text1: { required: true, minLength: 20, maxLength: 500 },
-    text2: { required: true, minLength: 20, maxLength: 500 },
     btnText: { required: true, minLength: 2, maxLength: 40 },
   },
+  /** Regra aplicada a cada paragrafo individual */
+  paragraphRule: { required: true, minLength: 20, maxLength: 500 },
+  paragraphs: { min: 1, max: 6 },
 } as const;
 
 // ============================================================
