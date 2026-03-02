@@ -25,5 +25,263 @@
       },
       "btnSubmit": "Send Message"
     }
+  },
+  "admin": {
+    "common": {
+      "badge": "Badge",
+      "title": "Title",
+      "subtitle": "Subtitle",
+      "description": "Description",
+      "name": "Name",
+      "icon": "Icon",
+      "color": "Color",
+      "image": "Image",
+      "optional": "optional",
+      "loading": "Loading data...",
+      "add": "Add"
+    },
+    "layout": {
+      "appName": "Elas Podem",
+      "appSubtitle": "Admin",
+      "groupGeneral": "General",
+      "dashboard": "Dashboard",
+      "groupPages": "Pages",
+      "homePage": "Home Page",
+      "logout": "Logout"
+    },
+    "login": {
+      "title": "Admin Panel",
+      "subtitle": "Enter your credentials to access",
+      "email": "Email",
+      "emailPlaceholder": "your{'@'}email.com",
+      "password": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
+      "submit": "Sign in",
+      "footer": "Elas Podem — Admin Panel",
+      "error": "Login error"
+    },
+    "dashboard": {
+      "badge": "ADMIN PANEL",
+      "title": "Dashboard",
+      "welcome": "Welcome back, {name}",
+      "contentBadge": "CONTENT",
+      "pagesTitle": "Pages",
+      "homePageTitle": "Home Page",
+      "homePageDesc": "Main website page — 8 editable sections",
+      "activityBadge": "ACTIVITY",
+      "activityTitle": "Recent Activity",
+      "activityPlaceholder": "Audit log available in Phase 2 — when editing actions are implemented"
+    },
+    "homeEdit": {
+      "badge": "PAGE EDITOR",
+      "title": "Home Page",
+      "subtitle": "8 editable sections — hero, mission, programs and more",
+      "loading": "Loading page data...",
+      "sections": {
+        "hero": "Hero",
+        "mission": "Mission",
+        "programs": "Programs",
+        "testimonials": "Testimonials",
+        "supporters": "Supporters",
+        "contact": "Contact",
+        "values": "Values",
+        "cta": "CTA",
+        "seo": "SEO"
+      }
+    },
+    "editor": {
+      "errors": "{count} error | {count} errors",
+      "changed": "Changed",
+      "discard": "Discard",
+      "save": "Save Section"
+    },
+    "pageCard": {
+      "edit": "Edit Page",
+      "noPermission": "No permission to edit"
+    },
+    "colorPicker": {
+      "label": "Color",
+      "custom": "Custom",
+      "tabColors": "Colors",
+      "tabGradients": "Gradients",
+      "tabCustom": "Custom",
+      "startColor": "Start Color",
+      "midColor": "Mid Color",
+      "endColor": "End Color",
+      "threeColors": "3 colors",
+      "twoColors": "2 colors"
+    },
+    "imageUploader": {
+      "label": "Image",
+      "dropzone": "Drag or click to upload",
+      "uploading": "Uploading...",
+      "compression": "Compression",
+      "presetHigh": "High (90%)",
+      "presetMedium": "Medium (80%)",
+      "presetLow": "Low (60%)",
+      "opacity": "Opacity (%)",
+      "invalidFile": "Invalid file",
+      "uploadError": "Error uploading image"
+    },
+    "paragraphList": {
+      "label": "Paragraphs",
+      "itemLabel": "Paragraph",
+      "add": "Add {item}"
+    },
+    "iconSelect": {
+      "label": "Icon"
+    },
+    "variantSelect": {
+      "label": "Button Variant"
+    },
+    "hero": {
+      "badge": "Badge",
+      "title": "Title",
+      "description": "Description",
+      "btnDonate": "Donate Button",
+      "btnHistory": "History Button",
+      "btnDonateColor": "Donate Button Color/Gradient",
+      "btnDonateVariant": "Donate Button Variant",
+      "btnHistoryColor": "History Button Color/Gradient",
+      "btnHistoryVariant": "History Button Variant",
+      "backgroundImage": "Background Image (appears translucent behind content)",
+      "statsTitle": "Statistics",
+      "statsItem": "Stat {n}",
+      "statsIcon": "Icon",
+      "statsNumber": "Number",
+      "statsLabel": "Label",
+      "addStat": "Add Stat"
+    },
+    "mission": {
+      "badge": "Badge",
+      "title": "Title",
+      "btnText": "Button Text",
+      "btnColor": "Button Color/Gradient",
+      "btnVariant": "Button Variant",
+      "image": "Mission Image",
+      "imageAlt": "Image alt text (accessibility)"
+    },
+    "programs": {
+      "badge": "Badge",
+      "sectionTitle": "Section Title",
+      "subtitle": "Subtitle (optional)",
+      "listTitle": "Programs",
+      "item": "Program {n}",
+      "itemTitle": "Title",
+      "itemIcon": "Icon",
+      "itemColor": "Color",
+      "itemDescription": "Description",
+      "itemLink": "Link Text",
+      "add": "Add Program"
+    },
+    "testimonials": {
+      "listTitle": "Testimonials",
+      "item": "Testimonial {n}",
+      "quote": "Quote",
+      "name": "Name",
+      "role": "Role",
+      "initials": "Initials (e.g.: ED)",
+      "photo": "Photo (optional)",
+      "photoAlt": "Photo alt (accessibility)",
+      "add": "Add Testimonial"
+    },
+    "supporters": {
+      "badge": "Badge",
+      "sectionTitle": "Section Title",
+      "subtitle": "Subtitle (optional)",
+      "marqueeSpeed": "Marquee Speed (px/s)",
+      "listTitle": "Supporters",
+      "item": "Supporter {n}",
+      "name": "Name",
+      "icon": "Icon",
+      "website": "Website (optional)",
+      "logo": "Logo (optional)",
+      "logoAlt": "Logo alt (accessibility)",
+      "add": "Add Supporter"
+    },
+    "contact": {
+      "badge": "Badge",
+      "title": "Title",
+      "description": "Description",
+      "methodsTitle": "Contact Methods",
+      "methodItem": "Method {n}",
+      "methodLabel": "Label",
+      "methodValue": "Value",
+      "methodIcon": "Icon",
+      "methodColor": "Color",
+      "methodUrl": "URL (optional)",
+      "addMethod": "Add Method",
+      "subjectsTitle": "Form Subjects",
+      "subjectItem": "Subject {n}",
+      "addSubject": "Add Subject"
+    },
+    "values": {
+      "listTitle": "Values",
+      "item": "Value {n}",
+      "title": "Title",
+      "subtitle": "Subtitle",
+      "color": "Color",
+      "add": "Add Value"
+    },
+    "cta": {
+      "title": "Title",
+      "subtitle": "Subtitle",
+      "btnDonate": "Donate Button",
+      "btnProjects": "Projects Button"
+    },
+    "seo": {
+      "title": "SEO Title",
+      "description": "SEO Description",
+      "keywordsTitle": "Keywords",
+      "keywordItem": "Keyword {n}",
+      "ogImage": "OG Image (Open Graph)",
+      "addKeyword": "Add Keyword"
+    },
+    "theme": {
+      "colors": {
+        "magenta": "Magenta",
+        "coral": "Coral",
+        "rosa": "Pink",
+        "oliva": "Olive",
+        "laranja": "Orange",
+        "vinho": "Wine",
+        "vinhoMedio": "Medium Wine",
+        "roxoNoite": "Night Purple",
+        "roxoAcento": "Accent Purple"
+      },
+      "gradients": {
+        "primary": "Primary",
+        "rosa": "Pink",
+        "vinho": "Wine",
+        "magenta": "Magenta",
+        "coral": "Coral",
+        "laranja": "Orange",
+        "oliva": "Olive",
+        "roxo": "Purple",
+        "acento": "Accent"
+      },
+      "variants": {
+        "solid": "Solid (Default)",
+        "outline": "Outline",
+        "ghost": "Ghost",
+        "link": "Link"
+      },
+      "icons": {
+        "award": "Award",
+        "megaphone": "Megaphone",
+        "users": "People",
+        "heartHandshake": "Support",
+        "graduationCap": "Education",
+        "scale": "Justice",
+        "globe": "Globe",
+        "star": "Star",
+        "building": "Building",
+        "instagram": "Instagram",
+        "userCheck": "User",
+        "mapPin": "Location"
+      }
+    }
   }
 }

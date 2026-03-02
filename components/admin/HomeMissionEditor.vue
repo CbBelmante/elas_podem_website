@@ -40,14 +40,14 @@ const rules = MISSION_CONFIG.validationRules;
     <div class="missionEditor__row">
       <CBInput
         v-model="forms.editable.badge"
-        label="Badge"
+        :label="$t('admin.mission.badge')"
         :rules="createValidationRules(rules.badge)"
         @update:model-value="emit('changed')"
       />
 
       <CBInput
         v-model="forms.editable.title"
-        label="Titulo"
+        :label="$t('admin.mission.title')"
         :rules="createValidationRules(rules.title)"
         @update:model-value="emit('changed')"
       />
@@ -63,7 +63,7 @@ const rules = MISSION_CONFIG.validationRules;
 
     <CBInput
       v-model="forms.editable.btnText"
-      label="Texto do Botao"
+      :label="$t('admin.mission.btnText')"
       :rules="createValidationRules(rules.btnText)"
       @update:model-value="emit('changed')"
     />
@@ -71,12 +71,12 @@ const rules = MISSION_CONFIG.validationRules;
     <div class="missionEditor__row">
       <AdminColorPicker
         v-model="forms.editable.btnColor"
-        label="Cor/Gradiente do Botao"
+        :label="$t('admin.mission.btnColor')"
         @update:model-value="emit('changed')"
       />
       <AdminButtonVariantSelect
         v-model="forms.editable.btnVariant"
-        label="Variante do Botao"
+        :label="$t('admin.mission.btnVariant')"
         @update:model-value="emit('changed')"
       />
     </div>
@@ -85,7 +85,7 @@ const rules = MISSION_CONFIG.validationRules;
       v-model="forms.editable.image"
       v-model:opacity="forms.editable.imageOpacity"
       category="mission"
-      label="Imagem da Missao"
+      :label="$t('admin.mission.image')"
       opacity-editable
       @update:model-value="emit('changed')"
       @update:opacity="emit('changed')"
@@ -94,7 +94,7 @@ const rules = MISSION_CONFIG.validationRules;
 
     <CBInput
       v-model="forms.editable.imageAlt"
-      label="Texto alternativo da imagem (acessibilidade)"
+      :label="$t('admin.mission.imageAlt')"
       @update:model-value="emit('changed')"
     />
   </div>

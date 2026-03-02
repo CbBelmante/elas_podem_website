@@ -6,6 +6,7 @@
  * Sidebar com navegacao, user info no footer, glows decorativos no main.
  */
 
+import { useI18n } from 'vue-i18n';
 import { CBSidebar, CBBadge, CBIcon } from '@cb/components';
 import type { ISidebarMenuGroup } from '@cb/components';
 
@@ -14,6 +15,7 @@ import type { AdminRole } from '@definitions/adminRoles';
 
 // ============== COMPOSABLES ==============
 
+const { t } = useI18n();
 const { userData, signOut } = useAuth();
 
 // ============== STATE ==============
@@ -31,16 +33,16 @@ const userName = computed(() => userData.value?.displayName ?? 'Admin');
 
 // ============== SIDEBAR CONFIG ==============
 
-const sidebarItems: ISidebarMenuGroup[] = [
+const sidebarItems = computed<ISidebarMenuGroup[]>(() => [
   {
-    label: 'Geral',
-    items: [{ label: 'Dashboard', icon: 'luc-layout-dashboard', to: '/admin' }],
+    label: t('admin.layout.groupGeneral'),
+    items: [{ label: t('admin.layout.dashboard'), icon: 'luc-layout-dashboard', to: '/admin' }],
   },
   {
-    label: 'Paginas',
-    items: [{ label: 'Home Page', icon: 'luc-home', to: '/admin/edit/homeEdit' }],
+    label: t('admin.layout.groupPages'),
+    items: [{ label: t('admin.layout.homePage'), icon: 'luc-home', to: '/admin/edit/homeEdit' }],
   },
-];
+]);
 
 // ============== METHODS ==============
 
@@ -53,8 +55,8 @@ const handleLogout = async (): Promise<void> => {
   <div class="adminLayout">
     <CBSidebar
       :items="sidebarItems"
-      app-name="Elas Podem"
-      app-subtitle="Admin"
+      :app-name="$t('admin.layout.appName')"
+      :app-subtitle="$t('admin.layout.appSubtitle')"
       :collapsed="isCollapsed"
       placement="in-flow"
       location="left"
@@ -94,7 +96,7 @@ const handleLogout = async (): Promise<void> => {
             @click="handleLogout"
           >
             <CBIcon icon="luc-log-out" :size="16" />
-            <span v-if="!collapsed">Sair</span>
+            <span v-if="!collapsed">{{ $t('admin.layout.logout') }}</span>
           </button>
         </div>
       </template>

@@ -6,6 +6,7 @@
 -->
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
 import { CBButton, CBCard, CBIcon, CBImage, CBInput, CBLabel } from '@cb/components';
 
 // ============== PAGE META ==============
@@ -16,6 +17,7 @@ definePageMeta({
 
 // ============== COMPOSABLES ==============
 
+const { t } = useI18n();
 const { signIn, isAuthenticated } = useAuth();
 
 // ============== REACTIVE STATE ==============
@@ -45,7 +47,7 @@ const handleLogin = async (): Promise<void> => {
   if (result.success) {
     await navigateTo('/admin');
   } else {
-    error.value = result.error ?? 'Erro ao fazer login';
+    error.value = result.error ?? t('admin.login.error');
   }
 
   isSubmitting.value = false;
@@ -89,13 +91,13 @@ onMounted(() => {
         <!-- Header -->
         <div class="loginCard__header">
           <CBLabel
-            text="Painel Administrativo"
+            :text="$t('admin.login.title')"
             tag="h1"
             size="xl"
             weight="bold"
             class="loginCard__title"
           />
-          <CBLabel text="Entre com suas credenciais para acessar" size="sm" color="secondary" />
+          <CBLabel :text="$t('admin.login.subtitle')" size="sm" color="secondary" />
         </div>
 
         <!-- Erro -->
@@ -110,8 +112,8 @@ onMounted(() => {
             v-model="email"
             name="admin-email"
             type="email"
-            label="Email"
-            placeholder="seu@email.com"
+            :label="$t('admin.login.email')"
+            :placeholder="$t('admin.login.emailPlaceholder')"
             :rounded="12"
             prepend-icon="luc-mail"
             :disabled="isSubmitting"
@@ -123,8 +125,8 @@ onMounted(() => {
               v-model="password"
               name="admin-password"
               :type="showPassword ? 'text' : 'password'"
-              label="Senha"
-              placeholder="Digite sua senha"
+              :label="$t('admin.login.password')"
+              :placeholder="$t('admin.login.passwordPlaceholder')"
               :rounded="12"
               prepend-icon="luc-lock"
               :disabled="isSubmitting"
@@ -133,7 +135,9 @@ onMounted(() => {
             <button
               type="button"
               class="loginForm__togglePassword"
-              :aria-label="showPassword ? 'Ocultar senha' : 'Mostrar senha'"
+              :aria-label="
+                showPassword ? $t('admin.login.hidePassword') : $t('admin.login.showPassword')
+              "
               @click="togglePassword"
             >
               <CBIcon
@@ -145,7 +149,7 @@ onMounted(() => {
           </div>
 
           <CBButton
-            label="Entrar"
+            :label="$t('admin.login.submit')"
             type="submit"
             size="lg"
             :bg-gradient="'var(--gradient-primary)'"
@@ -160,7 +164,7 @@ onMounted(() => {
       </CBCard>
 
       <!-- Rodape discreto -->
-      <CBLabel text="Elas Podem — Painel Admin" size="xs" color="tertiary" class="loginFooter" />
+      <CBLabel :text="$t('admin.login.footer')" size="xs" color="tertiary" class="loginFooter" />
     </div>
   </div>
 </template>

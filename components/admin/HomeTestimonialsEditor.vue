@@ -52,7 +52,7 @@ function removeTestimonial(index: number): void {
 <template>
   <div class="testimonialsEditor">
     <div class="testimonialsEditor__header">
-      <CBLabel text="Depoimentos" weight="semibold" size="sm" />
+      <CBLabel :text="$t('admin.testimonials.listTitle')" weight="semibold" size="sm" />
       <CBLabel
         :text="`${forms.editable.length}/${TESTIMONIALS_CONFIG.items.max}`"
         size="xs"
@@ -74,7 +74,11 @@ function removeTestimonial(index: number): void {
             <div class="dragHandle">
               <CBIcon icon="luc-grip-vertical" size="1rem" color="var(--text-tertiary)" />
             </div>
-            <CBLabel :text="`Depoimento ${index + 1}`" size="sm" weight="medium" />
+            <CBLabel
+              :text="$t('admin.testimonials.item', { n: index + 1 })"
+              size="sm"
+              weight="medium"
+            />
             <CBButton
               variant="outline"
               size="sm"
@@ -89,7 +93,7 @@ function removeTestimonial(index: number): void {
           <div class="testimonialsEditor__fields">
             <CBTextarea
               :model-value="element.quote"
-              label="Citacao"
+              :label="$t('admin.testimonials.quote')"
               :rules="createValidationRules(rules.quote)"
               @update:model-value="
                 element.quote = $event;
@@ -100,7 +104,7 @@ function removeTestimonial(index: number): void {
             <div class="testimonialsEditor__row">
               <CBInput
                 :model-value="element.name"
-                label="Nome"
+                :label="$t('admin.testimonials.name')"
                 :rules="createValidationRules(rules.name)"
                 @update:model-value="
                   element.name = $event;
@@ -110,7 +114,7 @@ function removeTestimonial(index: number): void {
 
               <CBInput
                 :model-value="element.role"
-                label="Funcao"
+                :label="$t('admin.testimonials.role')"
                 :rules="createValidationRules(rules.role)"
                 @update:model-value="
                   element.role = $event;
@@ -122,7 +126,7 @@ function removeTestimonial(index: number): void {
             <div class="testimonialsEditor__row">
               <CBInput
                 :model-value="element.initials"
-                label="Iniciais (ex: ED)"
+                :label="$t('admin.testimonials.initials')"
                 @update:model-value="
                   element.initials = $event;
                   emit('changed');
@@ -132,7 +136,7 @@ function removeTestimonial(index: number): void {
               <AdminImageUploader
                 :model-value="element.image"
                 category="testimonials"
-                label="Foto (opcional)"
+                :label="$t('admin.testimonials.photo')"
                 @update:model-value="
                   element.image = $event;
                   emit('changed');
@@ -142,7 +146,7 @@ function removeTestimonial(index: number): void {
 
               <CBInput
                 :model-value="element.imageAlt"
-                label="Alt da foto (acessibilidade)"
+                :label="$t('admin.testimonials.photoAlt')"
                 @update:model-value="
                   element.imageAlt = $event;
                   emit('changed');
@@ -155,7 +159,7 @@ function removeTestimonial(index: number): void {
     </draggable>
 
     <CBButton
-      label="Adicionar Depoimento"
+      :label="$t('admin.testimonials.add')"
       variant="outline"
       size="sm"
       prepend-icon="luc-plus"

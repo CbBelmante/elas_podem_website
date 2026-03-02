@@ -34,7 +34,7 @@ const rules = CTA_CONFIG.validationRules;
   <div class="ctaEditor">
     <CBInput
       :model-value="forms.editable.title"
-      label="Titulo"
+      :label="$t('admin.cta.title')"
       :rules="createValidationRules(rules.title)"
       @update:model-value="
         forms.editable.title = $event;
@@ -44,7 +44,7 @@ const rules = CTA_CONFIG.validationRules;
 
     <CBTextarea
       :model-value="forms.editable.subtitle"
-      label="Subtitulo"
+      :label="$t('admin.cta.subtitle')"
       :rules="createValidationRules(rules.subtitle)"
       @update:model-value="
         forms.editable.subtitle = $event;
@@ -55,7 +55,7 @@ const rules = CTA_CONFIG.validationRules;
     <div class="ctaEditor__row">
       <CBInput
         :model-value="forms.editable.btnDonate"
-        label="Botao Doar"
+        :label="$t('admin.cta.btnDonate')"
         :rules="createValidationRules(rules.btnDonate)"
         @update:model-value="
           forms.editable.btnDonate = $event;
@@ -65,7 +65,7 @@ const rules = CTA_CONFIG.validationRules;
 
       <CBInput
         :model-value="forms.editable.btnProjects"
-        label="Botao Projetos"
+        :label="$t('admin.cta.btnProjects')"
         :rules="createValidationRules(rules.btnProjects)"
         @update:model-value="
           forms.editable.btnProjects = $event;

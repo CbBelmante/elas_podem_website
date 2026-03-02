@@ -6,6 +6,7 @@
  * Cada secao e um componente independente dentro de HomeEditorSection (accordion).
  */
 
+import { useI18n } from 'vue-i18n';
 import { CBBadge, CBIcon, CBLabel } from '@cb/components';
 
 // Section editors
@@ -31,6 +32,7 @@ definePageMeta({
 
 // ============== COMPOSABLES ==============
 
+const { t } = useI18n();
 const { forms, isLoading, isSaving, loadPageData, saveSection, resetSection } = useHomePageData();
 const {
   validateHero,
@@ -62,27 +64,62 @@ interface ISectionConfig {
   component: Component;
 }
 
-const sections: ISectionConfig[] = [
-  { name: 'hero', title: 'Hero', icon: 'luc-star', component: HomeHeroEditor },
-  { name: 'mission', title: 'Missao', icon: 'luc-heart', component: HomeMissionEditor },
-  { name: 'programs', title: 'Programas', icon: 'luc-layout-grid', component: HomeProgramsEditor },
+const sections = computed<ISectionConfig[]>(() => [
+  {
+    name: 'hero',
+    title: t('admin.homeEdit.sections.hero'),
+    icon: 'luc-star',
+    component: HomeHeroEditor,
+  },
+  {
+    name: 'mission',
+    title: t('admin.homeEdit.sections.mission'),
+    icon: 'luc-heart',
+    component: HomeMissionEditor,
+  },
+  {
+    name: 'programs',
+    title: t('admin.homeEdit.sections.programs'),
+    icon: 'luc-layout-grid',
+    component: HomeProgramsEditor,
+  },
   {
     name: 'testimonials',
-    title: 'Depoimentos',
+    title: t('admin.homeEdit.sections.testimonials'),
     icon: 'luc-quote',
     component: HomeTestimonialsEditor,
   },
   {
     name: 'supporters',
-    title: 'Apoiadores',
+    title: t('admin.homeEdit.sections.supporters'),
     icon: 'luc-heart-handshake',
     component: HomeSupportersEditor,
   },
-  { name: 'contact', title: 'Contato', icon: 'luc-mail', component: HomeContactEditor },
-  { name: 'values', title: 'Valores', icon: 'luc-heart', component: HomeValuesEditor },
-  { name: 'cta', title: 'CTA', icon: 'luc-megaphone', component: HomeCtaEditor },
-  { name: 'seo', title: 'SEO', icon: 'luc-search', component: HomeSeoEditor },
-];
+  {
+    name: 'contact',
+    title: t('admin.homeEdit.sections.contact'),
+    icon: 'luc-mail',
+    component: HomeContactEditor,
+  },
+  {
+    name: 'values',
+    title: t('admin.homeEdit.sections.values'),
+    icon: 'luc-heart',
+    component: HomeValuesEditor,
+  },
+  {
+    name: 'cta',
+    title: t('admin.homeEdit.sections.cta'),
+    icon: 'luc-megaphone',
+    component: HomeCtaEditor,
+  },
+  {
+    name: 'seo',
+    title: t('admin.homeEdit.sections.seo'),
+    icon: 'luc-search',
+    component: HomeSeoEditor,
+  },
+]);
 
 // ============== VALIDATORS MAP ==============
 
@@ -193,7 +230,7 @@ onUnmounted(() => {
     <!-- Header -->
     <header class="homeEditHeader">
       <CBBadge
-        content="EDITOR DE PAGINA"
+        :content="$t('admin.homeEdit.badge')"
         variant="outline"
         :icon-size="14"
         weight="bold"
@@ -202,12 +239,13 @@ onUnmounted(() => {
         text-color="var(--color-vinho-medio)"
         class="homeEditHeader__badge"
       />
-      <CBLabel text="Home Page" tag="h1" weight="black" class="homeEditHeader__title" />
       <CBLabel
-        text="8 secoes editaveis — hero, missao, programas e mais"
-        size="md"
-        color="secondary"
+        :text="$t('admin.homeEdit.title')"
+        tag="h1"
+        weight="black"
+        class="homeEditHeader__title"
       />
+      <CBLabel :text="$t('admin.homeEdit.subtitle')" size="md" color="secondary" />
     </header>
 
     <!-- Success message -->
@@ -224,7 +262,7 @@ onUnmounted(() => {
         color="var(--text-tertiary)"
         class="homeEditLoading__spinner"
       />
-      <CBLabel text="Carregando dados da pagina..." size="sm" color="tertiary" />
+      <CBLabel :text="$t('admin.homeEdit.loading')" size="sm" color="tertiary" />
     </div>
 
     <!-- Sections -->

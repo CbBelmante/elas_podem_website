@@ -80,7 +80,7 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
     <div class="supportersEditor__sectionFields">
       <CBInput
         :model-value="forms.editable.badge"
-        label="Badge"
+        :label="$t('admin.supporters.badge')"
         :rules="createValidationRules(sectionRules.badge)"
         @update:model-value="
           forms.editable.badge = $event;
@@ -89,7 +89,7 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
       />
       <CBInput
         :model-value="forms.editable.title"
-        label="Titulo da Secao"
+        :label="$t('admin.supporters.sectionTitle')"
         :rules="createValidationRules(sectionRules.title)"
         @update:model-value="
           forms.editable.title = $event;
@@ -98,7 +98,7 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
       />
       <CBInput
         :model-value="forms.editable.subtitle"
-        label="Subtitulo (opcional)"
+        :label="$t('admin.supporters.subtitle')"
         @update:model-value="
           forms.editable.subtitle = $event;
           emit('changed');
@@ -110,7 +110,7 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
         :min="SUPPORTERS_CONFIG.marqueeSpeed.min"
         :max="SUPPORTERS_CONFIG.marqueeSpeed.max"
         :step="1"
-        label="Velocidade do Marquee (px/s)"
+        :label="$t('admin.supporters.marqueeSpeed')"
         thumb-label="always"
         color="primary"
         @update:model-value="
@@ -122,7 +122,7 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
 
     <!-- Items -->
     <div class="supportersEditor__header">
-      <CBLabel text="Apoiadores" weight="semibold" size="sm" />
+      <CBLabel :text="$t('admin.supporters.listTitle')" weight="semibold" size="sm" />
       <CBLabel
         :text="`${forms.editable.items.length}/${SUPPORTERS_CONFIG.items.max}`"
         size="xs"
@@ -145,7 +145,11 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
             <div class="dragHandle">
               <CBIcon icon="luc-grip-vertical" size="1rem" color="var(--text-tertiary)" />
             </div>
-            <CBLabel :text="`Apoiador ${index + 1}`" size="sm" weight="medium" />
+            <CBLabel
+              :text="$t('admin.supporters.item', { n: index + 1 })"
+              size="sm"
+              weight="medium"
+            />
             <CBButton
               variant="outline"
               size="sm"
@@ -161,7 +165,7 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
             <div class="supportersEditor__row">
               <CBInput
                 :model-value="element.name"
-                label="Nome"
+                :label="$t('admin.supporters.name')"
                 :rules="createValidationRules(itemRules.name)"
                 @update:model-value="
                   element.name = $event;
@@ -170,7 +174,7 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
               />
               <AdminIconSelect
                 :model-value="element.icon"
-                label="Icone"
+                :label="$t('admin.supporters.icon')"
                 @update:model-value="
                   element.icon = $event;
                   emit('changed');
@@ -181,7 +185,7 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
             <div class="supportersEditor__row">
               <CBInput
                 :model-value="element.url"
-                label="Website (opcional)"
+                :label="$t('admin.supporters.website')"
                 @update:model-value="
                   element.url = $event;
                   emit('changed');
@@ -190,7 +194,7 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
               <AdminImageUploader
                 :model-value="element.image"
                 category="supporters"
-                label="Logo (opcional)"
+                :label="$t('admin.supporters.logo')"
                 @update:model-value="
                   element.image = $event;
                   emit('changed');
@@ -200,7 +204,7 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
 
               <CBInput
                 :model-value="element.imageAlt"
-                label="Alt do logo (acessibilidade)"
+                :label="$t('admin.supporters.logoAlt')"
                 @update:model-value="
                   element.imageAlt = $event;
                   emit('changed');
@@ -213,7 +217,7 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
     </draggable>
 
     <CBButton
-      label="Adicionar Apoiador"
+      :label="$t('admin.supporters.add')"
       variant="outline"
       size="sm"
       prepend-icon="luc-plus"

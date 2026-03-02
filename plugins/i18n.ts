@@ -1,7 +1,6 @@
 import { createI18n } from 'vue-i18n';
 import ptBR from '../locales/pt-BR.json';
 import en from '../locales/en.json';
-import es from '../locales/es.json';
 
 export default defineNuxtPlugin(({ vueApp }) => {
   const i18n = createI18n({
@@ -12,7 +11,6 @@ export default defineNuxtPlugin(({ vueApp }) => {
     messages: {
       'pt-BR': ptBR,
       en: en,
-      es: es,
     },
   });
 

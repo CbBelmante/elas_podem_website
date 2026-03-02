@@ -25,5 +25,263 @@
       },
       "btnSubmit": "Enviar Mensagem"
     }
+  },
+  "admin": {
+    "common": {
+      "badge": "Badge",
+      "title": "Título",
+      "subtitle": "Subtítulo",
+      "description": "Descrição",
+      "name": "Nome",
+      "icon": "Ícone",
+      "color": "Cor",
+      "image": "Imagem",
+      "optional": "opcional",
+      "loading": "Carregando dados...",
+      "add": "Adicionar"
+    },
+    "layout": {
+      "appName": "Elas Podem",
+      "appSubtitle": "Admin",
+      "groupGeneral": "Geral",
+      "dashboard": "Dashboard",
+      "groupPages": "Páginas",
+      "homePage": "Home Page",
+      "logout": "Sair"
+    },
+    "login": {
+      "title": "Painel Administrativo",
+      "subtitle": "Entre com suas credenciais para acessar",
+      "email": "Email",
+      "emailPlaceholder": "seu{'@'}email.com",
+      "password": "Senha",
+      "passwordPlaceholder": "Digite sua senha",
+      "showPassword": "Mostrar senha",
+      "hidePassword": "Ocultar senha",
+      "submit": "Entrar",
+      "footer": "Elas Podem — Painel Admin",
+      "error": "Erro ao fazer login"
+    },
+    "dashboard": {
+      "badge": "PAINEL ADMINISTRATIVO",
+      "title": "Dashboard",
+      "welcome": "Bem-vinda de volta, {name}",
+      "contentBadge": "CONTEÚDO",
+      "pagesTitle": "Páginas",
+      "homePageTitle": "Home Page",
+      "homePageDesc": "Página principal do site — 8 seções editáveis",
+      "activityBadge": "ATIVIDADE",
+      "activityTitle": "Atividade Recente",
+      "activityPlaceholder": "Audit log disponível na Fase 2 — quando ações de edição forem implementadas"
+    },
+    "homeEdit": {
+      "badge": "EDITOR DE PÁGINA",
+      "title": "Home Page",
+      "subtitle": "8 seções editáveis — hero, missão, programas e mais",
+      "loading": "Carregando dados da página...",
+      "sections": {
+        "hero": "Hero",
+        "mission": "Missão",
+        "programs": "Programas",
+        "testimonials": "Depoimentos",
+        "supporters": "Apoiadores",
+        "contact": "Contato",
+        "values": "Valores",
+        "cta": "CTA",
+        "seo": "SEO"
+      }
+    },
+    "editor": {
+      "errors": "{count} erro | {count} erros",
+      "changed": "Alterado",
+      "discard": "Descartar",
+      "save": "Salvar Seção"
+    },
+    "pageCard": {
+      "edit": "Editar Página",
+      "noPermission": "Sem permissão para editar"
+    },
+    "colorPicker": {
+      "label": "Cor",
+      "custom": "Personalizado",
+      "tabColors": "Cores",
+      "tabGradients": "Gradientes",
+      "tabCustom": "Personalizado",
+      "startColor": "Cor Inicial",
+      "midColor": "Cor do Meio",
+      "endColor": "Cor Final",
+      "threeColors": "3 cores",
+      "twoColors": "2 cores"
+    },
+    "imageUploader": {
+      "label": "Imagem",
+      "dropzone": "Arraste ou clique para enviar",
+      "uploading": "Enviando...",
+      "compression": "Compressão",
+      "presetHigh": "Alta (90%)",
+      "presetMedium": "Média (80%)",
+      "presetLow": "Baixa (60%)",
+      "opacity": "Opacidade (%)",
+      "invalidFile": "Arquivo inválido",
+      "uploadError": "Erro ao enviar imagem"
+    },
+    "paragraphList": {
+      "label": "Parágrafos",
+      "itemLabel": "Parágrafo",
+      "add": "Adicionar {item}"
+    },
+    "iconSelect": {
+      "label": "Ícone"
+    },
+    "variantSelect": {
+      "label": "Variante do Botão"
+    },
+    "hero": {
+      "badge": "Badge",
+      "title": "Título",
+      "description": "Descrição",
+      "btnDonate": "Botão Doar",
+      "btnHistory": "Botão História",
+      "btnDonateColor": "Cor/Gradiente Botão Doar",
+      "btnDonateVariant": "Variante Botão Doar",
+      "btnHistoryColor": "Cor/Gradiente Botão História",
+      "btnHistoryVariant": "Variante Botão História",
+      "backgroundImage": "Imagem de Fundo (aparece opaca atrás do conteúdo)",
+      "statsTitle": "Estatísticas",
+      "statsItem": "Stat {n}",
+      "statsIcon": "Ícone",
+      "statsNumber": "Número",
+      "statsLabel": "Label",
+      "addStat": "Adicionar Stat"
+    },
+    "mission": {
+      "badge": "Badge",
+      "title": "Título",
+      "btnText": "Texto do Botão",
+      "btnColor": "Cor/Gradiente do Botão",
+      "btnVariant": "Variante do Botão",
+      "image": "Imagem da Missão",
+      "imageAlt": "Texto alternativo da imagem (acessibilidade)"
+    },
+    "programs": {
+      "badge": "Badge",
+      "sectionTitle": "Título da Seção",
+      "subtitle": "Subtítulo (opcional)",
+      "listTitle": "Programas",
+      "item": "Programa {n}",
+      "itemTitle": "Título",
+      "itemIcon": "Ícone",
+      "itemColor": "Cor",
+      "itemDescription": "Descrição",
+      "itemLink": "Texto do Link",
+      "add": "Adicionar Programa"
+    },
+    "testimonials": {
+      "listTitle": "Depoimentos",
+      "item": "Depoimento {n}",
+      "quote": "Citação",
+      "name": "Nome",
+      "role": "Função",
+      "initials": "Iniciais (ex: ED)",
+      "photo": "Foto (opcional)",
+      "photoAlt": "Alt da foto (acessibilidade)",
+      "add": "Adicionar Depoimento"
+    },
+    "supporters": {
+      "badge": "Badge",
+      "sectionTitle": "Título da Seção",
+      "subtitle": "Subtítulo (opcional)",
+      "marqueeSpeed": "Velocidade do Marquee (px/s)",
+      "listTitle": "Apoiadores",
+      "item": "Apoiador {n}",
+      "name": "Nome",
+      "icon": "Ícone",
+      "website": "Website (opcional)",
+      "logo": "Logo (opcional)",
+      "logoAlt": "Alt do logo (acessibilidade)",
+      "add": "Adicionar Apoiador"
+    },
+    "contact": {
+      "badge": "Badge",
+      "title": "Título",
+      "description": "Descrição",
+      "methodsTitle": "Métodos de Contato",
+      "methodItem": "Método {n}",
+      "methodLabel": "Label",
+      "methodValue": "Valor",
+      "methodIcon": "Ícone",
+      "methodColor": "Cor",
+      "methodUrl": "URL (opcional)",
+      "addMethod": "Adicionar Método",
+      "subjectsTitle": "Assuntos do Formulário",
+      "subjectItem": "Assunto {n}",
+      "addSubject": "Adicionar Assunto"
+    },
+    "values": {
+      "listTitle": "Valores",
+      "item": "Valor {n}",
+      "title": "Título",
+      "subtitle": "Subtítulo",
+      "color": "Cor",
+      "add": "Adicionar Valor"
+    },
+    "cta": {
+      "title": "Título",
+      "subtitle": "Subtítulo",
+      "btnDonate": "Botão Doar",
+      "btnProjects": "Botão Projetos"
+    },
+    "seo": {
+      "title": "Título SEO",
+      "description": "Descrição SEO",
+      "keywordsTitle": "Keywords",
+      "keywordItem": "Keyword {n}",
+      "ogImage": "Imagem OG (Open Graph)",
+      "addKeyword": "Adicionar Keyword"
+    },
+    "theme": {
+      "colors": {
+        "magenta": "Magenta",
+        "coral": "Coral",
+        "rosa": "Rosa",
+        "oliva": "Oliva",
+        "laranja": "Laranja",
+        "vinho": "Vinho",
+        "vinhoMedio": "Vinho Médio",
+        "roxoNoite": "Roxo Noite",
+        "roxoAcento": "Roxo Acento"
+      },
+      "gradients": {
+        "primary": "Primário",
+        "rosa": "Rosa",
+        "vinho": "Vinho",
+        "magenta": "Magenta",
+        "coral": "Coral",
+        "laranja": "Laranja",
+        "oliva": "Oliva",
+        "roxo": "Roxo",
+        "acento": "Acento"
+      },
+      "variants": {
+        "solid": "Solid (Padrão)",
+        "outline": "Outline",
+        "ghost": "Ghost",
+        "link": "Link"
+      },
+      "icons": {
+        "award": "Prêmio",
+        "megaphone": "Megafone",
+        "users": "Pessoas",
+        "heartHandshake": "Apoio",
+        "graduationCap": "Educação",
+        "scale": "Justiça",
+        "globe": "Globo",
+        "star": "Estrela",
+        "building": "Prédio",
+        "instagram": "Instagram",
+        "userCheck": "Usuário",
+        "mapPin": "Localização"
+      }
+    }
   }
 }

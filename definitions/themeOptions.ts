@@ -21,64 +21,64 @@
 // CORES DO TEMA
 // ============================================================
 
-/** Cores disponiveis no site Elas Podem */
+/** Cores disponiveis no site Elas Podem (labels sao chaves i18n) */
 export const THEME_COLOR_OPTIONS = [
-  { value: 'magenta', label: 'Magenta' },
-  { value: 'coral', label: 'Coral' },
-  { value: 'rosa', label: 'Rosa' },
-  { value: 'oliva', label: 'Oliva' },
-  { value: 'laranja', label: 'Laranja' },
-  { value: 'vinho', label: 'Vinho' },
-  { value: 'vinho-medio', label: 'Vinho Medio' },
-  { value: 'roxo-noite', label: 'Roxo Noite' },
-  { value: 'roxo-acento', label: 'Roxo Acento' },
+  { value: 'magenta', label: 'admin.theme.colors.magenta' },
+  { value: 'coral', label: 'admin.theme.colors.coral' },
+  { value: 'rosa', label: 'admin.theme.colors.rosa' },
+  { value: 'oliva', label: 'admin.theme.colors.oliva' },
+  { value: 'laranja', label: 'admin.theme.colors.laranja' },
+  { value: 'vinho', label: 'admin.theme.colors.vinho' },
+  { value: 'vinho-medio', label: 'admin.theme.colors.vinhoMedio' },
+  { value: 'roxo-noite', label: 'admin.theme.colors.roxoNoite' },
+  { value: 'roxo-acento', label: 'admin.theme.colors.roxoAcento' },
 ] as const;
 
 // ============================================================
 // GRADIENTES DO TEMA
 // ============================================================
 
-/** Gradientes disponiveis — value mapeia para var(--gradient-{value}) */
+/** Gradientes disponiveis — value mapeia para var(--gradient-{value}) (labels sao chaves i18n) */
 export const THEME_GRADIENT_OPTIONS = [
-  { value: 'primary', label: 'Primario' },
-  { value: 'rosa', label: 'Rosa' },
-  { value: 'vinho', label: 'Vinho' },
-  { value: 'magenta', label: 'Magenta' },
-  { value: 'coral', label: 'Coral' },
-  { value: 'laranja', label: 'Laranja' },
-  { value: 'oliva', label: 'Oliva' },
-  { value: 'roxo', label: 'Roxo' },
-  { value: 'accent', label: 'Acento' },
+  { value: 'primary', label: 'admin.theme.gradients.primary' },
+  { value: 'rosa', label: 'admin.theme.gradients.rosa' },
+  { value: 'vinho', label: 'admin.theme.gradients.vinho' },
+  { value: 'magenta', label: 'admin.theme.gradients.magenta' },
+  { value: 'coral', label: 'admin.theme.gradients.coral' },
+  { value: 'laranja', label: 'admin.theme.gradients.laranja' },
+  { value: 'oliva', label: 'admin.theme.gradients.oliva' },
+  { value: 'roxo', label: 'admin.theme.gradients.roxo' },
+  { value: 'accent', label: 'admin.theme.gradients.acento' },
 ] as const;
 
 // ============================================================
 // VARIANTES DE BOTAO
 // ============================================================
 
-/** Variantes visuais do CBButton para selects do admin */
+/** Variantes visuais do CBButton para selects do admin (labels sao chaves i18n) */
 export const BUTTON_VARIANT_OPTIONS = [
-  { value: 'solid', label: 'Solid (Padrao)' },
-  { value: 'outline', label: 'Outline' },
-  { value: 'ghost', label: 'Ghost' },
-  { value: 'link', label: 'Link' },
+  { value: 'solid', label: 'admin.theme.variants.solid' },
+  { value: 'outline', label: 'admin.theme.variants.outline' },
+  { value: 'ghost', label: 'admin.theme.variants.ghost' },
+  { value: 'link', label: 'admin.theme.variants.link' },
 ] as const;
 
 // ============================================================
 // ICONES DISPONIVEIS
 // ============================================================
 
-/** Subset de icones Lucide usados no site */
+/** Subset de icones Lucide usados no site (labels sao chaves i18n) */
 export const ICON_OPTIONS = [
-  { value: 'luc-award', label: 'Premio' },
-  { value: 'luc-megaphone', label: 'Megafone' },
-  { value: 'luc-users', label: 'Pessoas' },
-  { value: 'luc-heart-handshake', label: 'Apoio' },
-  { value: 'luc-graduation-cap', label: 'Educacao' },
-  { value: 'luc-scale', label: 'Justica' },
-  { value: 'luc-globe', label: 'Globo' },
-  { value: 'luc-star', label: 'Estrela' },
-  { value: 'luc-building-2', label: 'Predio' },
-  { value: 'luc-instagram', label: 'Instagram' },
-  { value: 'luc-user-check', label: 'Usuario' },
-  { value: 'luc-map-pin', label: 'Localizacao' },
+  { value: 'luc-award', label: 'admin.theme.icons.award' },
+  { value: 'luc-megaphone', label: 'admin.theme.icons.megaphone' },
+  { value: 'luc-users', label: 'admin.theme.icons.users' },
+  { value: 'luc-heart-handshake', label: 'admin.theme.icons.heartHandshake' },
+  { value: 'luc-graduation-cap', label: 'admin.theme.icons.graduationCap' },
+  { value: 'luc-scale', label: 'admin.theme.icons.scale' },
+  { value: 'luc-globe', label: 'admin.theme.icons.globe' },
+  { value: 'luc-star', label: 'admin.theme.icons.star' },
+  { value: 'luc-building-2', label: 'admin.theme.icons.building' },
+  { value: 'luc-instagram', label: 'admin.theme.icons.instagram' },
+  { value: 'luc-user-check', label: 'admin.theme.icons.userCheck' },
+  { value: 'luc-map-pin', label: 'admin.theme.icons.mapPin' },
 ] as const;

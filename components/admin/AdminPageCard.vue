@@ -84,7 +84,7 @@ const handleEdit = (): void => {
     <div class="pageCard__actions">
       <CBButton
         v-if="canEdit"
-        label="Editar Pagina"
+        :label="$t('admin.pageCard.edit')"
         size="lg"
         :bg-gradient="'var(--gradient-vinho)'"
         :rounded="50"
@@ -92,7 +92,7 @@ const handleEdit = (): void => {
         shine
         @click="handleEdit"
       />
-      <CBBadge v-else content="Sem permissao para editar" variant="outline" size="xs" />
+      <CBBadge v-else :content="$t('admin.pageCard.noPermission')" variant="outline" size="xs" />
     </div>
   </CBCard>
 </template>

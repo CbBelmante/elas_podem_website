@@ -23,7 +23,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  label: 'Icone',
+  label: '',
   options: () => ICON_OPTIONS as unknown as IconOption[],
 });
 
@@ -46,7 +46,12 @@ function select(value: string): void {
 
 <template>
   <div class="iconSelect">
-    <CBLabel v-if="label" :text="label" weight="semibold" size="sm" class="iconSelect__label" />
+    <CBLabel
+      :text="label || $t('admin.iconSelect.label')"
+      weight="semibold"
+      size="sm"
+      class="iconSelect__label"
+    />
 
     <!-- Grid de icones -->
     <div class="iconSelect__grid">
@@ -59,14 +64,14 @@ function select(value: string): void {
         @click="select(opt.value)"
       >
         <CBIcon :icon="opt.value" size="1.25rem" />
-        <span class="iconSelect__itemLabel">{{ opt.label }}</span>
+        <span class="iconSelect__itemLabel">{{ $t(opt.label) }}</span>
       </button>
     </div>
 
     <!-- Preview do icone selecionado -->
     <div v-if="selectedOption" class="iconSelect__preview">
       <CBIcon :icon="selectedOption.value" size="1.5rem" color="var(--color-vinho)" />
-      <CBLabel :text="selectedOption.label" size="xs" class="iconSelect__previewLabel" />
+      <CBLabel :text="$t(selectedOption.label)" size="xs" class="iconSelect__previewLabel" />
     </div>
   </div>
 </template>

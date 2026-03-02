@@ -97,7 +97,7 @@ function updateSubject(index: number, value: string): void {
     <div class="contactEditor__topFields">
       <CBInput
         :model-value="forms.editable.badge"
-        label="Badge"
+        :label="$t('admin.contact.badge')"
         :rules="createValidationRules(rules.badge)"
         @update:model-value="
           forms.editable.badge = $event;
@@ -107,7 +107,7 @@ function updateSubject(index: number, value: string): void {
 
       <CBInput
         :model-value="forms.editable.title"
-        label="Titulo"
+        :label="$t('admin.contact.title')"
         :rules="createValidationRules(rules.title)"
         @update:model-value="
           forms.editable.title = $event;
@@ -117,7 +117,7 @@ function updateSubject(index: number, value: string): void {
 
       <CBTextarea
         :model-value="forms.editable.description"
-        label="Descricao"
+        :label="$t('admin.contact.description')"
         :rules="createValidationRules(rules.description)"
         @update:model-value="
           forms.editable.description = $event;
@@ -129,7 +129,7 @@ function updateSubject(index: number, value: string): void {
     <!-- Metodos de contato -->
     <div class="contactEditor__section">
       <div class="contactEditor__sectionHeader">
-        <CBLabel text="Metodos de Contato" weight="semibold" size="sm" />
+        <CBLabel :text="$t('admin.contact.methodsTitle')" weight="semibold" size="sm" />
         <CBLabel
           :text="`${forms.editable.methods.length}/${CONTACT_CONFIG.methods.max}`"
           size="xs"
@@ -154,7 +154,11 @@ function updateSubject(index: number, value: string): void {
               <div class="dragHandle">
                 <CBIcon icon="luc-grip-vertical" size="1rem" color="var(--text-tertiary)" />
               </div>
-              <CBLabel :text="`Metodo ${index + 1}`" size="sm" weight="medium" />
+              <CBLabel
+                :text="$t('admin.contact.methodItem', { n: index + 1 })"
+                size="sm"
+                weight="medium"
+              />
               <CBButton
                 variant="outline"
                 size="sm"
@@ -170,7 +174,7 @@ function updateSubject(index: number, value: string): void {
               <div class="contactEditor__row">
                 <CBInput
                   :model-value="element.label"
-                  label="Label"
+                  :label="$t('admin.contact.methodLabel')"
                   @update:model-value="
                     element.label = $event;
                     emit('changed');
@@ -178,7 +182,7 @@ function updateSubject(index: number, value: string): void {
                 />
                 <CBInput
                   :model-value="element.value"
-                  label="Valor"
+                  :label="$t('admin.contact.methodValue')"
                   @update:model-value="
                     element.value = $event;
                     emit('changed');
@@ -188,7 +192,7 @@ function updateSubject(index: number, value: string): void {
               <div class="contactEditor__row">
                 <AdminIconSelect
                   :model-value="element.icon"
-                  label="Icone"
+                  :label="$t('admin.contact.methodIcon')"
                   @update:model-value="
                     element.icon = $event;
                     emit('changed');
@@ -196,7 +200,7 @@ function updateSubject(index: number, value: string): void {
                 />
                 <AdminColorPicker
                   :model-value="element.color"
-                  label="Cor"
+                  :label="$t('admin.contact.methodColor')"
                   :unavailable-modes="['gradients', 'custom']"
                   @update:model-value="
                     element.color = $event;
@@ -206,7 +210,7 @@ function updateSubject(index: number, value: string): void {
               </div>
               <CBInput
                 :model-value="element.url"
-                label="URL (opcional)"
+                :label="$t('admin.contact.methodUrl')"
                 @update:model-value="
                   element.url = $event;
                   emit('changed');
@@ -218,7 +222,7 @@ function updateSubject(index: number, value: string): void {
       </draggable>
 
       <CBButton
-        label="Adicionar Metodo"
+        :label="$t('admin.contact.addMethod')"
         variant="outline"
         size="sm"
         prepend-icon="luc-plus"
@@ -231,7 +235,7 @@ function updateSubject(index: number, value: string): void {
     <!-- Assuntos do formulario -->
     <div class="contactEditor__section">
       <div class="contactEditor__sectionHeader">
-        <CBLabel text="Assuntos do Formulario" weight="semibold" size="sm" />
+        <CBLabel :text="$t('admin.contact.subjectsTitle')" weight="semibold" size="sm" />
         <CBLabel
           :text="`${forms.editable.formSubjects.length}/${CONTACT_CONFIG.formSubjects.max}`"
           size="xs"
@@ -254,7 +258,7 @@ function updateSubject(index: number, value: string): void {
             </div>
             <CBInput
               :model-value="forms.editable.formSubjects[index]"
-              :label="`Assunto ${index + 1}`"
+              :label="$t('admin.contact.subjectItem', { n: index + 1 })"
               @update:model-value="updateSubject(index, $event)"
             />
             <CBButton
@@ -271,7 +275,7 @@ function updateSubject(index: number, value: string): void {
       </draggable>
 
       <CBButton
-        label="Adicionar Assunto"
+        :label="$t('admin.contact.addSubject')"
         variant="outline"
         size="sm"
         prepend-icon="luc-plus"

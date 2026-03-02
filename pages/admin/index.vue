@@ -68,7 +68,7 @@ onMounted(async () => {
     <!-- Header -->
     <header class="dashboardHeader">
       <CBBadge
-        content="PAINEL ADMINISTRATIVO"
+        :content="$t('admin.dashboard.badge')"
         variant="outline"
         :icon-size="14"
         weight="bold"
@@ -77,9 +77,14 @@ onMounted(async () => {
         text-color="var(--color-vinho-medio)"
         class="dashboardHeader__badge"
       />
-      <CBLabel text="Dashboard" tag="h1" weight="black" class="dashboardHeader__title" />
       <CBLabel
-        :text="`Bem-vinda de volta, ${userName}`"
+        :text="$t('admin.dashboard.title')"
+        tag="h1"
+        weight="black"
+        class="dashboardHeader__title"
+      />
+      <CBLabel
+        :text="$t('admin.dashboard.welcome', { name: userName })"
         size="md"
         color="secondary"
         class="dashboardHeader__subtitle"
@@ -94,14 +99,14 @@ onMounted(async () => {
         color="var(--text-tertiary)"
         class="dashboardLoading__spinner"
       />
-      <CBLabel text="Carregando dados..." size="sm" color="tertiary" />
+      <CBLabel :text="$t('admin.common.loading')" size="sm" color="tertiary" />
     </div>
 
     <!-- Cards de paginas -->
     <section v-else class="dashboardPages">
       <div class="dashboardPages__header">
         <CBBadge
-          content="CONTEUDO"
+          :content="$t('admin.dashboard.contentBadge')"
           variant="outline"
           :icon-size="14"
           weight="bold"
@@ -110,13 +115,18 @@ onMounted(async () => {
           text-color="var(--color-vinho-medio)"
           class="sectionBadge"
         />
-        <CBLabel text="Paginas" tag="h2" weight="black" class="dashboardPages__title" />
+        <CBLabel
+          :text="$t('admin.dashboard.pagesTitle')"
+          tag="h2"
+          weight="black"
+          class="dashboardPages__title"
+        />
       </div>
 
       <!-- Card: Home Page -->
       <AdminPageCard
-        title="Home Page"
-        description="Pagina principal do site — 8 secoes editaveis"
+        :title="$t('admin.dashboard.homePageTitle')"
+        :description="$t('admin.dashboard.homePageDesc')"
         icon="luc-home"
         color="rosa"
         edit-url="/admin/edit/homeEdit"
@@ -130,7 +140,7 @@ onMounted(async () => {
     <section v-if="permissions?.canViewLogs" class="dashboardAudit">
       <div class="dashboardAudit__header">
         <CBBadge
-          content="ATIVIDADE"
+          :content="$t('admin.dashboard.activityBadge')"
           variant="outline"
           :icon-size="14"
           weight="bold"
@@ -139,7 +149,12 @@ onMounted(async () => {
           text-color="var(--color-vinho-medio)"
           class="sectionBadge"
         />
-        <CBLabel text="Atividade Recente" tag="h2" weight="black" class="dashboardAudit__title" />
+        <CBLabel
+          :text="$t('admin.dashboard.activityTitle')"
+          tag="h2"
+          weight="black"
+          class="dashboardAudit__title"
+        />
       </div>
       <CBCard
         variant="outlined"
@@ -151,7 +166,7 @@ onMounted(async () => {
         <div class="dashboardAudit__empty">
           <CBIcon icon="luc-scroll-text" size="2rem" color="var(--color-nude-quente)" />
           <CBLabel
-            text="Audit log disponivel na Fase 2 — quando acoes de edicao forem implementadas"
+            :text="$t('admin.dashboard.activityPlaceholder')"
             size="sm"
             color="tertiary"
             class="dashboardAudit__emptyText"

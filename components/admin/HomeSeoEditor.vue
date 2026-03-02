@@ -59,7 +59,7 @@ function updateKeyword(index: number, value: string): void {
     <div class="seoEditor__field">
       <CBInput
         :model-value="forms.editable.title"
-        label="Titulo SEO"
+        :label="$t('admin.seo.title')"
         :rules="createValidationRules(rules.title)"
         @update:model-value="
           forms.editable.title = $event;
@@ -78,7 +78,7 @@ function updateKeyword(index: number, value: string): void {
     <div class="seoEditor__field">
       <CBTextarea
         :model-value="forms.editable.description"
-        label="Descricao SEO"
+        :label="$t('admin.seo.description')"
         :rules="createValidationRules(rules.description)"
         @update:model-value="
           forms.editable.description = $event;
@@ -96,7 +96,7 @@ function updateKeyword(index: number, value: string): void {
     <!-- Keywords -->
     <div class="seoEditor__section">
       <div class="seoEditor__sectionHeader">
-        <CBLabel text="Keywords" weight="semibold" size="sm" />
+        <CBLabel :text="$t('admin.seo.keywordsTitle')" weight="semibold" size="sm" />
         <CBLabel
           :text="`${forms.editable.keywords.length}/${SEO_CONFIG.keywords.max}`"
           size="xs"
@@ -119,7 +119,7 @@ function updateKeyword(index: number, value: string): void {
             </div>
             <CBInput
               :model-value="forms.editable.keywords[index]"
-              :label="`Keyword ${index + 1}`"
+              :label="$t('admin.seo.keywordItem', { n: index + 1 })"
               @update:model-value="updateKeyword(index, $event)"
             />
             <CBButton
@@ -136,7 +136,7 @@ function updateKeyword(index: number, value: string): void {
       </draggable>
 
       <CBButton
-        label="Adicionar Keyword"
+        :label="$t('admin.seo.addKeyword')"
         variant="outline"
         size="sm"
         prepend-icon="luc-plus"
@@ -150,7 +150,7 @@ function updateKeyword(index: number, value: string): void {
     <AdminImageUploader
       :model-value="forms.editable.ogImage"
       category="seo"
-      label="Imagem OG (Open Graph)"
+      :label="$t('admin.seo.ogImage')"
       @update:model-value="
         forms.editable.ogImage = $event;
         emit('changed');

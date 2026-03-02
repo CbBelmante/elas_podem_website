@@ -5,6 +5,7 @@
  * Valor armazenado: 'solid' | 'outline' | 'ghost' | 'link'
  */
 
+import { useI18n } from 'vue-i18n';
 import { CBSelect } from '@cb/components';
 import { BUTTON_VARIANT_OPTIONS } from '@definitions/themeOptions';
 
@@ -16,7 +17,7 @@ interface Props {
 }
 
 withDefaults(defineProps<Props>(), {
-  label: 'Variante do Botao',
+  label: '',
 });
 
 // ============== EMITS ==============
@@ -25,18 +26,22 @@ defineEmits<{
   'update:modelValue': [value: string];
 }>();
 
-// ============== CONSTANTS ==============
+// ============== I18N ==============
 
-const items = BUTTON_VARIANT_OPTIONS.map((opt) => ({
-  value: opt.value,
-  label: opt.label,
-}));
+const { t } = useI18n();
+
+const items = computed(() =>
+  BUTTON_VARIANT_OPTIONS.map((opt) => ({
+    value: opt.value,
+    label: t(opt.label),
+  }))
+);
 </script>
 
 <template>
   <CBSelect
     :model-value="modelValue"
-    :label="label"
+    :label="label || $t('admin.variantSelect.label')"
     :items="items"
     @update:model-value="$emit('update:modelValue', $event)"
   />

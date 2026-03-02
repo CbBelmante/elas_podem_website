@@ -1,5 +1,4 @@
 <script setup lang="ts">
-/* eslint-disable vue/no-mutating-props -- padrao dos editors admin */
 /**
  * 🧩 AdminParagraphList — Lista dinamica de paragrafos com drag-and-drop.
  *
@@ -8,6 +7,7 @@
  */
 
 import type { PropType } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { CBButton, CBIcon, CBLabel, CBTextarea } from '@cb/components';
 import draggable from 'vuedraggable';
 
@@ -20,11 +20,11 @@ const props = defineProps({
   },
   label: {
     type: String,
-    default: 'Paragrafos',
+    default: '',
   },
   itemLabel: {
     type: String,
-    default: 'Paragrafo',
+    default: '',
   },
   min: {
     type: Number,
@@ -41,6 +41,11 @@ const props = defineProps({
     default: undefined,
   },
 });
+
+const { t } = useI18n();
+
+const effectiveLabel = computed(() => props.label || t('admin.paragraphList.label'));
+const effectiveItemLabel = computed(() => props.itemLabel || t('admin.paragraphList.itemLabel'));
 
 // ============== EMITS ==============
 
@@ -80,7 +85,7 @@ function onDragUpdate(newList: string[]): void {
 <template>
   <div class="paragraphList">
     <div class="paragraphList__header">
-      <CBLabel :text="label" weight="semibold" size="sm" />
+      <CBLabel :text="effectiveLabel" weight="semibold" size="sm" />
       <CBLabel :text="`${modelValue.length}/${max}`" size="xs" class="paragraphList__counter" />
     </div>
 
@@ -100,7 +105,7 @@ function onDragUpdate(newList: string[]): void {
           </div>
           <CBTextarea
             :model-value="modelValue[index]"
-            :label="`${itemLabel} ${index + 1}`"
+            :label="`${effectiveItemLabel} ${index + 1}`"
             :rules="rules"
             @update:model-value="update(index, $event)"
           />
@@ -118,7 +123,7 @@ function onDragUpdate(newList: string[]): void {
     </draggable>
 
     <CBButton
-      :label="`Adicionar ${itemLabel}`"
+      :label="$t('admin.paragraphList.add', { item: effectiveItemLabel })"
       variant="outline"
       size="sm"
       prepend-icon="luc-plus"

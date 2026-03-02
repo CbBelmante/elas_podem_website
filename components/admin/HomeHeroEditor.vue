@@ -56,14 +56,14 @@ function removeStat(index: number): void {
     <div class="heroEditor__row">
       <CBInput
         v-model="forms.editable.badge"
-        label="Badge"
+        :label="$t('admin.hero.badge')"
         :rules="createValidationRules(rules.badge)"
         @update:model-value="emit('changed')"
       />
 
       <CBInput
         v-model="forms.editable.title"
-        label="Titulo"
+        :label="$t('admin.hero.title')"
         :rules="createValidationRules(rules.title)"
         @update:model-value="emit('changed')"
       />
@@ -71,7 +71,7 @@ function removeStat(index: number): void {
 
     <CBTextarea
       v-model="forms.editable.description"
-      label="Descricao"
+      :label="$t('admin.hero.description')"
       :rules="createValidationRules(rules.description)"
       @update:model-value="emit('changed')"
     />
@@ -79,14 +79,14 @@ function removeStat(index: number): void {
     <div class="heroEditor__row">
       <CBInput
         v-model="forms.editable.btnDonate"
-        label="Botao Doar"
+        :label="$t('admin.hero.btnDonate')"
         :rules="createValidationRules(rules.btnDonate)"
         @update:model-value="emit('changed')"
       />
 
       <CBInput
         v-model="forms.editable.btnHistory"
-        label="Botao Historia"
+        :label="$t('admin.hero.btnHistory')"
         :rules="createValidationRules(rules.btnHistory)"
         @update:model-value="emit('changed')"
       />
@@ -95,12 +95,12 @@ function removeStat(index: number): void {
     <div class="heroEditor__row">
       <AdminColorPicker
         v-model="forms.editable.btnDonateColor"
-        label="Cor/Gradiente Botao Doar"
+        :label="$t('admin.hero.btnDonateColor')"
         @update:model-value="emit('changed')"
       />
       <AdminButtonVariantSelect
         v-model="forms.editable.btnDonateVariant"
-        label="Variante Botao Doar"
+        :label="$t('admin.hero.btnDonateVariant')"
         @update:model-value="emit('changed')"
       />
     </div>
@@ -108,12 +108,12 @@ function removeStat(index: number): void {
     <div class="heroEditor__row">
       <AdminColorPicker
         v-model="forms.editable.btnHistoryColor"
-        label="Cor/Gradiente Botao Historia"
+        :label="$t('admin.hero.btnHistoryColor')"
         @update:model-value="emit('changed')"
       />
       <AdminButtonVariantSelect
         v-model="forms.editable.btnHistoryVariant"
-        label="Variante Botao Historia"
+        :label="$t('admin.hero.btnHistoryVariant')"
         @update:model-value="emit('changed')"
       />
     </div>
@@ -123,7 +123,7 @@ function removeStat(index: number): void {
       v-model="forms.editable.heroImage"
       v-model:opacity="forms.editable.heroImageOpacity"
       category="hero"
-      label="Imagem de Fundo (aparece opaca atras do conteudo)"
+      :label="$t('admin.hero.backgroundImage')"
       opacity-editable
       @update:model-value="emit('changed')"
       @update:opacity="emit('changed')"
@@ -133,7 +133,7 @@ function removeStat(index: number): void {
     <!-- Stats array -->
     <div class="heroEditor__statsSection">
       <div class="heroEditor__statsHeader">
-        <CBLabel text="Estatisticas" weight="semibold" size="sm" />
+        <CBLabel :text="$t('admin.hero.statsTitle')" weight="semibold" size="sm" />
         <CBLabel
           :text="`${forms.editable.stats.length}/${HERO_CONFIG.stats.max}`"
           size="xs"
@@ -158,7 +158,7 @@ function removeStat(index: number): void {
             <div class="heroEditor__statFields">
               <AdminIconSelect
                 :model-value="element.icon"
-                label="Icone"
+                :label="$t('admin.hero.statsIcon')"
                 @update:model-value="
                   element.icon = $event;
                   emit('changed');
@@ -166,12 +166,12 @@ function removeStat(index: number): void {
               />
               <CBInput
                 v-model="element.number"
-                label="Numero"
+                :label="$t('admin.hero.statsNumber')"
                 @update:model-value="emit('changed')"
               />
               <CBInput
                 v-model="element.label"
-                label="Label"
+                :label="$t('admin.hero.statsLabel')"
                 @update:model-value="emit('changed')"
               />
             </div>
@@ -190,7 +190,7 @@ function removeStat(index: number): void {
       </draggable>
 
       <CBButton
-        label="Adicionar Stat"
+        :label="$t('admin.hero.addStat')"
         variant="outline"
         size="sm"
         prepend-icon="luc-plus"

@@ -8,6 +8,7 @@
  * Use `unavailableModes` para esconder abas que nao fazem sentido no contexto.
  */
 
+import { useI18n } from 'vue-i18n';
 import { CBIcon, CBLabel } from '@cb/components';
 import { THEME_COLOR_OPTIONS, THEME_GRADIENT_OPTIONS } from '@definitions/themeOptions';
 import { parseColorValue, resolveColorValue } from '@utils/colorResolver';
@@ -23,9 +24,11 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  label: 'Cor',
+  label: '',
   unavailableModes: () => [],
 });
+
+const { t } = useI18n();
 
 // ============== EMITS ==============
 
@@ -81,10 +84,12 @@ watch(
 const displayLabel = computed(() => {
   const parsed = parseColorValue(props.modelValue);
   if (parsed.type === 'gradient') {
-    return THEME_GRADIENT_OPTIONS.find((o) => o.value === parsed.raw)?.label ?? parsed.raw;
+    const key = THEME_GRADIENT_OPTIONS.find((o) => o.value === parsed.raw)?.label;
+    return key ? t(key) : parsed.raw;
   }
-  if (parsed.type === 'custom') return 'Personalizado';
-  return THEME_COLOR_OPTIONS.find((o) => o.value === parsed.raw)?.label ?? parsed.raw;
+  if (parsed.type === 'custom') return t('admin.colorPicker.custom');
+  const key = THEME_COLOR_OPTIONS.find((o) => o.value === parsed.raw)?.label;
+  return key ? t(key) : parsed.raw;
 });
 
 /** CSS background para o preview bar */
@@ -145,7 +150,12 @@ function gradientBg(value: string): string {
 
 <template>
   <div class="picker">
-    <CBLabel v-if="label" :text="label" weight="semibold" size="sm" class="picker__label" />
+    <CBLabel
+      :text="label || $t('admin.colorPicker.label')"
+      weight="semibold"
+      size="sm"
+      class="picker__label"
+    />
 
     <!-- Abas (esconde quando so tem 1 modo) -->
     <div v-if="availableModes.length > 1" class="picker__tabs">
@@ -156,7 +166,7 @@ function gradientBg(value: string): string {
         :class="{ 'picker__tab--active': activeTab === 'colors' }"
         @click="activeTab = 'colors'"
       >
-        Cores
+        {{ $t('admin.colorPicker.tabColors') }}
       </button>
       <button
         v-if="isAvailable('gradients')"
@@ -165,7 +175,7 @@ function gradientBg(value: string): string {
         :class="{ 'picker__tab--active': activeTab === 'gradients' }"
         @click="activeTab = 'gradients'"
       >
-        Gradientes
+        {{ $t('admin.colorPicker.tabGradients') }}
       </button>
       <button
         v-if="isAvailable('custom')"
@@ -174,7 +184,7 @@ function gradientBg(value: string): string {
         :class="{ 'picker__tab--active': activeTab === 'custom' }"
         @click="activeTab = 'custom'"
       >
-        Personalizado
+        {{ $t('admin.colorPicker.tabCustom') }}
       </button>
     </div>
 
@@ -188,7 +198,7 @@ function gradientBg(value: string): string {
           class="picker__swatch picker__swatch--circle"
           :class="{ 'picker__swatch--selected': modelValue === opt.value }"
           :style="{ background: colorBg(opt.value) }"
-          :title="opt.label"
+          :title="$t(opt.label)"
           @click="selectColor(opt.value)"
         >
           <CBIcon
@@ -212,7 +222,7 @@ function gradientBg(value: string): string {
           class="picker__swatch picker__swatch--rect"
           :class="{ 'picker__swatch--selected': modelValue === `gradient:${opt.value}` }"
           :style="{ background: gradientBg(opt.value) }"
-          :title="opt.label"
+          :title="$t(opt.label)"
           @click="selectGradient(opt.value)"
         >
           <CBIcon
@@ -230,7 +240,7 @@ function gradientBg(value: string): string {
     <div v-if="activeTab === 'custom' && isAvailable('custom')" class="picker__panel">
       <!-- Cor Inicial -->
       <div class="picker__customGroup">
-        <CBLabel text="Cor Inicial" size="xs" class="picker__customLabel" />
+        <CBLabel :text="$t('admin.colorPicker.startColor')" size="xs" class="picker__customLabel" />
         <div class="picker__swatches">
           <button
             v-for="opt in THEME_COLOR_OPTIONS"
@@ -239,7 +249,7 @@ function gradientBg(value: string): string {
             class="picker__swatch picker__swatch--sm"
             :class="{ 'picker__swatch--selected': customStart === opt.value }"
             :style="{ background: colorBg(opt.value) }"
-            :title="opt.label"
+            :title="$t(opt.label)"
             @click="selectCustomColor('start', opt.value)"
           >
             <CBIcon
@@ -256,8 +266,12 @@ function gradientBg(value: string): string {
       <!-- Cor do Meio (opcional) -->
       <div class="picker__customGroup">
         <div class="picker__customLabelRow">
-          <CBLabel text="Cor do Meio" size="xs" class="picker__customLabel" />
-          <CBLabel text="(opcional)" size="xs" class="picker__customHint" />
+          <CBLabel :text="$t('admin.colorPicker.midColor')" size="xs" class="picker__customLabel" />
+          <CBLabel
+            :text="`(${$t('admin.common.optional')})`"
+            size="xs"
+            class="picker__customHint"
+          />
           <button
             v-if="customMiddle"
             type="button"
@@ -275,7 +289,7 @@ function gradientBg(value: string): string {
             class="picker__swatch picker__swatch--sm"
             :class="{ 'picker__swatch--selected': customMiddle === opt.value }"
             :style="{ background: colorBg(opt.value) }"
-            :title="opt.label"
+            :title="$t(opt.label)"
             @click="selectCustomColor('middle', opt.value)"
           >
             <CBIcon
@@ -291,7 +305,7 @@ function gradientBg(value: string): string {
 
       <!-- Cor Final -->
       <div class="picker__customGroup">
-        <CBLabel text="Cor Final" size="xs" class="picker__customLabel" />
+        <CBLabel :text="$t('admin.colorPicker.endColor')" size="xs" class="picker__customLabel" />
         <div class="picker__swatches">
           <button
             v-for="opt in THEME_COLOR_OPTIONS"
@@ -300,7 +314,7 @@ function gradientBg(value: string): string {
             class="picker__swatch picker__swatch--sm"
             :class="{ 'picker__swatch--selected': customEnd === opt.value }"
             :style="{ background: colorBg(opt.value) }"
-            :title="opt.label"
+            :title="$t(opt.label)"
             @click="selectCustomColor('end', opt.value)"
           >
             <CBIcon
@@ -318,7 +332,9 @@ function gradientBg(value: string): string {
       <div v-if="customStart && customEnd" class="picker__customPreview">
         <div class="picker__previewBar" :style="{ background: customPreviewBg }" />
         <CBLabel
-          :text="customMiddle ? '3 cores' : '2 cores'"
+          :text="
+            customMiddle ? $t('admin.colorPicker.threeColors') : $t('admin.colorPicker.twoColors')
+          "
           size="xs"
           class="picker__previewLabel"
         />

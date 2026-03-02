@@ -14,6 +14,7 @@
  */
 
 import type { PropType } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { CBIcon, CBLabel, CBSlider } from '@cb/components';
 import { useStorage } from '@composables/useStorage';
 import { useImageCompression } from '@composables/useImageCompression';
@@ -33,7 +34,7 @@ const props = defineProps({
   },
   label: {
     type: String,
-    default: 'Imagem',
+    default: '',
   },
   /** Habilita slider de opacidade (0-100%). Requer v-model:opacity. */
   opacityEditable: {
@@ -56,6 +57,7 @@ const emit = defineEmits<{
 
 // ============== COMPOSABLES ==============
 
+const { t } = useI18n();
 const { validateImageFile, uploadImage } = useStorage();
 const { compressImage } = useImageCompression();
 
@@ -73,9 +75,9 @@ const compressionEnabled = ref(compressionSettings.value.enabled);
 const compressionQuality = ref(compressionSettings.value.quality);
 
 const PRESETS = [
-  { label: 'Alta (90%)', value: 0.9, color: 'var(--color-oliva)' },
-  { label: 'Media (80%)', value: 0.8, color: 'var(--color-vinho-medio)' },
-  { label: 'Baixa (60%)', value: 0.6, color: 'var(--color-coral)' },
+  { label: 'admin.imageUploader.presetHigh', value: 0.9, color: 'var(--color-oliva)' },
+  { label: 'admin.imageUploader.presetMedium', value: 0.8, color: 'var(--color-vinho-medio)' },
+  { label: 'admin.imageUploader.presetLow', value: 0.6, color: 'var(--color-coral)' },
 ] as const;
 
 const formatsText = IMAGE_UPLOAD_CONFIG.validExtensions.join(', ');
@@ -94,7 +96,7 @@ async function processFile(file: File): Promise<void> {
 
   const validation = validateImageFile(file);
   if (!validation.isValid) {
-    uploadError.value = validation.error ?? 'Arquivo invalido';
+    uploadError.value = validation.error ?? t('admin.imageUploader.invalidFile');
     return;
   }
 
@@ -117,7 +119,8 @@ async function processFile(file: File): Promise<void> {
     emit('update:modelValue', url);
     emit('uploaded', url);
   } catch (error) {
-    uploadError.value = error instanceof Error ? error.message : 'Erro ao enviar imagem';
+    uploadError.value =
+      error instanceof Error ? error.message : t('admin.imageUploader.uploadError');
   } finally {
     isUploading.value = false;
     if (fileInput.value) fileInput.value.value = '';
@@ -154,7 +157,12 @@ async function handleDrop(event: DragEvent): Promise<void> {
 
 <template>
   <div class="imgUp">
-    <CBLabel :text="label" size="sm" weight="medium" class="imgUp__label" />
+    <CBLabel
+      :text="label || $t('admin.imageUploader.label')"
+      size="sm"
+      weight="medium"
+      class="imgUp__label"
+    />
 
     <!-- Zona de upload / preview -->
     <div
@@ -173,7 +181,7 @@ async function handleDrop(event: DragEvent): Promise<void> {
         <div class="imgUp__iconCircle">
           <CBIcon icon="luc-cloud-upload" size="1.75rem" color="var(--color-rosa)" />
         </div>
-        <span class="imgUp__title">Arraste ou clique para enviar</span>
+        <span class="imgUp__title">{{ $t('admin.imageUploader.dropzone') }}</span>
         <span class="imgUp__meta">{{ formatsText }} &middot; max {{ maxSizeText }}</span>
       </div>
 
@@ -202,7 +210,7 @@ async function handleDrop(event: DragEvent): Promise<void> {
       <!-- Loading overlay -->
       <div v-if="isUploading" class="imgUp__loading">
         <CBIcon icon="luc-loader-2" size="2rem" color="#ffffff" class="imgUp__spinner" />
-        <span class="imgUp__loadingText">Enviando...</span>
+        <span class="imgUp__loadingText">{{ $t('admin.imageUploader.uploading') }}</span>
       </div>
     </div>
 
@@ -216,7 +224,7 @@ async function handleDrop(event: DragEvent): Promise<void> {
     <div class="imgUp__compression">
       <div class="imgUp__compressionHeader">
         <CBIcon icon="luc-minimize-2" size="0.875rem" color="var(--text-tertiary)" />
-        <span class="imgUp__compressionLabel">Compressao</span>
+        <span class="imgUp__compressionLabel">{{ $t('admin.imageUploader.compression') }}</span>
         <button
           type="button"
           class="imgUp__toggle"
@@ -237,7 +245,7 @@ async function handleDrop(event: DragEvent): Promise<void> {
           :style="{ '--preset-color': preset.color }"
           @click="compressionQuality = preset.value"
         >
-          {{ preset.label }}
+          {{ $t(preset.label) }}
         </button>
       </div>
     </div>
@@ -246,7 +254,7 @@ async function handleDrop(event: DragEvent): Promise<void> {
     <CBSlider
       v-if="opacityEditable"
       :model-value="opacity"
-      label="Opacidade (%)"
+      :label="$t('admin.imageUploader.opacity')"
       :min="0"
       :max="100"
       :step="1"

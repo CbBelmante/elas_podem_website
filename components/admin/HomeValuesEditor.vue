@@ -50,7 +50,7 @@ function removeValue(index: number): void {
 <template>
   <div class="valuesEditor">
     <div class="valuesEditor__header">
-      <CBLabel text="Valores" weight="semibold" size="sm" />
+      <CBLabel :text="$t('admin.values.listTitle')" weight="semibold" size="sm" />
       <CBLabel
         :text="`${forms.editable.length}/${VALUES_CONFIG.items.max}`"
         size="xs"
@@ -72,7 +72,7 @@ function removeValue(index: number): void {
             <div class="dragHandle">
               <CBIcon icon="luc-grip-vertical" size="1rem" color="var(--text-tertiary)" />
             </div>
-            <CBLabel :text="`Valor ${index + 1}`" size="sm" weight="medium" />
+            <CBLabel :text="$t('admin.values.item', { n: index + 1 })" size="sm" weight="medium" />
             <CBButton
               variant="outline"
               size="sm"
@@ -87,7 +87,7 @@ function removeValue(index: number): void {
           <div class="valuesEditor__fields">
             <CBInput
               :model-value="element.title"
-              label="Titulo"
+              :label="$t('admin.values.title')"
               :rules="createValidationRules(rules.title)"
               @update:model-value="
                 element.title = $event;
@@ -97,7 +97,7 @@ function removeValue(index: number): void {
 
             <CBInput
               :model-value="element.subtitle"
-              label="Subtitulo"
+              :label="$t('admin.values.subtitle')"
               :rules="createValidationRules(rules.subtitle)"
               @update:model-value="
                 element.subtitle = $event;
@@ -107,7 +107,7 @@ function removeValue(index: number): void {
 
             <AdminColorPicker
               :model-value="element.color"
-              label="Cor"
+              :label="$t('admin.values.color')"
               :unavailable-modes="['gradients', 'custom']"
               @update:model-value="
                 element.color = $event;
@@ -120,7 +120,7 @@ function removeValue(index: number): void {
     </draggable>
 
     <CBButton
-      label="Adicionar Valor"
+      :label="$t('admin.values.add')"
       variant="outline"
       size="sm"
       prepend-icon="luc-plus"

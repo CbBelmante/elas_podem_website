@@ -42,14 +42,14 @@ defineEmits<{
         <CBLabel :text="title" weight="semibold" />
         <CBBadge
           v-if="errors.length"
-          :content="`${errors.length} erro${errors.length > 1 ? 's' : ''}`"
+          :content="$t('admin.editor.errors', errors.length)"
           variant="outline"
           size="xs"
           class="editorSection__errorBadge"
         />
         <CBBadge
           v-if="hasChanges && !errors.length"
-          content="Alterado"
+          :content="$t('admin.editor.changed')"
           variant="outline"
           size="xs"
           class="editorSection__changedBadge"
@@ -80,7 +80,7 @@ defineEmits<{
       <!-- Botoes de acao -->
       <div class="editorSection__actions">
         <CBButton
-          label="Descartar"
+          :label="$t('admin.editor.discard')"
           variant="outline"
           size="sm"
           :rounded="10"
@@ -88,7 +88,7 @@ defineEmits<{
           @click="$emit('discard')"
         />
         <CBButton
-          label="Salvar Secao"
+          :label="$t('admin.editor.save')"
           size="sm"
           :bg-gradient="'var(--gradient-vinho)'"
           :rounded="10"

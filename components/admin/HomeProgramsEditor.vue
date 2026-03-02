@@ -78,7 +78,7 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
     <div class="programsEditor__sectionFields">
       <CBInput
         :model-value="forms.editable.badge"
-        label="Badge"
+        :label="$t('admin.programs.badge')"
         :rules="createValidationRules(sectionRules.badge)"
         @update:model-value="
           forms.editable.badge = $event;
@@ -87,7 +87,7 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
       />
       <CBInput
         :model-value="forms.editable.title"
-        label="Titulo da Secao"
+        :label="$t('admin.programs.sectionTitle')"
         :rules="createValidationRules(sectionRules.title)"
         @update:model-value="
           forms.editable.title = $event;
@@ -96,7 +96,7 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
       />
       <CBInput
         :model-value="forms.editable.subtitle"
-        label="Subtitulo (opcional)"
+        :label="$t('admin.programs.subtitle')"
         @update:model-value="
           forms.editable.subtitle = $event;
           emit('changed');
@@ -106,7 +106,7 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
 
     <!-- Items -->
     <div class="programsEditor__header">
-      <CBLabel text="Programas" weight="semibold" size="sm" />
+      <CBLabel :text="$t('admin.programs.listTitle')" weight="semibold" size="sm" />
       <CBLabel
         :text="`${forms.editable.items.length}/${PROGRAMS_CONFIG.items.max}`"
         size="xs"
@@ -129,7 +129,11 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
             <div class="dragHandle">
               <CBIcon icon="luc-grip-vertical" size="1rem" color="var(--text-tertiary)" />
             </div>
-            <CBLabel :text="`Programa ${index + 1}`" size="sm" weight="medium" />
+            <CBLabel
+              :text="$t('admin.programs.item', { n: index + 1 })"
+              size="sm"
+              weight="medium"
+            />
             <CBButton
               variant="outline"
               size="sm"
@@ -145,7 +149,7 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
             <div class="programsEditor__row">
               <CBInput
                 :model-value="element.title"
-                label="Titulo"
+                :label="$t('admin.programs.itemTitle')"
                 :rules="createValidationRules(itemRules.title)"
                 @update:model-value="
                   element.title = $event;
@@ -154,7 +158,7 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
               />
               <AdminIconSelect
                 :model-value="element.icon"
-                label="Icone"
+                :label="$t('admin.programs.itemIcon')"
                 @update:model-value="
                   element.icon = $event;
                   emit('changed');
@@ -164,7 +168,7 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
 
             <AdminColorPicker
               :model-value="element.color"
-              label="Cor"
+              :label="$t('admin.programs.itemColor')"
               :unavailable-modes="['gradients', 'custom']"
               @update:model-value="
                 element.color = $event;
@@ -174,7 +178,7 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
 
             <CBTextarea
               :model-value="element.description"
-              label="Descricao"
+              :label="$t('admin.programs.itemDescription')"
               :rules="createValidationRules(itemRules.description)"
               @update:model-value="
                 element.description = $event;
@@ -184,7 +188,7 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
 
             <CBInput
               :model-value="element.link"
-              label="Texto do Link"
+              :label="$t('admin.programs.itemLink')"
               :rules="createValidationRules(itemRules.link)"
               @update:model-value="
                 element.link = $event;
@@ -197,7 +201,7 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
     </draggable>
 
     <CBButton
-      label="Adicionar Programa"
+      :label="$t('admin.programs.add')"
       variant="outline"
       size="sm"
       prepend-icon="luc-plus"
