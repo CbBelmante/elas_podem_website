@@ -110,6 +110,7 @@ export interface ISupportersSection {
   badge: string;
   title: string;
   subtitle: string;
+  marqueeSpeed: number;
   items: ISupporter[];
 }
 

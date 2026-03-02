@@ -7,12 +7,12 @@
  * + formSubjects array (CRUD + drag, strings simples).
  */
 
-import { CBButton, CBIcon, CBInput, CBLabel, CBSelect, CBTextarea } from '@cb/components';
+import { CBButton, CBIcon, CBInput, CBLabel, CBTextarea } from '@cb/components';
 import draggable from 'vuedraggable';
 import { CONTACT_CONFIG } from '@definitions/validationConfigs';
 import { createValidationRules } from '@utils/validationRules';
-import { ICON_OPTIONS } from '@definitions/themeOptions';
 import AdminColorPicker from '@components/admin/AdminColorPicker.vue';
+import AdminIconSelect from '@components/admin/AdminIconSelect.vue';
 import { createNewContactMethod } from '@utils/HomeFormUtils';
 import { SECTION_FIELDS } from '@definitions/sectionFields';
 import type {
@@ -39,13 +39,6 @@ const emit = defineEmits<{
 // ============== VALIDATION ==============
 
 const rules = CONTACT_CONFIG.validationRules;
-
-// ============== ICON OPTIONS ==============
-
-const iconSelectOptions = ICON_OPTIONS.map((opt) => ({
-  value: opt.value,
-  label: opt.label,
-}));
 
 // ============== METHODS CRUD ==============
 
@@ -193,10 +186,9 @@ function updateSubject(index: number, value: string): void {
                 />
               </div>
               <div class="contactEditor__row">
-                <CBSelect
+                <AdminIconSelect
                   :model-value="element.icon"
                   label="Icone"
-                  :items="iconSelectOptions"
                   @update:model-value="
                     element.icon = $event;
                     emit('changed');

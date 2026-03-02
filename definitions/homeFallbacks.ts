@@ -23,6 +23,7 @@ export const HOME_FALLBACK: IHomePageData = {
       btnHistoryColor: 'vinho-medio',
       btnHistoryVariant: 'outline',
       heroImage: 'https://picsum.photos/1920/1080?random=1',
+      heroImageOpacity: 100,
       stats: [
         { icon: 'luc-award', number: '000', label: 'Lorem Ipsum' },
         { icon: 'luc-megaphone', number: '0a', label: 'Lorem Dolor' },
@@ -41,6 +42,7 @@ export const HOME_FALLBACK: IHomePageData = {
       btnColor: 'gradient:primary',
       btnVariant: 'solid',
       image: '',
+      imageOpacity: 100,
       imageAlt: 'Lorem ipsum dolor sit amet',
     },
 
@@ -118,6 +120,7 @@ export const HOME_FALLBACK: IHomePageData = {
       badge: 'LOREM IPSUM',
       title: 'Lorem Ipsum Dolor Sit',
       subtitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor.',
+      marqueeSpeed: 18,
       items: [
         {
           name: 'Lorem 1',

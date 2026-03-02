@@ -89,6 +89,7 @@ export const SUPPORTERS_SECTION_DEFAULTS = {
   badge: 'PARCEIROS',
   title: 'Quem Apoia Nossa Causa',
   subtitle: '',
+  marqueeSpeed: 18,
 } as const;
 
 export const SUPPORTER_ITEM_DEFAULTS = {

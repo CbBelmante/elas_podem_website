@@ -298,6 +298,7 @@ export function separateSupportersData(data: ISupportersSection): {
       badge: data.badge,
       title: data.title,
       subtitle: data.subtitle,
+      marqueeSpeed: data.marqueeSpeed ?? SUPPORTERS_SECTION_DEFAULTS.marqueeSpeed,
       items: itemsEditable as ISupporterEditable[],
     },
     readonly: {
@@ -314,6 +315,7 @@ export function combineSupportersData(
     badge: editable.badge,
     title: editable.title,
     subtitle: editable.subtitle,
+    marqueeSpeed: editable.marqueeSpeed,
     items: combineArrayFromFields<ISupporter>(editable.items, readonly.items),
   };
 }

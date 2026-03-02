@@ -7,12 +7,12 @@
  * Tem readonly pareado (color).
  */
 
-import { CBButton, CBIcon, CBInput, CBLabel, CBSelect } from '@cb/components';
+import { CBButton, CBIcon, CBInput, CBLabel, CBSlider } from '@cb/components';
 import draggable from 'vuedraggable';
 import AdminImageUploader from '@components/admin/AdminImageUploader.vue';
+import AdminIconSelect from '@components/admin/AdminIconSelect.vue';
 import { SUPPORTERS_CONFIG } from '@definitions/validationConfigs';
 import { createValidationRules } from '@utils/validationRules';
-import { ICON_OPTIONS } from '@definitions/themeOptions';
 import { createNewSupporter } from '@utils/HomeFormUtils';
 import { SECTION_FIELDS } from '@definitions/sectionFields';
 import type {
@@ -41,13 +41,6 @@ const emit = defineEmits<{
 
 const itemRules = SUPPORTERS_CONFIG.validationRules;
 const sectionRules = SUPPORTERS_CONFIG.sectionRules;
-
-// ============== ICON OPTIONS ==============
-
-const iconSelectOptions = ICON_OPTIONS.map((opt) => ({
-  value: opt.value,
-  label: opt.label,
-}));
 
 // ============== CRUD ==============
 
@@ -111,6 +104,20 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
           emit('changed');
         "
       />
+
+      <CBSlider
+        :model-value="forms.editable.marqueeSpeed"
+        :min="SUPPORTERS_CONFIG.marqueeSpeed.min"
+        :max="SUPPORTERS_CONFIG.marqueeSpeed.max"
+        :step="1"
+        label="Velocidade do Marquee (px/s)"
+        thumb-label="always"
+        color="primary"
+        @update:model-value="
+          forms.editable.marqueeSpeed = $event;
+          emit('changed');
+        "
+      />
     </div>
 
     <!-- Items -->
@@ -161,10 +168,9 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
                   emit('changed');
                 "
               />
-              <CBSelect
+              <AdminIconSelect
                 :model-value="element.icon"
                 label="Icone"
-                :items="iconSelectOptions"
                 @update:model-value="
                   element.icon = $event;
                   emit('changed');

@@ -6,12 +6,12 @@
  * Array CRUD + drag-and-drop com readonly pareado.
  */
 
-import { CBButton, CBIcon, CBInput, CBLabel, CBSelect, CBTextarea } from '@cb/components';
+import { CBButton, CBIcon, CBInput, CBLabel, CBTextarea } from '@cb/components';
 import draggable from 'vuedraggable';
 import { PROGRAMS_CONFIG } from '@definitions/validationConfigs';
 import { createValidationRules } from '@utils/validationRules';
-import { ICON_OPTIONS } from '@definitions/themeOptions';
 import AdminColorPicker from '@components/admin/AdminColorPicker.vue';
+import AdminIconSelect from '@components/admin/AdminIconSelect.vue';
 import { createNewProgram } from '@utils/HomeFormUtils';
 import { SECTION_FIELDS } from '@definitions/sectionFields';
 import type {
@@ -39,13 +39,6 @@ const emit = defineEmits<{
 
 const itemRules = PROGRAMS_CONFIG.validationRules;
 const sectionRules = PROGRAMS_CONFIG.sectionRules;
-
-// ============== ICON OPTIONS ==============
-
-const iconSelectOptions = ICON_OPTIONS.map((opt) => ({
-  value: opt.value,
-  label: opt.label,
-}));
 
 // ============== CRUD ==============
 
@@ -159,10 +152,9 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
                   emit('changed');
                 "
               />
-              <CBSelect
+              <AdminIconSelect
                 :model-value="element.icon"
                 label="Icone"
-                :items="iconSelectOptions"
                 @update:model-value="
                   element.icon = $event;
                   emit('changed');

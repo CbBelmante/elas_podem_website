@@ -110,6 +110,8 @@ export const SUPPORTERS_CONFIG = {
     name: { required: true, minLength: 2, maxLength: 60 },
   },
   items: { min: 1, max: 20 },
+  /** Limites do slider de velocidade do marquee */
+  marqueeSpeed: { min: 5, max: 50 },
 } as const;
 
 // ============================================================

@@ -6,14 +6,14 @@
  * Campos de texto + stats array com CRUD e drag-and-drop.
  */
 
-import { CBButton, CBIcon, CBInput, CBLabel, CBSelect, CBTextarea } from '@cb/components';
+import { CBButton, CBIcon, CBInput, CBLabel, CBTextarea } from '@cb/components';
 import draggable from 'vuedraggable';
 import AdminColorPicker from '@components/admin/AdminColorPicker.vue';
 import AdminButtonVariantSelect from '@components/admin/AdminButtonVariantSelect.vue';
 import AdminImageUploader from '@components/admin/AdminImageUploader.vue';
+import AdminIconSelect from '@components/admin/AdminIconSelect.vue';
 import { HERO_CONFIG } from '@definitions/validationConfigs';
 import { createValidationRules } from '@utils/validationRules';
-import { ICON_OPTIONS } from '@definitions/themeOptions';
 import { createNewHeroStat } from '@utils/HomeFormUtils';
 import type { IHeroEditable, IHeroStat } from '@appTypes/admin';
 
@@ -35,13 +35,6 @@ const emit = defineEmits<{
 // ============== VALIDATION ==============
 
 const rules = HERO_CONFIG.validationRules;
-
-// ============== ICON OPTIONS (para CBSelect) ==============
-
-const iconSelectOptions = ICON_OPTIONS.map((opt) => ({
-  value: opt.value,
-  label: opt.label,
-}));
 
 // ============== STATS CRUD ==============
 
@@ -163,11 +156,13 @@ function removeStat(index: number): void {
             </div>
 
             <div class="heroEditor__statFields">
-              <CBSelect
-                v-model="element.icon"
+              <AdminIconSelect
+                :model-value="element.icon"
                 label="Icone"
-                :items="iconSelectOptions"
-                @update:model-value="emit('changed')"
+                @update:model-value="
+                  element.icon = $event;
+                  emit('changed');
+                "
               />
               <CBInput
                 v-model="element.number"

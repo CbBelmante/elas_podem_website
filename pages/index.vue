@@ -19,6 +19,11 @@ import {
 } from '@cb/components';
 import { useI18n } from 'vue-i18n';
 import { resolveColorValue, isGradientValue } from '@utils/colorResolver';
+import {
+  HERO_DEFAULTS,
+  MISSION_DEFAULTS,
+  SUPPORTERS_SECTION_DEFAULTS,
+} from '@definitions/sectionDefaults';
 
 // ============== FIREBASE DATA ==============
 
@@ -148,7 +153,7 @@ onMounted(() => {
       <!-- ════════ HERO ════════ -->
       <section
         class="heroSection"
-        :style="{ '--hero-image-opacity': (hero.heroImageOpacity ?? 100) / 100 }"
+        :style="{ '--hero-image-opacity': (hero.heroImageOpacity ?? HERO_DEFAULTS.heroImageOpacity) / 100 }"
       >
         <CBImage
           :src="hero.heroImage || 'https://picsum.photos/1920/1080?random=1'"
@@ -301,7 +306,7 @@ onMounted(() => {
               fit="cover"
               :rounded="20"
               class="missionImage"
-              :style="{ opacity: (mission.imageOpacity ?? 100) / 100 }"
+              :style="{ opacity: (mission.imageOpacity ?? MISSION_DEFAULTS.imageOpacity) / 100 }"
             />
           </div>
         </div>
@@ -461,7 +466,7 @@ onMounted(() => {
 
           <CBMarquee
             :gap="0"
-            :speed="18"
+            :speed="supporters.marqueeSpeed ?? SUPPORTERS_SECTION_DEFAULTS.marqueeSpeed"
             slow-on-hover
             :slow-on-hover-rate="0.2"
             :fade-size="100"

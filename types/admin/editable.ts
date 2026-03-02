@@ -105,6 +105,7 @@ export interface ISupportersEditable {
   badge: string;
   title: string;
   subtitle: string;
+  marqueeSpeed: number;
   items: ISupporterEditable[];
 }
 
