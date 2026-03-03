@@ -232,6 +232,9 @@
   --text-secondary: #7A6060;
   --text-tertiary: #A8A8A8;
 
+  /* Override cbcomponents — texto secundário alinhado ao tema Elas Podem */
+  --cb-text-secondary: var(--text-secondary);
+
   /* Bordas globais */
   --border-light: rgba(var(--color-vinho-rgb), 0.08);
   --border-hover: rgba(var(--color-vinho-rgb), 0.2);

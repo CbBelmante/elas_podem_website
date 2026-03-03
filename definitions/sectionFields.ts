@@ -61,6 +61,8 @@ export const SECTION_FIELDS = {
     icon: 'editable',
     color: 'editable',
     link: 'editable',
+    tags: 'editable',
+    tagColor: 'editable',
   },
 
   testimonials: {

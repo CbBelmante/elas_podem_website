@@ -141,6 +141,11 @@
       "itemLabel": "Paragraph",
       "add": "Add {item}"
     },
+    "tagInput": {
+      "label": "Tags",
+      "placeholder": "Type and press Enter",
+      "colorLabel": "Tag Color"
+    },
     "iconSelect": {
       "label": "Icon"
     },
@@ -185,6 +190,9 @@
       "itemColor": "Color",
       "itemDescription": "Description",
       "itemLink": "Link Text",
+      "tagsTitle": "Tags",
+      "tagItem": "Tag {n}",
+      "addTag": "Add Tag",
       "add": "Add Program"
     },
     "testimonials": {

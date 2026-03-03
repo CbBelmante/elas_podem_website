@@ -58,6 +58,8 @@ export const HOME_FALLBACK: IHomePageData = {
           icon: 'luc-megaphone',
           color: 'magenta',
           link: 'Lorem ipsum →',
+          tags: ['Lorem tag', 'Ipsum dolor'],
+          tagColor: 'magenta',
         },
         {
           title: 'Dolor Sit Amet',
@@ -66,6 +68,8 @@ export const HOME_FALLBACK: IHomePageData = {
           icon: 'luc-graduation-cap',
           color: 'coral',
           link: 'Lorem ipsum →',
+          tags: ['Dolor sit', 'Amet consectetur'],
+          tagColor: 'coral',
         },
         {
           title: 'Consectetur Elit',
@@ -74,6 +78,8 @@ export const HOME_FALLBACK: IHomePageData = {
           icon: 'luc-users',
           color: 'rosa',
           link: 'Lorem ipsum →',
+          tags: ['Consectetur', 'Adipiscing elit'],
+          tagColor: 'rosa',
         },
         {
           title: 'Adipiscing Tempor',
@@ -82,6 +88,8 @@ export const HOME_FALLBACK: IHomePageData = {
           icon: 'luc-scale',
           color: 'oliva',
           link: 'Lorem ipsum →',
+          tags: ['Tempor incididunt'],
+          tagColor: 'oliva',
         },
       ],
     },

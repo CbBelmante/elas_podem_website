@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watch, nextTick } from 'vue';
 import {
   CBBadge,
   CBButton,
@@ -100,8 +100,17 @@ const testimonialIndex = ref(0);
 
 // ============== SCROLL ANIMATIONS ==============
 
+let scrollObserver: IntersectionObserver | null = null;
+
+function observeAnimatedElements() {
+  if (!scrollObserver) return;
+  document.querySelectorAll('.animateOnScroll:not(.isVisible)').forEach((el) => {
+    scrollObserver!.observe(el);
+  });
+}
+
 onMounted(() => {
-  const observer = new IntersectionObserver(
+  scrollObserver = new IntersectionObserver(
     (entries) => {
       for (const entry of entries) {
         if (entry.isIntersecting) {
@@ -112,9 +121,13 @@ onMounted(() => {
     { threshold: 0.1, rootMargin: '0px 0px -100px 0px' }
   );
 
-  document.querySelectorAll('.animateOnScroll').forEach((el) => {
-    observer.observe(el);
-  });
+  observeAnimatedElements();
+});
+
+// Re-observa elementos novos quando dados do Firestore carregam (v-for recria DOM nodes)
+watch(status, async () => {
+  await nextTick();
+  observeAnimatedElements();
 });
 </script>
 
@@ -153,7 +166,9 @@ onMounted(() => {
       <!-- ════════ HERO ════════ -->
       <section
         class="heroSection"
-        :style="{ '--hero-image-opacity': (hero.heroImageOpacity ?? HERO_DEFAULTS.heroImageOpacity) / 100 }"
+        :style="{
+          '--hero-image-opacity': (hero.heroImageOpacity ?? HERO_DEFAULTS.heroImageOpacity) / 100,
+        }"
       >
         <CBImage
           :src="hero.heroImage || 'https://picsum.photos/1920/1080?random=1'"
@@ -368,6 +383,19 @@ onMounted(() => {
                   color="secondary"
                   class="programDescription"
                 />
+                <div v-if="program.tags?.length" class="programTags">
+                  <CBBadge
+                    v-for="(tag, tagIdx) in program.tags"
+                    :key="tagIdx"
+                    :content="tag"
+                    variant="solid"
+                    size="xs"
+                    weight="semibold"
+                    :bg-color="`color-mix(in srgb, ${toVar(program.tagColor || program.color)} 10%, transparent)`"
+                    :text-color="toVar(program.tagColor || program.color)"
+                    :rounded="20"
+                  />
+                </div>
                 <div class="programFooter">
                   <CBLabel
                     :text="program.link"
@@ -782,6 +810,7 @@ onMounted(() => {
 .sectionBadge {
   letter-spacing: 1.5px;
   margin-bottom: 14px;
+  pointer-events: none;
 }
 
 .sectionTitle {
@@ -1104,13 +1133,26 @@ onMounted(() => {
 
 .programsHeader {
   text-align: center;
-  margin-bottom: 50px;
+  margin-bottom: 52px;
+}
+
+.programsSubtitle {
+  max-width: 600px;
+  margin: 12px auto 0;
+  line-height: 1.6;
 }
 
 .programsGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 32px; /* Aumentei o gap para mais respiro */
+  gap: 32px;
+}
+
+/* Item ímpar sozinho na última linha → centraliza */
+.programsGrid > :last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+  max-width: calc(50% - 16px);
+  justify-self: center;
 }
 
 .programCard {
@@ -1186,14 +1228,13 @@ onMounted(() => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 56px;
-  height: 56px;
+  width: 54px;
+  height: 54px;
   border-radius: 50%;
-  margin-bottom: 24px;
-  background: var(--bg-white);
+  margin-bottom: 22px;
+  background: color-mix(in srgb, var(--program-color) 8%, transparent);
   color: var(--program-color);
-  border: 1px solid color-mix(in srgb, var(--program-color) 20%, transparent);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  border: 1px solid color-mix(in srgb, var(--program-color) 18%, transparent);
   transition: all 0.4s ease;
 }
 
@@ -1213,25 +1254,42 @@ onMounted(() => {
 }
 
 .programDescription {
-  line-height: 1.75; /* Leitura mais confortável */
-  margin-bottom: 2.5rem;
+  line-height: 1.75;
+  margin-bottom: 1.125rem;
   color: var(--text-secondary);
   flex-grow: 1;
+}
+
+.programTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 1.25rem;
+}
+
+/* Tags sao labels estaticos — neutraliza hover do CBBadge */
+.programTags .cbBadge {
+  pointer-events: none;
 }
 
 .programFooter {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
   margin-top: auto;
+  transition: gap 0.3s ease;
+}
+
+.programCard:hover .programFooter {
+  gap: 12px;
 }
 
 .programCardLink {
-  font-size: 0.9rem;
+  font-size: 0.76rem;
   font-weight: 700;
   color: var(--program-color);
   text-transform: uppercase;
-  letter-spacing: 1px; /* Espaçamento elegante */
+  letter-spacing: 1.5px;
   position: relative;
 }
 
@@ -1258,7 +1316,7 @@ onMounted(() => {
 }
 
 .programCard:hover .programLinkIcon {
-  transform: translateX(6px);
+  transform: translateX(3px);
   opacity: 1;
 }
 
@@ -1728,6 +1786,10 @@ onMounted(() => {
 
   .programsGrid {
     grid-template-columns: 1fr;
+  }
+
+  .programsGrid > :last-child:nth-child(odd) {
+    max-width: 100%;
   }
 
   .valuesStrip {

@@ -70,6 +70,8 @@ export interface IProgram {
   icon: string;
   color: string; // nome do tema (THEME_COLOR_OPTIONS)
   link: string; // texto do link, nao URL (ex: 'Saiba Mais →')
+  tags: string[]; // action-tags / palavras-chave do eixo
+  tagColor: string; // cor dos badges de tag (THEME_COLOR_OPTIONS)
 }
 
 /** Metadados da secao + array de items */

@@ -66,6 +66,8 @@ export const PROGRAM_ITEM_DEFAULTS = {
   icon: 'luc-star',
   color: 'magenta',
   link: 'Saiba Mais',
+  tags: [] as readonly string[],
+  tagColor: 'magenta',
 } as const;
 
 // ============================================================

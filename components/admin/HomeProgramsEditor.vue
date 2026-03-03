@@ -12,6 +12,7 @@ import { PROGRAMS_CONFIG } from '@definitions/validationConfigs';
 import { createValidationRules } from '@utils/validationRules';
 import AdminColorPicker from '@components/admin/AdminColorPicker.vue';
 import AdminIconSelect from '@components/admin/AdminIconSelect.vue';
+import AdminTagInput from '@components/admin/AdminTagInput.vue';
 import { createNewProgram } from '@utils/HomeFormUtils';
 import { SECTION_FIELDS } from '@definitions/sectionFields';
 import type {
@@ -194,6 +195,14 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
                 element.link = $event;
                 emit('changed');
               "
+            />
+
+            <AdminTagInput
+              :model-value="element.tags"
+              :color="element.tagColor"
+              :max="PROGRAMS_CONFIG.tags.max"
+              @update:model-value="element.tags = $event; emit('changed')"
+              @update:color="element.tagColor = $event; emit('changed')"
             />
           </div>
         </div>

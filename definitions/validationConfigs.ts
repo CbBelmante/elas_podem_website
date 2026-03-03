@@ -72,10 +72,11 @@ export const PROGRAMS_CONFIG = {
   /** Regras de cada item de programa */
   validationRules: {
     title: { required: true, minLength: 3, maxLength: 40 },
-    description: { required: true, minLength: 10, maxLength: 200 },
+    description: { required: true, minLength: 10, maxLength: 500 },
     link: { required: true, minLength: 2, maxLength: 30 },
   },
   items: { min: 1, max: 8 },
+  tags: { min: 0, max: 6 },
 } as const;
 
 // ============================================================
