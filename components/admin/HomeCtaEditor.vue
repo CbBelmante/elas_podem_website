@@ -3,10 +3,12 @@
 /**
  * 🧩 HomeCtaEditor — Editor da secao CTA (Call to Action).
  *
- * Secao mais simples: 4 campos de texto, sem arrays, sem imagem.
+ * Campos de texto + cor/variante para cada botao.
  */
 
 import { CBInput, CBTextarea } from '@cb/components';
+import AdminColorPicker from '@components/admin/AdminColorPicker.vue';
+import AdminButtonVariantSelect from '@components/admin/AdminButtonVariantSelect.vue';
 import { CTA_CONFIG } from '@definitions/validationConfigs';
 import { createValidationRules } from '@utils/validationRules';
 import type { ICtaEditable } from '@appTypes/admin';
@@ -71,6 +73,32 @@ const rules = CTA_CONFIG.validationRules;
           forms.editable.btnProjects = $event;
           emit('changed');
         "
+      />
+    </div>
+
+    <div class="ctaEditor__row">
+      <AdminColorPicker
+        v-model="forms.editable.btnDonateColor"
+        :label="$t('admin.cta.btnDonateColor')"
+        @update:model-value="emit('changed')"
+      />
+      <AdminButtonVariantSelect
+        v-model="forms.editable.btnDonateVariant"
+        :label="$t('admin.cta.btnDonateVariant')"
+        @update:model-value="emit('changed')"
+      />
+    </div>
+
+    <div class="ctaEditor__row">
+      <AdminColorPicker
+        v-model="forms.editable.btnProjectsColor"
+        :label="$t('admin.cta.btnProjectsColor')"
+        @update:model-value="emit('changed')"
+      />
+      <AdminButtonVariantSelect
+        v-model="forms.editable.btnProjectsVariant"
+        :label="$t('admin.cta.btnProjectsVariant')"
+        @update:model-value="emit('changed')"
       />
     </div>
   </div>

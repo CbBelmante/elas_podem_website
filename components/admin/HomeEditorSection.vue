@@ -4,9 +4,10 @@
  *
  * Reutilizado 8 vezes no homeEdit.vue, uma por secao.
  * Exibe header clicavel, badges de status, erros e botoes de acao.
+ * Usa CBCard com header slot para manter padrao cbcomponents.
  */
 
-import { CBBadge, CBButton, CBIcon, CBLabel } from '@cb/components';
+import { CBBadge, CBButton, CBCard, CBIcon, CBLabel } from '@cb/components';
 
 // ============== PROPS ==============
 
@@ -32,35 +33,41 @@ defineEmits<{
 </script>
 
 <template>
-  <div class="editorSection" :class="{ 'editorSection--expanded': expanded }">
-    <!-- Header clicavel -->
-    <button class="editorSection__header" type="button" @click="$emit('toggle')">
-      <div class="editorSection__headerLeft">
-        <div class="editorSection__iconWrapper">
-          <CBIcon :icon size="1rem" color="#ffffff" />
+  <CBCard
+    density="comfortable"
+    :rounded="16"
+    class="editorSection"
+    :class="{ 'editorSection--expanded': expanded }"
+  >
+    <template #header>
+      <button class="editorSection__headerBtn" type="button" @click="$emit('toggle')">
+        <div class="editorSection__headerLeft">
+          <div class="editorSection__iconWrapper">
+            <CBIcon :icon size="1rem" color="#ffffff" />
+          </div>
+          <CBLabel :text="title" weight="semibold" />
+          <CBBadge
+            v-if="errors.length"
+            :content="$t('admin.editor.errors', errors.length)"
+            variant="outline"
+            size="xs"
+            class="editorSection__errorBadge"
+          />
+          <CBBadge
+            v-if="hasChanges && !errors.length"
+            :content="$t('admin.editor.changed')"
+            variant="outline"
+            size="xs"
+            class="editorSection__changedBadge"
+          />
         </div>
-        <CBLabel :text="title" weight="semibold" />
-        <CBBadge
-          v-if="errors.length"
-          :content="$t('admin.editor.errors', errors.length)"
-          variant="outline"
-          size="xs"
-          class="editorSection__errorBadge"
+        <CBIcon
+          :icon="expanded ? 'luc-chevron-up' : 'luc-chevron-down'"
+          size="1.25rem"
+          color="var(--text-tertiary)"
         />
-        <CBBadge
-          v-if="hasChanges && !errors.length"
-          :content="$t('admin.editor.changed')"
-          variant="outline"
-          size="xs"
-          class="editorSection__changedBadge"
-        />
-      </div>
-      <CBIcon
-        :icon="expanded ? 'luc-chevron-up' : 'luc-chevron-down'"
-        size="1.25rem"
-        color="var(--text-tertiary)"
-      />
-    </button>
+      </button>
+    </template>
 
     <!-- Body colapsavel -->
     <div v-show="expanded" class="editorSection__body">
@@ -98,40 +105,33 @@ defineEmits<{
         />
       </div>
     </div>
-  </div>
+  </CBCard>
 </template>
 
 <style scoped>
 .editorSection {
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  border-radius: 16px;
-  overflow: hidden;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  box-shadow: var(--shadow-sm);
   transition: all 0.3s ease;
 }
 
 .editorSection--expanded {
   box-shadow: var(--shadow-lg);
-  border-color: var(--border-hover);
 }
 
-/* Header */
-.editorSection__header {
+/* Header button (dentro do slot #header do CBCard) */
+.editorSection__headerBtn {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 1rem 1.25rem;
   background: none;
   border: none;
   cursor: pointer;
   transition: background 0.2s ease;
 }
 
-.editorSection__header:hover {
+.editorSection__headerBtn:hover {
   background: rgba(var(--color-vinho-rgb), 0.03);
 }
 
@@ -153,18 +153,17 @@ defineEmits<{
 }
 
 .editorSection__errorBadge {
-  color: var(--color-coral, #ee4a55);
-  border-color: var(--color-coral, #ee4a55);
+  color: var(--color-coral);
+  border-color: var(--color-coral);
 }
 
 .editorSection__changedBadge {
-  color: var(--color-oliva, #88a201);
-  border-color: var(--color-oliva, #88a201);
+  color: var(--color-oliva);
+  border-color: var(--color-oliva);
 }
 
 /* Body */
 .editorSection__body {
-  border-top: 1px solid var(--border-light);
   padding: 1.25rem;
 }
 
@@ -188,7 +187,7 @@ defineEmits<{
 
 .editorSection__errorText {
   font-size: 0.8125rem;
-  color: var(--color-coral, #ee4a55);
+  color: var(--color-coral);
   font-family: var(--font-body);
 }
 
@@ -208,10 +207,6 @@ defineEmits<{
 
 /* Responsive */
 @media (max-width: 640px) {
-  .editorSection__header {
-    padding: 0.875rem 1rem;
-  }
-
   .editorSection__body {
     padding: 1rem;
   }

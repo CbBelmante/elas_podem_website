@@ -7,8 +7,9 @@
  * Sem readonly pareado (tudo editavel).
  */
 
-import { CBButton, CBIcon, CBInput, CBLabel, CBTextarea } from '@cb/components';
+import { CBButton, CBInput, CBLabel, CBTextarea } from '@cb/components';
 import draggable from 'vuedraggable';
+import AdminEditorCard from '@components/admin/AdminEditorCard.vue';
 import AdminImageUploader from '@components/admin/AdminImageUploader.vue';
 import { TESTIMONIALS_CONFIG } from '@definitions/validationConfigs';
 import { createValidationRules } from '@utils/validationRules';
@@ -69,92 +70,74 @@ function removeTestimonial(index: number): void {
       @end="emit('changed')"
     >
       <template #item="{ element, index }: { element: ITestimonialEditable; index: number }">
-        <div class="testimonialsEditor__card">
-          <div class="testimonialsEditor__cardHeader">
-            <div class="dragHandle">
-              <CBIcon icon="luc-grip-vertical" size="1rem" color="var(--text-tertiary)" />
-            </div>
-            <CBLabel
-              :text="$t('admin.testimonials.item', { n: index + 1 })"
-              size="sm"
-              weight="medium"
-            />
-            <CBButton
-              variant="outline"
-              size="sm"
-              prepend-icon="luc-trash-2"
-              :color="'var(--color-coral)'"
-              :rounded="8"
-              :disabled="forms.editable.length <= TESTIMONIALS_CONFIG.items.min"
-              @click="removeTestimonial(index)"
-            />
-          </div>
+        <AdminEditorCard
+          :title="$t('admin.testimonials.item', { n: index + 1 })"
+          :disabled="forms.editable.length <= TESTIMONIALS_CONFIG.items.min"
+          @remove="removeTestimonial(index)"
+        >
+          <CBTextarea
+            :model-value="element.quote"
+            :label="$t('admin.testimonials.quote')"
+            :rules="createValidationRules(rules.quote)"
+            @update:model-value="
+              element.quote = $event;
+              emit('changed');
+            "
+          />
 
-          <div class="testimonialsEditor__fields">
-            <CBTextarea
-              :model-value="element.quote"
-              :label="$t('admin.testimonials.quote')"
-              :rules="createValidationRules(rules.quote)"
+          <div class="testimonialsEditor__row">
+            <CBInput
+              :model-value="element.name"
+              :label="$t('admin.testimonials.name')"
+              :rules="createValidationRules(rules.name)"
               @update:model-value="
-                element.quote = $event;
+                element.name = $event;
                 emit('changed');
               "
             />
 
-            <div class="testimonialsEditor__row">
-              <CBInput
-                :model-value="element.name"
-                :label="$t('admin.testimonials.name')"
-                :rules="createValidationRules(rules.name)"
-                @update:model-value="
-                  element.name = $event;
-                  emit('changed');
-                "
-              />
-
-              <CBInput
-                :model-value="element.role"
-                :label="$t('admin.testimonials.role')"
-                :rules="createValidationRules(rules.role)"
-                @update:model-value="
-                  element.role = $event;
-                  emit('changed');
-                "
-              />
-            </div>
-
-            <div class="testimonialsEditor__row">
-              <CBInput
-                :model-value="element.initials"
-                :label="$t('admin.testimonials.initials')"
-                @update:model-value="
-                  element.initials = $event;
-                  emit('changed');
-                "
-              />
-
-              <AdminImageUploader
-                :model-value="element.image"
-                category="testimonials"
-                :label="$t('admin.testimonials.photo')"
-                @update:model-value="
-                  element.image = $event;
-                  emit('changed');
-                "
-                @uploaded="emit('uploaded', $event)"
-              />
-
-              <CBInput
-                :model-value="element.imageAlt"
-                :label="$t('admin.testimonials.photoAlt')"
-                @update:model-value="
-                  element.imageAlt = $event;
-                  emit('changed');
-                "
-              />
-            </div>
+            <CBInput
+              :model-value="element.role"
+              :label="$t('admin.testimonials.role')"
+              :rules="createValidationRules(rules.role)"
+              @update:model-value="
+                element.role = $event;
+                emit('changed');
+              "
+            />
           </div>
-        </div>
+
+          <div class="testimonialsEditor__row">
+            <CBInput
+              :model-value="element.initials"
+              :label="$t('admin.testimonials.initials')"
+              @update:model-value="
+                element.initials = $event;
+                emit('changed');
+              "
+            />
+
+            <CBInput
+              :model-value="element.imageAlt"
+              :label="$t('admin.testimonials.photoAlt')"
+              @update:model-value="
+                element.imageAlt = $event;
+                emit('changed');
+              "
+            />
+          </div>
+
+          <AdminImageUploader
+            :model-value="element.image"
+            category="testimonials"
+            :label="$t('admin.testimonials.photo')"
+            @update:model-value="
+              element.image = $event;
+              emit('changed');
+            "
+            @uploaded="emit('uploaded', $event)"
+          />
+        </AdminEditorCard>
       </template>
     </draggable>
 
@@ -187,31 +170,6 @@ function removeTestimonial(index: number): void {
   color: var(--text-tertiary);
 }
 
-.testimonialsEditor__card {
-  padding: 1rem;
-  margin-bottom: 0.5rem;
-  background: var(--bg-light, #f8f9fa);
-  border: 1px solid var(--border-light);
-  border-radius: 10px;
-}
-
-.testimonialsEditor__cardHeader {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
-}
-
-.testimonialsEditor__cardHeader > :last-child {
-  margin-left: auto;
-}
-
-.testimonialsEditor__fields {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
 .testimonialsEditor__row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -221,15 +179,6 @@ function removeTestimonial(index: number): void {
 .testimonialsEditor__ghost {
   opacity: 0.4;
   background: rgba(var(--color-vinho-rgb), 0.05);
-}
-
-.dragHandle {
-  cursor: grab;
-  padding: 0.25rem;
-}
-
-.dragHandle:active {
-  cursor: grabbing;
 }
 
 @media (max-width: 640px) {

@@ -7,10 +7,11 @@
  * + formSubjects array (CRUD + drag, strings simples).
  */
 
-import { CBButton, CBIcon, CBInput, CBLabel, CBTextarea } from '@cb/components';
+import { CBButton, CBInput, CBLabel, CBTextarea } from '@cb/components';
 import draggable from 'vuedraggable';
 import { CONTACT_CONFIG } from '@definitions/validationConfigs';
 import { createValidationRules } from '@utils/validationRules';
+import AdminEditorCard from '@components/admin/AdminEditorCard.vue';
 import AdminColorPicker from '@components/admin/AdminColorPicker.vue';
 import AdminIconSelect from '@components/admin/AdminIconSelect.vue';
 import { createNewContactMethod } from '@utils/HomeFormUtils';
@@ -149,75 +150,55 @@ function updateSubject(index: number, value: string): void {
         @end="onMethodsDragEnd"
       >
         <template #item="{ element, index }: { element: IContactMethodEditable; index: number }">
-          <div class="contactEditor__card">
-            <div class="contactEditor__cardHeader">
-              <div class="dragHandle">
-                <CBIcon icon="luc-grip-vertical" size="1rem" color="var(--text-tertiary)" />
-              </div>
-              <CBLabel
-                :text="$t('admin.contact.methodItem', { n: index + 1 })"
-                size="sm"
-                weight="medium"
-              />
-              <CBButton
-                variant="outline"
-                size="sm"
-                prepend-icon="luc-trash-2"
-                :color="'var(--color-coral)'"
-                :rounded="8"
-                :disabled="forms.editable.methods.length <= CONTACT_CONFIG.methods.min"
-                @click="removeMethod(index)"
-              />
-            </div>
-
-            <div class="contactEditor__methodFields">
-              <div class="contactEditor__row">
-                <CBInput
-                  :model-value="element.label"
-                  :label="$t('admin.contact.methodLabel')"
-                  @update:model-value="
-                    element.label = $event;
-                    emit('changed');
-                  "
-                />
-                <CBInput
-                  :model-value="element.value"
-                  :label="$t('admin.contact.methodValue')"
-                  @update:model-value="
-                    element.value = $event;
-                    emit('changed');
-                  "
-                />
-              </div>
-              <div class="contactEditor__row">
-                <AdminIconSelect
-                  :model-value="element.icon"
-                  :label="$t('admin.contact.methodIcon')"
-                  @update:model-value="
-                    element.icon = $event;
-                    emit('changed');
-                  "
-                />
-                <AdminColorPicker
-                  :model-value="element.color"
-                  :label="$t('admin.contact.methodColor')"
-                  :unavailable-modes="['gradients', 'custom']"
-                  @update:model-value="
-                    element.color = $event;
-                    emit('changed');
-                  "
-                />
-              </div>
+          <AdminEditorCard
+            :title="$t('admin.contact.methodItem', { n: index + 1 })"
+            :disabled="forms.editable.methods.length <= CONTACT_CONFIG.methods.min"
+            @remove="removeMethod(index)"
+          >
+            <div class="contactEditor__row">
               <CBInput
-                :model-value="element.url"
-                :label="$t('admin.contact.methodUrl')"
+                :model-value="element.label"
+                :label="$t('admin.contact.methodLabel')"
                 @update:model-value="
-                  element.url = $event;
+                  element.label = $event;
+                  emit('changed');
+                "
+              />
+              <CBInput
+                :model-value="element.value"
+                :label="$t('admin.contact.methodValue')"
+                @update:model-value="
+                  element.value = $event;
                   emit('changed');
                 "
               />
             </div>
-          </div>
+            <AdminIconSelect
+              :model-value="element.icon"
+              :label="$t('admin.contact.methodIcon')"
+              @update:model-value="
+                element.icon = $event;
+                emit('changed');
+              "
+            />
+            <AdminColorPicker
+              :model-value="element.color"
+              :label="$t('admin.contact.methodColor')"
+              :unavailable-modes="['gradients', 'custom']"
+              @update:model-value="
+                element.color = $event;
+                emit('changed');
+              "
+            />
+            <CBInput
+              :model-value="element.url"
+              :label="$t('admin.contact.methodUrl')"
+              @update:model-value="
+                element.url = $event;
+                emit('changed');
+              "
+            />
+          </AdminEditorCard>
         </template>
       </draggable>
 
@@ -252,25 +233,17 @@ function updateSubject(index: number, value: string): void {
         @end="emit('changed')"
       >
         <template #item="{ index }: { index: number }">
-          <div class="contactEditor__subjectRow">
-            <div class="dragHandle">
-              <CBIcon icon="luc-grip-vertical" size="1rem" color="var(--text-tertiary)" />
-            </div>
+          <AdminEditorCard
+            :title="$t('admin.contact.subjectItem', { n: index + 1 })"
+            :disabled="forms.editable.formSubjects.length <= CONTACT_CONFIG.formSubjects.min"
+            @remove="removeSubject(index)"
+          >
             <CBInput
               :model-value="forms.editable.formSubjects[index]"
-              :label="$t('admin.contact.subjectItem', { n: index + 1 })"
+              :label="$t('admin.contact.subjectsTitle')"
               @update:model-value="updateSubject(index, $event)"
             />
-            <CBButton
-              variant="outline"
-              size="sm"
-              prepend-icon="luc-trash-2"
-              :color="'var(--color-coral)'"
-              :rounded="8"
-              :disabled="forms.editable.formSubjects.length <= CONTACT_CONFIG.formSubjects.min"
-              @click="removeSubject(index)"
-            />
-          </div>
+          </AdminEditorCard>
         </template>
       </draggable>
 
@@ -318,60 +291,16 @@ function updateSubject(index: number, value: string): void {
   color: var(--text-tertiary);
 }
 
-.contactEditor__card {
-  padding: 1rem;
-  margin-bottom: 0.5rem;
-  background: var(--bg-light, #f8f9fa);
-  border: 1px solid var(--border-light);
-  border-radius: 10px;
-}
-
-.contactEditor__cardHeader {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
-}
-
-.contactEditor__cardHeader > :last-child {
-  margin-left: auto;
-}
-
-.contactEditor__methodFields {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
 .contactEditor__row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.75rem;
 }
 
-.contactEditor__subjectRow {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.contactEditor__subjectRow > :nth-child(2) {
-  flex: 1;
-}
 
 .contactEditor__ghost {
   opacity: 0.4;
   background: rgba(var(--color-vinho-rgb), 0.05);
-}
-
-.dragHandle {
-  cursor: grab;
-  padding: 0.25rem;
-}
-
-.dragHandle:active {
-  cursor: grabbing;
 }
 
 @media (max-width: 640px) {

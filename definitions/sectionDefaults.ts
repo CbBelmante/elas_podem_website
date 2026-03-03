@@ -138,7 +138,11 @@ export const CTA_DEFAULTS = {
   title: 'Juntas Somos Mais Fortes',
   subtitle: '',
   btnDonate: 'Doar Agora',
+  btnDonateColor: 'gradient:primary',
+  btnDonateVariant: 'solid',
   btnProjects: 'Conhecer Projetos',
+  btnProjectsColor: '#FFFFFF',
+  btnProjectsVariant: 'outline',
 } as const;
 
 // ============================================================

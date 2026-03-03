@@ -8,8 +8,9 @@
 
 import type { PropType } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { CBButton, CBIcon, CBLabel, CBTextarea } from '@cb/components';
+import { CBButton, CBLabel, CBTextarea } from '@cb/components';
 import draggable from 'vuedraggable';
+import AdminEditorCard from '@components/admin/AdminEditorCard.vue';
 
 // ============== PROPS ==============
 
@@ -99,26 +100,18 @@ function onDragUpdate(newList: string[]): void {
       @end="emit('changed')"
     >
       <template #item="{ index }: { index: number }">
-        <div class="paragraphList__row">
-          <div class="dragHandle">
-            <CBIcon icon="luc-grip-vertical" size="1rem" color="var(--text-tertiary)" />
-          </div>
+        <AdminEditorCard
+          :title="`${effectiveItemLabel} ${index + 1}`"
+          :disabled="modelValue.length <= min"
+          @remove="remove(index)"
+        >
           <CBTextarea
             :model-value="modelValue[index]"
-            :label="`${effectiveItemLabel} ${index + 1}`"
+            :label="effectiveItemLabel"
             :rules="rules"
             @update:model-value="update(index, $event)"
           />
-          <CBButton
-            variant="outline"
-            size="sm"
-            prepend-icon="luc-trash-2"
-            :color="'var(--color-coral)'"
-            :rounded="8"
-            :disabled="modelValue.length <= min"
-            @click="remove(index)"
-          />
-        </div>
+        </AdminEditorCard>
       </template>
     </draggable>
 
@@ -151,28 +144,8 @@ function onDragUpdate(newList: string[]): void {
   color: var(--text-tertiary);
 }
 
-.paragraphList__row {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.paragraphList__row > :nth-child(2) {
-  flex: 1;
-}
-
 .paragraphList__ghost {
   opacity: 0.4;
   background: rgba(var(--color-vinho-rgb), 0.05);
-}
-
-.dragHandle {
-  cursor: grab;
-  padding: 0.25rem;
-}
-
-.dragHandle:active {
-  cursor: grabbing;
 }
 </style>

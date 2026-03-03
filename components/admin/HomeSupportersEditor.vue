@@ -7,8 +7,9 @@
  * Tem readonly pareado (color).
  */
 
-import { CBButton, CBIcon, CBInput, CBLabel, CBSlider } from '@cb/components';
+import { CBButton, CBInput, CBLabel, CBSlider } from '@cb/components';
 import draggable from 'vuedraggable';
+import AdminEditorCard from '@components/admin/AdminEditorCard.vue';
 import AdminImageUploader from '@components/admin/AdminImageUploader.vue';
 import AdminIconSelect from '@components/admin/AdminIconSelect.vue';
 import { SUPPORTERS_CONFIG } from '@definitions/validationConfigs';
@@ -140,79 +141,59 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
       @end="onDragEnd"
     >
       <template #item="{ element, index }: { element: ISupporterEditable; index: number }">
-        <div class="supportersEditor__card">
-          <div class="supportersEditor__cardHeader">
-            <div class="dragHandle">
-              <CBIcon icon="luc-grip-vertical" size="1rem" color="var(--text-tertiary)" />
-            </div>
-            <CBLabel
-              :text="$t('admin.supporters.item', { n: index + 1 })"
-              size="sm"
-              weight="medium"
+        <AdminEditorCard
+          :title="$t('admin.supporters.item', { n: index + 1 })"
+          :disabled="forms.editable.items.length <= SUPPORTERS_CONFIG.items.min"
+          @remove="removeSupporter(index)"
+        >
+          <CBInput
+            :model-value="element.name"
+            :label="$t('admin.supporters.name')"
+            :rules="createValidationRules(itemRules.name)"
+            @update:model-value="
+              element.name = $event;
+              emit('changed');
+            "
+          />
+          <AdminIconSelect
+            :model-value="element.icon"
+            :label="$t('admin.supporters.icon')"
+            @update:model-value="
+              element.icon = $event;
+              emit('changed');
+            "
+          />
+
+          <div class="supportersEditor__row">
+            <CBInput
+              :model-value="element.url"
+              :label="$t('admin.supporters.website')"
+              @update:model-value="
+                element.url = $event;
+                emit('changed');
+              "
             />
-            <CBButton
-              variant="outline"
-              size="sm"
-              prepend-icon="luc-trash-2"
-              :color="'var(--color-coral)'"
-              :rounded="8"
-              :disabled="forms.editable.items.length <= SUPPORTERS_CONFIG.items.min"
-              @click="removeSupporter(index)"
+            <CBInput
+              :model-value="element.imageAlt"
+              :label="$t('admin.supporters.logoAlt')"
+              @update:model-value="
+                element.imageAlt = $event;
+                emit('changed');
+              "
             />
           </div>
 
-          <div class="supportersEditor__fields">
-            <div class="supportersEditor__row">
-              <CBInput
-                :model-value="element.name"
-                :label="$t('admin.supporters.name')"
-                :rules="createValidationRules(itemRules.name)"
-                @update:model-value="
-                  element.name = $event;
-                  emit('changed');
-                "
-              />
-              <AdminIconSelect
-                :model-value="element.icon"
-                :label="$t('admin.supporters.icon')"
-                @update:model-value="
-                  element.icon = $event;
-                  emit('changed');
-                "
-              />
-            </div>
-
-            <div class="supportersEditor__row">
-              <CBInput
-                :model-value="element.url"
-                :label="$t('admin.supporters.website')"
-                @update:model-value="
-                  element.url = $event;
-                  emit('changed');
-                "
-              />
-              <AdminImageUploader
-                :model-value="element.image"
-                category="supporters"
-                :label="$t('admin.supporters.logo')"
-                @update:model-value="
-                  element.image = $event;
-                  emit('changed');
-                "
-                @uploaded="emit('uploaded', $event)"
-              />
-
-              <CBInput
-                :model-value="element.imageAlt"
-                :label="$t('admin.supporters.logoAlt')"
-                @update:model-value="
-                  element.imageAlt = $event;
-                  emit('changed');
-                "
-              />
-            </div>
-          </div>
-        </div>
+          <AdminImageUploader
+            :model-value="element.image"
+            category="supporters"
+            :label="$t('admin.supporters.logo')"
+            @update:model-value="
+              element.image = $event;
+              emit('changed');
+            "
+            @uploaded="emit('uploaded', $event)"
+          />
+        </AdminEditorCard>
       </template>
     </draggable>
 
@@ -254,31 +235,6 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
   color: var(--text-tertiary);
 }
 
-.supportersEditor__card {
-  padding: 1rem;
-  margin-bottom: 0.5rem;
-  background: var(--bg-light, #f8f9fa);
-  border: 1px solid var(--border-light);
-  border-radius: 10px;
-}
-
-.supportersEditor__cardHeader {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
-}
-
-.supportersEditor__cardHeader > :last-child {
-  margin-left: auto;
-}
-
-.supportersEditor__fields {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
 .supportersEditor__row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -288,15 +244,6 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
 .supportersEditor__ghost {
   opacity: 0.4;
   background: rgba(var(--color-vinho-rgb), 0.05);
-}
-
-.dragHandle {
-  cursor: grab;
-  padding: 0.25rem;
-}
-
-.dragHandle:active {
-  cursor: grabbing;
 }
 
 @media (max-width: 640px) {

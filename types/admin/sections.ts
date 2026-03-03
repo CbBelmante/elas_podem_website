@@ -155,7 +155,11 @@ export interface ICtaSection {
   title: string;
   subtitle: string;
   btnDonate: string;
+  btnDonateColor: string;
+  btnDonateVariant: ButtonVariant;
   btnProjects: string;
+  btnProjectsColor: string;
+  btnProjectsVariant: ButtonVariant;
 }
 
 // ============================================================

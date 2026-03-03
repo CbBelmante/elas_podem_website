@@ -199,7 +199,11 @@ export const HOME_FALLBACK: IHomePageData = {
       subtitle:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore!',
       btnDonate: 'Lorem Ipsum',
+      btnDonateColor: 'gradient:primary',
+      btnDonateVariant: 'solid',
       btnProjects: 'Lorem Dolor',
+      btnProjectsColor: '#FFFFFF',
+      btnProjectsVariant: 'outline',
     },
   },
 

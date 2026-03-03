@@ -101,7 +101,11 @@ export const SECTION_FIELDS = {
     title: 'editable',
     subtitle: 'editable',
     btnDonate: 'editable',
+    btnDonateColor: 'editable',
+    btnDonateVariant: 'editable',
     btnProjects: 'editable',
+    btnProjectsColor: 'editable',
+    btnProjectsVariant: 'editable',
   },
 
   seo: {

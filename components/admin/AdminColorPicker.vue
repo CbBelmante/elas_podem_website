@@ -152,7 +152,8 @@ function gradientBg(value: string): string {
   <div class="picker">
     <CBLabel
       :text="label || $t('admin.colorPicker.label')"
-      weight="semibold"
+      color="secondary"
+      weight="medium"
       size="sm"
       class="picker__label"
     />
@@ -357,10 +358,6 @@ function gradientBg(value: string): string {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-}
-
-.picker__label {
-  color: var(--text-primary);
 }
 
 /* ============================================

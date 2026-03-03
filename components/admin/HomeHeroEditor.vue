@@ -6,8 +6,9 @@
  * Campos de texto + stats array com CRUD e drag-and-drop.
  */
 
-import { CBButton, CBIcon, CBInput, CBLabel, CBTextarea } from '@cb/components';
+import { CBButton, CBInput, CBLabel, CBTextarea } from '@cb/components';
 import draggable from 'vuedraggable';
+import AdminEditorCard from '@components/admin/AdminEditorCard.vue';
 import AdminColorPicker from '@components/admin/AdminColorPicker.vue';
 import AdminButtonVariantSelect from '@components/admin/AdminButtonVariantSelect.vue';
 import AdminImageUploader from '@components/admin/AdminImageUploader.vue';
@@ -150,20 +151,12 @@ function removeStat(index: number): void {
         @end="emit('changed')"
       >
         <template #item="{ element, index }: { element: IHeroStat; index: number }">
-          <div class="heroEditor__statCard">
-            <div class="dragHandle">
-              <CBIcon icon="luc-grip-vertical" size="1rem" color="var(--text-tertiary)" />
-            </div>
-
-            <div class="heroEditor__statFields">
-              <AdminIconSelect
-                :model-value="element.icon"
-                :label="$t('admin.hero.statsIcon')"
-                @update:model-value="
-                  element.icon = $event;
-                  emit('changed');
-                "
-              />
+          <AdminEditorCard
+            :title="$t('admin.hero.statsItem', { n: index + 1 })"
+            :disabled="forms.editable.stats.length <= HERO_CONFIG.stats.min"
+            @remove="removeStat(index)"
+          >
+            <div class="heroEditor__statRow">
               <CBInput
                 v-model="element.number"
                 :label="$t('admin.hero.statsNumber')"
@@ -175,17 +168,15 @@ function removeStat(index: number): void {
                 @update:model-value="emit('changed')"
               />
             </div>
-
-            <CBButton
-              variant="outline"
-              size="sm"
-              prepend-icon="luc-trash-2"
-              :color="'var(--color-coral)'"
-              :rounded="8"
-              :disabled="forms.editable.stats.length <= HERO_CONFIG.stats.min"
-              @click="removeStat(index)"
+            <AdminIconSelect
+              :model-value="element.icon"
+              :label="$t('admin.hero.statsIcon')"
+              @update:model-value="
+                element.icon = $event;
+                emit('changed');
+              "
             />
-          </div>
+          </AdminEditorCard>
         </template>
       </draggable>
 
@@ -233,21 +224,9 @@ function removeStat(index: number): void {
   color: var(--text-tertiary);
 }
 
-.heroEditor__statCard {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  padding: 0.75rem;
-  margin-bottom: 0.5rem;
-  background: var(--bg-light, #f8f9fa);
-  border: 1px solid var(--border-light);
-  border-radius: 10px;
-}
-
-.heroEditor__statFields {
-  flex: 1;
+.heroEditor__statRow {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 0.75rem;
 }
 
@@ -256,28 +235,13 @@ function removeStat(index: number): void {
   background: rgba(var(--color-vinho-rgb), 0.05);
 }
 
-.dragHandle {
-  cursor: grab;
-  padding: 0.5rem 0.125rem;
-  display: flex;
-  align-items: center;
-}
-
-.dragHandle:active {
-  cursor: grabbing;
-}
-
 @media (max-width: 640px) {
   .heroEditor__row {
     grid-template-columns: 1fr;
   }
 
-  .heroEditor__statFields {
+  .heroEditor__statRow {
     grid-template-columns: 1fr;
-  }
-
-  .heroEditor__statCard {
-    flex-direction: column;
   }
 }
 </style>

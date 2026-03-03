@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch, nextTick } from 'vue';
 import {
-  CBBadge,
   CBButton,
   CBCard,
   CBCarousel,
@@ -18,7 +17,9 @@ import {
   type INavbarMenuItem,
 } from '@cb/components';
 import { useI18n } from 'vue-i18n';
-import { resolveColorValue, isGradientValue } from '@utils/colorResolver';
+import FrontBadge from '@components/front/FrontBadge.vue';
+import FrontButton from '@components/front/FrontButton.vue';
+import { resolveColorValue } from '@utils/colorResolver';
 import {
   HERO_DEFAULTS,
   MISSION_DEFAULTS,
@@ -30,18 +31,9 @@ import {
 const { hero, mission, programs, testimonials, supporters, contact, values, cta, seo, status } =
   useHomePublicData();
 
-// Resolve nome do tema para CSS variable (passthrough se ja for hex/rgb/hsl/var)
-const toVar = (color: string) =>
-  color.startsWith('#') ||
-  color.startsWith('rgb') ||
-  color.startsWith('hsl') ||
-  color.startsWith('var(')
-    ? color
-    : `var(--color-${color})`;
-
 // CSS custom properties por cor (compoe createGradient + createGlow da CbColorUtils)
 const colorVars = (color: string) => {
-  const c = toVar(color);
+  const c = resolveColorValue(color);
   return {
     '--c-gradient': createGradient(c),
     '--c-glow': createGlow(c),
@@ -187,14 +179,13 @@ watch(status, async () => {
 
         <div class="heroContainer">
           <div class="heroContent animateOnScroll">
-            <CBBadge
+            <FrontBadge
               :content="hero.badge"
+              theme-color="vinho-medio"
               variant="outline"
               :icon-size="14"
               weight="bold"
               size="xs"
-              bg-color="rgba(92, 26, 42, 0.06)"
-              text-color="var(--color-vinho-medio)"
               class="heroBadge"
             />
 
@@ -208,20 +199,11 @@ watch(status, async () => {
             />
 
             <div class="heroActions animateOnScroll">
-              <CBButton
+              <FrontButton
                 :label="hero.btnDonate"
-                size="lg"
+                :theme-color="hero.btnDonateColor"
                 :variant="hero.btnDonateVariant"
-                :bg-gradient="
-                  isGradientValue(hero.btnDonateColor)
-                    ? resolveColorValue(hero.btnDonateColor, 'gradient:primary')
-                    : undefined
-                "
-                :color="
-                  !isGradientValue(hero.btnDonateColor)
-                    ? resolveColorValue(hero.btnDonateColor, 'gradient:primary')
-                    : undefined
-                "
+                size="lg"
                 :rounded="50"
                 prepend-icon="luc-heart"
                 shine
@@ -229,20 +211,11 @@ watch(status, async () => {
                 class="btnHero"
               />
 
-              <CBButton
+              <FrontButton
                 :label="hero.btnHistory"
-                size="lg"
+                :theme-color="hero.btnHistoryColor"
                 :variant="hero.btnHistoryVariant"
-                :bg-gradient="
-                  isGradientValue(hero.btnHistoryColor)
-                    ? resolveColorValue(hero.btnHistoryColor)
-                    : undefined
-                "
-                :color="
-                  !isGradientValue(hero.btnHistoryColor)
-                    ? resolveColorValue(hero.btnHistoryColor, 'vinho-medio')
-                    : undefined
-                "
+                size="lg"
                 :rounded="50"
                 append-icon="luc-arrow-right"
                 class="btnHeroSecondary"
@@ -268,14 +241,13 @@ watch(status, async () => {
       <section class="missionSection">
         <div class="missionContainer">
           <div class="missionContent animateOnScroll">
-            <CBBadge
+            <FrontBadge
               :content="mission.badge"
+              theme-color="vinho-medio"
               variant="outline"
               :icon-size="14"
               weight="bold"
               size="xs"
-              bg-color="rgba(92, 26, 42, 0.06)"
-              text-color="var(--color-vinho-medio)"
               class="sectionBadge"
             />
 
@@ -290,20 +262,11 @@ watch(status, async () => {
               class="missionText"
             />
 
-            <CBButton
+            <FrontButton
               :label="mission.btnText"
-              size="lg"
+              :theme-color="mission.btnColor"
               :variant="mission.btnVariant"
-              :bg-gradient="
-                isGradientValue(mission.btnColor)
-                  ? resolveColorValue(mission.btnColor, 'gradient:primary')
-                  : undefined
-              "
-              :color="
-                !isGradientValue(mission.btnColor)
-                  ? resolveColorValue(mission.btnColor, 'gradient:primary')
-                  : undefined
-              "
+              size="lg"
               :rounded="50"
               append-icon="luc-arrow-right"
               class="btnMission"
@@ -331,14 +294,13 @@ watch(status, async () => {
       <section class="programsSection">
         <div class="programsContainer">
           <div class="programsHeader animateOnScroll">
-            <CBBadge
+            <FrontBadge
               :content="programs.badge"
+              theme-color="vinho-medio"
               variant="outline"
               :icon-size="14"
               weight="bold"
               size="xs"
-              bg-color="rgba(92, 26, 42, 0.06)"
-              text-color="var(--color-vinho-medio)"
               class="sectionBadge"
             />
 
@@ -364,7 +326,7 @@ watch(status, async () => {
               border-color="rgba(92, 26, 42, 0.06)"
               :border-width="1"
               class="programCard animateOnScroll"
-              :style="{ '--program-color': toVar(program.color) }"
+              :style="{ '--program-color': resolveColorValue(program.color) }"
             >
               <div class="programBody">
                 <div class="programIconWrapper">
@@ -384,15 +346,14 @@ watch(status, async () => {
                   class="programDescription"
                 />
                 <div v-if="program.tags?.length" class="programTags">
-                  <CBBadge
+                  <FrontBadge
                     v-for="(tag, tagIdx) in program.tags"
                     :key="tagIdx"
                     :content="tag"
+                    :theme-color="program.tagColor || program.color"
                     variant="solid"
                     size="xs"
                     weight="semibold"
-                    :bg-color="`color-mix(in srgb, ${toVar(program.tagColor || program.color)} 10%, transparent)`"
-                    :text-color="toVar(program.tagColor || program.color)"
                     :rounded="20"
                   />
                 </div>
@@ -408,7 +369,7 @@ watch(status, async () => {
                   <CBIcon
                     icon="luc-arrow-right"
                     size="1rem"
-                    :color="toVar(program.color)"
+                    :color="resolveColorValue(program.color)"
                     class="programLinkIcon"
                   />
                 </div>
@@ -470,14 +431,13 @@ watch(status, async () => {
       <section class="supportersSection">
         <div class="supportersContainer">
           <div class="supportersHeader animateOnScroll">
-            <CBBadge
+            <FrontBadge
               :content="supporters.badge"
+              theme-color="vinho-medio"
               variant="outline"
               :icon-size="14"
               weight="bold"
               size="xs"
-              bg-color="rgba(92, 26, 42, 0.06)"
-              text-color="var(--color-vinho-medio)"
               class="sectionBadge"
             />
 
@@ -536,7 +496,7 @@ watch(status, async () => {
           v-for="value in values"
           :key="value.title"
           class="valueItem"
-          :style="{ background: toVar(value.color) }"
+          :style="{ background: resolveColorValue(value.color) }"
         >
           <CBLabel :text="value.title" tag="h3" weight="black" class="valueTitle" />
           <CBLabel :text="value.subtitle" tag="p" size="sm" class="valueSubtitle" />
@@ -547,14 +507,13 @@ watch(status, async () => {
       <section class="contactSection">
         <div class="contactContainer">
           <div class="contactInfo animateOnScroll">
-            <CBBadge
+            <FrontBadge
               :content="contact.badge"
+              theme-color="vinho-medio"
               variant="outline"
               :icon-size="14"
               weight="bold"
               size="xs"
-              bg-color="rgba(92, 26, 42, 0.06)"
-              text-color="var(--color-vinho-medio)"
               class="sectionBadge"
             />
 
@@ -685,21 +644,21 @@ watch(status, async () => {
           <CBLabel :text="cta.title" tag="h2" weight="black" class="ctaTitle" />
           <CBLabel :text="cta.subtitle" size="lg" class="ctaSubtitle" />
           <div class="ctaActions">
-            <CBButton
+            <FrontButton
               :label="cta.btnDonate"
+              :theme-color="cta.btnDonateColor"
+              :variant="cta.btnDonateVariant"
               size="lg"
-              bg-color="var(--color-branco)"
-              text-color="var(--color-vinho)"
               :rounded="50"
               prepend-icon="luc-heart"
               class="btnCtaWhite"
             />
 
-            <CBButton
+            <FrontButton
               :label="cta.btnProjects"
+              :theme-color="cta.btnProjectsColor"
+              :variant="cta.btnProjectsVariant"
               size="lg"
-              variant="outline"
-              :color="'rgba(255,255,255,0.8)'"
               :rounded="50"
               append-icon="luc-arrow-right"
               class="btnCtaOutline"

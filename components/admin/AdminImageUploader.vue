@@ -15,7 +15,7 @@
 
 import type { PropType } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { CBIcon, CBLabel, CBSlider } from '@cb/components';
+import { CBCard, CBIcon, CBLabel, CBSlider } from '@cb/components';
 import { useStorage } from '@composables/useStorage';
 import { useImageCompression } from '@composables/useImageCompression';
 import { COMPRESSION_SETTINGS, IMAGE_UPLOAD_CONFIG } from '@definitions/validationConfigs';
@@ -156,13 +156,14 @@ async function handleDrop(event: DragEvent): Promise<void> {
 </script>
 
 <template>
-  <div class="imgUp">
-    <CBLabel
-      :text="label || $t('admin.imageUploader.label')"
-      size="sm"
-      weight="medium"
-      class="imgUp__label"
-    />
+  <CBCard density="compact" :rounded="10" color="#FDF5F0" class="imgUp">
+    <template #header>
+      <CBLabel
+        :text="label || $t('admin.imageUploader.label')"
+        size="sm"
+        weight="semibold"
+      />
+    </template>
 
     <!-- Zona de upload / preview -->
     <div
@@ -271,7 +272,7 @@ async function handleDrop(event: DragEvent): Promise<void> {
       hidden
       @change="handleFileSelect"
     />
-  </div>
+  </CBCard>
 </template>
 
 <style scoped>
@@ -282,10 +283,6 @@ async function handleDrop(event: DragEvent): Promise<void> {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-}
-
-.imgUp__label {
-  color: var(--text-secondary);
 }
 
 /* ============================================

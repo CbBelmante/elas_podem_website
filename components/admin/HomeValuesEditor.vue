@@ -9,6 +9,7 @@
 import { CBButton, CBIcon, CBInput, CBLabel } from '@cb/components';
 import draggable from 'vuedraggable';
 import AdminColorPicker from '@components/admin/AdminColorPicker.vue';
+import AdminEditorCard from '@components/admin/AdminEditorCard.vue';
 import { VALUES_CONFIG } from '@definitions/validationConfigs';
 import { createValidationRules } from '@utils/validationRules';
 import { createNewValue } from '@utils/HomeFormUtils';
@@ -67,55 +68,41 @@ function removeValue(index: number): void {
       @end="emit('changed')"
     >
       <template #item="{ element, index }: { element: IValueEditable; index: number }">
-        <div class="valuesEditor__card">
-          <div class="valuesEditor__cardHeader">
-            <div class="dragHandle">
-              <CBIcon icon="luc-grip-vertical" size="1rem" color="var(--text-tertiary)" />
-            </div>
-            <CBLabel :text="$t('admin.values.item', { n: index + 1 })" size="sm" weight="medium" />
-            <CBButton
-              variant="outline"
-              size="sm"
-              prepend-icon="luc-trash-2"
-              :color="'var(--color-coral)'"
-              :rounded="8"
-              :disabled="forms.editable.length <= VALUES_CONFIG.items.min"
-              @click="removeValue(index)"
-            />
-          </div>
+        <AdminEditorCard
+          :title="$t('admin.values.item', { n: index + 1 })"
+          :disabled="forms.editable.length <= VALUES_CONFIG.items.min"
+          @remove="removeValue(index)"
+        >
+          <CBInput
+            :model-value="element.title"
+            :label="$t('admin.values.title')"
+            :rules="createValidationRules(rules.title)"
+            @update:model-value="
+              element.title = $event;
+              emit('changed');
+            "
+          />
 
-          <div class="valuesEditor__fields">
-            <CBInput
-              :model-value="element.title"
-              :label="$t('admin.values.title')"
-              :rules="createValidationRules(rules.title)"
-              @update:model-value="
-                element.title = $event;
-                emit('changed');
-              "
-            />
+          <CBInput
+            :model-value="element.subtitle"
+            :label="$t('admin.values.subtitle')"
+            :rules="createValidationRules(rules.subtitle)"
+            @update:model-value="
+              element.subtitle = $event;
+              emit('changed');
+            "
+          />
 
-            <CBInput
-              :model-value="element.subtitle"
-              :label="$t('admin.values.subtitle')"
-              :rules="createValidationRules(rules.subtitle)"
-              @update:model-value="
-                element.subtitle = $event;
-                emit('changed');
-              "
-            />
-
-            <AdminColorPicker
-              :model-value="element.color"
-              :label="$t('admin.values.color')"
-              :unavailable-modes="['gradients', 'custom']"
-              @update:model-value="
-                element.color = $event;
-                emit('changed');
-              "
-            />
-          </div>
-        </div>
+          <AdminColorPicker
+            :model-value="element.color"
+            :label="$t('admin.values.color')"
+            :unavailable-modes="['gradients', 'custom']"
+            @update:model-value="
+              element.color = $event;
+              emit('changed');
+            "
+          />
+        </AdminEditorCard>
       </template>
     </draggable>
 
@@ -148,42 +135,8 @@ function removeValue(index: number): void {
   color: var(--text-tertiary);
 }
 
-.valuesEditor__card {
-  padding: 1rem;
-  margin-bottom: 0.5rem;
-  background: var(--bg-light, #f8f9fa);
-  border: 1px solid var(--border-light);
-  border-radius: 10px;
-}
-
-.valuesEditor__cardHeader {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
-}
-
-.valuesEditor__cardHeader > :last-child {
-  margin-left: auto;
-}
-
-.valuesEditor__fields {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
 .valuesEditor__ghost {
   opacity: 0.4;
   background: rgba(var(--color-vinho-rgb), 0.05);
-}
-
-.dragHandle {
-  cursor: grab;
-  padding: 0.25rem;
-}
-
-.dragHandle:active {
-  cursor: grabbing;
 }
 </style>
