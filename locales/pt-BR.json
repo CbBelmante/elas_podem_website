@@ -209,11 +209,13 @@
       "add": "Adicionar Programa"
     },
     "testimonials": {
+      "autoplay": "Autoplay",
+      "autoplayInterval": "Intervalo do Autoplay (ms)",
       "listTitle": "Depoimentos",
       "item": "Depoimento {n}",
       "quote": "Citação",
-      "name": "Nome",
-      "role": "Função",
+      "name": "Nome (opcional)",
+      "role": "Função (opcional)",
       "initials": "Iniciais (ex: ED)",
       "photo": "Foto (opcional)",
       "photoAlt": "Alt da foto (acessibilidade)",

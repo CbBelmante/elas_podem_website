@@ -78,14 +78,22 @@ export interface IProgramsReadonly {
 }
 
 // ============================================================
-// TESTIMONIALS
+// TESTIMONIALS — estrutura aninhada (secao + items[])
 // ============================================================
 
+// Item-level (derivado automaticamente — tudo editavel)
 export type ITestimonialEditable = FieldsByMode<
   ITestimonial,
   typeof SECTION_FIELDS.testimonials,
   'editable'
 >;
+
+// Section-level (composto manualmente — autoplay/autoplayInterval + items)
+export interface ITestimonialsEditable {
+  autoplay: boolean;
+  autoplayInterval: number;
+  items: ITestimonialEditable[];
+}
 
 // ============================================================
 // SUPPORTERS — estrutura aninhada (secao + items[])

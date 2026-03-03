@@ -74,6 +74,11 @@ export const PROGRAM_ITEM_DEFAULTS = {
 // TESTIMONIALS
 // ============================================================
 
+export const TESTIMONIALS_SECTION_DEFAULTS = {
+  autoplay: true,
+  autoplayInterval: 6000,
+} as const;
+
 export const TESTIMONIAL_DEFAULTS = {
   quote: '',
   name: '',

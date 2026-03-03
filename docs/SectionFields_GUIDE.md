@@ -367,14 +367,14 @@ Contact tem estrutura aninhada — campos top-level + methods[] com split propri
 
 | Secao | Editable | Hidden | Readonly |
 |-------|----------|--------|----------|
-| **hero** | badge, title, description, btnDonate, btnDonateColor, btnDonateVariant, btnHistory, btnHistoryColor, btnHistoryVariant, heroImage, stats | — | — |
+| **hero** | badge, title, description, btnDonate, btnDonateColor, btnDonateVariant, btnHistory, btnHistoryColor, btnHistoryVariant, heroImage, heroImageOpacity, stats | — | — |
 | **mission** | badge, title, paragraphs, btnText, btnColor, btnVariant, image, imageOpacity, imageAlt | — | — |
-| **programs** | title, description, icon, color, link | — | — |
-| **testimonials** | quote, name, role, initials, image, imageAlt | — | — |
+| **programs** | title, description, icon, color, link, tags, tagColor | — | — |
+| **testimonials** | quote, name, role, initials, image, imageAlt *(section-level: autoplay, autoplayInterval — gerenciados manualmente no wrapper)* | — | — |
 | **supporters** | name, icon, image, imageAlt, url | — | — |
 | **contactMethod** | label, value, icon, color, url | — | — |
 | **values** | title, subtitle, color | — | — |
-| **cta** | title, subtitle, btnDonate, btnProjects | — | — |
+| **cta** | title, subtitle, btnDonate, btnDonateColor, btnDonateVariant, btnProjects, btnProjectsColor, btnProjectsVariant | — | — |
 | **seo** | title, description, keywords, ogImage | og | — |
 
 ---

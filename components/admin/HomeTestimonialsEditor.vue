@@ -3,23 +3,24 @@
 /**
  * 🧩 HomeTestimonialsEditor — Editor da secao Depoimentos.
  *
+ * Section-level: switch autoplay + slider intervalo.
  * Array CRUD + drag-and-drop + image upload por item.
  * Sem readonly pareado (tudo editavel).
  */
 
-import { CBButton, CBInput, CBLabel, CBTextarea } from '@cb/components';
+import { CBButton, CBInput, CBLabel, CBSlider, CBSwitch, CBTextarea } from '@cb/components';
 import draggable from 'vuedraggable';
 import AdminEditorCard from '@components/admin/AdminEditorCard.vue';
 import AdminImageUploader from '@components/admin/AdminImageUploader.vue';
 import { TESTIMONIALS_CONFIG } from '@definitions/validationConfigs';
 import { createValidationRules } from '@utils/validationRules';
 import { createNewTestimonial } from '@utils/HomeFormUtils';
-import type { ITestimonialEditable } from '@appTypes/admin';
+import type { ITestimonialEditable, ITestimonialsEditable } from '@appTypes/admin';
 
 // ============== PROPS ==============
 
 interface Props {
-  forms: { editable: ITestimonialEditable[] };
+  forms: { editable: ITestimonialsEditable };
 }
 
 const props = defineProps<Props>();
@@ -38,31 +39,59 @@ const rules = TESTIMONIALS_CONFIG.validationRules;
 // ============== CRUD ==============
 
 function addTestimonial(): void {
-  if (props.forms.editable.length >= TESTIMONIALS_CONFIG.items.max) return;
-  props.forms.editable.push(createNewTestimonial() as unknown as ITestimonialEditable);
+  if (props.forms.editable.items.length >= TESTIMONIALS_CONFIG.items.max) return;
+  props.forms.editable.items.push(createNewTestimonial() as unknown as ITestimonialEditable);
   emit('changed');
 }
 
 function removeTestimonial(index: number): void {
-  if (props.forms.editable.length <= TESTIMONIALS_CONFIG.items.min) return;
-  props.forms.editable.splice(index, 1);
+  if (props.forms.editable.items.length <= TESTIMONIALS_CONFIG.items.min) return;
+  props.forms.editable.items.splice(index, 1);
   emit('changed');
 }
 </script>
 
 <template>
   <div class="testimonialsEditor">
+    <!-- Metadados da secao -->
+    <div class="testimonialsEditor__sectionFields">
+      <CBSwitch
+        :model-value="forms.editable.autoplay"
+        :label="$t('admin.testimonials.autoplay')"
+        @update:model-value="
+          forms.editable.autoplay = $event;
+          emit('changed');
+        "
+      />
+
+      <CBSlider
+        v-if="forms.editable.autoplay"
+        :model-value="forms.editable.autoplayInterval"
+        :min="TESTIMONIALS_CONFIG.autoplayInterval.min"
+        :max="TESTIMONIALS_CONFIG.autoplayInterval.max"
+        :step="500"
+        :label="$t('admin.testimonials.autoplayInterval')"
+        thumb-label="always"
+        color="primary"
+        @update:model-value="
+          forms.editable.autoplayInterval = $event;
+          emit('changed');
+        "
+      />
+    </div>
+
+    <!-- Items -->
     <div class="testimonialsEditor__header">
       <CBLabel :text="$t('admin.testimonials.listTitle')" weight="semibold" size="sm" />
       <CBLabel
-        :text="`${forms.editable.length}/${TESTIMONIALS_CONFIG.items.max}`"
+        :text="`${forms.editable.items.length}/${TESTIMONIALS_CONFIG.items.max}`"
         size="xs"
         class="testimonialsEditor__counter"
       />
     </div>
 
     <draggable
-      v-model="forms.editable"
+      v-model="forms.editable.items"
       item-key="_dragId"
       handle=".dragHandle"
       :animation="200"
@@ -72,7 +101,7 @@ function removeTestimonial(index: number): void {
       <template #item="{ element, index }: { element: ITestimonialEditable; index: number }">
         <AdminEditorCard
           :title="$t('admin.testimonials.item', { n: index + 1 })"
-          :disabled="forms.editable.length <= TESTIMONIALS_CONFIG.items.min"
+          :disabled="forms.editable.items.length <= TESTIMONIALS_CONFIG.items.min"
           @remove="removeTestimonial(index)"
         >
           <CBTextarea
@@ -89,7 +118,6 @@ function removeTestimonial(index: number): void {
             <CBInput
               :model-value="element.name"
               :label="$t('admin.testimonials.name')"
-              :rules="createValidationRules(rules.name)"
               @update:model-value="
                 element.name = $event;
                 emit('changed');
@@ -99,7 +127,6 @@ function removeTestimonial(index: number): void {
             <CBInput
               :model-value="element.role"
               :label="$t('admin.testimonials.role')"
-              :rules="createValidationRules(rules.role)"
               @update:model-value="
                 element.role = $event;
                 emit('changed');
@@ -147,7 +174,7 @@ function removeTestimonial(index: number): void {
       size="sm"
       prepend-icon="luc-plus"
       :rounded="10"
-      :disabled="forms.editable.length >= TESTIMONIALS_CONFIG.items.max"
+      :disabled="forms.editable.items.length >= TESTIMONIALS_CONFIG.items.max"
       @click="addTestimonial"
     />
   </div>
@@ -158,6 +185,15 @@ function removeTestimonial(index: number): void {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+}
+
+.testimonialsEditor__sectionFields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-light);
+  margin-bottom: 0.5rem;
 }
 
 .testimonialsEditor__header {

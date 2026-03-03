@@ -209,11 +209,13 @@
       "add": "Add Program"
     },
     "testimonials": {
+      "autoplay": "Autoplay",
+      "autoplayInterval": "Autoplay Interval (ms)",
       "listTitle": "Testimonials",
       "item": "Testimonial {n}",
       "quote": "Quote",
-      "name": "Name",
-      "role": "Role",
+      "name": "Name (optional)",
+      "role": "Role (optional)",
       "initials": "Initials (e.g.: ED)",
       "photo": "Photo (optional)",
       "photoAlt": "Photo alt (accessibility)",

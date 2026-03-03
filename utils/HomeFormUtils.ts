@@ -30,6 +30,7 @@ import type {
   IProgram,
   IProgramsSection,
   ITestimonial,
+  ITestimonialsSection,
   ISupporter,
   ISupportersSection,
   IContactSection,
@@ -43,6 +44,7 @@ import type {
   IProgramsEditable,
   IProgramsReadonly,
   ITestimonialEditable,
+  ITestimonialsEditable,
   ISupporterEditable,
   ISupporterReadonly,
   ISupportersEditable,
@@ -67,6 +69,7 @@ import {
   MISSION_DEFAULTS,
   PROGRAMS_SECTION_DEFAULTS,
   PROGRAM_ITEM_DEFAULTS,
+  TESTIMONIALS_SECTION_DEFAULTS,
   TESTIMONIAL_DEFAULTS,
   SUPPORTERS_SECTION_DEFAULTS,
   SUPPORTER_ITEM_DEFAULTS,
@@ -258,18 +261,41 @@ export function createNewProgram(): IProgram {
 }
 
 // ============================================================
-// TESTIMONIALS
+// TESTIMONIALS — estrutura aninhada (secao + items[])
 // ============================================================
 
-export function separateTestimonialsData(data: ITestimonial[]) {
-  return separateArrayByFields(data, SECTION_FIELDS.testimonials) as {
-    editable: ITestimonialEditable[];
-    readonly: Record<string, never>[];
+export function separateTestimonialsData(data: ITestimonialsSection): {
+  editable: ITestimonialsEditable;
+} {
+  // Normaliza dados antigos do Firestore (array plano → wrapper)
+  const normalized = Array.isArray(data)
+    ? { ...TESTIMONIALS_SECTION_DEFAULTS, items: data as unknown as ITestimonial[] }
+    : data;
+
+  const { editable: itemsEditable } = separateArrayByFields(
+    normalized.items,
+    SECTION_FIELDS.testimonials
+  );
+
+  return {
+    editable: {
+      autoplay: normalized.autoplay ?? TESTIMONIALS_SECTION_DEFAULTS.autoplay,
+      autoplayInterval: normalized.autoplayInterval ?? TESTIMONIALS_SECTION_DEFAULTS.autoplayInterval,
+      items: itemsEditable as ITestimonialEditable[],
+    },
   };
 }
 
-export function combineTestimonialsData(editable: ITestimonialEditable[]): ITestimonial[] {
-  return combineArrayFromFields<ITestimonial>(editable, []);
+export function combineTestimonialsData(editable: ITestimonialsEditable): ITestimonialsSection {
+  return {
+    autoplay: editable.autoplay,
+    autoplayInterval: editable.autoplayInterval,
+    items: combineArrayFromFields<ITestimonial>(editable.items, []),
+  };
+}
+
+export function createDefaultTestimonialsEditable(): ITestimonialsEditable {
+  return { ...TESTIMONIALS_SECTION_DEFAULTS, items: [createDefaultTestimonialEditable()] };
 }
 
 export function createDefaultTestimonialEditable(): ITestimonialEditable {
@@ -485,7 +511,7 @@ export function createDefaultHomeForms(): IHomeFormsData {
       editable: createDefaultProgramsEditable(),
       readonly: { items: [{ color: 'magenta' }] },
     },
-    testimonials: { editable: [createDefaultTestimonialEditable()] },
+    testimonials: { editable: createDefaultTestimonialsEditable() },
     supporters: {
       editable: createDefaultSupportersEditable(),
       readonly: { items: [{ color: 'magenta' }] },

@@ -94,35 +94,39 @@ export const HOME_FALLBACK: IHomePageData = {
       ],
     },
 
-    testimonials: [
-      {
-        quote:
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.',
-        name: 'Lorem Ipsum',
-        role: 'Lorem Dolor',
-        initials: 'LI',
-        image: '',
-        imageAlt: 'Foto de Lorem Ipsum',
-      },
-      {
-        quote:
-          'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat.',
-        name: 'Dolor Sit',
-        role: 'Lorem Amet',
-        initials: 'DS',
-        image: '',
-        imageAlt: 'Foto de Dolor Sit',
-      },
-      {
-        quote:
-          'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        name: 'Amet Consectetur',
-        role: 'Lorem Elit',
-        initials: 'AC',
-        image: '',
-        imageAlt: 'Foto de Amet Consectetur',
-      },
-    ],
+    testimonials: {
+      autoplay: true,
+      autoplayInterval: 6000,
+      items: [
+        {
+          quote:
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.',
+          name: 'Lorem Ipsum',
+          role: 'Lorem Dolor',
+          initials: 'LI',
+          image: '',
+          imageAlt: 'Foto de Lorem Ipsum',
+        },
+        {
+          quote:
+            'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat.',
+          name: 'Dolor Sit',
+          role: 'Lorem Amet',
+          initials: 'DS',
+          image: '',
+          imageAlt: 'Foto de Dolor Sit',
+        },
+        {
+          quote:
+            'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+          name: 'Amet Consectetur',
+          role: 'Lorem Elit',
+          initials: 'AC',
+          image: '',
+          imageAlt: 'Foto de Amet Consectetur',
+        },
+      ],
+    },
 
     supporters: {
       badge: 'LOREM IPSUM',

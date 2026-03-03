@@ -323,7 +323,7 @@ watch(status, async () => {
               :rounded="24"
               hover
               bg-color="var(--bg-white)"
-              border-color="rgba(92, 26, 42, 0.06)"
+              border-color="rgba(var(--color-vinho-rgb), 0.06)"
               :border-width="1"
               class="programCard animateOnScroll"
               :style="{ '--program-color': resolveColorValue(program.color) }"
@@ -384,9 +384,9 @@ watch(status, async () => {
         <div class="testimonialContainer animateOnScroll">
           <CBCarousel
             v-model="testimonialIndex"
-            :total="testimonials.length"
-            autoplay
-            :autoplay-interval="6000"
+            :total="testimonials.items.length"
+            :autoplay="testimonials.autoplay"
+            :autoplay-interval="testimonials.autoplayInterval"
             transition-type="horizontal"
             :show-navigation="false"
             pause-on-hover
@@ -397,22 +397,40 @@ watch(status, async () => {
                 <div class="testimonialCardGlow"></div>
                 <div class="testimonialQuoteIcon">&ldquo;</div>
                 <blockquote class="testimonialQuote">
-                  {{ testimonials[index].quote }}
+                  {{ testimonials.items[index].quote }}
                 </blockquote>
-                <div class="testimonialAuthor">
-                  <div class="testimonialAuthorAvatar">
-                    {{ testimonials[index].initials }}
+                <div
+                  v-if="testimonials.items[index].initials || testimonials.items[index].image || testimonials.items[index].name || testimonials.items[index].role"
+                  class="testimonialAuthor"
+                >
+                  <CBImage
+                    v-if="testimonials.items[index].image"
+                    :src="testimonials.items[index].image"
+                    :alt="testimonials.items[index].imageAlt || testimonials.items[index].name"
+                    :width="60"
+                    :height="60"
+                    fit="cover"
+                    :rounded="999"
+                    class="testimonialAuthorPhoto"
+                  />
+                  <div v-else-if="testimonials.items[index].initials" class="testimonialAuthorAvatar">
+                    {{ testimonials.items[index].initials }}
                   </div>
-                  <div class="testimonialAuthorInfo">
+                  <div
+                    v-if="testimonials.items[index].name || testimonials.items[index].role"
+                    class="testimonialAuthorInfo"
+                  >
                     <CBLabel
-                      :text="testimonials[index].name"
+                      v-if="testimonials.items[index].name"
+                      :text="testimonials.items[index].name"
                       tag="span"
                       weight="semibold"
                       dense
                       class="testimonialAuthorName"
                     />
                     <CBLabel
-                      :text="testimonials[index].role"
+                      v-if="testimonials.items[index].role"
+                      :text="testimonials.items[index].role"
                       tag="span"
                       size="sm"
                       color="secondary"
@@ -533,13 +551,13 @@ watch(status, async () => {
                 variant="outlined"
                 :rounded="16"
                 hover
-                bg-color="#FFFFFF"
-                border-color="rgba(92, 26, 42, 0.04)"
+                bg-color="var(--bg-white)"
+                border-color="rgba(var(--color-vinho-rgb), 0.04)"
                 class="contactMethodCard"
               >
                 <div class="contactMethodInner">
                   <div class="contactMethodIconWrapper" :style="colorVars(method.color)">
-                    <CBIcon :icon="method.icon" size="1.5rem" color="#ffffff" />
+                    <CBIcon :icon="method.icon" size="1.5rem" color="var(--bg-white)" />
                   </div>
                   <div class="contactMethodContent">
                     <CBLabel
@@ -575,8 +593,8 @@ watch(status, async () => {
             <CBCard
               variant="outlined"
               :rounded="24"
-              bg-color="#FFFFFF"
-              border-color="rgba(92, 26, 42, 0.08)"
+              bg-color="var(--bg-white)"
+              border-color="var(--border-light)"
               class="contactFormCard"
             >
               <form class="contactForm">
@@ -1357,6 +1375,14 @@ watch(status, async () => {
   gap: 1rem;
 }
 
+.testimonialAuthorPhoto {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
 .testimonialAuthorAvatar {
   width: 60px;
   height: 60px;
@@ -1369,6 +1395,7 @@ watch(status, async () => {
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--bg-white);
+  flex-shrink: 0;
 }
 
 .testimonialAuthorName {
@@ -1802,6 +1829,7 @@ watch(status, async () => {
     left: 1.5rem;
   }
 
+  .testimonialAuthorPhoto,
   .testimonialAuthorAvatar {
     width: 48px;
     height: 48px;
@@ -1888,6 +1916,7 @@ watch(status, async () => {
     margin-bottom: 1.5rem;
   }
 
+  .testimonialAuthorPhoto,
   .testimonialAuthorAvatar {
     width: 40px;
     height: 40px;

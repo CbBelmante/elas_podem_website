@@ -44,7 +44,7 @@ Se tudo ficasse em 1 arquivo: 3500+ linhas. Impossivel de manter.
 
 ### A Solucao
 
-14 componentes com responsabilidades claras:
+19 componentes com responsabilidades claras:
 
 ```
 pages/admin/edit/
@@ -52,19 +52,24 @@ pages/admin/edit/
 
 components/admin/
   HomeEditorSection.vue             ← wrapper colapsavel generico
-  AdminImageUploader.vue            ← upload compartilhado (usa useStorage → Cloudinary/Firebase)
-  AdminColorPicker.vue              ← seletor de cor (cores/gradientes/custom)
-  AdminButtonVariantSelect.vue      ← seletor de variante de botao
-  HomeHeroEditor.vue                ← Hero: textos + stats CRUD + drag
-  HomeMissionEditor.vue             ← Missao: paragrafos dinamicos + image upload
-  AdminParagraphList.vue            ← lista de paragrafos reutilizavel (drag + CRUD)
-  HomeProgramsEditor.vue            ← Programas: CRUD + drag + cor por item
+  HomeHeroEditor.vue                ← Hero: textos + stats CRUD + drag + cor/variante botoes
+  HomeMissionEditor.vue             ← Missao: paragrafos dinamicos + image upload + cor/variante botao
+  HomeProgramsEditor.vue            ← Programas: CRUD + drag + tags + cor por item
   HomeValuesEditor.vue              ← Valores: CRUD + drag + cor por item
-  HomeTestimonialsEditor.vue        ← Depoimentos: CRUD + image + drag
-  HomeSupportersEditor.vue          ← Apoiadores: CRUD + image + drag
+  HomeTestimonialsEditor.vue        ← Depoimentos: autoplay/interval + CRUD + image + drag
+  HomeSupportersEditor.vue          ← Apoiadores: marquee speed + CRUD + image + drag
   HomeContactEditor.vue             ← Contato: campos + 2 arrays (methods + subjects)
-  HomeCtaEditor.vue                 ← CTA: 4 campos de texto (mais simples)
+  HomeCtaEditor.vue                 ← CTA: textos + cor/variante para botoes
   HomeSeoEditor.vue                 ← SEO: campos + keywords + char counter + image
+
+  AdminEditorCard.vue               ← card com drag handle + botao remover (reutilizavel)
+  AdminImageUploader.vue            ← upload com preview, validacao e compressao
+  AdminColorPicker.vue              ← seletor de cor (cores/gradientes/custom)
+  AdminButtonVariantSelect.vue      ← seletor de variante de botao (solid/outline/ghost/link)
+  AdminIconSelect.vue               ← seletor de icone com busca e categorias
+  AdminParagraphList.vue            ← lista de paragrafos reutilizavel (drag + CRUD)
+  AdminTagInput.vue                 ← input de tags com cor (drag + CRUD)
+  AdminPageCard.vue                 ← card de pagina no dashboard
 ```
 
 Cada arquivo fica entre 80-250 linhas. O dev abre e entende.
@@ -216,7 +221,7 @@ const rules = XXX_CONFIG.validationRules;
 
 | Tipo | Exemplos | Caracteristicas |
 |------|----------|----------------|
-| **Campos simples** | CTA, Mission | So inputs/textareas, sem arrays |
+| **Campos simples** | CTA, Mission | Inputs/textareas/color pickers, sem arrays |
 | **Array de objetos** | Programs, Testimonials, Supporters, Contact methods, Values | CRUD + drag, tudo editavel |
 | **Array de strings** | SEO keywords, Contact formSubjects | CRUD + drag, strings simples |
 
@@ -485,33 +490,42 @@ homeEdit.vue (orquestrador)
   ├── HomeEditorSection × 9  (wrapper colapsavel generico)
   │     │
   │     ├── HomeHeroEditor
-  │     │     └── CBInput, CBTextarea, CBSelect, draggable (stats)
+  │     │     ├── CBInput, CBTextarea, AdminEditorCard, draggable (stats)
+  │     │     ├── AdminColorPicker × 2, AdminButtonVariantSelect × 2 (botoes)
+  │     │     └── AdminImageUploader (heroImage + opacidade)
   │     │
   │     ├── HomeMissionEditor
   │     │     ├── CBInput, AdminParagraphList (paragrafos dinamicos)
-  │     │     └── AdminImageUploader → useStorage()
+  │     │     ├── AdminColorPicker, AdminButtonVariantSelect (botao)
+  │     │     └── AdminImageUploader (image + opacidade)
   │     │
   │     ├── HomeProgramsEditor
-  │     │     └── CBInput, CBTextarea, CBSelect, AdminColorPicker, draggable
+  │     │     ├── CBInput, CBTextarea, AdminEditorCard, draggable
+  │     │     ├── AdminColorPicker, AdminIconSelect (por item)
+  │     │     └── AdminTagInput (tags + cor por item)
   │     │
   │     ├── HomeValuesEditor
-  │     │     └── CBInput, AdminColorPicker, draggable
+  │     │     └── CBInput, AdminEditorCard, AdminColorPicker, draggable
   │     │
   │     ├── HomeTestimonialsEditor
-  │     │     ├── CBInput, CBTextarea, draggable
+  │     │     ├── CBSwitch (autoplay), CBSlider (interval)
+  │     │     ├── CBInput, CBTextarea, AdminEditorCard, draggable
   │     │     └── AdminImageUploader × N (1 por depoimento)
   │     │
   │     ├── HomeSupportersEditor
-  │     │     ├── CBInput, CBSelect, draggable
+  │     │     ├── CBSlider (marquee speed)
+  │     │     ├── CBInput, AdminEditorCard, AdminIconSelect, draggable
   │     │     └── AdminImageUploader × N (1 por apoiador)
   │     │
   │     ├── HomeContactEditor
-  │     │     ├── CBInput, CBTextarea, CBSelect, AdminColorPicker
+  │     │     ├── CBInput, CBTextarea, AdminEditorCard
+  │     │     ├── AdminColorPicker, AdminIconSelect (por metodo)
   │     │     ├── draggable (methods)
   │     │     └── draggable (formSubjects, strings simples)
   │     │
   │     ├── HomeCtaEditor
-  │     │     └── CBInput, CBTextarea
+  │     │     ├── CBInput, CBTextarea
+  │     │     └── AdminColorPicker × 2, AdminButtonVariantSelect × 2 (botoes)
   │     │
   │     └── HomeSeoEditor
   │           ├── CBInput, CBTextarea (com char counter)
@@ -519,11 +533,15 @@ homeEdit.vue (orquestrador)
   │           └── AdminImageUploader (ogImage)
   │
   ├── components/admin/ (compartilhados):
-  │     ├── AdminColorPicker.vue       ← seletor de cor (3 modos: cores, gradientes, custom)
-  │     └── AdminButtonVariantSelect.vue ← seletor de variante de botao
+  │     ├── AdminEditorCard.vue         ← card com drag handle + botao remover
+  │     ├── AdminColorPicker.vue        ← seletor de cor (3 modos: cores, gradientes, custom)
+  │     ├── AdminButtonVariantSelect.vue ← seletor de variante de botao
+  │     ├── AdminIconSelect.vue         ← seletor de icone com busca e categorias
+  │     ├── AdminParagraphList.vue      ← lista de paragrafos (drag + CRUD)
+  │     └── AdminTagInput.vue           ← input de tags com cor (drag + CRUD)
   │
   └── @cb/components: CBButton, CBIcon, CBLabel, CBInput, CBTextarea,
-                      CBSelect, CBBadge, CBCard
+                      CBSelect, CBSlider, CBSwitch, CBBadge, CBCard
 ```
 
 ### Diagrama de dependencias
@@ -552,16 +570,16 @@ types/admin/
 
 ### Secoes e suas capacidades
 
-| Secao | Campos | Array | Drag | Image | Color Picker |
-|-------|--------|-------|------|-------|-------------|
-| Hero | 5 + botoes (cor/variante) | stats (1-6) | ✅ | ✅ 1 (heroImage) | ✅ botoes (AdminColorPicker) |
-| Missao | 5 + botao (cor/variante) | - | - | ✅ 1 | ✅ botao (AdminColorPicker) |
-| Programas | - | programs (1-8) | ✅ | - | ✅ por item (AdminColorPicker) |
-| Valores | - | values (1-10) | ✅ | - | ✅ por item (AdminColorPicker) |
-| Depoimentos | - | testimonials (1-12) | ✅ | ✅ por item | - |
-| Apoiadores | - | supporters (1-20) | ✅ | ✅ por item | - |
-| Contato | 3 | methods (1-8) + subjects (1-10) | ✅ ambos | - | ✅ por metodo (AdminColorPicker) |
-| CTA | 4 | - | - | - | - |
+| Secao | Campos | Array | Drag | Image | Color/Icon Picker |
+|-------|--------|-------|------|-------|------------------|
+| Hero | 5 + botoes (cor/variante) | stats (1-6) | ✅ | ✅ 1 (heroImage + opacidade) | ✅ AdminColorPicker + AdminButtonVariantSelect × 2 |
+| Missao | 5 + botao (cor/variante) | paragrafos (1-6) | ✅ | ✅ 1 (image + opacidade) | ✅ AdminColorPicker + AdminButtonVariantSelect |
+| Programas | badge, title, subtitle | programs (1-8) | ✅ | - | ✅ AdminColorPicker + AdminIconSelect + AdminTagInput |
+| Valores | - | values (1-8) | ✅ | - | ✅ AdminColorPicker por item |
+| Depoimentos | autoplay + interval | testimonials (1-12) | ✅ | ✅ por item | - |
+| Apoiadores | badge, title, subtitle, marquee speed | supporters (1-20) | ✅ | ✅ por item | ✅ AdminIconSelect por item |
+| Contato | badge, title, description | methods (1-8) + subjects (1-10) | ✅ ambos | - | ✅ AdminColorPicker + AdminIconSelect por metodo |
+| CTA | 2 + botoes (cor/variante) | - | - | - | ✅ AdminColorPicker + AdminButtonVariantSelect × 2 |
 | SEO | 2 (+counter) | keywords (1-20) | ✅ | ✅ 1 (og) | - |
 
 ---
@@ -593,7 +611,7 @@ const validators: Record<string, (data) => IValidationResult> = {
 };
 ```
 
-Note que `programs`, `testimonials` e `supporters` passam o **array editable** diretamente (nao o objeto). Os demais passam o objeto `data` (campos simples).
+Note que `programs`, `testimonials` e `supporters` passam o **objeto editable** (que contem campos section-level + `items[]`). Os demais passam o objeto `data` (campos simples).
 
 **3. handleSave(sectionName):**
 
@@ -702,20 +720,24 @@ O `category` (ex: `'mission'`, `'testimonials'`) define o preset de compressao e
 | Arquivo | Linhas | Descricao |
 |---------|--------|-----------|
 | `pages/admin/edit/homeEdit.vue` | ~510 | Orquestrador: load, save, discard, validation, guard |
-| `components/admin/HomeEditorSection.vue` | ~220 | Wrapper colapsavel generico (×8) |
-| `components/admin/AdminImageUploader.vue` | ~180 | Upload com preview, validacao e compressao |
-| `components/admin/HomeHeroEditor.vue` | ~245 | Hero: textos + stats CRUD/drag |
-| `components/admin/AdminParagraphList.vue` | ~120 | Lista reutilizavel de paragrafos (drag + CRUD) |
-| `components/admin/HomeMissionEditor.vue` | ~120 | Missao: paragrafos dinamicos + image upload |
-| `components/admin/HomeProgramsEditor.vue` | ~225 | Programas: CRUD/drag + AdminColorPicker por item |
-| `components/admin/HomeValuesEditor.vue` | ~180 | Valores: CRUD/drag + AdminColorPicker por item |
-| `components/admin/HomeTestimonialsEditor.vue` | ~210 | Depoimentos: CRUD/drag + image por item |
-| `components/admin/HomeSupportersEditor.vue` | ~230 | Apoiadores: CRUD/drag + image |
-| `components/admin/HomeContactEditor.vue` | ~345 | Contato: campos + methods (com AdminColorPicker) + formSubjects |
-| `components/admin/HomeSeoEditor.vue` | ~210 | SEO: campos + keywords + char counter + ogImage |
-| `components/admin/HomeCtaEditor.vue` | ~85 | CTA: 4 campos de texto |
-| `components/admin/AdminColorPicker.vue` | ~250 | Seletor de cor: 3 modos (cores, gradientes, custom) |
-| `components/admin/AdminButtonVariantSelect.vue` | ~50 | Seletor de variante de botao (solid/outline/ghost/link) |
+| `components/admin/HomeEditorSection.vue` | ~220 | Wrapper colapsavel generico (×9) |
+| `components/admin/HomeHeroEditor.vue` | ~247 | Hero: textos + stats CRUD/drag + cor/variante botoes + image |
+| `components/admin/HomeMissionEditor.vue` | ~121 | Missao: paragrafos dinamicos + image upload + cor/variante botao |
+| `components/admin/HomeProgramsEditor.vue` | ~242 | Programas: CRUD/drag + tags + cor/icone por item |
+| `components/admin/HomeValuesEditor.vue` | ~142 | Valores: CRUD/drag + AdminColorPicker por item |
+| `components/admin/HomeTestimonialsEditor.vue` | ~225 | Depoimentos: autoplay/interval + CRUD/drag + image por item |
+| `components/admin/HomeSupportersEditor.vue` | ~254 | Apoiadores: marquee speed + CRUD/drag + icone/image |
+| `components/admin/HomeContactEditor.vue` | ~311 | Contato: campos + methods (cor/icone) + formSubjects |
+| `components/admin/HomeCtaEditor.vue` | ~125 | CTA: textos + cor/variante para botoes |
+| `components/admin/HomeSeoEditor.vue` | ~228 | SEO: campos + keywords + char counter + ogImage |
+| `components/admin/AdminEditorCard.vue` | ~91 | Card com drag handle + botao remover (reutilizavel) |
+| `components/admin/AdminImageUploader.vue` | ~602 | Upload com preview, validacao, compressao e opacidade |
+| `components/admin/AdminColorPicker.vue` | ~555 | Seletor de cor: 3 modos (cores, gradientes, custom) |
+| `components/admin/AdminButtonVariantSelect.vue` | ~48 | Seletor de variante de botao (solid/outline/ghost/link) |
+| `components/admin/AdminIconSelect.vue` | ~333 | Seletor de icone com busca e categorias |
+| `components/admin/AdminParagraphList.vue` | ~151 | Lista reutilizavel de paragrafos (drag + CRUD) |
+| `components/admin/AdminTagInput.vue` | ~153 | Input de tags com cor (drag + CRUD) |
+| `components/admin/AdminPageCard.vue` | ~202 | Card de pagina no dashboard |
 
 ### Dependencia externa
 

@@ -95,6 +95,13 @@ export interface ITestimonial {
   imageAlt: string; // alt text para acessibilidade
 }
 
+/** Metadados da secao + array de items */
+export interface ITestimonialsSection {
+  autoplay: boolean;
+  autoplayInterval: number; // ms entre slides (ex: 6000)
+  items: ITestimonial[];
+}
+
 // ============================================================
 // SUPPORTERS
 // ============================================================
@@ -190,7 +197,7 @@ export interface IHomePageData {
     hero: IHeroSection;
     mission: IMissionSection;
     programs: IProgramsSection;
-    testimonials: ITestimonial[];
+    testimonials: ITestimonialsSection;
     supporters: ISupportersSection;
     contact: IContactSection;
     values: IValue[];

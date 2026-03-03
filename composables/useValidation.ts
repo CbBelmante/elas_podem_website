@@ -176,8 +176,9 @@ export function useValidation() {
     return { isValid: errors.length === 0, errors };
   };
 
-  const validateTestimonials = (items: Record<string, unknown>[]): IValidationResult => {
+  const validateTestimonials = (data: Record<string, unknown>): IValidationResult => {
     const errors: string[] = [];
+    const items = (data.items ?? []) as Record<string, unknown>[];
     errors.push(...validateItemCount(items, TESTIMONIALS_CONFIG.items, 'Depoimentos'));
     errors.push(...validateArrayItems(items, TESTIMONIALS_CONFIG.validationRules, 'Depoimento'));
     return { isValid: errors.length === 0, errors };

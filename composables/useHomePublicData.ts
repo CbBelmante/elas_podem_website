@@ -40,9 +40,10 @@ function mergeWithFallback(firestore: Record<string, unknown>): IHomePageData {
       hero: (content.hero as IHomePageData['content']['hero']) ?? fb.content.hero,
       mission: (content.mission as IHomePageData['content']['mission']) ?? fb.content.mission,
       programs: (content.programs as IHomePageData['content']['programs']) ?? fb.content.programs,
-      testimonials:
-        (content.testimonials as IHomePageData['content']['testimonials']) ??
-        fb.content.testimonials,
+      testimonials: Array.isArray(content.testimonials)
+        ? { autoplay: true, autoplayInterval: 6000, items: content.testimonials }
+        : (content.testimonials as IHomePageData['content']['testimonials']) ??
+          fb.content.testimonials,
       supporters:
         (content.supporters as IHomePageData['content']['supporters']) ?? fb.content.supporters,
       contact: (content.contact as IHomePageData['content']['contact']) ?? fb.content.contact,

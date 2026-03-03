@@ -87,11 +87,13 @@ export const PROGRAMS_CONFIG = {
 export const TESTIMONIALS_CONFIG = {
   validationRules: {
     quote: { required: true, minLength: 20, maxLength: 500 },
-    name: { required: true, minLength: 2, maxLength: 60 },
-    role: { required: true, minLength: 2, maxLength: 60 },
+    name: { required: false, maxLength: 60 },
+    role: { required: false, maxLength: 60 },
   },
   /** Min/max de depoimentos */
   items: { min: 1, max: 12 },
+  /** Limites do intervalo de autoplay (ms) */
+  autoplayInterval: { min: 2000, max: 15000 },
 } as const;
 
 // ============================================================

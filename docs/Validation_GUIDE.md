@@ -236,7 +236,7 @@ export const SECTION_CONFIG = {
 | `HERO_CONFIG` | Hero | badge, title, description, btnDonate, btnHistory | stats: 1-6 |
 | `MISSION_CONFIG` | Missao | badge, title, btnText | paragraphs: 1-6 (paragraphRule por item) |
 | `PROGRAMS_CONFIG` | Programas | title, description, link | items: 1-8 |
-| `TESTIMONIALS_CONFIG` | Depoimentos | quote, name, role | items: 1-12 |
+| `TESTIMONIALS_CONFIG` | Depoimentos | quote (name/role opcionais) | items: 1-12, autoplayInterval: 2000-15000 |
 | `SUPPORTERS_CONFIG` | Apoiadores | name | items: 1-20 |
 | `CONTACT_CONFIG` | Contato | badge, title, description | methods: 1-8, formSubjects: 1-10 |
 | `CTA_CONFIG` | CTA | title, subtitle, btnDonate, btnProjects | — |
@@ -379,9 +379,11 @@ const validateMission = (data) => {
   return validateFields(data, MISSION_CONFIG.validationRules, 'Missao');
 };
 
-// Secao com array
-const validatePrograms = (items) => {
+// Secao com section-level + array
+const validatePrograms = (data) => {
   const errors = [];
+  errors.push(...validateFields(data, PROGRAMS_CONFIG.sectionRules, 'Programas').errors);
+  const items = (data.items ?? []);
   errors.push(...validateItemCount(items, PROGRAMS_CONFIG.items, 'Programas'));
   errors.push(...validateArrayItems(items, PROGRAMS_CONFIG.validationRules, 'Programa'));
   return { isValid: errors.length === 0, errors };

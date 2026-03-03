@@ -11,7 +11,7 @@ import type {
   IMissionEditable,
   IProgramsEditable,
   IProgramsReadonly,
-  ITestimonialEditable,
+  ITestimonialsEditable,
   ISupportersEditable,
   ISupportersReadonly,
   IContactEditable,
@@ -30,7 +30,7 @@ export interface IHomeFormsData {
   hero: { editable: IHeroEditable };
   mission: { editable: IMissionEditable };
   programs: { editable: IProgramsEditable; readonly: IProgramsReadonly };
-  testimonials: { editable: ITestimonialEditable[] };
+  testimonials: { editable: ITestimonialsEditable };
   supporters: { editable: ISupportersEditable; readonly: ISupportersReadonly };
   contact: { editable: IContactEditable; readonly: IContactReadonly };
   values: { editable: IValueEditable[] };
