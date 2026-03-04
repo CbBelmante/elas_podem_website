@@ -40,7 +40,10 @@ const sidebarItems = computed<ISidebarMenuGroup[]>(() => [
   },
   {
     label: t('admin.layout.groupPages'),
-    items: [{ label: t('admin.layout.homePage'), icon: 'luc-home', to: '/admin/edit/homeEdit' }],
+    items: [
+      { label: t('admin.layout.homePage'), icon: 'luc-home', to: '/admin/edit/homeEdit' },
+      { label: t('admin.layout.aboutPage'), icon: 'luc-users', to: '/admin/edit/aboutEdit' },
+    ],
   },
 ]);
 

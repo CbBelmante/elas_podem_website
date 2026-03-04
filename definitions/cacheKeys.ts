@@ -22,6 +22,8 @@ export const CACHE_KEYS = {
   USER_DATA: { key: 'userData', hasCache: true },
   /** Dados da homepage (IHomePageData do Firestore) */
   HOME_PAGE: { key: 'homePage', hasCache: true },
+  /** Dados da pagina About (IAboutPageData do Firestore) */
+  ABOUT_PAGE: { key: 'aboutPage', hasCache: true },
 } as const;
 
 // ============== TYPES ==============

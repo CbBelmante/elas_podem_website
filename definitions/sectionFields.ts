@@ -150,4 +150,68 @@ export const SECTION_FIELDS = {
     ogImage: 'editable',
     og: 'hidden',
   },
+
+  // ============================================================
+  // ABOUT PAGE
+  // ============================================================
+
+  aboutHero: {
+    badge: 'editable',
+    title: 'editable',
+    description: 'editable',
+  },
+
+  aboutTimeline: {
+    /** Campos section-level (IAboutTimelineSection) */
+    badge: 'editable',
+    title: 'editable',
+    /** Campos item-level (IAboutTimelineItem) */
+    items: {
+      year: 'editable',
+      title: 'editable',
+      description: 'editable',
+      icon: 'editable',
+      color: 'editable',
+    },
+  },
+
+  aboutTeam: {
+    /** Campos section-level (IAboutTeamSection) */
+    badge: 'editable',
+    title: 'editable',
+    subtitle: 'editable',
+    /** Campos item-level (IAboutTeamMember) */
+    items: {
+      name: 'editable',
+      role: 'editable',
+      bio: 'editable',
+      image: 'editable',
+      imageAlt: 'editable',
+      initials: 'editable',
+    },
+  },
+
+  aboutPillars: {
+    /** Campos section-level (IAboutPillarsSection) */
+    badge: 'editable',
+    title: 'editable',
+    /** Campos item-level (IAboutPillar) */
+    items: {
+      icon: 'editable',
+      title: 'editable',
+      description: 'editable',
+      color: 'editable',
+    },
+  },
+
+  aboutCta: {
+    title: 'editable',
+    subtitle: 'editable',
+    btnDonate: 'editable',
+    btnDonateColor: 'editable',
+    btnDonateVariant: 'editable',
+    btnContact: 'editable',
+    btnContactColor: 'editable',
+    btnContactVariant: 'editable',
+  },
 } as const;

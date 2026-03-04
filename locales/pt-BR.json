@@ -47,6 +47,7 @@
       "dashboard": "Dashboard",
       "groupPages": "Páginas",
       "homePage": "Home Page",
+      "aboutPage": "Sobre",
       "logout": "Sair"
     },
     "login": {
@@ -70,6 +71,8 @@
       "pagesTitle": "Páginas",
       "homePageTitle": "Home Page",
       "homePageDesc": "Página principal do site — 8 seções editáveis",
+      "aboutPageTitle": "Sobre",
+      "aboutPageDesc": "Página Quem Somos — 5 seções editáveis + SEO",
       "activityBadge": "ATIVIDADE",
       "activityTitle": "Atividade Recente",
       "activityPlaceholder": "Audit log disponível na Fase 2 — quando ações de edição forem implementadas"
@@ -89,6 +92,72 @@
         "values": "Valores",
         "cta": "CTA",
         "seo": "SEO"
+      }
+    },
+    "aboutEdit": {
+      "badge": "EDITOR DE PÁGINA",
+      "title": "Sobre",
+      "subtitle": "5 seções editáveis + SEO — hero, trajetória, equipe, pilares, CTA",
+      "loading": "Carregando dados da página...",
+      "sections": {
+        "hero": "Hero",
+        "timeline": "Trajetória",
+        "team": "Equipe",
+        "pillars": "Pilares",
+        "cta": "CTA",
+        "seo": "SEO"
+      },
+      "hero": {
+        "badge": "Badge",
+        "title": "Título",
+        "description": "Descrição"
+      },
+      "timeline": {
+        "badge": "Badge",
+        "sectionTitle": "Título da Seção",
+        "listTitle": "Eventos",
+        "item": "Evento {n}",
+        "year": "Ano",
+        "itemTitle": "Título",
+        "itemIcon": "Ícone",
+        "itemColor": "Cor",
+        "itemDescription": "Descrição",
+        "add": "Adicionar Evento"
+      },
+      "team": {
+        "badge": "Badge",
+        "sectionTitle": "Título da Seção",
+        "subtitle": "Subtítulo (opcional)",
+        "listTitle": "Membros",
+        "item": "Membro {n}",
+        "name": "Nome",
+        "role": "Função",
+        "initials": "Iniciais (ex: MS)",
+        "bio": "Biografia",
+        "photo": "Foto (opcional)",
+        "photoAlt": "Alt da foto (acessibilidade)",
+        "add": "Adicionar Membro"
+      },
+      "pillars": {
+        "badge": "Badge",
+        "sectionTitle": "Título da Seção",
+        "listTitle": "Pilares",
+        "item": "Pilar {n}",
+        "itemTitle": "Título",
+        "itemIcon": "Ícone",
+        "itemColor": "Cor",
+        "itemDescription": "Descrição",
+        "add": "Adicionar Pilar"
+      },
+      "cta": {
+        "title": "Título",
+        "subtitle": "Subtítulo",
+        "btnDonate": "Botão Doar",
+        "btnDonateColor": "Cor/Gradiente Botão Doar",
+        "btnDonateVariant": "Variante Botão Doar",
+        "btnContact": "Botão Contato",
+        "btnContactColor": "Cor/Gradiente Botão Contato",
+        "btnContactVariant": "Variante Botão Contato"
       }
     },
     "editor": {

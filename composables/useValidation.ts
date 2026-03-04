@@ -22,6 +22,11 @@ import {
   VALUES_CONFIG,
   CTA_CONFIG,
   SEO_CONFIG,
+  ABOUT_HERO_CONFIG,
+  ABOUT_TIMELINE_CONFIG,
+  ABOUT_TEAM_CONFIG,
+  ABOUT_PILLARS_CONFIG,
+  ABOUT_CTA_CONFIG,
 } from '@definitions/validationConfigs';
 import { isValidUrl } from '@utils/validationRules';
 
@@ -53,18 +58,18 @@ function validateField(fieldName: string, value: unknown, rules: IFieldRule): st
   const text = typeof value === 'string' ? value.trim() : '';
 
   if (rules.required && !text) {
-    errors.push(`"${fieldName}" e obrigatorio`);
+    errors.push(`"${fieldName}" é obrigatório`);
     return errors;
   }
 
   if (!text) return errors;
 
   if (rules.minLength && text.length < rules.minLength) {
-    errors.push(`"${fieldName}" precisa ter no minimo ${rules.minLength} caracteres`);
+    errors.push(`"${fieldName}" precisa ter no mínimo ${rules.minLength} caracteres`);
   }
 
   if (rules.maxLength && text.length > rules.maxLength) {
-    errors.push(`"${fieldName}" pode ter no maximo ${rules.maxLength} caracteres`);
+    errors.push(`"${fieldName}" pode ter no máximo ${rules.maxLength} caracteres`);
   }
 
   return errors;
@@ -100,11 +105,11 @@ function validateItemCount(items: unknown[], rules: IItemsRule, label: string): 
   const errors: string[] = [];
 
   if (items.length < rules.min) {
-    errors.push(`${label}: minimo ${rules.min} item(ns)`);
+    errors.push(`${label}: mínimo ${rules.min} item(ns)`);
   }
 
   if (items.length > rules.max) {
-    errors.push(`${label}: maximo ${rules.max} itens`);
+    errors.push(`${label}: máximo ${rules.max} itens`);
   }
 
   return errors;
@@ -242,6 +247,49 @@ export function useValidation() {
     return { isValid: errors.length === 0, errors };
   };
 
+  // ===== VALIDATORS ABOUT =====
+
+  const validateAboutHero = (data: Record<string, unknown>): IValidationResult => {
+    return validateFields(data, ABOUT_HERO_CONFIG.validationRules, 'About Hero');
+  };
+
+  const validateAboutTimeline = (data: Record<string, unknown>): IValidationResult => {
+    const errors: string[] = [];
+    // Campos da seção (badge, title)
+    errors.push(...validateFields(data, ABOUT_TIMELINE_CONFIG.sectionRules, 'About Trajetória').errors);
+    // Items
+    const items = (data.items ?? []) as Record<string, unknown>[];
+    errors.push(...validateItemCount(items, ABOUT_TIMELINE_CONFIG.items, 'Trajetória'));
+    errors.push(...validateArrayItems(items, ABOUT_TIMELINE_CONFIG.validationRules, 'Evento'));
+    return { isValid: errors.length === 0, errors };
+  };
+
+  const validateAboutTeam = (data: Record<string, unknown>): IValidationResult => {
+    const errors: string[] = [];
+    // Campos da seção (badge, title, subtitle)
+    errors.push(...validateFields(data, ABOUT_TEAM_CONFIG.sectionRules, 'About Equipe').errors);
+    // Items
+    const items = (data.items ?? []) as Record<string, unknown>[];
+    errors.push(...validateItemCount(items, ABOUT_TEAM_CONFIG.items, 'Equipe'));
+    errors.push(...validateArrayItems(items, ABOUT_TEAM_CONFIG.validationRules, 'Membro'));
+    return { isValid: errors.length === 0, errors };
+  };
+
+  const validateAboutPillars = (data: Record<string, unknown>): IValidationResult => {
+    const errors: string[] = [];
+    // Campos da seção (badge, title)
+    errors.push(...validateFields(data, ABOUT_PILLARS_CONFIG.sectionRules, 'About Pilares').errors);
+    // Items
+    const items = (data.items ?? []) as Record<string, unknown>[];
+    errors.push(...validateItemCount(items, ABOUT_PILLARS_CONFIG.items, 'Pilares'));
+    errors.push(...validateArrayItems(items, ABOUT_PILLARS_CONFIG.validationRules, 'Pilar'));
+    return { isValid: errors.length === 0, errors };
+  };
+
+  const validateAboutCta = (data: Record<string, unknown>): IValidationResult => {
+    return validateFields(data, ABOUT_CTA_CONFIG.validationRules, 'About CTA');
+  };
+
   // ===== RETURN =====
 
   return {
@@ -250,7 +298,7 @@ export function useValidation() {
     validateItemCount,
     validateArrayItems,
 
-    // Especificos da home
+    // Específicos da home
     validateHero,
     validateMission,
     validatePrograms,
@@ -260,6 +308,13 @@ export function useValidation() {
     validateValues,
     validateCta,
     validateSeo,
+
+    // Específicos do about
+    validateAboutHero,
+    validateAboutTimeline,
+    validateAboutTeam,
+    validateAboutPillars,
+    validateAboutCta,
   };
 }
 

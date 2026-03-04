@@ -167,3 +167,82 @@ export const SEO_OG_DEFAULTS = {
   siteName: 'Elas Podem',
   locale: 'pt_BR',
 } as const;
+
+// ============================================================
+// ABOUT — HERO
+// ============================================================
+
+export const ABOUT_HERO_DEFAULTS = {
+  badge: 'CONHEÇA NOSSA HISTÓRIA',
+  title: 'Quem Somos',
+  description:
+    'Desde 2020, o Coletivo Elas Podem atua em Campo Grande, MS — um movimento feminista de mulheres cis e trans unidas pela equidade de gênero e ampliação da participação feminina em espaços públicos e privados.',
+} as const;
+
+// ============================================================
+// ABOUT — TIMELINE
+// ============================================================
+
+export const ABOUT_TIMELINE_SECTION_DEFAULTS = {
+  badge: 'NOSSA TRAJETÓRIA',
+  title: 'Uma História de Luta e Conquistas',
+} as const;
+
+export const ABOUT_TIMELINE_ITEM_DEFAULTS = {
+  year: '',
+  title: '',
+  description: '',
+  icon: 'luc-star',
+  color: 'magenta',
+} as const;
+
+// ============================================================
+// ABOUT — TEAM
+// ============================================================
+
+export const ABOUT_TEAM_SECTION_DEFAULTS = {
+  badge: 'NOSSA EQUIPE',
+  title: 'Mulheres que Fazem Acontecer',
+  subtitle:
+    'Conheça a diretoria eleita em julho de 2025, que lidera o coletivo com gestão democrática e compromisso com a equidade.',
+} as const;
+
+export const ABOUT_TEAM_MEMBER_DEFAULTS = {
+  name: '',
+  role: '',
+  bio: '',
+  image: '',
+  imageAlt: '',
+  initials: '',
+} as const;
+
+// ============================================================
+// ABOUT — PILLARS
+// ============================================================
+
+export const ABOUT_PILLARS_SECTION_DEFAULTS = {
+  badge: 'O QUE NOS MOVE',
+  title: 'Missão, Visão e Valores',
+} as const;
+
+export const ABOUT_PILLAR_ITEM_DEFAULTS = {
+  icon: 'luc-heart',
+  title: '',
+  description: '',
+  color: 'magenta',
+} as const;
+
+// ============================================================
+// ABOUT — CTA
+// ============================================================
+
+export const ABOUT_CTA_DEFAULTS = {
+  title: 'Faça Parte Dessa História',
+  subtitle: '',
+  btnDonate: 'Doe Agora',
+  btnDonateColor: 'gradient:primary',
+  btnDonateVariant: 'solid',
+  btnContact: 'Entre em Contato',
+  btnContactColor: '#FFFFFF',
+  btnContactVariant: 'outline',
+} as const;

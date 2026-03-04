@@ -10,7 +10,7 @@
 -->
 
 <script setup lang="ts">
-import { CBBadge, CBCard, CBIcon, CBLabel } from '@cb/components';
+import { CBBadge, CBCard, CBIcon, CBLabel, formatDayjs, DATE_TIME_BR } from '@cb/components';
 import AdminPageCard from '@components/admin/AdminPageCard.vue';
 
 // ============== PAGE META ==============
@@ -23,6 +23,7 @@ definePageMeta({
 
 const { permissions, userData } = useAuth();
 const { originalData, isLoading, loadPageData } = useHomePageData();
+const { originalData: aboutOriginalData, isLoading: aboutIsLoading, loadPageData: loadAboutPageData } = useAboutPageData();
 
 // ============== COMPUTED ==============
 
@@ -39,19 +40,23 @@ const homeStatus = computed(() => {
 
 /** Data formatada da ultima edicao */
 const lastEditFormatted = computed(() => {
-  if (!homeStatus.value?.lastUpdated) return null;
+  return formatDayjs(homeStatus.value?.lastUpdated, DATE_TIME_BR);
+});
 
-  try {
-    return new Date(homeStatus.value.lastUpdated).toLocaleString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  } catch {
-    return homeStatus.value.lastUpdated;
-  }
+/** Metadados de status do documento about */
+const aboutStatus = computed(() => {
+  const data = aboutOriginalData.value as Record<string, unknown> | null;
+  if (!data) return null;
+
+  return {
+    lastUpdated: data.lastUpdated as string | null,
+    updatedByName: data.updatedByName as string | null,
+  };
+});
+
+/** Data formatada da última edição do about */
+const aboutLastEditFormatted = computed(() => {
+  return formatDayjs(aboutStatus.value?.lastUpdated, DATE_TIME_BR);
 });
 
 const userName = computed(() => userData.value?.displayName ?? 'Admin');
@@ -59,7 +64,7 @@ const userName = computed(() => userData.value?.displayName ?? 'Admin');
 // ============== LIFECYCLE ==============
 
 onMounted(async () => {
-  await loadPageData();
+  await Promise.all([loadPageData(), loadAboutPageData()]);
 });
 </script>
 
@@ -133,6 +138,18 @@ onMounted(async () => {
         :can-edit="permissions?.canEdit ?? false"
         :last-editor-name="homeStatus?.updatedByName"
         :last-edit-date="lastEditFormatted"
+      />
+
+      <!-- Card: About Page -->
+      <AdminPageCard
+        :title="$t('admin.dashboard.aboutPageTitle')"
+        :description="$t('admin.dashboard.aboutPageDesc')"
+        icon="luc-users"
+        color="olive"
+        edit-url="/admin/edit/aboutEdit"
+        :can-edit="permissions?.canEdit ?? false"
+        :last-editor-name="aboutStatus?.updatedByName"
+        :last-edit-date="aboutLastEditFormatted"
       />
     </section>
 

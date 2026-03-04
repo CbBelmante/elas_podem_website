@@ -47,6 +47,7 @@
       "dashboard": "Dashboard",
       "groupPages": "Pages",
       "homePage": "Home Page",
+      "aboutPage": "About",
       "logout": "Logout"
     },
     "login": {
@@ -70,6 +71,8 @@
       "pagesTitle": "Pages",
       "homePageTitle": "Home Page",
       "homePageDesc": "Main website page — 8 editable sections",
+      "aboutPageTitle": "About",
+      "aboutPageDesc": "About Us page — 5 editable sections + SEO",
       "activityBadge": "ACTIVITY",
       "activityTitle": "Recent Activity",
       "activityPlaceholder": "Audit log available in Phase 2 — when editing actions are implemented"
@@ -89,6 +92,72 @@
         "values": "Values",
         "cta": "CTA",
         "seo": "SEO"
+      }
+    },
+    "aboutEdit": {
+      "badge": "PAGE EDITOR",
+      "title": "About",
+      "subtitle": "5 editable sections + SEO — hero, timeline, team, pillars, CTA",
+      "loading": "Loading page data...",
+      "sections": {
+        "hero": "Hero",
+        "timeline": "Timeline",
+        "team": "Team",
+        "pillars": "Pillars",
+        "cta": "CTA",
+        "seo": "SEO"
+      },
+      "hero": {
+        "badge": "Badge",
+        "title": "Title",
+        "description": "Description"
+      },
+      "timeline": {
+        "badge": "Badge",
+        "sectionTitle": "Section Title",
+        "listTitle": "Events",
+        "item": "Event {n}",
+        "year": "Year",
+        "itemTitle": "Title",
+        "itemIcon": "Icon",
+        "itemColor": "Color",
+        "itemDescription": "Description",
+        "add": "Add Event"
+      },
+      "team": {
+        "badge": "Badge",
+        "sectionTitle": "Section Title",
+        "subtitle": "Subtitle (optional)",
+        "listTitle": "Members",
+        "item": "Member {n}",
+        "name": "Name",
+        "role": "Role",
+        "initials": "Initials (e.g.: MS)",
+        "bio": "Biography",
+        "photo": "Photo (optional)",
+        "photoAlt": "Photo alt (accessibility)",
+        "add": "Add Member"
+      },
+      "pillars": {
+        "badge": "Badge",
+        "sectionTitle": "Section Title",
+        "listTitle": "Pillars",
+        "item": "Pillar {n}",
+        "itemTitle": "Title",
+        "itemIcon": "Icon",
+        "itemColor": "Color",
+        "itemDescription": "Description",
+        "add": "Add Pillar"
+      },
+      "cta": {
+        "title": "Title",
+        "subtitle": "Subtitle",
+        "btnDonate": "Donate Button",
+        "btnDonateColor": "Donate Button Color/Gradient",
+        "btnDonateVariant": "Donate Button Variant",
+        "btnContact": "Contact Button",
+        "btnContactColor": "Contact Button Color/Gradient",
+        "btnContactVariant": "Contact Button Variant"
       }
     },
     "editor": {

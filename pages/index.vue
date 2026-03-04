@@ -9,14 +9,11 @@ import {
   CBInput,
   CBLabel,
   CBMarquee,
-  CBNavbar,
   CBSelect,
   CBTextarea,
   createGradient,
   createGlow,
-  type INavbarMenuItem,
 } from '@cb/components';
-import { useI18n } from 'vue-i18n';
 import FrontBadge from '@components/front/FrontBadge.vue';
 import FrontButton from '@components/front/FrontButton.vue';
 import { resolveColorValue } from '@utils/colorResolver';
@@ -49,26 +46,6 @@ useSeoMeta({
   ogSiteName: () => seo.value.og.siteName,
   ogLocale: () => seo.value.og.locale,
 });
-
-// ============== NAVBAR (i18n) ==============
-
-const currentPath = ref('/');
-const { t } = useI18n();
-
-const menuItems = computed<INavbarMenuItem[]>(() => [
-  { label: t('navbar.home'), to: '/' },
-  { label: t('navbar.about'), to: '/sobre' },
-  { label: t('navbar.projects'), to: '/projetos' },
-  { label: t('navbar.blog'), to: '/blog' },
-]);
-
-const handleNavigate = ({ path }: { path: string }) => {
-  currentPath.value = path;
-};
-
-const handleLogoClick = () => {
-  currentPath.value = '/';
-};
 
 // ============== CONTACT FORM ==============
 
@@ -123,31 +100,6 @@ watch(status, async () => {
     <ClientOnly>
       <LoadingOverlay :visible="status !== 'success'" />
     </ClientOnly>
-
-    <!-- Navbar -->
-    <CBNavbar
-      :menu-items="menuItems"
-      :current-path="currentPath"
-      menu-style="underline"
-      placement="fixed"
-      :elevation="2"
-      mobile-mode="popover"
-      class="customNavbar"
-      @navigate="handleNavigate"
-      @logo-click="handleLogoClick"
-    >
-      <template #logo>
-        <CBImage
-          src="/logo-elas-podem.png"
-          alt="Elas Podem"
-          size="auto"
-          :height="48"
-          fit="contain"
-          :eager="true"
-          class="navbarLogo"
-        />
-      </template>
-    </CBNavbar>
 
     <div class="pageWrapper">
       <!-- ════════ HERO ════════ -->
@@ -773,33 +725,6 @@ watch(status, async () => {
     opacity: 1;
     transform: translateX(0);
   }
-}
-
-/* ============================================
-   NAVBAR
-   ============================================ */
-.customNavbar :deep(.cbNavbar) {
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-}
-
-.customNavbar :deep(.cbNavbar__logoSection) {
-  margin-left: 80px;
-}
-
-.customNavbar :deep(.cbNavbar__menuContainer) {
-  justify-content: center;
-}
-
-.navbarLogo {
-  height: 48px;
-  width: auto;
-  cursor: pointer;
-  transition: transform 0.35s ease;
-}
-
-.navbarLogo:hover {
-  transform: scale(1.05);
 }
 
 /* ============================================
@@ -1745,14 +1670,6 @@ watch(status, async () => {
 }
 
 @media (max-width: 768px) {
-  .customNavbar :deep(.cbNavbar__logoSection) {
-    margin-left: 1rem;
-  }
-
-  .navbarLogo {
-    height: 40px;
-  }
-
   .heroSection {
     padding: 120px 7% 60px;
   }

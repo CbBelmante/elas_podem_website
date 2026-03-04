@@ -179,6 +179,87 @@ export const SEO_CONFIG = {
 } as const;
 
 // ============================================================
+// ABOUT — HERO
+// ============================================================
+
+/** Regras de validacao da secao About Hero */
+export const ABOUT_HERO_CONFIG = {
+  validationRules: {
+    badge: { required: true, minLength: 3, maxLength: 60 },
+    title: { required: true, minLength: 3, maxLength: 60 },
+    description: { required: true, minLength: 10, maxLength: 500 },
+  },
+} as const;
+
+// ============================================================
+// ABOUT — TIMELINE
+// ============================================================
+
+/** Regras de validacao e limites da secao About Timeline */
+export const ABOUT_TIMELINE_CONFIG = {
+  sectionRules: {
+    badge: { required: true, minLength: 3, maxLength: 60 },
+    title: { required: true, minLength: 3, maxLength: 80 },
+  },
+  validationRules: {
+    year: { required: true, minLength: 2, maxLength: 10 },
+    title: { required: true, minLength: 3, maxLength: 60 },
+    description: { required: true, minLength: 10, maxLength: 500 },
+  },
+  items: { min: 1, max: 20 },
+} as const;
+
+// ============================================================
+// ABOUT — TEAM
+// ============================================================
+
+/** Regras de validacao e limites da secao About Team */
+export const ABOUT_TEAM_CONFIG = {
+  sectionRules: {
+    badge: { required: true, minLength: 3, maxLength: 60 },
+    title: { required: true, minLength: 3, maxLength: 80 },
+    subtitle: { required: false, maxLength: 300 },
+  },
+  validationRules: {
+    name: { required: true, minLength: 2, maxLength: 60 },
+    role: { required: true, minLength: 2, maxLength: 60 },
+    bio: { required: true, minLength: 10, maxLength: 500 },
+  },
+  items: { min: 1, max: 20 },
+} as const;
+
+// ============================================================
+// ABOUT — PILLARS
+// ============================================================
+
+/** Regras de validacao e limites da secao About Pillars */
+export const ABOUT_PILLARS_CONFIG = {
+  sectionRules: {
+    badge: { required: true, minLength: 3, maxLength: 60 },
+    title: { required: true, minLength: 3, maxLength: 80 },
+  },
+  validationRules: {
+    title: { required: true, minLength: 3, maxLength: 60 },
+    description: { required: true, minLength: 10, maxLength: 500 },
+  },
+  items: { min: 1, max: 6 },
+} as const;
+
+// ============================================================
+// ABOUT — CTA
+// ============================================================
+
+/** Regras de validacao da secao About CTA */
+export const ABOUT_CTA_CONFIG = {
+  validationRules: {
+    title: { required: true, minLength: 5, maxLength: 80 },
+    subtitle: { required: true, minLength: 10, maxLength: 300 },
+    btnDonate: { required: true, minLength: 2, maxLength: 30 },
+    btnContact: { required: true, minLength: 2, maxLength: 30 },
+  },
+} as const;
+
+// ============================================================
 // IMAGE UPLOAD
 // ============================================================
 

@@ -74,3 +74,31 @@ export type {
   IValidationResult,
   IAdminLog,
 } from './formsData';
+
+// ---- About Page: Camada 1 (Section Data) ----
+export type {
+  IAboutHeroSection,
+  IAboutTimelineItem,
+  IAboutTimelineSection,
+  IAboutTeamMember,
+  IAboutTeamSection,
+  IAboutPillar,
+  IAboutPillarsSection,
+  IAboutCtaSection,
+  IAboutPageData,
+} from './aboutSections';
+
+// ---- About Page: Camada 2 (Editable split) ----
+export type {
+  IAboutHeroEditable,
+  IAboutTimelineItemEditable,
+  IAboutTimelineEditable,
+  IAboutTeamMemberEditable,
+  IAboutTeamEditable,
+  IAboutPillarEditable,
+  IAboutPillarsEditable,
+  IAboutCtaEditable,
+} from './aboutEditable';
+
+// ---- About Page: Camada 3 (FormsData) ----
+export type { IAboutFormsData } from './aboutFormsData';

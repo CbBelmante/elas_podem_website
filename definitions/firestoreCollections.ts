@@ -20,6 +20,7 @@ export type FirestoreCollection =
 
 export const PAGE_DOCUMENTS = {
   HOME: 'home',
+  ABOUT: 'about',
 } as const satisfies Record<string, string>;
 
 export type PageDocument = (typeof PAGE_DOCUMENTS)[keyof typeof PAGE_DOCUMENTS];
