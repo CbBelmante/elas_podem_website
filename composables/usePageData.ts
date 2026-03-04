@@ -183,6 +183,17 @@ export function createPageDataComposable<TPageData, TFormsData extends Record<st
       }
     };
 
+    // Atualiza originalData (pra reset funcionar) sem substituir state.forms
+    const syncOriginalData = async (): Promise<void> => {
+      try {
+        const docRef = doc($db, config.collection, config.document);
+        const snap = await getDoc(docRef);
+        if (snap.exists()) state.originalData = snap.data() as TPageData;
+      } catch {
+        logger.warn('Falha ao sincronizar originalData apos save');
+      }
+    };
+
     /**
      * Salva UMA secao no Firestore via dot notation.
      * Exemplo: saveSection('hero') → updateDoc({ 'content.hero': {...} })
@@ -204,7 +215,8 @@ export function createPageDataComposable<TPageData, TFormsData extends Record<st
 
         logger.info('Secao salva', { section, updatedBy: userData.value?.displayName });
 
-        await loadPageData();
+        // Sincroniza originalData sem re-renderizar os forms
+        await syncOriginalData();
 
         return {
           success: true,
@@ -255,7 +267,8 @@ export function createPageDataComposable<TPageData, TFormsData extends Record<st
           updatedBy: userData.value?.displayName,
         });
 
-        await loadPageData();
+        // Sincroniza originalData sem re-renderizar os forms
+        await syncOriginalData();
 
         return {
           success: true,

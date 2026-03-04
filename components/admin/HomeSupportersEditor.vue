@@ -50,7 +50,7 @@ function addSupporter(): void {
   const newItem = createNewSupporter();
   const editable: Record<string, unknown> = {};
   const readonly: Record<string, unknown> = {};
-  for (const [key, mode] of Object.entries(SECTION_FIELDS.supporters)) {
+  for (const [key, mode] of Object.entries(SECTION_FIELDS.supporters.items)) {
     if (mode === 'editable') editable[key] = (newItem as Record<string, unknown>)[key];
     else readonly[key] = (newItem as Record<string, unknown>)[key];
   }
@@ -119,6 +119,7 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
           emit('changed');
         "
       />
+
     </div>
 
     <!-- Items -->
@@ -193,6 +194,40 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
             "
             @uploaded="emit('uploaded', $event)"
           />
+
+          <CBSlider
+            :model-value="element.logoSize"
+            :min="SUPPORTERS_CONFIG.logoSize.min"
+            :max="SUPPORTERS_CONFIG.logoSize.max"
+            :step="2"
+            :label="$t('admin.supporters.logoSize')"
+            thumb-label="always"
+            color="primary"
+            @update:model-value="
+              element.logoSize = $event;
+              emit('changed');
+            "
+          />
+
+          <!-- Preview do tamanho real -->
+          <div class="supportersEditor__preview">
+            <CBLabel :text="$t('admin.supporters.preview')" size="xs" class="supportersEditor__previewLabel" />
+            <div class="supportersEditor__previewBox">
+              <img
+                v-if="element.image"
+                :src="element.image"
+                :alt="element.imageAlt || element.name"
+                :style="{ height: `${element.logoSize}px`, width: 'auto', objectFit: 'contain' }"
+              />
+              <CBLabel
+                v-else
+                :text="element.name || '—'"
+                size="lg"
+                weight="bold"
+                :style="{ height: `${element.logoSize}px`, lineHeight: `${element.logoSize}px` }"
+              />
+            </div>
+          </div>
         </AdminEditorCard>
       </template>
     </draggable>
@@ -239,6 +274,27 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.75rem;
+}
+
+.supportersEditor__preview {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.supportersEditor__previewLabel {
+  color: var(--text-tertiary);
+}
+
+.supportersEditor__previewBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem;
+  border: 1px dashed var(--border-light);
+  border-radius: 8px;
+  background: var(--bg-subtle);
+  min-height: 60px;
 }
 
 .supportersEditor__ghost {

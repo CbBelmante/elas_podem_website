@@ -86,30 +86,35 @@ function calculateDimensions(opts: {
   return { width, height };
 }
 
-/**
- * Converte canvas para Blob JPEG com a qualidade especificada.
- */
-function canvasToBlob(canvas: HTMLCanvasElement, quality: number): Promise<Blob> {
+// Converte canvas para Blob. JPEG usa quality; PNG/WebP preservam transparência.
+function canvasToBlob(
+  canvas: HTMLCanvasElement,
+  mimeType: 'image/jpeg' | 'image/png' | 'image/webp',
+  quality: number
+): Promise<Blob> {
   return new Promise((resolve, reject) => {
     canvas.toBlob(
       (blob) => {
         if (blob) resolve(blob);
         else reject(new Error('Falha ao converter canvas para blob'));
       },
-      'image/jpeg',
-      quality
+      mimeType,
+      mimeType === 'image/jpeg' ? quality : undefined
     );
   });
 }
 
-/**
- * Gera nome do arquivo comprimido.
- * hero-bg.png → hero-bg_compressed.jpg
- */
-function generateCompressedName(originalName: string): string {
+// Formatos que suportam transparência (alpha channel)
+function supportsAlpha(file: File): boolean {
+  return file.type === 'image/png' || file.type === 'image/webp';
+}
+
+// Gera nome comprimido preservando extensão: foto.webp → foto_compressed.webp
+function generateCompressedName(originalName: string, mimeType: string): string {
   const dotIndex = originalName.lastIndexOf('.');
   const baseName = dotIndex > 0 ? originalName.substring(0, dotIndex) : originalName;
-  return `${baseName}_compressed.jpg`;
+  const extMap: Record<string, string> = { 'image/png': 'png', 'image/webp': 'webp' };
+  return `${baseName}_compressed.${extMap[mimeType] ?? 'jpg'}`;
 }
 
 // ============== COMPOSABLE ==============
@@ -169,11 +174,20 @@ export function useImageCompression() {
       canvas.height = height;
 
       const ctx = canvas.getContext('2d')!;
+      const hasAlpha = supportsAlpha(file);
+
+      // PNG/WebP: fundo transparente. JPEG: fundo branco (evita fundo preto).
+      if (!hasAlpha) {
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, width, height);
+      }
+
       ctx.drawImage(img, 0, 0, width, height);
 
-      const blob = await canvasToBlob(canvas, opts.quality);
-      const compressedName = generateCompressedName(file.name);
-      const compressed = new File([blob], compressedName, { type: 'image/jpeg' });
+      const mimeType = hasAlpha ? (file.type as 'image/png' | 'image/webp') : 'image/jpeg';
+      const blob = await canvasToBlob(canvas, mimeType, opts.quality);
+      const compressedName = generateCompressedName(file.name, mimeType);
+      const compressed = new File([blob], compressedName, { type: mimeType });
 
       logger.debug('Imagem comprimida', {
         original: `${(file.size / 1024).toFixed(0)}KB (${img.width}x${img.height})`,

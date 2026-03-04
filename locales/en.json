@@ -226,6 +226,7 @@
       "sectionTitle": "Section Title",
       "subtitle": "Subtitle (optional)",
       "marqueeSpeed": "Marquee Speed (px/s)",
+      "logoSize": "Logo Size (px)",
       "listTitle": "Supporters",
       "item": "Supporter {n}",
       "name": "Name",
@@ -233,7 +234,8 @@
       "website": "Website (optional)",
       "logo": "Logo (optional)",
       "logoAlt": "Logo alt (accessibility)",
-      "add": "Add Supporter"
+      "add": "Add Supporter",
+      "preview": "Preview"
     },
     "contact": {
       "badge": "Badge",

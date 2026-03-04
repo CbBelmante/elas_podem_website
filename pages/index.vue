@@ -20,11 +20,6 @@ import { useI18n } from 'vue-i18n';
 import FrontBadge from '@components/front/FrontBadge.vue';
 import FrontButton from '@components/front/FrontButton.vue';
 import { resolveColorValue } from '@utils/colorResolver';
-import {
-  HERO_DEFAULTS,
-  MISSION_DEFAULTS,
-  SUPPORTERS_SECTION_DEFAULTS,
-} from '@definitions/sectionDefaults';
 
 // ============== FIREBASE DATA ==============
 
@@ -159,7 +154,7 @@ watch(status, async () => {
       <section
         class="heroSection"
         :style="{
-          '--hero-image-opacity': (hero.heroImageOpacity ?? HERO_DEFAULTS.heroImageOpacity) / 100,
+          '--hero-image-opacity': hero.heroImageOpacity / 100,
         }"
       >
         <CBImage
@@ -284,7 +279,7 @@ watch(status, async () => {
               fit="cover"
               :rounded="20"
               class="missionImage"
-              :style="{ opacity: (mission.imageOpacity ?? MISSION_DEFAULTS.imageOpacity) / 100 }"
+              :style="{ opacity: mission.imageOpacity / 100 }"
             />
           </div>
         </div>
@@ -472,7 +467,8 @@ watch(status, async () => {
 
           <CBMarquee
             :gap="0"
-            :speed="supporters.marqueeSpeed ?? SUPPORTERS_SECTION_DEFAULTS.marqueeSpeed"
+            :speed="supporters.marqueeSpeed"
+            :no-repeat="supporters.items.length < 4"
             slow-on-hover
             :slow-on-hover-rate="0.2"
             :fade-size="100"
@@ -490,7 +486,7 @@ watch(status, async () => {
                   :src="supporter.image"
                   :alt="supporter.imageAlt || supporter.name"
                   size="auto"
-                  :height="32"
+                  :height="supporter.logoSize"
                   fit="contain"
                   class="supporterLogo"
                 />

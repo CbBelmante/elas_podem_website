@@ -49,7 +49,7 @@ function addProgram(): void {
   const newItem = createNewProgram();
   const editable: Record<string, unknown> = {};
   const readonly: Record<string, unknown> = {};
-  for (const [key, mode] of Object.entries(SECTION_FIELDS.programs)) {
+  for (const [key, mode] of Object.entries(SECTION_FIELDS.programs.items)) {
     if (mode === 'editable') editable[key] = (newItem as Record<string, unknown>)[key];
     else readonly[key] = (newItem as Record<string, unknown>)[key];
   }

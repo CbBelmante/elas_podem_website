@@ -140,6 +140,7 @@ export const HOME_FALLBACK: IHomePageData = {
           image: '',
           imageAlt: '',
           url: '',
+          logoSize: 48,
         },
         {
           name: 'Lorem 2',
@@ -147,10 +148,11 @@ export const HOME_FALLBACK: IHomePageData = {
           image: '',
           imageAlt: '',
           url: '',
+          logoSize: 48,
         },
-        { name: 'Lorem 3', icon: 'luc-globe', image: '', imageAlt: '', url: '' },
-        { name: 'Lorem 4', icon: 'luc-star', image: '', imageAlt: '', url: '' },
-        { name: 'Lorem 5', icon: 'luc-award', image: '', imageAlt: '', url: '' },
+        { name: 'Lorem 3', icon: 'luc-globe', image: '', imageAlt: '', url: '', logoSize: 48 },
+        { name: 'Lorem 4', icon: 'luc-star', image: '', imageAlt: '', url: '', logoSize: 48 },
+        { name: 'Lorem 5', icon: 'luc-award', image: '', imageAlt: '', url: '', logoSize: 48 },
       ],
     },
 

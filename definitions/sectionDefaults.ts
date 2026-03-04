@@ -105,6 +105,7 @@ export const SUPPORTER_ITEM_DEFAULTS = {
   image: '',
   imageAlt: '',
   url: '',
+  logoSize: 48,
 } as const;
 
 // ============================================================

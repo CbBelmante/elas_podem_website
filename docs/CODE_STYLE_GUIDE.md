@@ -958,6 +958,31 @@ for (const item of items) {
 }
 ```
 
+### **Parâmetros Nomeados (3+ params)**
+
+Funções com **3 ou mais parâmetros** devem usar um **objeto nomeado** para evitar dependência de ordem:
+
+```typescript
+// ❌ ERRADO - 3+ params posicionais: precisa lembrar a ordem
+function separateWrapper(data: Record, fields: Record, defaults?: Record) { }
+separateWrapper(data, SECTION_FIELDS.supporters, SUPPORTERS_DEFAULTS);
+
+// ✅ CORRETO - Objeto nomeado: claro qual é qual
+function separateWrapper(params: {
+  data: Record<string, unknown>;
+  fields: Record<string, unknown>;
+  sectionDefaults?: Record<string, unknown>;
+}) { }
+separateWrapper({
+  data: data,
+  fields: SECTION_FIELDS.supporters,
+  sectionDefaults: SUPPORTERS_DEFAULTS,
+});
+```
+
+**Quando NÃO usar objeto:**
+- Funções com 1-2 params óbvios: `separateByFields(data, fields)`, `combineFromFields(editable, readonly)`
+
 ### **Princípios de Simplicidade**
 
 1. **Sem variáveis intermediárias desnecessárias** — se o valor é usado uma vez e inline é legível, não crie variável
@@ -1015,6 +1040,7 @@ Use este checklist antes de commitar código:
 
 ### **Iteração e Simplicidade**
 
+- [ ] Funções com 3+ params usam objeto nomeado (não posicional)
 - [ ] Zero `.forEach()` — usar `for...of`, `for...in`, `for` clássico
 - [ ] `.find()` para buscar 1 item (nunca `.filter()[0]`)
 - [ ] `.some()` / `.every()` / `.includes()` para verificações

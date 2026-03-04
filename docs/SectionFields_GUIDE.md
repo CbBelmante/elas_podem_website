@@ -3,7 +3,7 @@
 <div align="center">
 
 ![Tipo](https://img.shields.io/badge/Tipo-ARQUITETURA-lightblue?style=for-the-badge)
-![Versão](https://img.shields.io/badge/Versão-1.0-blue?style=for-the-badge)
+![Versão](https://img.shields.io/badge/Versão-2.0-blue?style=for-the-badge)
 ![Status](https://img.shields.io/badge/Status-COMPLETO-green?style=for-the-badge)
 
 </div>
@@ -18,10 +18,12 @@
 
 1. [Visao Geral](#-visao-geral)
 2. [Como Mudar um Campo](#-como-mudar-um-campo-essencial) (Essencial)
-3. [Os 3 Modos](#-os-3-modos-importante) (Importante)
-4. [Arquitetura](#-arquitetura-opcional) (Opcional)
-5. [Referencia de Arquivos](#-referencia-de-arquivos-referencia) (Referencia)
-6. [FAQ](#-faq-suporte) (Suporte)
+3. [Como Adicionar um Campo](#-como-adicionar-um-campo-essencial) (Essencial)
+4. [Como Remover um Campo](#-como-remover-um-campo-essencial) (Essencial)
+5. [Os 3 Modos](#-os-3-modos-importante) (Importante)
+6. [Arquitetura](#-arquitetura-opcional) (Opcional)
+7. [Referencia de Arquivos](#-referencia-de-arquivos-referencia) (Referencia)
+8. [FAQ](#-faq-suporte) (Suporte)
 
 ---
 
@@ -29,40 +31,50 @@
 
 ### O Problema
 
-Antes, cada campo do admin tinha sua definicao duplicada em 4 lugares:
+Antes, cada campo do admin tinha sua definicao duplicada em 4+ lugares:
 
 ```
-editable.ts     → interface manual (IProgramEditable, IProgramReadonly)
-formsData.ts    → container que importa as interfaces
+sections.ts      → interface base
+editable.ts      → interface manual (IProgramEditable, IProgramReadonly)
 HomeFormUtils.ts → separate/combine listava campo por campo
-UI              → form inputs
+sectionDefaults  → defaults
+UI               → form inputs
 ```
 
-Para mover `icon` de editavel para hidden: **4 arquivos**.
+Para mover `icon` de editavel para hidden: **4+ arquivos**.
 
 ### A Solucao
 
 Agora existe **1 unica fonte de verdade**: `definitions/sectionFields.ts`
 
 ```
-sectionFields.ts → define o modo de cada campo ('editable' | 'readonly' | 'hidden')
-editable.ts      → tipos DERIVADOS automaticamente (FieldsByMode + PreservedFields)
-HomeFormUtils.ts  → separate/combine GENERICOS (leem o config em runtime)
-UI               → form inputs
+sectionFields.ts      → define o modo de cada campo ('editable' | 'readonly' | 'hidden')
+editable.ts           → tipos DERIVADOS automaticamente (FieldsByMode + PreservedFields)
+sectionFieldsUtils.ts → helpers genéricos de split/combine (leem o config em runtime)
+HomeFormUtils.ts      → thin wrappers por secao (delegam pros genericos)
+UI                    → form inputs
 ```
 
 Para mover `icon` de editavel para hidden: **1 arquivo** (+ ajustar UI).
+
+### Dois tipos de secao
+
+| Tipo | Descricao | Exemplo | Estrutura no config |
+|------|-----------|---------|---------------------|
+| **Flat** | Campos simples no root | hero, mission, values, cta, seo | `{ campo: 'editable' }` |
+| **Wrapper** | Campos section-level + array de items | programs, testimonials, supporters, contact | `{ badge: 'editable', items: { name: 'editable' } }` |
 
 ### Quando Usar
 
 ✅ **Consulte este guia quando:**
 - Precisar mudar um campo de editavel para readonly/hidden (ou vice-versa)
 - Adicionar um campo novo a uma secao
+- Remover um campo existente
 - Adicionar uma secao nova ao admin
 - Entender como os tipos sao derivados
 
 ❌ **Nao precisa deste guia para:**
-- Mudar textos default (va em `HomeFormUtils.ts` → `createDefault*()`)
+- Mudar textos default (va em `definitions/sectionDefaults.ts`)
 - Mudar regras de validacao (va em `Validation_GUIDE.md`)
 - Entender o fluxo de dados load/save (va em `PageData_GUIDE.md`)
 - Mudar opcoes de cores/icones (va em `definitions/themeOptions.ts`)
@@ -71,27 +83,38 @@ Para mover `icon` de editavel para hidden: **1 arquivo** (+ ajustar UI).
 
 ## 🔧 Como Mudar um Campo (Essencial)
 
-### Cenario: Mudar `icon` de editavel para hidden em Programs
+### Cenario: Mudar `color` de editable para hidden em Programs
 
 **Passo 1** — Mude o modo em `definitions/sectionFields.ts`:
 
 ```typescript
 programs: {
-  title:       'editable',
-  description: 'editable',
-  icon:        'hidden',      // ← era 'editable', agora 'hidden'
-  color:       'editable',
-  link:        'editable',
+  badge: 'editable',
+  title: 'editable',
+  subtitle: 'editable',
+  items: {
+    title: 'editable',
+    description: 'editable',
+    icon: 'editable',
+    color: 'hidden',      // ← era 'editable', agora 'hidden'
+    link: 'editable',
+    tags: 'editable',
+    tagColor: 'editable',
+  },
 },
 ```
 
-**Passo 2** — Ajuste a UI (remova o input do icon no formulario).
+**Passo 2** — Ajuste a UI (remova o input do color no formulario).
 
 **Pronto.** Os tipos se recalculam. O separate/combine se adapta. O build passa.
 
-### Cenario: Adicionar campo novo `subtitle` em Programs
+---
 
-**Passo 1** — Adicione a interface em `types/admin/sections.ts`:
+## ➕ Como Adicionar um Campo (Essencial)
+
+### Cenario A: Adicionar campo item-level `subtitle` em Programs
+
+**Passo 1** — Adicione na interface em `types/admin/sections.ts`:
 
 ```typescript
 export interface IProgram {
@@ -101,6 +124,8 @@ export interface IProgram {
   icon: string;
   color: string;
   link: string;
+  tags: string[];
+  tagColor: string;
 }
 ```
 
@@ -108,30 +133,103 @@ export interface IProgram {
 
 ```typescript
 programs: {
-  title:       'editable',
-  description: 'editable',
-  subtitle:    'editable',  // ← NOVO
-  icon:        'editable',
-  color:       'editable',
-  link:        'editable',
+  badge: 'editable',
+  title: 'editable',
+  subtitle: 'editable',
+  items: {
+    title: 'editable',
+    description: 'editable',
+    subtitle: 'editable',  // ← NOVO
+    icon: 'editable',
+    color: 'editable',
+    link: 'editable',
+    tags: 'editable',
+    tagColor: 'editable',
+  },
 },
 ```
 
-**Passo 3** — Adicione o default em `utils/HomeFormUtils.ts`:
+**Passo 3** — Adicione o default em `definitions/sectionDefaults.ts`:
 
 ```typescript
-export function createDefaultProgramEditable(): IProgramEditable {
-  return { title: '', description: '', subtitle: '', icon: 'luc-star', link: 'Saiba Mais' };
-  //                                   ^^^^^^^^^ NOVO
-}
-
-export function createNewProgram(): IProgram {
-  return { title: '', description: '', subtitle: '', icon: 'luc-star', color: 'magenta', link: 'Saiba Mais' };
-  //                                   ^^^^^^^^^ NOVO
-}
+export const PROGRAM_ITEM_DEFAULTS = {
+  title: '',
+  description: '',
+  subtitle: '',            // ← NOVO
+  icon: 'luc-star',
+  color: 'magenta',
+  link: 'Saiba Mais',
+  tags: [],
+  tagColor: 'magenta',
+} as const;
 ```
 
 **Passo 4** — Adicione o input na UI do formulario.
+
+**Pronto.** O tipo `IProgramEditable` ja inclui `subtitle` automaticamente. O `separateWrapperByFields` ja le o novo campo do config. Zero mudanca em `editable.ts` ou `HomeFormUtils.ts`.
+
+### Cenario B: Adicionar campo section-level `logoSize` em Supporters
+
+**Passo 1** — Adicione na interface da secao em `types/admin/sections.ts`:
+
+```typescript
+export interface ISupporter {
+  name: string;
+  icon: string;
+  image: string;
+  imageAlt: string;
+  url: string;
+  logoSize: number;       // ← NOVO (item-level, cada supporter tem o seu)
+}
+```
+
+> **Decisao:** campo section-level (um valor pra todos) ou item-level (cada item tem o seu)?
+> Section-level → vai no root do config. Item-level → vai dentro de `items`.
+
+**Passo 2** — Adicione o modo em `definitions/sectionFields.ts`:
+
+```typescript
+supporters: {
+  badge: 'editable',
+  title: 'editable',
+  subtitle: 'editable',
+  marqueeSpeed: 'editable',
+  items: {
+    name: 'editable',
+    icon: 'editable',
+    image: 'editable',
+    imageAlt: 'editable',
+    url: 'editable',
+    logoSize: 'editable',   // ← NOVO
+  },
+},
+```
+
+**Passo 3** — Adicione o default em `definitions/sectionDefaults.ts`:
+
+```typescript
+export const SUPPORTER_ITEM_DEFAULTS = {
+  name: '',
+  icon: 'luc-building-2',
+  image: '',
+  imageAlt: '',
+  url: '',
+  logoSize: 48,            // ← NOVO
+} as const;
+```
+
+**Passo 4** — Adicione o input na UI do formulario.
+
+### Resumo: Adicionar campo
+
+| Nivel | Arquivos | O que muda automaticamente |
+|-------|----------|---------------------------|
+| **Item-level** (ex: `subtitle` em IProgram) | `sections.ts` + `sectionFields.ts` + `sectionDefaults.ts` (3 arquivos) | Tipos expandem, separate/combine adaptam |
+| **Section-level** (ex: `marqueeSpeed` em ISupportersSection) | `sections.ts` + `sectionFields.ts` + `sectionDefaults.ts` (3 arquivos) | Tipos expandem, separate/combine adaptam |
+
+---
+
+## ➖ Como Remover um Campo (Essencial)
 
 ### Cenario: Remover campo `btnHistory` do Hero
 
@@ -165,27 +263,21 @@ export interface IHeroSection {
 ```typescript
 // ANTES:
 hero: {
-  badge: 'editable',
-  title: 'editable',
-  description: 'editable',
   btnDonate: 'editable',
   btnHistory: 'editable',    // ← REMOVER
   heroImage: 'editable',
-  stats: 'editable',
 },
 
 // DEPOIS:
 hero: {
-  badge: 'editable',
-  title: 'editable',
-  description: 'editable',
   btnDonate: 'editable',
   heroImage: 'editable',
-  stats: 'editable',
 },
 ```
 
-**Passo 3** — Siga os erros do TypeScript. O tipo `IHeroEditable` se recalcula automaticamente (nao tem mais `btnHistory`), entao o compilador vai apontar cada lugar que ainda referencia o campo removido:
+**Passo 3** — Remova do default em `definitions/sectionDefaults.ts` (se existir).
+
+**Passo 4** — Siga os erros do TypeScript. O tipo `IHeroEditable` se recalcula automaticamente (nao tem mais `btnHistory`), entao o compilador vai apontar cada lugar que ainda referencia o campo removido:
 
 ```
 ❌ createDefaultHeroEditable() → Property 'btnHistory' does not exist
@@ -194,15 +286,13 @@ hero: {
 
 Corrija cada erro removendo a referencia. O TypeScript te guia — **voce nunca esquece de limpar algo**.
 
-**Passo 4** — Remova o input da UI do formulario.
-
 ### Resumo dos 3 cenarios
 
 | Cenario | Arquivos obrigatorios | O que o TypeScript faz |
 |---------|----------------------|----------------------|
 | **Mudar modo** | `sectionFields.ts` (1 arquivo) | Tipos recalculam, build passa |
-| **Adicionar campo** | `sections.ts` + `sectionFields.ts` (2 arquivos) | Tipos expandem, defaults pedem o campo novo |
-| **Remover campo** | `sections.ts` + `sectionFields.ts` (2 arquivos) | Tipos encolhem, erros guiam a limpeza |
+| **Adicionar campo** | `sections.ts` + `sectionFields.ts` + `sectionDefaults.ts` (3 arquivos) | Tipos expandem, defaults pedem o campo novo |
+| **Remover campo** | `sections.ts` + `sectionFields.ts` + `sectionDefaults.ts` (3 arquivos) | Tipos encolhem, erros guiam a limpeza |
 
 ---
 
@@ -212,14 +302,15 @@ Corrija cada erro removendo a referencia. O TypeScript te guia — **voce nunca 
 |------|-----------------|---------|---------|
 | `editable` | Input editavel | Admin muda | title, description, image |
 | `readonly` | Texto visivel, nao editavel | Preservado | *(reservado para uso futuro)* |
-| `hidden` | Nao aparece | Preservado silenciosamente | color, og |
+| `hidden` | Nao aparece | Preservado silenciosamente | og (Open Graph) |
 
 ### Quando usar cada modo
 
 **`editable`** — Conteudo que o admin precisa mudar:
 - Textos (titulos, descricoes, botoes)
 - Imagens (URLs do Storage — Cloudinary/Firebase)
-- Arrays editaveis (stats, keywords, formSubjects)
+- Arrays editaveis (stats, keywords, formSubjects, tags)
+- Numeros de config (marqueeSpeed, logoSize, heroImageOpacity)
 
 **`readonly`** — Dados que o admin deve VER mas nao editar:
 - Exemplo futuro: data de criacao, ID do documento
@@ -257,16 +348,52 @@ O admin mudou `title`, preservou `icon`, e `color` voltou intacto sem o admin sa
 
 ```
 definitions/
-└── sectionFields.ts        ← UNICA FONTE DE VERDADE (modos dos campos)
+├── sectionFields.ts         ← UNICA FONTE DE VERDADE (modos dos campos)
+└── sectionDefaults.ts       ← valores default por secao/item
 
 types/admin/
-├── sections.ts             ← interfaces base (formato Firebase)
-├── editable.ts             ← tipos DERIVADOS (FieldsByMode, PreservedFields)
-├── formsData.ts            ← container + orquestrador (IHomeFormsData, ISaveResult, IValidationResult...)
-└── index.ts                ← barrel exports
+├── sections.ts              ← interfaces base (formato Firebase)
+├── editable.ts              ← tipos DERIVADOS (FieldsByMode, PreservedFields, ExtractItemConfig)
+├── formsData.ts             ← container (IHomeFormsData, ISaveResult, IValidationResult)
+└── index.ts                 ← barrel exports
 
 utils/
-└── HomeFormUtils.ts        ← separate/combine GENERICOS + defaults
+├── sectionFieldsUtils.ts    ← helpers GENERICOS de split/combine (nao sabe sobre secoes)
+└── HomeFormUtils.ts         ← thin wrappers por secao (delegam pros genericos)
+```
+
+### Secoes flat vs wrapper
+
+**Secoes flat** (hero, mission, values, cta, seo):
+- Campos direto no root do config
+- Usam `separateByFields` / `combineFromFields`
+- Tipos: `FieldsByMode<IHeroSection, config.hero, 'editable'>`
+
+**Secoes wrapper** (programs, testimonials, supporters, contact):
+- Section-level no root + item-level em `items` (ou `methods` no contact)
+- Usam `separateWrapperByFields` / `combineWrapperFromFields`
+- Tipos: section-level (`FieldsByMode` no root) + item-level (`FieldsByMode` via `ExtractItemConfig`)
+- O tipo final e a intersecao: `ISectionEditable & { items: IItemEditable[] }`
+
+```typescript
+// Exemplo: Supporters
+
+// Config:
+supporters: {
+  badge: 'editable',        // section-level
+  title: 'editable',        // section-level
+  marqueeSpeed: 'editable', // section-level
+  items: {                   // item-level
+    name: 'editable',
+    logoSize: 'editable',
+  },
+}
+
+// Tipo derivado:
+type ISupportersSectionEditable = { badge: string; title: string; marqueeSpeed: number }
+type ISupporterEditable = { name: string; logoSize: number }
+type ISupportersEditable = ISupportersSectionEditable & { items: ISupporterEditable[] }
+// = { badge, title, marqueeSpeed, items: [{ name, logoSize }] }
 ```
 
 ### Como os tipos sao derivados
@@ -274,63 +401,60 @@ utils/
 ```typescript
 // definitions/sectionFields.ts — DEFINE os modos
 programs: {
-  title: 'editable',
-  color: 'hidden',
+  badge: 'editable',     // section-level
+  items: {
+    title: 'editable',   // item-level
+    color: 'hidden',     // item-level
+  },
 },
 
 // types/admin/editable.ts — DERIVA os tipos automaticamente
 
-// Utility type: pega campos por modo
-type FieldsByMode<T, Config, Mode> = Pick<T, campos onde Config[K] === Mode>
+// Utility types:
+type FieldsByMode<T, Config, Mode>        // Pega campos onde Config[K] === Mode
+type PreservedFields<T, Config>           // Pega campos readonly + hidden
+type ExtractItemConfig<Config, 'items'>   // Extrai o sub-config de items
 
-// Utility type: pega tudo que NAO e editable (readonly + hidden)
-type PreservedFields<T, Config> = Pick<T, campos onde Config[K] === 'readonly' | 'hidden'>
+// Item-level:
+type IProgramEditable = FieldsByMode<IProgram, ExtractItemConfig<config, 'items'>, 'editable'>
+// = { title: string, description: string, icon: string, link: string, tags: string[], tagColor: string }
 
-// Tipos derivados:
-type IProgramEditable = FieldsByMode<IProgram, config, 'editable'>
-// = { title: string, description: string, icon: string, link: string }
-
-type IProgramReadonly = PreservedFields<IProgram, config>
+type IProgramReadonly = PreservedFields<IProgram, ExtractItemConfig<config, 'items'>>
 // = { color: string }
+
+// Section-level:
+type IProgramsSectionEditable = FieldsByMode<IProgramsSection, config.programs, 'editable'>
+// = { badge: string, title: string, subtitle: string }
+
+// Tipo final (intersecao):
+type IProgramsEditable = IProgramsSectionEditable & { items: IProgramEditable[] }
 ```
 
-### Como o separate/combine funciona em runtime
+### Helpers genericos (sectionFieldsUtils.ts)
 
-```typescript
-// utils/HomeFormUtils.ts — GENERICOS
+| Funcao | Tipo | Descricao |
+|--------|------|-----------|
+| `separateByFields(data, fields)` | flat | Separa 1 objeto em editable/readonly por modo |
+| `combineFromFields(editable, readonly)` | flat | Junta editable + readonly de volta |
+| `separateArrayByFields(data, fields)` | array | Separa array em editable[]/readonly[] pareados |
+| `combineArrayFromFields({ editable, readonly })` | array | Junta arrays pareados de volta |
+| `separateWrapperByFields({ data, fields, sectionDefaults })` | wrapper | Separa section-level + item-level automaticamente |
+| `combineWrapperFromFields({ editable, readonly, fields })` | wrapper | Junta section-level + item-level de volta |
+| `getItemFields(fields)` | descoberta | Encontra a chave nested (items/methods) no config |
+| `getSectionFields(fields)` | descoberta | Filtra apenas campos section-level (string FieldMode) |
 
-function separateByFields(data, fields) {
-  // Para cada campo no config:
-  //   se mode === 'editable' → vai pro bucket editable
-  //   senao (readonly ou hidden) → vai pro bucket readonly
-  // Valores sao clonados (nao referencia)
-}
+### Thin wrappers (HomeFormUtils.ts)
 
-function combineFromFields(editable, readonly) {
-  // Junta os dois buckets: { ...readonly, ...editable }
-  // Editable sobrescreve em caso de conflito
-}
+Cada secao wrapper tem 4 funcoes que delegam pros genericos:
 
-// Per-section wrappers chamam os genericos:
-function separateProgramsData(data: IProgram[]) {
-  return separateArrayByFields(data, SECTION_FIELDS.programs);
-}
-```
+| Funcao | Faz o que |
+|--------|-----------|
+| `separate*Data(data)` | Chama `separateWrapperByFields` + cast de tipo |
+| `combine*Data(editable, readonly)` | Chama `combineWrapperFromFields` + cast de tipo |
+| `createDefault*Editable()` | Cria editable vazio (estado inicial do form) |
+| `createNew*()` | Cria 1 item novo (botao [+Novo] do CRUD) |
 
-### Caso especial: Contact
-
-Contact tem estrutura aninhada — campos top-level + methods[] com split proprio:
-
-```typescript
-// IContactSection = { badge, title, description, methods[], formSubjects[] }
-// Os campos top-level sao TODOS editaveis
-// Os methods[] tem split proprio via SECTION_FIELDS.contactMethod
-// (atualmente todos os campos de method sao editaveis)
-
-// Entao Contact usa:
-// - SECTION_FIELDS.contactMethod para o split dos methods
-// - Campos top-level sao montados manualmente (todos editaveis)
-```
+Secoes flat (hero, mission, values, cta, seo) delegam pra `separateByFields` / `combineFromFields`.
 
 ---
 
@@ -349,33 +473,54 @@ Contact tem estrutura aninhada — campos top-level + methods[] com split propri
 |--------|------|-----------|
 | `FieldsByMode<T, Config, Mode>` | utility type | Extrai campos de T cujo mode no Config === Mode |
 | `PreservedFields<T, Config>` | utility type | Extrai campos readonly + hidden (tudo que NAO e editable) |
+| `ExtractItemConfig<Config, Key>` | utility type | Extrai sub-config de items/methods |
 | `I*Editable` | type alias | Campos editaveis por secao (derivados via FieldsByMode) |
 | `I*Readonly` | type alias | Campos preservados por secao (derivados via PreservedFields) |
+
+### `utils/sectionFieldsUtils.ts`
+
+| Export | Tipo | Descricao |
+|--------|------|-----------|
+| `separateByFields()` | function | Objeto flat → { editable, readonly } |
+| `combineFromFields()` | function | { editable, readonly } → objeto flat |
+| `separateArrayByFields()` | function | Array → { editable[], readonly[] } pareados |
+| `combineArrayFromFields()` | function | { editable[], readonly[] } → array flat |
+| `separateWrapperByFields()` | function | Wrapper → { editable, readonly } com section + items |
+| `combineWrapperFromFields()` | function | { editable, readonly } → wrapper flat |
+| `getItemFields()` | function | Descobre chave nested no config (items/methods) |
+| `getSectionFields()` | function | Filtra campos section-level do config |
 
 ### `utils/HomeFormUtils.ts`
 
 | Export | Tipo | Descricao |
 |--------|------|-----------|
-| `separate*Data()` | function | Firestore → { editable, readonly } |
-| `combine*Data()` | function | { editable, readonly } → Firestore |
-| `createDefault*()` | function | Valores iniciais para formulario vazio |
+| `separate*Data()` | function | Firestore → { editable, readonly } por secao |
+| `combine*Data()` | function | { editable, readonly } → Firestore por secao |
+| `createDefault*Editable()` | function | Valores iniciais para formulario vazio |
 | `createNew*()` | function | Item em branco para CRUD [+Novo] |
 | `separateAllSections()` | function | Converte IHomePageData inteira em IHomeFormsData |
 | `createDefaultHomeForms()` | function | Gera IHomeFormsData completo com defaults |
 
 ### Mapa atual de campos
 
-| Secao | Editable | Hidden | Readonly |
-|-------|----------|--------|----------|
-| **hero** | badge, title, description, btnDonate, btnDonateColor, btnDonateVariant, btnHistory, btnHistoryColor, btnHistoryVariant, heroImage, heroImageOpacity, stats | — | — |
-| **mission** | badge, title, paragraphs, btnText, btnColor, btnVariant, image, imageOpacity, imageAlt | — | — |
-| **programs** | title, description, icon, color, link, tags, tagColor | — | — |
-| **testimonials** | quote, name, role, initials, image, imageAlt *(section-level: autoplay, autoplayInterval — gerenciados manualmente no wrapper)* | — | — |
-| **supporters** | name, icon, image, imageAlt, url | — | — |
-| **contactMethod** | label, value, icon, color, url | — | — |
-| **values** | title, subtitle, color | — | — |
-| **cta** | title, subtitle, btnDonate, btnDonateColor, btnDonateVariant, btnProjects, btnProjectsColor, btnProjectsVariant | — | — |
-| **seo** | title, description, keywords, ogImage | og | — |
+#### Secoes flat
+
+| Secao | Editable | Hidden |
+|-------|----------|--------|
+| **hero** | badge, title, description, btnDonate, btnDonateColor, btnDonateVariant, btnHistory, btnHistoryColor, btnHistoryVariant, heroImage, heroImageOpacity, stats | — |
+| **mission** | badge, title, paragraphs, btnText, btnColor, btnVariant, image, imageOpacity, imageAlt | — |
+| **values** | title, subtitle, color | — |
+| **cta** | title, subtitle, btnDonate, btnDonateColor, btnDonateVariant, btnProjects, btnProjectsColor, btnProjectsVariant | — |
+| **seo** | title, description, keywords, ogImage | og |
+
+#### Secoes wrapper
+
+| Secao | Section-level (editable) | Item-level (editable) | Item-level (hidden) |
+|-------|--------------------------|-----------------------|---------------------|
+| **programs** | badge, title, subtitle | title, description, icon, color, link, tags, tagColor | — |
+| **testimonials** | autoplay, autoplayInterval | quote, name, role, initials, image, imageAlt | — |
+| **supporters** | badge, title, subtitle, marqueeSpeed | name, icon, image, imageAlt, url, logoSize | — |
+| **contact** | badge, title, description, formSubjects | label, value, icon, color, url (via `methods`) | — |
 
 ---
 
@@ -405,16 +550,16 @@ Sem `as const`, o TypeScript nao consegue distinguir `'editable'` de `'hidden'` 
 
 ```typescript
 export type FieldsByMode<
-  T,                                      // interface base (ex: IProgram)
-  Config extends Record<string, string>,  // config (ex: SECTION_FIELDS.programs)
-  Mode extends string,                    // modo desejado (ex: 'editable')
+  T,                                        // interface base (ex: IProgram)
+  Config extends Record<string, unknown>,   // config (ex: SECTION_FIELDS.programs.items)
+  Mode extends string,                      // modo desejado (ex: 'editable')
 > = Pick<
   T,
   { [K in keyof Config]: Config[K] extends Mode ? K : never }[keyof Config] & keyof T
 >;
 ```
 
-Exemplo concreto — `FieldsByMode<IProgram, SECTION_FIELDS.programs, 'editable'>`:
+Exemplo concreto — `FieldsByMode<IProgram, config.programs.items, 'editable'>`:
 
 **Passo 1** — Para cada campo do config, pergunta: "o valor e `'editable'`?"
 
@@ -424,8 +569,6 @@ description: 'editable' extends 'editable'? SIM → 'description'
 icon:        'editable' extends 'editable'? SIM → 'icon'
 color:       'hidden'   extends 'editable'? NAO → never
 link:        'editable' extends 'editable'? SIM → 'link'
-
-= { title: 'title', description: 'description', icon: 'icon', color: never, link: 'link' }
 ```
 
 **Passo 2** — Pega os valores (nomes dos campos aprovados):
@@ -449,157 +592,72 @@ Pick<IProgram, 'title' | 'description' | 'icon' | 'link'>
 = { title: string, description: string, icon: string, link: string }
 ```
 
-**Resultado:** `color` foi excluido automaticamente porque e `'hidden'`, nao `'editable'`.
+### Por que FieldsByMode funciona com secoes wrapper
 
-Se amanha mudar `icon: 'hidden'` no config, o tipo recalcula sozinho:
+Na secao wrapper, o root tem strings (`badge: 'editable'`) + um objeto (`items: { ... }`). O `FieldsByMode` usa `Config[K] extends Mode` — como `Mode` e uma string ('editable'), o objeto `items` **nunca** matcheia `extends 'editable'`, entao e ignorado automaticamente:
 
-```typescript
-// Antes: { title, description, icon, link }
-// Depois: { title, description, link }    ← icon sumiu automaticamente
+```
+badge:  'editable' extends 'editable'? SIM → 'badge'
+title:  'editable' extends 'editable'? SIM → 'title'
+items:  { name: 'editable', ... } extends 'editable'? NAO → never  (objeto ≠ string)
 ```
 
 ---
 
-### PreservedFields — a mesma logica invertida
+### ExtractItemConfig — extrair sub-config de items
 
 ```typescript
-export type PreservedFields<T, Config> = Pick<
-  T,
-  { [K in keyof Config]: Config[K] extends 'readonly' | 'hidden' ? K : never }[keyof Config] & keyof T
->;
+type ExtractItemConfig<Config, Key extends string> =
+  Config extends Record<Key, infer S extends Record<string, unknown>>
+    ? S
+    : never;
 ```
 
-A diferenca: ao inves de filtrar por UM modo, pega **tudo que NAO e editable**:
-
-```
-title:       'editable' extends 'readonly' | 'hidden'? NAO → never
-description: 'editable' extends 'readonly' | 'hidden'? NAO → never
-icon:        'editable' extends 'readonly' | 'hidden'? NAO → never
-color:       'hidden'   extends 'readonly' | 'hidden'? SIM → 'color'
-link:        'editable' extends 'readonly' | 'hidden'? NAO → never
-
-Pick<IProgram, 'color'> = { color: string }
-```
-
----
-
-### FieldsByMode e reutilizavel — 1 utility type serve pra tudo
+Pega o sub-objeto `items` (ou `methods`) do config wrapper:
 
 ```typescript
-// Programs — editaveis
-FieldsByMode<IProgram, config.programs, 'editable'>
-// = { title, description, icon, link }
-
-// Programs — hidden
-FieldsByMode<IProgram, config.programs, 'hidden'>
-// = { color }
-
-// SEO — editaveis
-FieldsByMode<ISeo, config.seo, 'editable'>
-// = { title, description, keywords, ogImage }
-
-// SEO — hidden
-FieldsByMode<ISeo, config.seo, 'hidden'>
-// = { og }
-
-// Supporters — editaveis
-FieldsByMode<ISupporter, config.supporters, 'editable'>
-// = { name, icon, image, url }
+ExtractItemConfig<typeof SECTION_FIELDS.programs, 'items'>
+// = { title: 'editable', description: 'editable', icon: 'editable', color: 'editable', ... }
 ```
 
-Muda so os 3 parametros: qual interface, qual config, qual modo.
+Isso permite derivar os tipos item-level:
+
+```typescript
+type IProgramEditable = FieldsByMode<IProgram, ExtractItemConfig<config, 'items'>, 'editable'>
+```
 
 ---
 
 ### Helpers de runtime — como separate/combine funcionam
 
-Os utility types resolvem os TIPOS em compile time. Em runtime, quem faz o trabalho sao 4 helpers genericos:
-
-#### `cloneValue` — copia segura
+#### Secoes flat: `separateByFields` + `combineFromFields`
 
 ```typescript
-function cloneValue(value: unknown): unknown {
-  if (Array.isArray(value)) return value.map((v) => cloneValue(v));
-  if (typeof value === 'object' && value !== null) return { ...value };
-  return value;
+// separateByFields: para cada campo no config, separa por modo
+for (const [key, mode] of Object.entries(fields)) {
+  const target = mode === 'editable' ? editable : readonly;
+  target[key] = cloneValue(data[key]);
 }
+
+// combineFromFields: junta de volta (1 linha)
+return { ...readonly, ...editable };
 ```
 
-Por que: sem clone, editar um campo no form alteraria o dado original do Firebase (mesma referencia em memoria). Com clone, cada um tem sua copia independente.
-
-#### `separateByFields` — separa 1 objeto por modo
-
-```typescript
-function separateByFields(data, fields) {
-  const editable = {};
-  const readonly = {};
-
-  for (const [key, mode] of Object.entries(fields)) {
-    if (!(key in data)) continue;
-    const target = mode === 'editable' ? editable : readonly;
-    target[key] = cloneValue(data[key]);
-  }
-
-  return { editable, readonly };
-}
-```
-
-Exemplo com dado real:
+#### Secoes wrapper: `separateWrapperByFields` + `combineWrapperFromFields`
 
 ```
-data   = { title: 'Comunicacao', icon: 'luc-megaphone', color: 'magenta', ... }
-fields = { title: 'editable', icon: 'editable', color: 'hidden', ... }
+separateWrapperByFields:
+  1. getItemFields(config) → descobre 'items' (ou 'methods')
+  2. getSectionFields(config) → filtra campos section-level (strings)
+  3. Separa section-level por modo → sectionEditable
+  4. Separa array item-level por modo → itemsEditable[], itemsReadonly[]
+  5. Retorna { editable: { ...sectionEditable, items: itemsEditable }, readonly: { items: itemsReadonly } }
 
-Loop:
-  key='title', mode='editable' → editable.title = 'Comunicacao'
-  key='icon',  mode='editable' → editable.icon = 'luc-megaphone'
-  key='color', mode='hidden'   → readonly.color = 'magenta'  (nao e 'editable' → vai pro readonly)
-
-Resultado:
-  editable: { title: 'Comunicacao', icon: 'luc-megaphone', ... }
-  readonly: { color: 'magenta' }
-```
-
-**Detalhe:** a unica checagem e `mode === 'editable'`. Tudo que nao e editable (seja `'readonly'` ou `'hidden'`) vai pro mesmo bucket. Simples.
-
-#### `combineFromFields` — junta de volta (1 linha)
-
-```typescript
-function combineFromFields(editable, readonly) {
-  return { ...readonly, ...editable };
-}
-```
-
-Na hora do save: `{ color: 'magenta' } + { title: 'Educacao', icon: 'luc-star', ... }` = dado flat completo pro Firebase.
-
-#### `separateArrayByFields` — versao pra arrays
-
-```typescript
-function separateArrayByFields(data, fields) {
-  const results = data.map((item) => separateByFields(item, fields));
-  return {
-    editable: results.map((r) => r.editable),
-    readonly: results.map((r) => r.readonly),
-  };
-}
-```
-
-Aplica `separateByFields` em cada item do array. Resultado: arrays pareados por indice.
-
-```
-Firebase: [
-  { title: 'Comunicacao', color: 'magenta' },     // [0]
-  { title: 'Educacao',    color: 'coral' },        // [1]
-]
-
-editable: [
-  { title: 'Comunicacao' },   // [0]
-  { title: 'Educacao' },      // [1]
-]
-readonly: [
-  { color: 'magenta' },       // [0] casa com editable[0]
-  { color: 'coral' },         // [1] casa com editable[1]
-]
+combineWrapperFromFields:
+  1. getItemFields(config) → descobre 'items'
+  2. Copia campos section-level do editable/readonly pro result
+  3. Recombina arrays item a item (combineArrayFromFields)
+  4. Retorna objeto flat pro Firestore
 ```
 
 ---
@@ -609,17 +667,15 @@ readonly: [
 O mesmo config (`SECTION_FIELDS`) alimenta os dois mundos:
 
 ```
-SECTION_FIELDS.programs = { title: 'editable', color: 'hidden', ... }
+SECTION_FIELDS.programs = { badge: 'editable', items: { title: 'editable', color: 'hidden' } }
         |                                               |
         ↓ (compile time)                                ↓ (runtime)
-  FieldsByMode / PreservedFields              separateByFields / combineFromFields
-  geram os TIPOS corretos                    separam os DADOS corretamente
-  (TypeScript grita se errar)                (JavaScript executa a separacao)
+  FieldsByMode / ExtractItemConfig              separateWrapperByFields / combineWrapperFromFields
+  geram os TIPOS corretos                      separam os DADOS corretamente
+  (TypeScript grita se errar)                  (JavaScript executa a separacao)
 ```
 
-Ambos leem o mesmo config, entao estao sempre sincronizados. Se mudar `icon: 'hidden'` no config:
-- **Compile time:** FieldsByMode remove `icon` do tipo IProgramEditable → TypeScript grita se a UI tentar acessar `editable.icon`
-- **Runtime:** separateByFields coloca `icon` no bucket readonly → o dado vai pro lugar certo
+Ambos leem o mesmo config, entao estao sempre sincronizados.
 
 ---
 
@@ -633,27 +689,41 @@ Verifique se o campo existe em `types/admin/sections.ts`. O `SECTION_FIELDS` dev
 
 Adicione ao `FieldMode` type em `sectionFields.ts`. Depois decida se `PreservedFields` deve incluir o novo modo ou nao. O `separateByFields` em runtime coloca tudo que nao e `'editable'` no bucket readonly.
 
-### Contact e mais complexo que as outras secoes. Por que?
+### Qual a diferenca entre section-level e item-level?
 
-Porque Contact tem **2 niveis de split**: campos top-level (badge, title) + sub-array methods[] onde cada method tambem tem split (color e hidden). As outras secoes sao flat ou arrays simples.
+- **Section-level**: se aplica a secao inteira (ex: `badge`, `marqueeSpeed`)
+- **Item-level**: se aplica a cada item individual (ex: `name`, `logoSize`)
+- No config: section-level fica no root, item-level fica dentro de `items` (ou `methods`)
+- No tipo: o tipo final e a intersecao dos dois
+
+### Por que Contact usa `methods` em vez de `items`?
+
+Porque o Firestore armazena como `methods` (sao metodos de contato: email, telefone, WhatsApp). O `getItemFields()` detecta qualquer chave nested automaticamente — nao depende do nome ser `items`.
 
 ### Posso ter um campo que e editable em uma secao e hidden em outra?
 
-Sim, cada secao tem seu proprio config independente. `icon` pode ser `'editable'` em programs e `'hidden'` em supporters, por exemplo.
+Sim, cada secao tem seu proprio config independente. `icon` pode ser `'editable'` em programs e `'hidden'` em supporters.
 
 ### Como adicionar uma secao nova (ex: gallery)?
 
-1. Crie a interface em `types/admin/sections.ts` (ex: `IGalleryItem`)
+1. Crie a interface em `types/admin/sections.ts` (ex: `IGalleryItem`, `IGallerySection`)
 2. Adicione em `IHomePageData.content`
-3. Adicione os modos em `definitions/sectionFields.ts` (ex: `gallery: { ... }`)
-4. Os tipos Editable/Readonly sao derivados automaticamente em `editable.ts`
-5. Adicione as funcoes em `HomeFormUtils.ts` (separate, combine, createDefault)
-6. Adicione o bloco no `IHomeFormsData` em `formsData.ts`
-7. Crie a UI do formulario
+3. Adicione os modos em `definitions/sectionFields.ts`
+4. Adicione defaults em `definitions/sectionDefaults.ts`
+5. Os tipos Editable/Readonly sao derivados automaticamente em `editable.ts`
+6. Adicione thin wrappers em `HomeFormUtils.ts` (separate, combine, createDefault, createNew)
+7. Adicione o bloco no `IHomeFormsData` em `formsData.ts`
+8. Adicione fallback em `definitions/homeFallbacks.ts`
+9. Crie a UI do formulario
+
+### Onde ficam os helpers genericos?
+
+Em `utils/sectionFieldsUtils.ts`. Esses helpers nao sabem nada sobre secoes especificas — so leem configs e separam/combinam dados. A HomeFormUtils.ts importa deles e faz thin wrappers tipados por secao.
 
 ---
 
 *📅 Criado em*: 18 FEV 2026
-*📋 Versao*: 1.0
+*📅 Ultima atualizacao*: 03 MAR 2026
+*📋 Versao*: 2.0
 *👥 Responsavel*: CbBelmante
-*🏷️ Tags*: [arquitetura, admin, tipos, sectionFields, editable, readonly, hidden]
+*🏷️ Tags*: [arquitetura, admin, tipos, sectionFields, editable, readonly, hidden, wrapper, section-level, item-level]

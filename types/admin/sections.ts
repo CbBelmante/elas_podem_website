@@ -112,6 +112,7 @@ export interface ISupporter {
   image: string; // Firebase Storage URL (opcional)
   imageAlt: string; // alt text para acessibilidade
   url: string;
+  logoSize: number; // altura do logo em px (por item)
 }
 
 /** Metadados da secao + array de items */

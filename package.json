@@ -17,7 +17,8 @@
     "format:check": "prettier --check .",
     "deploy": "npm run generate && npx firebase-tools deploy --only hosting",
     "deployPreview": "npm run generate && npx serve .output/public",
-    "seedAdmin": "npx tsx --no-deprecation scripts/seedAdmin.ts"
+    "seedAdmin": "npx tsx --no-deprecation scripts/seedAdmin.ts",
+    "killPort": "bash scripts/killPort.sh"
   },
   "dependencies": {
     "dayjs": "^1.11.19",

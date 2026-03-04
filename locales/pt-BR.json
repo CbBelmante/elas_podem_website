@@ -226,6 +226,7 @@
       "sectionTitle": "Título da Seção",
       "subtitle": "Subtítulo (opcional)",
       "marqueeSpeed": "Velocidade do Marquee (px/s)",
+      "logoSize": "Tamanho do Logo (px)",
       "listTitle": "Apoiadores",
       "item": "Apoiador {n}",
       "name": "Nome",
@@ -233,7 +234,8 @@
       "website": "Website (opcional)",
       "logo": "Logo (opcional)",
       "logoAlt": "Alt do logo (acessibilidade)",
-      "add": "Adicionar Apoiador"
+      "add": "Adicionar Apoiador",
+      "preview": "Preview"
     },
     "contact": {
       "badge": "Badge",

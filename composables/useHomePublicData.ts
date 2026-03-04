@@ -17,6 +17,12 @@ import { useCache } from '@composables/useCache';
 import { FIRESTORE_COLLECTIONS, PAGE_DOCUMENTS } from '@definitions/firestoreCollections';
 import { CACHE_KEYS } from '@definitions/cacheKeys';
 import { HOME_FALLBACK } from '@definitions/homeFallbacks';
+import {
+  HERO_DEFAULTS,
+  MISSION_DEFAULTS,
+  SUPPORTERS_SECTION_DEFAULTS,
+  SUPPORTER_ITEM_DEFAULTS,
+} from '@definitions/sectionDefaults';
 import { Logger } from '@utils/Logger';
 
 import type { IHomePageData } from '@appTypes/admin';
@@ -26,6 +32,24 @@ import type { IHomePageData } from '@appTypes/admin';
 const logger = Logger.child({ composable: 'useHomePublicData' });
 
 // ============== HELPERS ==============
+
+// Backward compat: logoSize migrou de section-level pra item-level
+function normalizeSupporters(raw: Record<string, unknown>): IHomePageData['content']['supporters'] {
+  const section = { ...SUPPORTERS_SECTION_DEFAULTS, ...raw } as Record<string, unknown>;
+  const sectionLogoSize = (section.logoSize as number) ?? SUPPORTER_ITEM_DEFAULTS.logoSize;
+  const items = (section.items ?? []) as Record<string, unknown>[];
+
+  return {
+    badge: section.badge as string,
+    title: section.title as string,
+    subtitle: section.subtitle as string,
+    marqueeSpeed: section.marqueeSpeed as number,
+    items: items.map((item) => ({
+      ...item,
+      logoSize: (item.logoSize as number) ?? sectionLogoSize,
+    })),
+  } as IHomePageData['content']['supporters'];
+}
 
 /**
  * Merge por secao: Firestore sobrescreve fallback apenas onde existir dados.
@@ -37,15 +61,22 @@ function mergeWithFallback(firestore: Record<string, unknown>): IHomePageData {
 
   return {
     content: {
-      hero: (content.hero as IHomePageData['content']['hero']) ?? fb.content.hero,
-      mission: (content.mission as IHomePageData['content']['mission']) ?? fb.content.mission,
+      hero: {
+        ...HERO_DEFAULTS,
+        ...((content.hero as IHomePageData['content']['hero']) ?? fb.content.hero),
+      },
+      mission: {
+        ...MISSION_DEFAULTS,
+        ...((content.mission as IHomePageData['content']['mission']) ?? fb.content.mission),
+      },
       programs: (content.programs as IHomePageData['content']['programs']) ?? fb.content.programs,
       testimonials: Array.isArray(content.testimonials)
         ? { autoplay: true, autoplayInterval: 6000, items: content.testimonials }
         : (content.testimonials as IHomePageData['content']['testimonials']) ??
           fb.content.testimonials,
-      supporters:
-        (content.supporters as IHomePageData['content']['supporters']) ?? fb.content.supporters,
+      supporters: normalizeSupporters(
+        (content.supporters as Record<string, unknown>) ?? fb.content.supporters
+      ),
       contact: (content.contact as IHomePageData['content']['contact']) ?? fb.content.contact,
       values: (content.values as IHomePageData['content']['values']) ?? fb.content.values,
       cta: (content.cta as IHomePageData['content']['cta']) ?? fb.content.cta,

@@ -48,7 +48,7 @@ function addMethod(): void {
   const newItem = createNewContactMethod();
   const editable: Record<string, unknown> = {};
   const readonly: Record<string, unknown> = {};
-  for (const [key, mode] of Object.entries(SECTION_FIELDS.contactMethod)) {
+  for (const [key, mode] of Object.entries(SECTION_FIELDS.contact.methods)) {
     if (mode === 'editable') editable[key] = (newItem as Record<string, unknown>)[key];
     else readonly[key] = (newItem as Record<string, unknown>)[key];
   }

@@ -1,27 +1,9 @@
 /**
- * Home Form Utils - Elas Podem
+ * 🎯 HomeFormUtils - Conversão Firestore ↔ Editor por seção da Home Page
  *
- * Funcoes de conversao entre formato Firestore (flat) e formato Editor (editable/readonly).
- *
- * Usa SECTION_FIELDS como fonte de verdade para saber quais campos sao
- * editable vs readonly. As funcoes genericas separateByFields/combineFromFields
- * leem o config em runtime — nao precisa listar campos manualmente.
- *
- * Padrao por secao:
- *   separate*Data()  — Firestore -> { editable, readonly }  (abre pro formulario)
- *   combine*Data()   — { editable, readonly } -> Firestore   (junta pro save)
- *   createDefault*() — valores iniciais quando Firestore esta vazio
- *   createNew*()     — item em branco para CRUD [+Novo] (arrays only)
- *
- * Funcoes agregadoras:
- *   separateAllSections() — converte IHomePageData inteira em IHomeFormsData
- *   createDefaultHomeForms() — gera IHomeFormsData completo com defaults
- *
- * @module utils/HomeFormUtils
- *
- * @dependencias
- * - types/admin (interfaces de secao e editable/readonly)
- * - definitions/sectionFields (config de modos)
+ * Padrão por seção: separate*Data (abre), combine*Data (salva),
+ * createDefault* (vazio), createNew* (CRUD [+Novo]).
+ * Delega split/combine genérico para sectionFieldsUtils.
  */
 
 import type {
@@ -39,20 +21,14 @@ import type {
   // Camada 2: Editable/Readonly
   IHeroEditable,
   IMissionEditable,
-  IProgramEditable,
-  IProgramReadonly,
   IProgramsEditable,
   IProgramsReadonly,
   ITestimonialEditable,
   ITestimonialsEditable,
-  ISupporterEditable,
-  ISupporterReadonly,
   ISupportersEditable,
   ISupportersReadonly,
   IContactEditable,
   IContactReadonly,
-  IContactMethodEditable,
-  IContactMethodReadonly,
   IValueEditable,
   ICtaEditable,
   ISeoEditable,
@@ -62,7 +38,7 @@ import type {
   IHomePageData,
 } from '@appTypes/admin';
 
-import { SECTION_FIELDS, type FieldMode } from '@definitions/sectionFields';
+import { SECTION_FIELDS } from '@definitions/sectionFields';
 import {
   HERO_DEFAULTS,
   HERO_STAT_DEFAULTS,
@@ -81,90 +57,14 @@ import {
   SEO_OG_DEFAULTS,
 } from '@definitions/sectionDefaults';
 
-// ============================================================
-// HELPERS GENERICOS
-// ============================================================
-
-/**
- * Deep clone de um valor (arrays, objetos, primitivos).
- * Copia shallow de objetos e recursiva de arrays.
- */
-function cloneValue(value: unknown): unknown {
-  if (Array.isArray(value)) return value.map((v) => cloneValue(v));
-  if (typeof value === 'object' && value !== null) return { ...value };
-  return value;
-}
-
-/**
- * Separa um objeto flat em { editable, readonly } baseado no config de campos.
- *
- * Le SECTION_FIELDS em runtime: campos marcados 'editable' vao pro editable,
- * campos 'readonly' vao pro readonly. Valores sao clonados (nao referencia).
- *
- * @param data - Objeto flat do Firestore
- * @param fields - Config de campos (ex: SECTION_FIELDS.programs)
- * @returns { editable, readonly } com os campos separados
- */
-function separateByFields<T extends object>(
-  data: T,
-  fields: Record<string, FieldMode>
-): { editable: Partial<T>; readonly: Partial<T> } {
-  const editable: Record<string, unknown> = {};
-  const readonly: Record<string, unknown> = {};
-
-  for (const [key, mode] of Object.entries(fields)) {
-    if (!(key in data) || mode === 'hidden') continue;
-    const target = mode === 'editable' ? editable : readonly;
-    target[key] = cloneValue((data as Record<string, unknown>)[key]);
-  }
-
-  return { editable: editable as Partial<T>, readonly: readonly as Partial<T> };
-}
-
-/**
- * Combina editable + readonly de volta em um objeto flat.
- *
- * @param editable - Campos editaveis
- * @param readonly - Campos readonly
- * @returns Objeto flat recombinado
- */
-function combineFromFields<T>(editable: Partial<T>, readonly: Partial<T>): T {
-  return { ...readonly, ...editable } as T;
-}
-
-/**
- * Separa um array de objetos em { editable[], readonly[] } pareados por indice.
- *
- * @param data - Array de objetos do Firestore
- * @param fields - Config de campos
- * @returns { editable[], readonly[] }
- */
-function separateArrayByFields<T extends object>(
-  data: T[],
-  fields: Record<string, FieldMode>
-): { editable: Partial<T>[]; readonly: Partial<T>[] } {
-  const results = data.map((item) => separateByFields(item, fields));
-  return {
-    editable: results.map((r) => r.editable),
-    readonly: results.map((r) => r.readonly),
-  };
-}
-
-/**
- * Combina arrays pareados de editable + readonly de volta em um array flat.
- *
- * @param editable - Array de campos editaveis
- * @param readonly - Array de campos readonly (pareado por indice)
- * @param defaultReadonly - Fallback para readonly quando indice nao existe
- * @returns Array de objetos flat recombinados
- */
-function combineArrayFromFields<T>(
-  editable: Partial<T>[],
-  readonly: Partial<T>[],
-  defaultReadonly: Partial<T> = {}
-): T[] {
-  return editable.map((e, i) => ({ ...(readonly[i] || defaultReadonly), ...e }) as T);
-}
+import {
+  separateByFields,
+  combineFromFields,
+  separateArrayByFields,
+  combineArrayFromFields,
+  separateWrapperByFields,
+  combineWrapperFromFields,
+} from '@utils/sectionFieldsUtils';
 
 // ============================================================
 // HERO
@@ -215,41 +115,29 @@ export function createDefaultMissionEditable(): IMissionEditable {
 }
 
 // ============================================================
-// PROGRAMS — estrutura aninhada (secao + items[])
+// PROGRAMS — estrutura aninhada (seção + items[])
 // ============================================================
 
 export function separateProgramsData(data: IProgramsSection): {
   editable: IProgramsEditable;
   readonly: IProgramsReadonly;
 } {
-  const { editable: itemsEditable, readonly: itemsReadonly } = separateArrayByFields(
-    data.items,
-    SECTION_FIELDS.programs
-  );
-
-  return {
-    editable: {
-      badge: data.badge,
-      title: data.title,
-      subtitle: data.subtitle,
-      items: itemsEditable as IProgramEditable[],
-    },
-    readonly: {
-      items: itemsReadonly as IProgramReadonly[],
-    },
-  };
+  return separateWrapperByFields({
+    data: data as unknown as Record<string, unknown>,
+    fields: SECTION_FIELDS.programs,
+    sectionDefaults: PROGRAMS_SECTION_DEFAULTS,
+  }) as { editable: IProgramsEditable; readonly: IProgramsReadonly };
 }
 
 export function combineProgramsData(
   editable: IProgramsEditable,
   readonly: IProgramsReadonly
 ): IProgramsSection {
-  return {
-    badge: editable.badge,
-    title: editable.title,
-    subtitle: editable.subtitle,
-    items: combineArrayFromFields<IProgram>(editable.items, readonly.items),
-  };
+  return combineWrapperFromFields<IProgramsSection>({
+    editable: editable as unknown as Record<string, unknown>,
+    readonly: readonly as unknown as Record<string, unknown>,
+    fields: SECTION_FIELDS.programs,
+  });
 }
 
 export function createDefaultProgramsEditable(): IProgramsEditable {
@@ -261,7 +149,7 @@ export function createNewProgram(): IProgram {
 }
 
 // ============================================================
-// TESTIMONIALS — estrutura aninhada (secao + items[])
+// TESTIMONIALS — estrutura aninhada (seção + items[])
 // ============================================================
 
 export function separateTestimonialsData(data: ITestimonialsSection): {
@@ -272,26 +160,19 @@ export function separateTestimonialsData(data: ITestimonialsSection): {
     ? { ...TESTIMONIALS_SECTION_DEFAULTS, items: data as unknown as ITestimonial[] }
     : data;
 
-  const { editable: itemsEditable } = separateArrayByFields(
-    normalized.items,
-    SECTION_FIELDS.testimonials
-  );
-
-  return {
-    editable: {
-      autoplay: normalized.autoplay ?? TESTIMONIALS_SECTION_DEFAULTS.autoplay,
-      autoplayInterval: normalized.autoplayInterval ?? TESTIMONIALS_SECTION_DEFAULTS.autoplayInterval,
-      items: itemsEditable as ITestimonialEditable[],
-    },
-  };
+  return separateWrapperByFields({
+    data: normalized as unknown as Record<string, unknown>,
+    fields: SECTION_FIELDS.testimonials,
+    sectionDefaults: TESTIMONIALS_SECTION_DEFAULTS,
+  }) as { editable: ITestimonialsEditable };
 }
 
 export function combineTestimonialsData(editable: ITestimonialsEditable): ITestimonialsSection {
-  return {
-    autoplay: editable.autoplay,
-    autoplayInterval: editable.autoplayInterval,
-    items: combineArrayFromFields<ITestimonial>(editable.items, []),
-  };
+  return combineWrapperFromFields<ITestimonialsSection>({
+    editable: editable as unknown as Record<string, unknown>,
+    readonly: {},
+    fields: SECTION_FIELDS.testimonials,
+  });
 }
 
 export function createDefaultTestimonialsEditable(): ITestimonialsEditable {
@@ -307,43 +188,38 @@ export function createNewTestimonial(): ITestimonial {
 }
 
 // ============================================================
-// SUPPORTERS — estrutura aninhada (secao + items[])
+// SUPPORTERS — estrutura aninhada (seção + items[])
 // ============================================================
 
 export function separateSupportersData(data: ISupportersSection): {
   editable: ISupportersEditable;
   readonly: ISupportersReadonly;
 } {
-  const { editable: itemsEditable, readonly: itemsReadonly } = separateArrayByFields(
-    data.items,
-    SECTION_FIELDS.supporters
-  );
+  // Backward compat: logoSize migrou de section-level pra item-level
+  const raw = data as unknown as Record<string, unknown>;
+  const sectionLogoSize = raw.logoSize as number | undefined;
+  if (sectionLogoSize && Array.isArray(raw.items)) {
+    for (const item of raw.items as Record<string, unknown>[]) {
+      item.logoSize ??= sectionLogoSize;
+    }
+  }
 
-  return {
-    editable: {
-      badge: data.badge,
-      title: data.title,
-      subtitle: data.subtitle,
-      marqueeSpeed: data.marqueeSpeed ?? SUPPORTERS_SECTION_DEFAULTS.marqueeSpeed,
-      items: itemsEditable as ISupporterEditable[],
-    },
-    readonly: {
-      items: itemsReadonly as ISupporterReadonly[],
-    },
-  };
+  return separateWrapperByFields({
+    data: raw,
+    fields: SECTION_FIELDS.supporters,
+    sectionDefaults: SUPPORTERS_SECTION_DEFAULTS,
+  }) as { editable: ISupportersEditable; readonly: ISupportersReadonly };
 }
 
 export function combineSupportersData(
   editable: ISupportersEditable,
   readonly: ISupportersReadonly
 ): ISupportersSection {
-  return {
-    badge: editable.badge,
-    title: editable.title,
-    subtitle: editable.subtitle,
-    marqueeSpeed: editable.marqueeSpeed,
-    items: combineArrayFromFields<ISupporter>(editable.items, readonly.items),
-  };
+  return combineWrapperFromFields<ISupportersSection>({
+    editable: editable as unknown as Record<string, unknown>,
+    readonly: readonly as unknown as Record<string, unknown>,
+    fields: SECTION_FIELDS.supporters,
+  });
 }
 
 export function createDefaultSupportersEditable(): ISupportersEditable {
@@ -355,47 +231,29 @@ export function createNewSupporter(): ISupporter {
 }
 
 // ============================================================
-// CONTACT
+// CONTACT — estrutura aninhada (seção + methods[])
 // ============================================================
 
-/**
- * Contact tem estrutura aninhada: campos top-level + methods[] com split proprio.
- * Usa separateArrayByFields para os methods e monta o resultado manualmente.
- */
 export function separateContactData(data: IContactSection): {
   editable: IContactEditable;
   readonly: IContactReadonly;
 } {
-  const { editable: methodsEditable, readonly: methodsReadonly } = separateArrayByFields(
-    data.methods,
-    SECTION_FIELDS.contactMethod
-  );
-
-  return {
-    editable: {
-      badge: data.badge,
-      title: data.title,
-      description: data.description,
-      methods: methodsEditable as IContactMethodEditable[],
-      formSubjects: [...data.formSubjects],
-    },
-    readonly: {
-      methods: methodsReadonly as IContactMethodReadonly[],
-    },
-  };
+  return separateWrapperByFields({
+    data: data as unknown as Record<string, unknown>,
+    fields: SECTION_FIELDS.contact,
+    sectionDefaults: CONTACT_DEFAULTS,
+  }) as { editable: IContactEditable; readonly: IContactReadonly };
 }
 
 export function combineContactData(
   editable: IContactEditable,
   readonly: IContactReadonly
 ): IContactSection {
-  return {
-    badge: editable.badge,
-    title: editable.title,
-    description: editable.description,
-    methods: combineArrayFromFields<IContactMethod>(editable.methods, readonly.methods),
-    formSubjects: [...editable.formSubjects],
-  };
+  return combineWrapperFromFields<IContactSection>({
+    editable: editable as unknown as Record<string, unknown>,
+    readonly: readonly as unknown as Record<string, unknown>,
+    fields: SECTION_FIELDS.contact,
+  });
 }
 
 export function createDefaultContactEditable(): IContactEditable {
@@ -418,7 +276,7 @@ export function separateValuesData(data: IValue[]) {
 }
 
 export function combineValuesData(editable: IValueEditable[]): IValue[] {
-  return combineArrayFromFields<IValue>(editable, []);
+  return combineArrayFromFields<IValue>({ editable, readonly: [] });
 }
 
 export function createDefaultValueEditable(): IValueEditable {
@@ -468,17 +326,20 @@ export function createDefaultSeoEditable(): ISeoEditable {
 }
 
 // ============================================================
-// AGREGADORAS — Pagina completa
+// AGREGADORAS — Página completa
 // ============================================================
 
 /**
  * Converte o documento Firestore completo (IHomePageData) em
  * IHomeFormsData (formato do editor com editable/readonly split).
  *
- * Fallback por secao: se o Firestore so tem hero salvo, as outras
- * secoes usam defaults (nao crasha). Mesma logica do publico.
+ * Fallback por seção: se o Firestore só tem hero salvo, as outras
+ * seções usam defaults (não crasha). Mesma lógica do público.
  *
  * Usado no homeEdit.vue ao carregar dados do Firebase.
+ *
+ * @param pageData - Documento completo do Firestore
+ * @returns IHomeFormsData com todas as seções separadas em editable/readonly
  */
 export function separateAllSections(pageData: IHomePageData): IHomeFormsData {
   const c = (pageData.content ?? {}) as Partial<IHomePageData['content']>;
@@ -500,8 +361,10 @@ export function separateAllSections(pageData: IHomePageData): IHomeFormsData {
 /**
  * Gera IHomeFormsData completo com valores default.
  *
- * Usado como fallback quando o Firebase esta vazio/offline,
- * e como estado inicial do formulario antes de carregar dados.
+ * Usado como fallback quando o Firebase está vazio/offline,
+ * e como estado inicial do formulário antes de carregar dados.
+ *
+ * @returns IHomeFormsData com todas as seções preenchidas com defaults
  */
 export function createDefaultHomeForms(): IHomeFormsData {
   return {

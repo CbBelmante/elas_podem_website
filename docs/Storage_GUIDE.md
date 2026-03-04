@@ -334,12 +334,24 @@ img.src = URL.createObjectURL(file);
 const canvas = document.createElement('canvas');
 canvas.width = 800;
 canvas.height = 533;
-canvas.getContext('2d').drawImage(img, 0, 0, 800, 533);
+const ctx = canvas.getContext('2d');
 
-// 4. Converte pra JPEG com qualidade
-canvas.toBlob(callback, 'image/jpeg', 0.8);
-// PNG de 2MB → JPEG de ~150KB
+// PNG/WebP: fundo transparente (preserva alpha)
+// JPEG: fundo branco (evita fundo preto)
+if (!supportsAlpha(file)) {
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fillRect(0, 0, 800, 533);
+}
+ctx.drawImage(img, 0, 0, 800, 533);
+
+// 4. Converte mantendo formato original (PNG→PNG, WebP→WebP, JPEG→JPEG)
+const mimeType = supportsAlpha(file) ? file.type : 'image/jpeg';
+canvas.toBlob(callback, mimeType, 0.8);
 ```
+
+**Formatos com transparencia:** PNG e WebP preservam canal alpha (fundo transparente). JPEG recebe fundo branco explícito pra evitar fundo preto.
+
+A funcao `supportsAlpha(file)` checa se o MIME type e `image/png` ou `image/webp`.
 
 ### Fallback na compressao
 

@@ -93,7 +93,7 @@ const { saveSection } = useHomePageData();
 
 const result = await saveSection('hero');
 if (result.success) {
-  // Secao salva! Dados recarregados automaticamente.
+  // Secao salva! originalData sincronizado (sem re-render dos forms).
 } else {
   console.error(result.message);  // "Erro ao salvar"
 }
@@ -255,7 +255,7 @@ forms.hero.editable             saveSection('hero')
                                   │     updatedByName: 'Maria',
                                   │   })
                                   │
-                                  └─ loadPageData()              (reload automatico)
+                                  └─ syncOriginalData()          (atualiza snapshot sem re-render)
 ```
 
 ### Save All: Atomico
@@ -270,7 +270,7 @@ saveAll()
   │
   ├─ updateDoc(docRef, { tudo_junto })   ← 1 unico write (atomico)
   │
-  └─ loadPageData()
+  └─ syncOriginalData()
 ```
 
 ### Dot notation no Firestore
@@ -433,19 +433,19 @@ await updateDoc(docRef, {
 
 O `userData` vem do `useAuth()` — e o usuario logado no momento.
 
-### Reload automatico apos save
+### Sincronizacao apos save
 
-Depois de cada `saveSection` ou `saveAll`, a factory chama `loadPageData()` automaticamente:
+Depois de cada `saveSection` ou `saveAll`, a factory chama `syncOriginalData()` — que atualiza apenas o `originalData` (pra reset funcionar) **sem substituir `state.forms`**:
 
 ```typescript
 const saveSection = async (section) => {
   // ... updateDoc ...
-  await loadPageData();  // ← recarrega do Firestore
+  await syncOriginalData();  // ← atualiza snapshot sem re-render dos forms
   return { success: true, ... };
 };
 ```
 
-Isso garante que `forms` e `originalData` estejam sincronizados com o Firestore.
+Isso evita re-render desnecessario dos editores. O admin continua editando sem flash/reload. O `originalData` fica sincronizado com o Firestore pra `resetSection`/`resetAll` funcionar.
 
 ---
 
@@ -509,7 +509,7 @@ Sim. `saveAll()` combina TODAS as secoes em um unico `updateDoc()`. Se falhar, n
 
 ### O que e `originalData`?
 
-E um snapshot dos dados como vieram do Firestore no ultimo `loadPageData()`. Serve como referencia para `resetSection`/`resetAll` — "voltar pro que era antes de editar".
+E um snapshot dos dados como vieram do Firestore. Atualizado no `loadPageData()` (carga inicial) e no `syncOriginalData()` (apos cada save). Serve como referencia para `resetSection`/`resetAll` — "voltar pro que era antes de editar".
 
 ### Por que o save esta embutido na factory?
 

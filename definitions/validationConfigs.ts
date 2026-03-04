@@ -115,6 +115,8 @@ export const SUPPORTERS_CONFIG = {
   items: { min: 1, max: 20 },
   /** Limites do slider de velocidade do marquee */
   marqueeSpeed: { min: 5, max: 50 },
+  /** Limites do slider de tamanho do logo (px) */
+  logoSize: { min: 24, max: 96 },
 } as const;
 
 // ============================================================
