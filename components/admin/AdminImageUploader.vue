@@ -75,8 +75,8 @@ const compressionEnabled = ref(compressionSettings.value.enabled);
 const compressionQuality = ref(compressionSettings.value.quality);
 
 const PRESETS = [
-  { label: 'admin.imageUploader.presetHigh', value: 0.9, color: 'var(--color-oliva)' },
-  { label: 'admin.imageUploader.presetMedium', value: 0.8, color: 'var(--color-vinho-medio)' },
+  { label: 'admin.imageUploader.presetHigh', value: 0.9, color: 'var(--color-olive)' },
+  { label: 'admin.imageUploader.presetMedium', value: 0.8, color: 'var(--color-wine-mid)' },
   { label: 'admin.imageUploader.presetLow', value: 0.6, color: 'var(--color-coral)' },
 ] as const;
 
@@ -158,11 +158,7 @@ async function handleDrop(event: DragEvent): Promise<void> {
 <template>
   <CBCard density="compact" :rounded="10" color="#FDF5F0" class="imgUp">
     <template #header>
-      <CBLabel
-        :text="label || $t('admin.imageUploader.label')"
-        size="sm"
-        weight="semibold"
-      />
+      <CBLabel :text="label || $t('admin.imageUploader.label')" size="sm" weight="semibold" />
     </template>
 
     <!-- Zona de upload / preview -->
@@ -180,7 +176,7 @@ async function handleDrop(event: DragEvent): Promise<void> {
       <!-- Estado: sem imagem -->
       <div v-if="!modelValue" class="imgUp__empty">
         <div class="imgUp__iconCircle">
-          <CBIcon icon="luc-cloud-upload" size="1.75rem" color="var(--color-rosa)" />
+          <CBIcon icon="luc-cloud-upload" size="1.75rem" color="var(--color-wine-rose)" />
         </div>
         <span class="imgUp__title">{{ $t('admin.imageUploader.dropzone') }}</span>
         <span class="imgUp__meta">{{ formatsText }} &middot; max {{ maxSizeText }}</span>
@@ -292,7 +288,7 @@ async function handleDrop(event: DragEvent): Promise<void> {
   position: relative;
   border: 2px dashed var(--border-hover);
   border-radius: 12px;
-  background: rgba(var(--color-vinho-rgb), 0.03);
+  background: rgba(var(--color-wine-rgb), 0.03);
   transition: all 0.3s ease;
   cursor: pointer;
   overflow: hidden;
@@ -303,15 +299,15 @@ async function handleDrop(event: DragEvent): Promise<void> {
 }
 
 .imgUp__zone:hover:not(.imgUp__zone--has-image) {
-  border-color: var(--color-rosa);
-  background: rgba(var(--color-rosa-rgb), 0.06);
+  border-color: var(--color-wine-rose);
+  background: rgba(var(--color-wine-rose-rgb), 0.06);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(var(--color-rosa-rgb), 0.12);
+  box-shadow: 0 8px 24px rgba(var(--color-wine-rose-rgb), 0.12);
 }
 
 .imgUp__zone--dragging {
-  border-color: var(--color-oliva);
-  background: rgba(var(--color-oliva-rgb), 0.08);
+  border-color: var(--color-olive);
+  background: rgba(var(--color-olive-rgb), 0.08);
   transform: scale(1.01);
 }
 
@@ -339,7 +335,7 @@ async function handleDrop(event: DragEvent): Promise<void> {
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: rgba(var(--color-rosa-rgb), 0.08);
+  background: rgba(var(--color-wine-rose-rgb), 0.08);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -426,8 +422,8 @@ async function handleDrop(event: DragEvent): Promise<void> {
 }
 
 .imgUp__action--edit {
-  background: var(--color-rosa);
-  box-shadow: var(--glow-rosa);
+  background: var(--color-wine-rose);
+  box-shadow: var(--glow-wine-rose);
 }
 
 .imgUp__action--delete {
@@ -499,7 +495,7 @@ async function handleDrop(event: DragEvent): Promise<void> {
   flex-direction: column;
   gap: 0.5rem;
   padding: 0.625rem 0.75rem;
-  background: rgba(var(--color-vinho-rgb), 0.03);
+  background: rgba(var(--color-wine-rgb), 0.03);
   border: 1px solid var(--border-light);
   border-radius: 10px;
 }
@@ -534,7 +530,7 @@ async function handleDrop(event: DragEvent): Promise<void> {
 }
 
 .imgUp__toggle--active {
-  background: var(--color-rosa);
+  background: var(--color-wine-rose);
 }
 
 .imgUp__toggleDot {

@@ -232,7 +232,7 @@ function removeStat(index: number): void {
 
 .heroEditor__ghost {
   opacity: 0.4;
-  background: rgba(var(--color-vinho-rgb), 0.05);
+  background: rgba(var(--color-wine-rgb), 0.05);
 }
 
 @media (max-width: 640px) {

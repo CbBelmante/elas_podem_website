@@ -20,7 +20,7 @@ export const HOME_FALLBACK: IHomePageData = {
       btnDonateColor: 'gradient:primary',
       btnDonateVariant: 'solid',
       btnHistory: 'Lorem Dolor',
-      btnHistoryColor: 'vinho-medio',
+      btnHistoryColor: 'wine-mid',
       btnHistoryVariant: 'outline',
       heroImage: 'https://picsum.photos/1920/1080?random=1',
       heroImageOpacity: 100,
@@ -76,20 +76,20 @@ export const HOME_FALLBACK: IHomePageData = {
           description:
             'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat.',
           icon: 'luc-users',
-          color: 'rosa',
+          color: 'wine-rose',
           link: 'Lorem ipsum →',
           tags: ['Consectetur', 'Adipiscing elit'],
-          tagColor: 'rosa',
+          tagColor: 'wine-rose',
         },
         {
           title: 'Adipiscing Tempor',
           description:
             'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit.',
           icon: 'luc-scale',
-          color: 'oliva',
+          color: 'olive',
           link: 'Lorem ipsum →',
           tags: ['Tempor incididunt'],
-          tagColor: 'oliva',
+          tagColor: 'olive',
         },
       ],
     },
@@ -176,13 +176,13 @@ export const HOME_FALLBACK: IHomePageData = {
           color: 'coral',
           url: '',
         },
-        { label: 'Amet', value: 'Lorem - IP', icon: 'luc-map-pin', color: 'rosa', url: '' },
+        { label: 'Amet', value: 'Lorem - IP', icon: 'luc-map-pin', color: 'wine-rose', url: '' },
       ],
       formSubjects: ['Lorem ipsum', 'Dolor sit', 'Amet consectetur', 'Adipiscing elit'],
     },
 
     values: [
-      { title: 'Lorem Ipsum', subtitle: 'Lorem ipsum dolor sit amet consectetur', color: 'vinho' },
+      { title: 'Lorem Ipsum', subtitle: 'Lorem ipsum dolor sit amet consectetur', color: 'wine' },
       {
         title: 'Dolor Sit',
         subtitle: 'Ut enim ad minim veniam quis nostrud',
@@ -191,12 +191,12 @@ export const HOME_FALLBACK: IHomePageData = {
       {
         title: 'Amet Elit',
         subtitle: 'Duis aute irure dolor in reprehenderit',
-        color: 'vinho-medio',
+        color: 'wine-mid',
       },
       {
         title: 'Consectetur',
         subtitle: 'Excepteur sint occaecat cupidatat non',
-        color: 'roxo-noite',
+        color: 'purple-night',
       },
     ],
 

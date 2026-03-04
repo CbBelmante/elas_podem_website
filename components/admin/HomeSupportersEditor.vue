@@ -119,7 +119,6 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
           emit('changed');
         "
       />
-
     </div>
 
     <!-- Items -->
@@ -211,7 +210,11 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
 
           <!-- Preview do tamanho real -->
           <div class="supportersEditor__preview">
-            <CBLabel :text="$t('admin.supporters.preview')" size="xs" class="supportersEditor__previewLabel" />
+            <CBLabel
+              :text="$t('admin.supporters.preview')"
+              size="xs"
+              class="supportersEditor__previewLabel"
+            />
             <div class="supportersEditor__previewBox">
               <img
                 v-if="element.image"
@@ -299,7 +302,7 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
 
 .supportersEditor__ghost {
   opacity: 0.4;
-  background: rgba(var(--color-vinho-rgb), 0.05);
+  background: rgba(var(--color-wine-rgb), 0.05);
 }
 
 @media (max-width: 640px) {

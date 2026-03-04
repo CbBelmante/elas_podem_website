@@ -236,7 +236,7 @@ onUnmounted(() => {
         weight="bold"
         size="xs"
         bg-color="rgba(92, 26, 42, 0.06)"
-        text-color="var(--color-vinho-medio)"
+        text-color="var(--color-wine-mid)"
         class="homeEditHeader__badge"
       />
       <CBLabel
@@ -250,7 +250,7 @@ onUnmounted(() => {
 
     <!-- Success message -->
     <div v-if="successMessage" class="homeEditSuccess">
-      <CBIcon icon="luc-check-circle" size="1rem" color="var(--color-oliva)" />
+      <CBIcon icon="luc-check-circle" size="1rem" color="var(--color-olive)" />
       <span class="homeEditSuccess__text">{{ successMessage }}</span>
     </div>
 
@@ -343,7 +343,7 @@ onUnmounted(() => {
 
 .homeEditSuccess__text {
   font-size: 0.875rem;
-  color: var(--color-oliva, #88a201);
+  color: var(--color-olive, #88a201);
   font-family: var(--font-body);
 }
 

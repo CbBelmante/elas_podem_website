@@ -176,7 +176,7 @@ watch(status, async () => {
           <div class="heroContent animateOnScroll">
             <FrontBadge
               :content="hero.badge"
-              theme-color="vinho-medio"
+              theme-color="wine-mid"
               variant="outline"
               :icon-size="14"
               weight="bold"
@@ -238,7 +238,7 @@ watch(status, async () => {
           <div class="missionContent animateOnScroll">
             <FrontBadge
               :content="mission.badge"
-              theme-color="vinho-medio"
+              theme-color="wine-mid"
               variant="outline"
               :icon-size="14"
               weight="bold"
@@ -291,7 +291,7 @@ watch(status, async () => {
           <div class="programsHeader animateOnScroll">
             <FrontBadge
               :content="programs.badge"
-              theme-color="nude-quente"
+              theme-color="nude-warm"
               variant="outline"
               :icon-size="14"
               weight="bold"
@@ -299,13 +299,19 @@ watch(status, async () => {
               class="sectionBadge"
             />
 
-            <CBLabel :text="programs.title" tag="h2" weight="black" :color="'var(--color-branco)'" class="sectionTitle" />
+            <CBLabel
+              :text="programs.title"
+              tag="h2"
+              weight="black"
+              :color="'var(--color-white)'"
+              class="sectionTitle"
+            />
 
             <CBLabel
               v-if="programs.subtitle"
               :text="programs.subtitle"
               size="md"
-              :color="'var(--color-nude-quente)'"
+              :color="'var(--color-nude-warm)'"
               class="programsSubtitle"
             />
           </div>
@@ -318,7 +324,7 @@ watch(status, async () => {
               :rounded="24"
               hover
               bg-color="var(--bg-white)"
-              border-color="rgba(var(--color-vinho-rgb), 0.06)"
+              border-color="rgba(var(--color-wine-rgb), 0.06)"
               :border-width="1"
               class="programCard animateOnScroll"
               :style="{ '--program-color': resolveColorValue(program.color) }"
@@ -395,7 +401,12 @@ watch(status, async () => {
                   {{ testimonials.items[index].quote }}
                 </blockquote>
                 <div
-                  v-if="testimonials.items[index].initials || testimonials.items[index].image || testimonials.items[index].name || testimonials.items[index].role"
+                  v-if="
+                    testimonials.items[index].initials ||
+                    testimonials.items[index].image ||
+                    testimonials.items[index].name ||
+                    testimonials.items[index].role
+                  "
                   class="testimonialAuthor"
                 >
                   <CBImage
@@ -408,7 +419,10 @@ watch(status, async () => {
                     :rounded="999"
                     class="testimonialAuthorPhoto"
                   />
-                  <div v-else-if="testimonials.items[index].initials" class="testimonialAuthorAvatar">
+                  <div
+                    v-else-if="testimonials.items[index].initials"
+                    class="testimonialAuthorAvatar"
+                  >
                     {{ testimonials.items[index].initials }}
                   </div>
                   <div
@@ -446,7 +460,7 @@ watch(status, async () => {
           <div class="supportersHeader animateOnScroll">
             <FrontBadge
               :content="supporters.badge"
-              theme-color="vinho-medio"
+              theme-color="wine-mid"
               variant="outline"
               :icon-size="14"
               weight="bold"
@@ -523,7 +537,7 @@ watch(status, async () => {
           <div class="contactInfo animateOnScroll">
             <FrontBadge
               :content="contact.badge"
-              theme-color="vinho-medio"
+              theme-color="wine-mid"
               variant="outline"
               :icon-size="14"
               weight="bold"
@@ -548,7 +562,7 @@ watch(status, async () => {
                 :rounded="16"
                 hover
                 bg-color="var(--bg-white)"
-                border-color="rgba(var(--color-vinho-rgb), 0.04)"
+                border-color="rgba(var(--color-wine-rgb), 0.04)"
                 class="contactMethodCard"
               >
                 <div class="contactMethodInner">
@@ -655,8 +669,19 @@ watch(status, async () => {
       <section class="ctaSection">
         <div class="ctaDecorCircle"></div>
         <div class="ctaContainer animateOnScroll">
-          <CBLabel :text="cta.title" tag="h2" weight="black" :color="'var(--color-branco)'" class="ctaTitle" />
-          <CBLabel :text="cta.subtitle" size="lg" :color="'var(--color-nude-quente)'" class="ctaSubtitle" />
+          <CBLabel
+            :text="cta.title"
+            tag="h2"
+            weight="black"
+            :color="'var(--color-white)'"
+            class="ctaTitle"
+          />
+          <CBLabel
+            :text="cta.subtitle"
+            size="lg"
+            :color="'var(--color-nude-warm)'"
+            class="ctaSubtitle"
+          />
           <div class="ctaActions">
             <FrontButton
               :label="cta.btnDonate"
@@ -825,7 +850,7 @@ watch(status, async () => {
   position: absolute;
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, rgba(var(--color-vinho-rgb), 0.03) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(var(--color-wine-rgb), 0.03) 0%, transparent 70%);
   top: -150px;
   left: -150px;
   border-radius: 50%;
@@ -859,7 +884,7 @@ watch(status, async () => {
 .dot1 {
   width: 12px;
   height: 12px;
-  background: var(--color-coral-claro);
+  background: var(--color-coral-light);
   top: 90px;
   right: 16%;
 }
@@ -867,7 +892,7 @@ watch(status, async () => {
 .dot2 {
   width: 8px;
   height: 8px;
-  background: var(--color-vinho-medio);
+  background: var(--color-wine-mid);
   bottom: 120px;
   left: 46%;
   animation-delay: 1s;
@@ -876,7 +901,7 @@ watch(status, async () => {
 .dot3 {
   width: 16px;
   height: 16px;
-  background: var(--color-nude-quente);
+  background: var(--color-nude-warm);
   top: 42%;
   right: 9%;
   animation-delay: 2s;
@@ -895,7 +920,7 @@ watch(status, async () => {
 .dot5 {
   width: 10px;
   height: 10px;
-  background: var(--color-vinho);
+  background: var(--color-wine);
   bottom: 25%;
   left: 52%;
   opacity: 0.6;
@@ -915,7 +940,7 @@ watch(status, async () => {
 .dot7 {
   width: 14px;
   height: 14px;
-  background: var(--color-roxo-acento);
+  background: var(--color-purple-accent);
   top: 22%;
   right: 25%;
   opacity: 0.4;
@@ -963,13 +988,13 @@ watch(status, async () => {
   height: 400px;
   background: linear-gradient(
     135deg,
-    var(--color-vinho) 0%,
+    var(--color-wine) 0%,
     var(--color-magenta) 40%,
     var(--color-coral) 75%,
-    var(--color-coral-claro) 100%
+    var(--color-coral-light) 100%
   );
   animation: blobMorph 8s ease-in-out infinite;
-  box-shadow: 22px 22px 0px var(--color-nude-quente);
+  box-shadow: 22px 22px 0px var(--color-nude-warm);
 }
 
 /* ============================================
@@ -1004,7 +1029,7 @@ watch(status, async () => {
   font-family: var(--font-heading);
   font-size: 2.8rem;
   font-weight: 900;
-  color: var(--color-coral-claro);
+  color: var(--color-coral-light);
   line-height: 1;
 }
 
@@ -1074,7 +1099,7 @@ watch(status, async () => {
 .mDot2 {
   width: 14px;
   height: 14px;
-  background: var(--color-vinho-medio);
+  background: var(--color-wine-mid);
   bottom: 20px;
   right: -7px;
   animation-delay: 1.5s;
@@ -1083,7 +1108,7 @@ watch(status, async () => {
 .mDot3 {
   width: 32px;
   height: 32px;
-  background: var(--color-nude-quente);
+  background: var(--color-nude-warm);
   bottom: -15px;
   left: 40px;
   opacity: 0.4;
@@ -1136,8 +1161,8 @@ watch(status, async () => {
 
 .programCard:hover {
   transform: translateY(-5px);
-  border-color: rgba(var(--color-vinho-rgb), 0.15);
-  box-shadow: 0 15px 35px rgba(var(--color-vinho-rgb), 0.08);
+  border-color: rgba(var(--color-wine-rgb), 0.15);
+  box-shadow: 0 15px 35px rgba(var(--color-wine-rgb), 0.08);
 }
 
 /* Blob Orgânico de Fundo - Variação Padrão (1, 5, 9...) */
@@ -1322,7 +1347,7 @@ watch(status, async () => {
   flex-direction: column;
   justify-content: center;
   background: var(--bg-white);
-  border: 1px solid rgba(var(--color-vinho-rgb), 0.06);
+  border: 1px solid rgba(var(--color-wine-rgb), 0.06);
   border-radius: 32px;
   overflow: hidden;
 }
@@ -1359,7 +1384,7 @@ watch(status, async () => {
   font-weight: 500;
   font-style: italic;
   line-height: 1.5;
-  color: var(--color-vinho);
+  color: var(--color-wine);
   margin: 0 0 2rem 0;
   padding-top: 0.5rem;
 }
@@ -1457,7 +1482,7 @@ watch(status, async () => {
 }
 
 .supporterName {
-  color: var(--color-carvao);
+  color: var(--color-charcoal);
   opacity: 0.35;
   white-space: nowrap;
   font-family: var(--font-heading);
@@ -1470,7 +1495,7 @@ watch(status, async () => {
 }
 
 .supporterDivider {
-  color: var(--color-carvao);
+  color: var(--color-charcoal);
   opacity: 0.15;
   font-size: 2rem;
   line-height: 1;
@@ -1558,8 +1583,8 @@ watch(status, async () => {
 
 .contactMethodCard:hover {
   transform: translateY(-4px);
-  border-color: rgba(var(--color-vinho-rgb), 0.15);
-  box-shadow: 0 12px 24px rgba(var(--color-vinho-rgb), 0.06); /* Sombra leve apenas no hover */
+  border-color: rgba(var(--color-wine-rgb), 0.15);
+  box-shadow: 0 12px 24px rgba(var(--color-wine-rgb), 0.06); /* Sombra leve apenas no hover */
 }
 
 .contactMethodInner {
@@ -1804,7 +1829,7 @@ watch(status, async () => {
 
   .contactFormCard {
     padding: 28px 20px;
-    box-shadow: 0 20px 40px -10px rgba(var(--color-vinho-rgb), 0.06);
+    box-shadow: 0 20px 40px -10px rgba(var(--color-wine-rgb), 0.06);
   }
 
   .testimonialSection {
@@ -1842,7 +1867,7 @@ watch(status, async () => {
   .blobShape {
     width: 200px;
     height: 200px;
-    box-shadow: 14px 14px 0px var(--color-nude-quente);
+    box-shadow: 14px 14px 0px var(--color-nude-warm);
   }
 
   .statItem {

@@ -14,6 +14,19 @@ export interface IParsedColorValue {
   raw: string;
 }
 
+// ============== LEGACY NAME MAP ==============
+
+/** Maps old Portuguese color names (stored in Firestore) to new English CSS variable names */
+const LEGACY_NAMES: Record<string, string> = {
+  rosa: 'wine-rose',
+  oliva: 'olive',
+  laranja: 'orange',
+  vinho: 'wine',
+  'vinho-medio': 'wine-mid',
+  'roxo-noite': 'purple-night',
+  'roxo-acento': 'purple-accent',
+};
+
 // ============== PARSING ==============
 
 /** Detecta o tipo do valor armazenado e extrai conteudo util */
@@ -48,16 +61,17 @@ export function resolveColorValue(value: string, fallback = ''): string {
 
   if (parsed.type === 'custom') {
     const parts = parsed.raw.split(',');
-    const css = parts.map((c) => `var(--color-${c})`);
+    const css = parts.map((c) => `var(--color-${LEGACY_NAMES[c] ?? c})`);
     if (css.length === 3)
       return `linear-gradient(135deg, ${css[0]} 0%, ${css[1]} 50%, ${css[2]} 100%)`;
     if (css.length === 2) return `linear-gradient(135deg, ${css[0]} 0%, ${css[1]} 100%)`;
     return 'transparent';
   }
 
-  if (parsed.type === 'gradient') return `var(--gradient-${parsed.raw})`;
+  const name = LEGACY_NAMES[parsed.raw] ?? parsed.raw;
+  if (parsed.type === 'gradient') return `var(--gradient-${name})`;
 
-  return `var(--color-${parsed.raw})`;
+  return `var(--color-${name})`;
 }
 
 // ============== HELPERS ==============

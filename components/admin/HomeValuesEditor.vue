@@ -6,7 +6,7 @@
  * Array CRUD + drag-and-drop.
  */
 
-import { CBButton, CBIcon, CBInput, CBLabel } from '@cb/components';
+import { CBButton, CBInput, CBLabel } from '@cb/components';
 import draggable from 'vuedraggable';
 import AdminColorPicker from '@components/admin/AdminColorPicker.vue';
 import AdminEditorCard from '@components/admin/AdminEditorCard.vue';
@@ -137,6 +137,6 @@ function removeValue(index: number): void {
 
 .valuesEditor__ghost {
   opacity: 0.4;
-  background: rgba(var(--color-vinho-rgb), 0.05);
+  background: rgba(var(--color-wine-rgb), 0.05);
 }
 </style>

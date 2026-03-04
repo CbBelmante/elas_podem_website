@@ -3,7 +3,7 @@
  * 🧩 AdminColorPicker — Seletor visual de cor/gradiente
  *
  * Suporta cor solida, gradiente preset e gradiente custom (2-3 cores).
- * Valor armazenado: 'rosa' | 'gradient:primary' | 'custom:rosa,magenta'
+ * Valor armazenado: 'wine-rose' | 'gradient:primary' | 'custom:wine-rose,magenta'
  *
  * Use `unavailableModes` para esconder abas que nao fazem sentido no contexto.
  */
@@ -98,10 +98,10 @@ const previewBg = computed(() => resolveColorValue(props.modelValue));
 /** Preview ao vivo do gradiente custom sendo montado */
 const customPreviewBg = computed(() => {
   if (!customStart.value || !customEnd.value) return 'transparent';
-  const start = `var(--color-${customStart.value})`;
-  const end = `var(--color-${customEnd.value})`;
+  const start = resolveColorValue(customStart.value);
+  const end = resolveColorValue(customEnd.value);
   if (customMiddle.value) {
-    const mid = `var(--color-${customMiddle.value})`;
+    const mid = resolveColorValue(customMiddle.value);
     return `linear-gradient(135deg, ${start} 0%, ${mid} 50%, ${end} 100%)`;
   }
   return `linear-gradient(135deg, ${start} 0%, ${end} 100%)`;
@@ -139,12 +139,12 @@ function clearCustomMiddle(): void {
 
 /** CSS background de um swatch de cor */
 function colorBg(value: string): string {
-  return `var(--color-${value})`;
+  return resolveColorValue(value);
 }
 
 /** CSS background de um swatch de gradiente */
 function gradientBg(value: string): string {
-  return `var(--gradient-${value})`;
+  return resolveColorValue(`gradient:${value}`);
 }
 </script>
 
@@ -385,13 +385,13 @@ function gradientBg(value: string): string {
 
 .picker__tab:hover {
   color: var(--text-primary);
-  background: rgba(var(--color-vinho-rgb), 0.04);
+  background: rgba(var(--color-wine-rgb), 0.04);
 }
 
 .picker__tab--active {
-  color: var(--color-rosa);
-  background: rgba(var(--color-rosa-rgb), 0.08);
-  border-bottom: 2px solid var(--color-rosa);
+  color: var(--color-wine-rose);
+  background: rgba(var(--color-wine-rose-rgb), 0.08);
+  border-bottom: 2px solid var(--color-wine-rose);
 }
 
 /* ============================================
@@ -446,8 +446,8 @@ function gradientBg(value: string): string {
 }
 
 .picker__swatch--selected {
-  border-color: var(--color-preto);
-  box-shadow: 0 0 0 2px rgba(var(--color-vinho-rgb), 0.2);
+  border-color: var(--color-black);
+  box-shadow: 0 0 0 2px rgba(var(--color-wine-rgb), 0.2);
   transform: scale(1.08);
 }
 
@@ -490,7 +490,7 @@ function gradientBg(value: string): string {
 }
 
 .picker__clearBtn:hover {
-  background: rgba(var(--color-vinho-rgb), 0.08);
+  background: rgba(var(--color-wine-rgb), 0.08);
 }
 
 .picker__customPreview {
@@ -515,7 +515,7 @@ function gradientBg(value: string): string {
   flex: 1;
   height: 8px;
   border-radius: 4px;
-  border: 1px solid rgba(var(--color-vinho-rgb), 0.1);
+  border: 1px solid rgba(var(--color-wine-rgb), 0.1);
 }
 
 .picker__previewLabel {

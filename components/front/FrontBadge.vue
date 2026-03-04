@@ -26,10 +26,5 @@ const bgColor = computed(() => `color-mix(in srgb, ${resolved.value} 10%, transp
 </script>
 
 <template>
-  <CBBadge
-    :content="content"
-    :text-color="resolved"
-    :bg-color="bgColor"
-    v-bind="$attrs"
-  />
+  <CBBadge :content="content" :text-color="resolved" :bg-color="bgColor" v-bind="$attrs" />
 </template>

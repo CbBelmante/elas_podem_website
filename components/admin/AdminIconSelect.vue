@@ -149,7 +149,7 @@ function toggleCategory(cat: LucideIconCategory): void {
     <!-- Preview do icone selecionado -->
     <div v-if="selectedIcon" class="iconSelect__preview">
       <div class="iconSelect__previewIcon">
-        <CBIcon :icon="selectedIcon.value" size="1.5rem" color="var(--color-vinho)" />
+        <CBIcon :icon="selectedIcon.value" size="1.5rem" color="var(--color-wine)" />
       </div>
       <div class="iconSelect__previewInfo">
         <CBLabel :text="$t(selectedIcon.label)" size="sm" weight="medium" />
@@ -195,13 +195,13 @@ function toggleCategory(cat: LucideIconCategory): void {
 }
 
 .iconSelect__chip:hover {
-  border-color: var(--color-vinho);
-  color: var(--color-vinho);
+  border-color: var(--color-wine);
+  color: var(--color-wine);
 }
 
 .iconSelect__chip--active {
-  background: var(--color-vinho);
-  border-color: var(--color-vinho);
+  background: var(--color-wine);
+  border-color: var(--color-wine);
   color: #fff;
 }
 
@@ -230,7 +230,7 @@ function toggleCategory(cat: LucideIconCategory): void {
   padding: 0.5rem 0.25rem;
   border: 2px solid transparent;
   border-radius: 8px;
-  background: rgba(var(--color-vinho-rgb), 0.04);
+  background: rgba(var(--color-wine-rgb), 0.04);
   cursor: pointer;
   outline: none;
   transition: all 0.2s ease;
@@ -242,9 +242,9 @@ function toggleCategory(cat: LucideIconCategory): void {
 }
 
 .iconSelect__item--selected {
-  border-color: var(--color-vinho);
+  border-color: var(--color-wine);
   transform: scale(1.04);
-  background: rgba(var(--color-vinho-rgb), 0.08);
+  background: rgba(var(--color-wine-rgb), 0.08);
 }
 
 .iconSelect__itemLabel {
@@ -260,7 +260,7 @@ function toggleCategory(cat: LucideIconCategory): void {
 }
 
 .iconSelect__item--selected .iconSelect__itemLabel {
-  color: var(--color-vinho);
+  color: var(--color-wine);
   font-weight: 600;
 }
 
@@ -288,8 +288,8 @@ function toggleCategory(cat: LucideIconCategory): void {
   gap: 0.75rem;
   margin-top: 0.25rem;
   padding: 0.625rem 0.75rem;
-  background: rgba(var(--color-vinho-rgb), 0.04);
-  border: 1px solid rgba(var(--color-vinho-rgb), 0.15);
+  background: rgba(var(--color-wine-rgb), 0.04);
+  border: 1px solid rgba(var(--color-wine-rgb), 0.15);
   border-radius: 10px;
 }
 
@@ -299,7 +299,7 @@ function toggleCategory(cat: LucideIconCategory): void {
   justify-content: center;
   width: 2.5rem;
   height: 2.5rem;
-  background: rgba(var(--color-vinho-rgb), 0.08);
+  background: rgba(var(--color-wine-rgb), 0.08);
   border-radius: 8px;
   flex-shrink: 0;
 }

@@ -69,7 +69,7 @@ defineProps<Props>();
   height: 350px;
   bottom: -80px;
   left: -80px;
-  background: var(--color-roxo-acento, #9b59b6);
+  background: var(--color-purple-accent, #9b59b6);
 }
 
 .loadingOverlay__content {

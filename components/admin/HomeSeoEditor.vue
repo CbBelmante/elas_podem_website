@@ -214,7 +214,7 @@ function updateKeyword(index: number, value: string): void {
 
 .seoEditor__ghost {
   opacity: 0.4;
-  background: rgba(var(--color-vinho-rgb), 0.05);
+  background: rgba(var(--color-wine-rgb), 0.05);
 }
 
 .dragHandle {

@@ -4,7 +4,7 @@
  * Opcoes de cores, gradientes e icones disponiveis no admin.
  * Usadas em selects/dropdowns/pickers dos formularios de edicao.
  *
- * Cores: paleta do site Elas Podem (magenta, coral, rosa, oliva, laranja).
+ * Cores: paleta do site Elas Podem (magenta, coral, wine-rose, olive, orange).
  * Gradientes: mapeia para --gradient-{value} do theme.css.
  * Icones: subset de Lucide icons usados no site.
  *
@@ -25,13 +25,13 @@
 export const THEME_COLOR_OPTIONS = [
   { value: 'magenta', label: 'admin.theme.colors.magenta' },
   { value: 'coral', label: 'admin.theme.colors.coral' },
-  { value: 'rosa', label: 'admin.theme.colors.rosa' },
-  { value: 'oliva', label: 'admin.theme.colors.oliva' },
-  { value: 'laranja', label: 'admin.theme.colors.laranja' },
-  { value: 'vinho', label: 'admin.theme.colors.vinho' },
-  { value: 'vinho-medio', label: 'admin.theme.colors.vinhoMedio' },
-  { value: 'roxo-noite', label: 'admin.theme.colors.roxoNoite' },
-  { value: 'roxo-acento', label: 'admin.theme.colors.roxoAcento' },
+  { value: 'wine-rose', label: 'admin.theme.colors.wineRose' },
+  { value: 'olive', label: 'admin.theme.colors.olive' },
+  { value: 'orange', label: 'admin.theme.colors.orange' },
+  { value: 'wine', label: 'admin.theme.colors.wine' },
+  { value: 'wine-mid', label: 'admin.theme.colors.wineMid' },
+  { value: 'purple-night', label: 'admin.theme.colors.purpleNight' },
+  { value: 'purple-accent', label: 'admin.theme.colors.purpleAccent' },
 ] as const;
 
 // ============================================================
@@ -41,14 +41,14 @@ export const THEME_COLOR_OPTIONS = [
 /** Gradientes disponiveis — value mapeia para var(--gradient-{value}) (labels sao chaves i18n) */
 export const THEME_GRADIENT_OPTIONS = [
   { value: 'primary', label: 'admin.theme.gradients.primary' },
-  { value: 'rosa', label: 'admin.theme.gradients.rosa' },
-  { value: 'vinho', label: 'admin.theme.gradients.vinho' },
+  { value: 'wine-rose', label: 'admin.theme.gradients.wineRose' },
+  { value: 'wine', label: 'admin.theme.gradients.wine' },
   { value: 'magenta', label: 'admin.theme.gradients.magenta' },
   { value: 'coral', label: 'admin.theme.gradients.coral' },
-  { value: 'laranja', label: 'admin.theme.gradients.laranja' },
-  { value: 'oliva', label: 'admin.theme.gradients.oliva' },
-  { value: 'roxo', label: 'admin.theme.gradients.roxo' },
-  { value: 'accent', label: 'admin.theme.gradients.acento' },
+  { value: 'orange', label: 'admin.theme.gradients.orange' },
+  { value: 'olive', label: 'admin.theme.gradients.olive' },
+  { value: 'purple', label: 'admin.theme.gradients.purple' },
+  { value: 'accent', label: 'admin.theme.gradients.accent' },
 ] as const;
 
 // ============================================================

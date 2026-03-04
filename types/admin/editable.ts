@@ -64,9 +64,8 @@ export type PreservedFields<T, Config extends Record<string, unknown>> = Pick<
  * @template Key - Nome da chave nested (ex: 'items' ou 'methods')
  * @returns O sub-objeto com os FieldModes do array, ou never se não existir
  */
-type ExtractItemConfig<Config, Key extends string> = Config extends Record<Key, infer S extends Record<string, unknown>>
-  ? S
-  : never;
+type ExtractItemConfig<Config, Key extends string> =
+  Config extends Record<Key, infer S extends Record<string, unknown>> ? S : never;
 
 // ============================================================
 // HERO

@@ -91,7 +91,11 @@ const COMMUNICATION_ICONS: ILucideIcon[] = [
   { value: 'luc-rss', label: 'admin.theme.icons.rss', category: 'communication' },
   { value: 'luc-podcast', label: 'admin.theme.icons.podcast', category: 'communication' },
   { value: 'luc-volume-2', label: 'admin.theme.icons.volume', category: 'communication' },
-  { value: 'luc-message-circle', label: 'admin.theme.icons.messageCircle', category: 'communication' },
+  {
+    value: 'luc-message-circle',
+    label: 'admin.theme.icons.messageCircle',
+    category: 'communication',
+  },
 ];
 
 /** Pessoas, grupos, comunidade */

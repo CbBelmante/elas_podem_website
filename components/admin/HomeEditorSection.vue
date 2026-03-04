@@ -97,7 +97,7 @@ defineEmits<{
         <CBButton
           :label="$t('admin.editor.save')"
           size="sm"
-          :bg-gradient="'var(--gradient-vinho)'"
+          :bg-gradient="'var(--gradient-wine)'"
           :rounded="10"
           :loading="isSaving"
           :disabled="!hasChanges"
@@ -132,7 +132,7 @@ defineEmits<{
 }
 
 .editorSection__headerBtn:hover {
-  background: rgba(var(--color-vinho-rgb), 0.03);
+  background: rgba(var(--color-wine-rgb), 0.03);
 }
 
 .editorSection__headerLeft {
@@ -148,7 +148,7 @@ defineEmits<{
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background: var(--gradient-rosa);
+  background: var(--gradient-wine-rose);
   flex-shrink: 0;
 }
 
@@ -158,8 +158,8 @@ defineEmits<{
 }
 
 .editorSection__changedBadge {
-  color: var(--color-oliva);
-  border-color: var(--color-oliva);
+  color: var(--color-olive);
+  border-color: var(--color-olive);
 }
 
 /* Body */

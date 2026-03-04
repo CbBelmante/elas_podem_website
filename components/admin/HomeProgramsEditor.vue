@@ -184,8 +184,14 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
             :model-value="element.tags"
             :color="element.tagColor"
             :max="PROGRAMS_CONFIG.tags.max"
-            @update:model-value="element.tags = $event; emit('changed')"
-            @update:color="element.tagColor = $event; emit('changed')"
+            @update:model-value="
+              element.tags = $event;
+              emit('changed');
+            "
+            @update:color="
+              element.tagColor = $event;
+              emit('changed');
+            "
           />
         </AdminEditorCard>
       </template>
@@ -231,7 +237,7 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
 
 .programsEditor__ghost {
   opacity: 0.4;
-  background: rgba(var(--color-vinho-rgb), 0.05);
+  background: rgba(var(--color-wine-rgb), 0.05);
 }
 
 @media (max-width: 640px) {

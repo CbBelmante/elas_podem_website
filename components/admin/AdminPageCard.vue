@@ -23,7 +23,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  color: 'rosa',
+  color: 'wine-rose',
   canEdit: false,
   lastEditorName: null,
   lastEditDate: null,
@@ -86,7 +86,7 @@ const handleEdit = (): void => {
         v-if="canEdit"
         :label="$t('admin.pageCard.edit')"
         size="lg"
-        :bg-gradient="'var(--gradient-vinho)'"
+        :bg-gradient="'var(--gradient-wine)'"
         :rounded="50"
         prepend-icon="luc-pencil"
         shine
@@ -115,7 +115,7 @@ const handleEdit = (): void => {
   right: -60px;
   width: 240px;
   height: 240px;
-  background: var(--pageCard-color, var(--color-rosa));
+  background: var(--pageCard-color, var(--color-wine-rose));
   opacity: 0.04;
   border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%;
   transition: all 0.7s ease-in-out;
@@ -125,8 +125,8 @@ const handleEdit = (): void => {
 
 .pageCard:hover {
   transform: translateY(-5px);
-  border-color: rgba(var(--color-vinho-rgb), 0.15);
-  box-shadow: 0 15px 35px rgba(var(--color-vinho-rgb), 0.08);
+  border-color: rgba(var(--color-wine-rgb), 0.15);
+  box-shadow: 0 15px 35px rgba(var(--color-wine-rgb), 0.08);
 }
 
 .pageCard:hover::before {
@@ -151,7 +151,7 @@ const handleEdit = (): void => {
   height: 52px;
   border-radius: 50%;
   flex-shrink: 0;
-  background: var(--pageCard-gradient, var(--gradient-rosa));
+  background: var(--pageCard-gradient, var(--gradient-wine-rose));
   box-shadow: var(--pageCard-glow, var(--glow-magenta));
   transition: all 0.4s ease;
 }
@@ -171,7 +171,7 @@ const handleEdit = (): void => {
   gap: 1.5rem;
   margin-bottom: 1rem;
   padding: 0.75rem 0;
-  border-top: 1px solid rgba(var(--color-vinho-rgb), 0.06);
+  border-top: 1px solid rgba(var(--color-wine-rgb), 0.06);
   position: relative;
   z-index: 1;
 }

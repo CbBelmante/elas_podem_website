@@ -79,7 +79,7 @@ import { CBImage, CBLabel, CBIcon } from '@cb/components';
 
 <style scoped>
 .siteFooter {
-  background: var(--color-preto);
+  background: var(--color-black);
   padding: 60px 7% 30px;
   color: rgba(255, 255, 255, 0.4);
 }
@@ -143,7 +143,7 @@ import { CBImage, CBLabel, CBIcon } from '@cb/components';
 }
 
 .footerColumn ul li a:hover {
-  color: var(--color-coral-claro);
+  color: var(--color-coral-light);
 }
 
 .footerBottom {

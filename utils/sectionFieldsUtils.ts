@@ -188,7 +188,10 @@ export function combineWrapperFromFields<TResult>(params: {
   if (itemInfo) {
     const editableItems = (editable[itemInfo.key] ?? []) as Partial<unknown>[];
     const readonlyItems = (readonly[itemInfo.key] ?? []) as Partial<unknown>[];
-    result[itemInfo.key] = combineArrayFromFields({ editable: editableItems, readonly: readonlyItems });
+    result[itemInfo.key] = combineArrayFromFields({
+      editable: editableItems,
+      readonly: readonlyItems,
+    });
   }
 
   return result as TResult;

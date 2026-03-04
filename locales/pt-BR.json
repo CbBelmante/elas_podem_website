@@ -283,24 +283,24 @@
       "colors": {
         "magenta": "Magenta",
         "coral": "Coral",
-        "rosa": "Rosa",
-        "oliva": "Oliva",
-        "laranja": "Laranja",
-        "vinho": "Vinho",
-        "vinhoMedio": "Vinho Médio",
-        "roxoNoite": "Roxo Noite",
-        "roxoAcento": "Roxo Acento"
+        "wineRose": "Rosa",
+        "olive": "Oliva",
+        "orange": "Laranja",
+        "wine": "Vinho",
+        "wineMid": "Vinho Médio",
+        "purpleNight": "Roxo Noite",
+        "purpleAccent": "Roxo Acento"
       },
       "gradients": {
         "primary": "Primário",
-        "rosa": "Rosa",
-        "vinho": "Vinho",
+        "wineRose": "Rosa",
+        "wine": "Vinho",
         "magenta": "Magenta",
         "coral": "Coral",
-        "laranja": "Laranja",
-        "oliva": "Oliva",
-        "roxo": "Roxo",
-        "acento": "Acento"
+        "orange": "Laranja",
+        "olive": "Oliva",
+        "purple": "Roxo",
+        "accent": "Acento"
       },
       "variants": {
         "solid": "Solid (Padrão)",

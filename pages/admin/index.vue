@@ -74,7 +74,7 @@ onMounted(async () => {
         weight="bold"
         size="xs"
         bg-color="rgba(92, 26, 42, 0.06)"
-        text-color="var(--color-vinho-medio)"
+        text-color="var(--color-wine-mid)"
         class="dashboardHeader__badge"
       />
       <CBLabel
@@ -112,7 +112,7 @@ onMounted(async () => {
           weight="bold"
           size="xs"
           bg-color="rgba(92, 26, 42, 0.06)"
-          text-color="var(--color-vinho-medio)"
+          text-color="var(--color-wine-mid)"
           class="sectionBadge"
         />
         <CBLabel
@@ -128,7 +128,7 @@ onMounted(async () => {
         :title="$t('admin.dashboard.homePageTitle')"
         :description="$t('admin.dashboard.homePageDesc')"
         icon="luc-home"
-        color="rosa"
+        color="wine-rose"
         edit-url="/admin/edit/homeEdit"
         :can-edit="permissions?.canEdit ?? false"
         :last-editor-name="homeStatus?.updatedByName"
@@ -146,7 +146,7 @@ onMounted(async () => {
           weight="bold"
           size="xs"
           bg-color="rgba(92, 26, 42, 0.06)"
-          text-color="var(--color-vinho-medio)"
+          text-color="var(--color-wine-mid)"
           class="sectionBadge"
         />
         <CBLabel
@@ -164,7 +164,7 @@ onMounted(async () => {
         class="dashboardAudit__placeholder"
       >
         <div class="dashboardAudit__empty">
-          <CBIcon icon="luc-scroll-text" size="2rem" color="var(--color-nude-quente)" />
+          <CBIcon icon="luc-scroll-text" size="2rem" color="var(--color-nude-warm)" />
           <CBLabel
             :text="$t('admin.dashboard.activityPlaceholder')"
             size="sm"

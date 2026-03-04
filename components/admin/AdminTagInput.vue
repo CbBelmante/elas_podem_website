@@ -89,7 +89,10 @@ function removeTag(index: number): void {
       :model-value="color"
       :label="$t('admin.tagInput.colorLabel')"
       :unavailable-modes="['gradients', 'custom']"
-      @update:model-value="emit('update:color', $event); emit('changed')"
+      @update:model-value="
+        emit('update:color', $event);
+        emit('changed');
+      "
     />
 
     <div v-if="modelValue.length" class="adminTagInput__chips">

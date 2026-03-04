@@ -17,7 +17,7 @@ export const HERO_DEFAULTS = {
   btnDonateColor: 'gradient:primary',
   btnDonateVariant: 'solid',
   btnHistory: 'Nossa Historia',
-  btnHistoryColor: 'vinho-medio',
+  btnHistoryColor: 'wine-mid',
   btnHistoryVariant: 'outline',
   heroImage: '',
   heroImageOpacity: 100,
@@ -133,7 +133,7 @@ export const CONTACT_METHOD_DEFAULTS = {
 export const VALUE_ITEM_DEFAULTS = {
   title: '',
   subtitle: '',
-  color: 'vinho',
+  color: 'wine',
 } as const;
 
 // ============================================================

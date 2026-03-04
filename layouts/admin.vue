@@ -67,7 +67,7 @@ const handleLogout = async (): Promise<void> => {
     >
       <template #logo="{ isCollapsed: collapsed }">
         <div class="adminLayout__logo">
-          <CBIcon icon="luc-heart" :size="collapsed ? 18 : 16" color="var(--color-rosa)" />
+          <CBIcon icon="luc-heart" :size="collapsed ? 18 : 16" color="var(--color-wine-rose)" />
         </div>
       </template>
 
@@ -144,7 +144,7 @@ const handleLogout = async (): Promise<void> => {
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background: rgba(var(--color-rosa-rgb), 0.1);
+  background: rgba(var(--color-wine-rose-rgb), 0.1);
   flex-shrink: 0;
 }
 
@@ -239,7 +239,7 @@ const handleLogout = async (): Promise<void> => {
 .adminLayout__glow--1 {
   width: 600px;
   height: 600px;
-  background: radial-gradient(circle, rgba(var(--color-rosa-rgb), 0.12) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(var(--color-wine-rose-rgb), 0.12) 0%, transparent 70%);
   top: -150px;
   right: -120px;
 }
@@ -247,7 +247,7 @@ const handleLogout = async (): Promise<void> => {
 .adminLayout__glow--2 {
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, rgba(var(--color-vinho-medio-rgb), 0.1) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(var(--color-wine-mid-rgb), 0.1) 0%, transparent 70%);
   bottom: -100px;
   left: -100px;
 }
@@ -255,7 +255,11 @@ const handleLogout = async (): Promise<void> => {
 .adminLayout__glow--3 {
   width: 450px;
   height: 450px;
-  background: radial-gradient(circle, rgba(var(--color-roxo-acento-rgb), 0.07) 0%, transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--color-purple-accent-rgb), 0.07) 0%,
+    transparent 70%
+  );
   top: 35%;
   right: 20%;
 }
@@ -291,7 +295,7 @@ const handleLogout = async (): Promise<void> => {
 .adminLayout__dot--1 {
   width: 10px;
   height: 10px;
-  background: var(--color-coral-claro);
+  background: var(--color-coral-light);
   top: 12%;
   right: 15%;
   opacity: 0.4;
@@ -300,7 +304,7 @@ const handleLogout = async (): Promise<void> => {
 .adminLayout__dot--2 {
   width: 8px;
   height: 8px;
-  background: var(--color-vinho-medio);
+  background: var(--color-wine-mid);
   top: 55%;
   right: 8%;
   opacity: 0.3;
@@ -310,7 +314,7 @@ const handleLogout = async (): Promise<void> => {
 .adminLayout__dot--3 {
   width: 14px;
   height: 14px;
-  background: var(--color-nude-quente);
+  background: var(--color-nude-warm);
   bottom: 20%;
   left: 18%;
   opacity: 0.5;
@@ -320,7 +324,7 @@ const handleLogout = async (): Promise<void> => {
 .adminLayout__dot--4 {
   width: 6px;
   height: 6px;
-  background: var(--color-roxo-acento);
+  background: var(--color-purple-accent);
   top: 30%;
   left: 40%;
   opacity: 0.35;
@@ -330,7 +334,7 @@ const handleLogout = async (): Promise<void> => {
 .adminLayout__dot--5 {
   width: 12px;
   height: 12px;
-  background: var(--color-rosa);
+  background: var(--color-wine-rose);
   bottom: 35%;
   right: 30%;
   opacity: 0.15;
