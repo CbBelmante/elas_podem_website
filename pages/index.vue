@@ -291,7 +291,7 @@ watch(status, async () => {
           <div class="programsHeader animateOnScroll">
             <FrontBadge
               :content="programs.badge"
-              theme-color="vinho-medio"
+              theme-color="nude-quente"
               variant="outline"
               :icon-size="14"
               weight="bold"
@@ -299,13 +299,13 @@ watch(status, async () => {
               class="sectionBadge"
             />
 
-            <CBLabel :text="programs.title" tag="h2" weight="black" class="sectionTitle" />
+            <CBLabel :text="programs.title" tag="h2" weight="black" :color="'var(--color-branco)'" class="sectionTitle" />
 
             <CBLabel
               v-if="programs.subtitle"
               :text="programs.subtitle"
               size="md"
-              color="secondary"
+              :color="'var(--color-nude-quente)'"
               class="programsSubtitle"
             />
           </div>
@@ -655,8 +655,8 @@ watch(status, async () => {
       <section class="ctaSection">
         <div class="ctaDecorCircle"></div>
         <div class="ctaContainer animateOnScroll">
-          <CBLabel :text="cta.title" tag="h2" weight="black" class="ctaTitle" />
-          <CBLabel :text="cta.subtitle" size="lg" class="ctaSubtitle" />
+          <CBLabel :text="cta.title" tag="h2" weight="black" :color="'var(--color-branco)'" class="ctaTitle" />
+          <CBLabel :text="cta.subtitle" size="lg" :color="'var(--color-nude-quente)'" class="ctaSubtitle" />
           <div class="ctaActions">
             <FrontButton
               :label="cta.btnDonate"
@@ -792,7 +792,6 @@ watch(status, async () => {
   font-weight: 900;
   line-height: 1.15;
   letter-spacing: -0.02em;
-  color: var(--text-primary);
   margin-bottom: 1rem;
 }
 
@@ -1096,7 +1095,7 @@ watch(status, async () => {
    ============================================ */
 .programsSection {
   padding: 100px 7%;
-  background: var(--bg-white);
+  background: var(--gradient-programs);
 }
 
 .programsContainer {
@@ -1671,12 +1670,10 @@ watch(status, async () => {
   font-family: var(--font-heading);
   font-size: clamp(2rem, 4.5vw, 3.2rem);
   font-weight: 900;
-  color: white;
   margin-bottom: 16px;
 }
 
 .ctaSubtitle {
-  color: rgba(255, 255, 255, 0.75);
   line-height: 1.65;
   margin-bottom: 36px;
 }

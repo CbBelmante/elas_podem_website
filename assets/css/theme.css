@@ -90,7 +90,9 @@
   --gradient-accent: linear-gradient(135deg, var(--color-magenta) 0%, var(--color-rosa) 100%);
   --gradient-hero: linear-gradient(160deg, var(--color-branco) 50%, var(--color-nude-fundo) 100%);
   --gradient-stats-bar: linear-gradient(135deg, var(--color-vinho) 0%, var(--color-borgonha) 100%);
-  --gradient-cta: linear-gradient(135deg, var(--color-magenta) 0%, var(--color-vinho-medio) 50%, var(--color-vinho) 100%);
+  --gradient-magenta-vinho: linear-gradient(135deg, var(--color-magenta) 0%, var(--color-vinho-medio) 50%, var(--color-vinho) 100%);
+  --gradient-cta: var(--gradient-magenta-vinho);
+  --gradient-programs: var(--gradient-magenta-vinho);
 
   /* ============================================
      GLOW / SOMBRAS POR VARIANTE
