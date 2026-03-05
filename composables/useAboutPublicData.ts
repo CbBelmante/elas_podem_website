@@ -24,7 +24,7 @@ import {
   ABOUT_PILLARS_SECTION_DEFAULTS,
   ABOUT_CTA_DEFAULTS,
 } from '@definitions/sectionDefaults';
-import { Logger } from '@utils/Logger';
+import { Logger } from '@cb/components';
 
 import type { IAboutPageData } from '@appTypes/admin';
 

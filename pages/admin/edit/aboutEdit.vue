@@ -18,8 +18,7 @@ import AboutPillarsEditor from '@components/admin/AboutPillarsEditor.vue';
 import AboutCtaEditor from '@components/admin/AboutCtaEditor.vue';
 import HomeSeoEditor from '@components/admin/HomeSeoEditor.vue';
 
-import type { Component } from 'vue';
-import type { ISaveResult } from '@appTypes/admin';
+import type { ISectionConfig, ISaveResult } from '@appTypes/admin';
 
 // ============== PAGE META ==============
 
@@ -51,13 +50,6 @@ const tempUploadedImages = ref<string[]>([]);
 const successMessage = ref('');
 
 // ============== SECTION CONFIG ==============
-
-interface ISectionConfig {
-  name: string;
-  title: string;
-  icon: string;
-  component: Component;
-}
 
 const sections = computed<ISectionConfig[]>(() => [
   {

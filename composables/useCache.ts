@@ -20,7 +20,7 @@
 // ============== DEPENDENCIAS ==============
 
 import { LocalStorage } from '@utils/LocalStorage';
-import { Logger } from '@utils/Logger';
+import { Logger } from '@cb/components';
 import { APP_CONSTANTS } from '@config/constants';
 import type { CacheKeyEntry } from '@definitions/cacheKeys';
 

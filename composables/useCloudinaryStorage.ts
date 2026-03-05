@@ -19,7 +19,7 @@ import { useI18n } from 'vue-i18n';
 import { useConfig } from '@config/index';
 import { useImageCompression } from '@composables/useImageCompression';
 import { COMPRESSION_SETTINGS, IMAGE_UPLOAD_CONFIG } from '@definitions/validationConfigs';
-import { Logger } from '@utils/Logger';
+import { Logger } from '@cb/components';
 import type { IStorageAdapter, IFileValidation, CompressionCategory } from '@/types/storage';
 
 // ============== CONSTANTS ==============

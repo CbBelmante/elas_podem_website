@@ -27,7 +27,7 @@ import { useFirebase } from '@composables/useFirebase';
 import { ADMIN_ROLES, isValidRole, getRolePermissions } from '@definitions/adminRoles';
 import { FIRESTORE_COLLECTIONS } from '@definitions/firestoreCollections';
 import type { AdminRole } from '@definitions/adminRoles';
-import { Logger } from '@utils/Logger';
+import { Logger } from '@cb/components';
 import { useCache } from '@composables/useCache';
 import { CACHE_KEYS } from '@definitions/cacheKeys';
 

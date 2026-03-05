@@ -18,7 +18,7 @@
 // ============== DEPENDENCIAS INTERNAS ==============
 
 import { useStorage } from '@composables/useStorage';
-import { Logger } from '@utils/Logger';
+import { Logger } from '@cb/components';
 
 // ============== CONSTANTS ==============
 

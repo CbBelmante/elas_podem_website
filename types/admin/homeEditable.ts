@@ -1,7 +1,7 @@
 /**
- * Editable/Readonly Types - Elas Podem Admin
+ * Home Editable/Readonly Types - Elas Podem Admin
  *
- * Camada 2: Tipos derivados de sections.ts + sectionFields.ts.
+ * Camada 2: Tipos derivados de homeSections.ts + sectionFields.ts.
  * Para mudar campo de editable para readonly → mude em definitions/sectionFields.ts.
  *
  * Seções wrapper (Programs, Supporters, Testimonials, Contact) usam
@@ -22,7 +22,7 @@ import type {
   IValue,
   ICtaSection,
   ISeo,
-} from './sections';
+} from './homeSections';
 import type { SECTION_FIELDS } from '@definitions/sectionFields';
 
 // ============================================================

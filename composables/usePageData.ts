@@ -14,7 +14,7 @@ import { useI18n } from 'vue-i18n';
 
 import { useFirebase } from '@composables/useFirebase';
 import { useAuth } from '@composables/useAuth';
-import { Logger } from '@utils/Logger';
+import { Logger } from '@cb/components';
 import { FIRESTORE_COLLECTIONS, PAGE_DOCUMENTS } from '@definitions/firestoreCollections';
 import {
   separateAllSections,

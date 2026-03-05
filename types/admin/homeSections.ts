@@ -1,5 +1,5 @@
 /**
- * Section Data Types - Elas Podem Admin
+ * Home Section Data Types - Elas Podem Admin
  *
  * Camada 1: Interfaces que espelham o formato exato dos dados no Firestore.
  * Hierarquia: pages/home → { content: { hero, mission, programs, ... }, seo, lastUpdated, updatedBy }

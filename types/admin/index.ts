@@ -1,15 +1,15 @@
 /**
  * Admin Types - Elas Podem
  *
- * Barrel export de todas as interfaces do admin, organizadas em 4 camadas:
+ * Barrel export de todas as interfaces do admin:
  *
- * - sections.ts  → Camada 1: formato exato no Firestore (flat/completo)
- * - editable.ts  → Camada 2: separacao editable/readonly para o formulario
- * - formsData.ts → Camada 3-4: container do editor + orquestrador, validacao, audit log
- *
- * O QUE VAI AQUI:
- * - Interfaces de dados do admin (shapes de secoes, formularios, editor)
- * - Types de validacao e resultado de operacoes
+ * - common.ts         → Tipos genéricos reutilizados por todas as páginas
+ * - homeSections.ts   → Camada 1: formato exato no Firestore (home)
+ * - homeEditable.ts   → Camada 2: separação editable/readonly (home)
+ * - homeFormsData.ts  → Camada 3: container do editor (home)
+ * - aboutSections.ts  → Camada 1: formato Firestore (about)
+ * - aboutEditable.ts  → Camada 2: editable/readonly (about)
+ * - aboutFormsData.ts → Camada 3: container do editor (about)
  *
  * O QUE NAO VAI AQUI:
  * - Constantes (THEME_COLOR_OPTIONS, ICON_OPTIONS) → vao em definitions/
@@ -19,7 +19,17 @@
  * @module types/admin
  */
 
-// ---- Camada 1: Section Data (formato Firestore) ----
+// ---- Common: Tipos genéricos (UI, save, validação, audit) ----
+export type {
+  ISectionConfig,
+  IPageSectionConfig,
+  IPageEditorConfig,
+  ISaveResult,
+  IValidationResult,
+  IAdminLog,
+} from './common';
+
+// ---- Home: Camada 1 (Section Data / Firestore) ----
 export type {
   IHeroStat,
   IHeroSection,
@@ -37,9 +47,9 @@ export type {
   ISeoOg,
   ISeo,
   IHomePageData,
-} from './sections';
+} from './homeSections';
 
-// ---- Camada 2: Editable/Readonly split (derivados de sectionFields.ts) ----
+// ---- Home: Camada 2 (Editable/Readonly split) ----
 export type {
   FieldsByMode,
   PreservedFields,
@@ -63,19 +73,12 @@ export type {
   ICtaEditable,
   ISeoEditable,
   ISeoReadonly,
-} from './editable';
+} from './homeEditable';
 
-// ---- Camada 3-4: FormsData + Editor/Orquestrador ----
-export type {
-  IHomeFormsData,
-  IPageSectionConfig,
-  IPageEditorConfig,
-  ISaveResult,
-  IValidationResult,
-  IAdminLog,
-} from './formsData';
+// ---- Home: Camada 3 (FormsData) ----
+export type { IHomeFormsData } from './homeFormsData';
 
-// ---- About Page: Camada 1 (Section Data) ----
+// ---- About: Camada 1 (Section Data) ----
 export type {
   IAboutHeroSection,
   IAboutTimelineItem,
@@ -88,7 +91,7 @@ export type {
   IAboutPageData,
 } from './aboutSections';
 
-// ---- About Page: Camada 2 (Editable split) ----
+// ---- About: Camada 2 (Editable split) ----
 export type {
   IAboutHeroEditable,
   IAboutTimelineItemEditable,
@@ -100,5 +103,5 @@ export type {
   IAboutCtaEditable,
 } from './aboutEditable';
 
-// ---- About Page: Camada 3 (FormsData) ----
+// ---- About: Camada 3 (FormsData) ----
 export type { IAboutFormsData } from './aboutFormsData';

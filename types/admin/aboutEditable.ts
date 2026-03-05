@@ -16,7 +16,7 @@ import type {
   IAboutCtaSection,
 } from './aboutSections';
 import type { SECTION_FIELDS } from '@definitions/sectionFields';
-import type { FieldsByMode } from './editable';
+import type { FieldsByMode } from './homeEditable';
 
 // ============================================================
 // Utility — extrai sub-config de items

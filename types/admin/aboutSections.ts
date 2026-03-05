@@ -5,7 +5,7 @@
  * Hierarquia: pages/about → { content: { hero, timeline, team, pillars, cta }, seo, lastUpdated, updatedBy }
  */
 
-import type { ButtonVariant, ISeo } from './sections';
+import type { ButtonVariant, ISeo } from './homeSections';
 
 // ============================================================
 // HERO

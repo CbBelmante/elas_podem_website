@@ -22,7 +22,7 @@
 
 // ============== DEPENDÊNCIAS ==============
 
-import { Logger } from '@utils/Logger';
+import { Logger } from '@cb/components';
 
 // ============== LOGGER SETUP ==============
 

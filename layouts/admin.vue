@@ -16,7 +16,10 @@ import type { AdminRole } from '@definitions/adminRoles';
 // ============== COMPOSABLES ==============
 
 const { t } = useI18n();
-const { userData, signOut } = useAuth();
+const { userData, signOut, isAuthenticated, isLoading: authLoading } = useAuth();
+
+/** Só renderiza conteúdo após auth resolver no client (evita flash sem login) */
+const isReady = computed(() => !authLoading.value && isAuthenticated.value);
 
 // ============== STATE ==============
 
@@ -55,7 +58,10 @@ const handleLogout = async (): Promise<void> => {
 </script>
 
 <template>
-  <div class="adminLayout">
+  <!-- Loading enquanto auth resolve (evita flash do dashboard sem login) -->
+  <LoadingOverlay :visible="!isReady" />
+
+  <div v-if="isReady" class="adminLayout">
     <CBSidebar
       :items="sidebarItems"
       :app-name="$t('admin.layout.appName')"

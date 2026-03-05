@@ -23,7 +23,7 @@ import {
   SUPPORTERS_SECTION_DEFAULTS,
   SUPPORTER_ITEM_DEFAULTS,
 } from '@definitions/sectionDefaults';
-import { Logger } from '@utils/Logger';
+import { Logger } from '@cb/components';
 
 import type { IHomePageData } from '@appTypes/admin';
 

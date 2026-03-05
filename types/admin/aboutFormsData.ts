@@ -12,7 +12,7 @@ import type {
   IAboutCtaEditable,
 } from './aboutEditable';
 
-import type { ISeoEditable, ISeoReadonly } from './editable';
+import type { ISeoEditable, ISeoReadonly } from './homeEditable';
 
 // ============================================================
 // FORMS DATA

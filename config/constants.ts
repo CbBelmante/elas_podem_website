@@ -154,7 +154,7 @@ export const APP_CONSTANTS: Readonly<IConstants> = {
     enableDonations: true,
     enableNewsletter: false,
     enableBlog: false,
-    enableDebugLogs: true,
+    enableDebugLogs: false,
     enableCache: false,
   },
 
