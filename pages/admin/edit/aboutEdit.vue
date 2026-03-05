@@ -65,16 +65,16 @@ const sections = computed<ISectionConfig[]>(() => [
     component: AboutTimelineEditor,
   },
   {
-    name: 'team',
-    title: t('admin.aboutEdit.sections.team'),
-    icon: 'luc-users',
-    component: AboutTeamEditor,
-  },
-  {
     name: 'pillars',
     title: t('admin.aboutEdit.sections.pillars'),
     icon: 'luc-heart',
     component: AboutPillarsEditor,
+  },
+  {
+    name: 'team',
+    title: t('admin.aboutEdit.sections.team'),
+    icon: 'luc-users',
+    component: AboutTeamEditor,
   },
   {
     name: 'cta',

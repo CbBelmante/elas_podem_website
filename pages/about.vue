@@ -118,6 +118,34 @@ onMounted(() => {
       </div>
     </section>
 
+    <!-- ════════ PILLARS (Missao/Visao/Valores) ════════ -->
+    <section class="pillarsSection">
+      <div class="sectionContainer">
+        <div class="sectionHeader animateOnScroll">
+          <FrontBadge
+            :content="pillars.badge"
+            theme-color="wine-mid"
+            variant="outline"
+            :icon-size="14"
+            weight="bold"
+            size="xs"
+            class="sectionBadge"
+          />
+          <CBLabel :text="pillars.title" tag="h2" weight="black" class="sectionTitle" />
+        </div>
+
+        <div class="pillarsGrid">
+          <div v-for="pillar in pillars.items" :key="pillar.title" class="pillarCard animateOnScroll">
+            <div class="pillarIcon" :style="{ background: resolveColorValue(pillar.color) }">
+              <CBIcon :icon="pillar.icon" size="1.75rem" color="var(--color-white)" />
+            </div>
+            <CBLabel :text="pillar.title" tag="h3" weight="bold" class="pillarTitle" />
+            <CBLabel :text="pillar.description" size="sm" color="secondary" class="pillarText" />
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ════════ TEAM ════════ -->
     <section class="teamSection">
       <div class="sectionContainer">
@@ -178,34 +206,6 @@ onMounted(() => {
               <CBLabel :text="member.bio" size="sm" color="secondary" class="teamBio" />
             </div>
           </CBCard>
-        </div>
-      </div>
-    </section>
-
-    <!-- ════════ PILLARS (Missao/Visao/Valores) ════════ -->
-    <section class="pillarsSection">
-      <div class="sectionContainer">
-        <div class="sectionHeader animateOnScroll">
-          <FrontBadge
-            :content="pillars.badge"
-            theme-color="wine-mid"
-            variant="outline"
-            :icon-size="14"
-            weight="bold"
-            size="xs"
-            class="sectionBadge"
-          />
-          <CBLabel :text="pillars.title" tag="h2" weight="black" class="sectionTitle" />
-        </div>
-
-        <div class="pillarsGrid">
-          <div v-for="pillar in pillars.items" :key="pillar.title" class="pillarCard animateOnScroll">
-            <div class="pillarIcon" :style="{ background: resolveColorValue(pillar.color) }">
-              <CBIcon :icon="pillar.icon" size="1.75rem" color="var(--color-white)" />
-            </div>
-            <CBLabel :text="pillar.title" tag="h3" weight="bold" class="pillarTitle" />
-            <CBLabel :text="pillar.description" size="sm" color="secondary" class="pillarText" />
-          </div>
         </div>
       </div>
     </section>
