@@ -7,9 +7,9 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare",
-    "cbcomponentsLinkLocal": "bash scripts/linkLocal.sh",
-    "cbcomponentsLinkRemote": "bash scripts/linkRemote.sh",
+    "postinstall": "bun scripts/postinstall.ts",
+    "cbcomponentsLinkLocal": "bun scripts/linkLocal.ts",
+    "cbcomponentsLinkRemote": "bun scripts/linkRemote.ts",
     "cleanViteCache": "rm -rf .nuxt .output .vite node_modules/.vite node_modules/.cache",
     "lint": "eslint .",
     "lintFix": "eslint . --fix",
@@ -18,9 +18,12 @@
     "deploy": "npm run generate && npx firebase-tools deploy --only hosting",
     "deployPreview": "npm run generate && npx serve .output/public",
     "seedAdmin": "npx tsx --no-deprecation scripts/seedAdmin.ts",
-    "killPort": "bash scripts/killPort.sh",
+    "killPort": "bun scripts/killPort.ts",
     "prepare": "husky",
     "lintStaged": "lint-staged"
+  },
+  "config": {
+    "useCbLocal": true
   },
   "lint-staged": {
     "*.{vue,js,jsx,ts,tsx}": [
