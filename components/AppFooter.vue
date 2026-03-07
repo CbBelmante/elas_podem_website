@@ -66,7 +66,7 @@ import { CBImage, CBLabel, CBIcon } from '@cb/components';
 
       <div class="footerBottom">
         <span class="footerCopyright"
-          >&copy; 2025 Coletivo Elas Podem. Todos os direitos reservados.</span
+        >&copy; 2025 Coletivo Elas Podem. Todos os direitos reservados.</span
         >
         <div class="footerSocial">
           <a

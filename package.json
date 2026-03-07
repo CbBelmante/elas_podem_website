@@ -18,7 +18,14 @@
     "deploy": "npm run generate && npx firebase-tools deploy --only hosting",
     "deployPreview": "npm run generate && npx serve .output/public",
     "seedAdmin": "npx tsx --no-deprecation scripts/seedAdmin.ts",
-    "killPort": "bash scripts/killPort.sh"
+    "killPort": "bash scripts/killPort.sh",
+    "prepare": "husky",
+    "lintStaged": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{vue,js,jsx,ts,tsx}": [
+      "eslint --fix"
+    ]
   },
   "dependencies": {
     "dayjs": "^1.11.19",
@@ -36,6 +43,8 @@
     "@nuxt/eslint": "^1.13.0",
     "eslint": "^9.39.2",
     "firebase-admin": "^13.6.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.3.2",
     "vue-tsc": "^3.2.5"
   }
 }

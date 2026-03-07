@@ -365,9 +365,9 @@ watch(status, async () => {
                 <div
                   v-if="
                     testimonials.items[index].initials ||
-                    testimonials.items[index].image ||
-                    testimonials.items[index].name ||
-                    testimonials.items[index].role
+                      testimonials.items[index].image ||
+                      testimonials.items[index].name ||
+                      testimonials.items[index].role
                   "
                   class="testimonialAuthor"
                 >
