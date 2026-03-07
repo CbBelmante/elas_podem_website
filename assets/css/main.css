@@ -1,0 +1,9 @@
+/**
+ * 🎨 main — CSS global centralizado
+ *
+ * Ponto único de importação para o nuxt.config.ts.
+ * Ordem: reset → theme (variáveis) → sections (classes compartilhadas)
+ */
+
+@import './theme.css';
+@import './sections.css';

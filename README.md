@@ -61,6 +61,7 @@ elas_podem_website/
 │   └── admin.global.ts        # Proteção de rotas /admin/*
 ├── plugins/
 │   ├── auth.client.ts         # Init Firebase Auth (client-only)
+│   ├── logger.client.ts       # Config CbLogger (forceDebug)
 │   └── i18n.ts                # Config vue-i18n
 ├── definitions/               # Constantes, defaults, configs de validação
 │   ├── themeOptions.ts        # Cores, gradientes, ícones, variantes
@@ -76,9 +77,13 @@ elas_podem_website/
 ├── config/                    # Aliases e configurações
 ├── utils/                     # Funções utilitárias
 ├── locales/                   # Traduções (pt-BR, en, es)
-├── assets/css/                # CSS variables do tema
+├── assets/css/                # Estilos globais
+│   ├── main.css              # Ponto de entrada (importa theme + sections)
+│   ├── theme.css             # CSS variables do tema (cores, gradientes, tokens)
+│   ├── sections.css          # Classes compartilhadas entre páginas (títulos, CTA)
+│   └── reset.css             # Reset CSS base
 ├── public/                    # Assets estáticos
-├── scripts/                   # Scripts utilitários (seed admin, link local)
+├── scripts/                   # Scripts TypeScript via bun (postinstall, link, seed)
 ├── docs/                      # Documentação técnica
 ├── nuxt.config.ts
 ├── firebase.json
@@ -141,7 +146,8 @@ npm run format:check     # Verificar formatação
 ### Sistema de Design
 
 - **CSS Variables**: Design tokens customizáveis em `assets/css/theme.css` (cores, gradientes, espaçamentos)
-- **Tema**: `@cb/components/style.css` (base) + `theme.css` (overrides) — ordem importa
+- **Tema**: `@cb/components/style.css` (base) + `main.css` (theme + sections) — ordem importa
+- **Classes globais**: `sections.css` — títulos, badges, CTA e responsivos compartilhados entre páginas
 - **Fontes**: Fraunces (headings) + DM Sans (body text) via Google Fonts
 - **Responsivo**: Breakpoints em 768px e 480px
 

@@ -29,7 +29,7 @@ export default defineNuxtConfig(() => {
     modules: ['@nuxt/eslint'],
 
     // CSS global — ordem importa (library primeiro, theme depois)
-    css: ['@cb/components/style.css', '~/assets/css/theme.css'],
+    css: ['@cb/components/style.css', '~/assets/css/main.css'],
 
     // Head global — fontes carregam antes de qualquer page/layout renderizar
     app: {
@@ -81,6 +81,19 @@ export default defineNuxtConfig(() => {
       },
       optimizeDeps: {
         exclude: ['@cb/components'],
+        include: [
+          'vue-i18n',
+          '@vueuse/core',
+          'lucide-vue-next',
+          '@fortawesome/fontawesome-svg-core',
+          '@fortawesome/free-solid-svg-icons',
+          '@fortawesome/free-brands-svg-icons',
+          '@fortawesome/vue-fontawesome',
+          'firebase/app',
+          'firebase/firestore',
+          'firebase/auth',
+          'firebase/storage',
+        ],
       },
       server: {
         fs: {

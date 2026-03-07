@@ -279,38 +279,6 @@ onMounted(() => {
 }
 
 /* ============================================
-   SHARED
-   ============================================ */
-.sectionBadge {
-  letter-spacing: 1.5px;
-  margin-bottom: 14px;
-  pointer-events: none;
-}
-
-.sectionTitle {
-  font-family: var(--font-heading);
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
-  font-weight: 900;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  margin-bottom: 1rem;
-}
-
-.sectionSubtitle {
-  max-width: 560px;
-  line-height: 1.65;
-}
-
-.sectionContainer {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.sectionHeader {
-  margin-bottom: 56px;
-}
-
-/* ============================================
    HERO
    ============================================ */
 .heroSection {
@@ -519,70 +487,12 @@ onMounted(() => {
   line-height: 1.65;
 }
 
-/* ============================================
-   CTA
-   ============================================ */
-.ctaSection {
-  position: relative;
-  padding: 110px 7%;
-  background: var(--gradient-cta);
-  overflow: hidden;
-  text-align: center;
-}
-
-.ctaDecorCircle {
-  position: absolute;
-  width: 600px;
-  height: 600px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.03);
-  top: -200px;
-  right: -200px;
-  pointer-events: none;
-}
-
+/* CTA — page-specific */
 .ctaContainer {
   position: relative;
   max-width: 600px;
   margin: 0 auto;
   z-index: 2;
-}
-
-.ctaTitle {
-  font-family: var(--font-heading);
-  font-size: clamp(2rem, 4.5vw, 3.2rem);
-  font-weight: 900;
-  margin-bottom: 16px;
-}
-
-.ctaSubtitle {
-  line-height: 1.65;
-  margin-bottom: 36px;
-}
-
-.ctaActions {
-  display: flex;
-  gap: 14px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.btnCtaWhite {
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  transition: all 0.35s ease;
-}
-
-.btnCtaWhite:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.2);
-}
-
-.btnCtaOutline :deep(.cbButton__icon) {
-  transition: transform 0.3s ease;
-}
-
-.btnCtaOutline:hover :deep(.cbButton__icon) {
-  transform: translateX(4px);
 }
 
 /* ============================================
@@ -606,22 +516,17 @@ onMounted(() => {
     padding: 70px 5%;
   }
 
-  .ctaSection {
-    padding: 80px 5%;
-  }
-
   .teamGrid,
   .pillarsGrid {
     grid-template-columns: 1fr;
   }
 
-  .ctaActions {
-    flex-direction: column;
-    width: 100%;
+  .heroTitle {
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
   }
 
-  .ctaActions :deep(.cbButton) {
-    width: 100%;
+  .heroDescription {
+    font-size: 0.93rem;
   }
 }
 
@@ -636,12 +541,8 @@ onMounted(() => {
     padding: 60px 5%;
   }
 
-  .ctaSection {
-    padding: 70px 5%;
-  }
-
   .heroTitle {
-    font-size: clamp(2rem, 8vw, 2.5rem);
+    font-size: clamp(1.6rem, 6vw, 2.2rem);
   }
 }
 </style>

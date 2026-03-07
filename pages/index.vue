@@ -740,21 +740,6 @@ watch(status, async () => {
 /* ============================================
    SHARED: SECTION BADGE
    ============================================ */
-.sectionBadge {
-  letter-spacing: 1.5px;
-  margin-bottom: 14px;
-  pointer-events: none;
-}
-
-.sectionTitle {
-  font-family: var(--font-heading);
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
-  font-weight: 900;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  margin-bottom: 1rem;
-}
-
 /* ============================================
    HERO — 2 COLUNAS + BLOB
    ============================================ */
@@ -939,6 +924,8 @@ watch(status, async () => {
 
 .blobLogo {
   z-index: 1;
+  max-height: 60%;
+  max-width: 60%;
   filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
 }
 
@@ -1595,74 +1582,22 @@ watch(status, async () => {
 /* Arrow icon hover effect on buttons */
 .btnHeroSecondary :deep(.cbButton__icon),
 .btnMission :deep(.cbButton__icon),
-.btnCtaOutline :deep(.cbButton__icon),
 .btnFormSubmit :deep(.cbButton__icon) {
   transition: transform 0.3s ease;
 }
 
 .btnHeroSecondary:hover :deep(.cbButton__icon),
 .btnMission:hover :deep(.cbButton__icon),
-.btnCtaOutline:hover :deep(.cbButton__icon),
 .btnFormSubmit:hover :deep(.cbButton__icon) {
   transform: translateX(4px);
 }
 
-/* ============================================
-   CTA — GRADIENT ESCURO
-   ============================================ */
-.ctaSection {
-  position: relative;
-  padding: 110px 7%;
-  background: var(--gradient-cta);
-  overflow: hidden;
-  text-align: center;
-}
-
-.ctaDecorCircle {
-  position: absolute;
-  width: 600px;
-  height: 600px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.03);
-  top: -200px;
-  right: -200px;
-  pointer-events: none;
-}
-
+/* CTA — page-specific */
 .ctaContainer {
   position: relative;
   max-width: 600px;
   margin: 0 auto;
   z-index: 2;
-}
-
-.ctaTitle {
-  font-family: var(--font-heading);
-  font-size: clamp(2rem, 4.5vw, 3.2rem);
-  font-weight: 900;
-  margin-bottom: 16px;
-}
-
-.ctaSubtitle {
-  line-height: 1.65;
-  margin-bottom: 36px;
-}
-
-.ctaActions {
-  display: flex;
-  gap: 14px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.btnCtaWhite {
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  transition: all 0.35s ease;
-}
-
-.btnCtaWhite:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.2);
 }
 
 /* ============================================
@@ -1700,12 +1635,27 @@ watch(status, async () => {
     gap: 40px;
   }
 
+  .heroVisual {
+    order: -1;
+  }
+
   .heroContent {
     max-width: 100%;
   }
 
+  .heroTitle {
+    font-size: clamp(1.8rem, 4.5vw, 2.6rem);
+  }
+
   .heroDescription {
     max-width: 100%;
+    font-size: 0.95rem;
+  }
+
+  .programsSubtitle,
+  .supportersSubtitle,
+  .contactDescription {
+    font-size: 0.93rem;
   }
 
   .heroActions {
@@ -1737,14 +1687,12 @@ watch(status, async () => {
     grid-template-columns: 1fr;
   }
 
-  .heroActions,
-  .ctaActions {
+  .heroActions {
     flex-direction: column;
     width: 100%;
   }
 
   .heroActions :deep(.cbButton),
-  .ctaActions :deep(.cbButton),
   .btnMission {
     width: 100%;
   }
@@ -1754,10 +1702,6 @@ watch(status, async () => {
   .supportersSection,
   .contactSection {
     padding: 70px 5%;
-  }
-
-  .ctaSection {
-    padding: 80px 5%;
   }
 
   .programBody {
@@ -1820,10 +1764,6 @@ watch(status, async () => {
   .supportersSection,
   .contactSection {
     padding: 60px 5%;
-  }
-
-  .ctaSection {
-    padding: 70px 5%;
   }
 
   .programBody {
