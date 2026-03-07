@@ -1,6 +1,5 @@
 // @ts-check
 import withNuxt from './.nuxt/eslint.config.mjs';
-import prettier from '@vue/eslint-config-prettier';
 
 export default withNuxt(
   // 1. GLOBAL IGNORES - Must be in separate object at TOP (ESLint v9+ requirement)
@@ -16,15 +15,31 @@ export default withNuxt(
       '.husky',
     ],
   },
-  // 2. RULES CONFIGURATION - Separate object after ignores
+  // 2. RULES CONFIGURATION
   {
     rules: {
-      '@typescript-eslint/no-explicit-any': 'off', // Permitir uso de 'any'
+      '@typescript-eslint/no-explicit-any': 'off',
       'no-unused-vars': ['error', { varsIgnorePattern: '^_|^ctx$', args: 'none' }],
       'typescript-eslint/no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': 'off',
+
+      'max-len': ['warn', { code: 150, comments: 150, ignoreUrls: true, ignoreStrings: true, ignoreTemplateLiterals: true, ignoreRegExpLiterals: true }],
+      'linebreak-style': ['error', 'unix'],
+      'vue/max-attributes-per-line': ['error', {
+        singleline: {
+          max: 4
+        },
+        multiline: {
+          max: 2
+        }
+      }],
+      'vue/html-indent': ['error', 2, {
+        attribute: 1,
+        baseIndent: 1,
+        closeBracket: 0,
+        alignAttributesVertically: true,
+      }],
+      'vue/html-self-closing': 'off',
     },
   },
-  // 3. PRETTIER - Must come last to override conflicting rules
-  prettier
 );

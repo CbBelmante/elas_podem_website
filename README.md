@@ -11,23 +11,23 @@ Website institucional desenvolvido com **Nuxt 4 + Vue 3** e **@cb/components**, 
 - **⚡ Vue 3**: Framework progressivo para construção de interfaces
 - **🏗️ Nuxt 4**: Framework Vue.js full-stack moderno
 - **📦 @cb/components**: Biblioteca customizada de componentes UI
-- **🔥 Firebase**: Auth, Firestore, Storage, Hosting
+- **🔥 Firebase**: Auth, Firestore, Hosting
+- **☁️ Cloudinary**: Upload e CDN de imagens
 - **🎯 Reka UI**: Primitivos headless para componentes acessíveis
 - **🎨 Lucide Icons**: Biblioteca moderna de ícones
 - **🌐 vue-i18n**: Internacionalização (pt-BR, en, es)
-- **✨ Prettier**: Formatador de código
-- **🔍 ESLint**: Linter para manter qualidade do código
+- **🔍 ESLint**: Linter + formatação de código
 
 ### Stack Completa
 
 - **Framework**: Nuxt 4 + Vue 3 (Composition API, `<script setup>`)
-- **Backend**: Firebase (Auth + Firestore + Storage)
+- **Backend**: Firebase (Auth + Firestore) + Cloudinary (imagens)
 - **Componentes**: @cb/components (customizados) + Reka UI (primitivos)
 - **Ícones**: Lucide Vue Next
 - **i18n**: vue-i18n (pt-BR, en, es)
 - **Estilo**: CSS Variables + tema customizado
 - **Fontes**: Fraunces (headings) + DM Sans (body)
-- **Qualidade**: ESLint + Prettier
+- **Qualidade**: ESLint
 
 ## 📂 Estrutura do Projeto
 
@@ -47,7 +47,7 @@ elas_podem_website/
 ├── composables/               # Lógica reutilizável
 │   ├── useAuth.ts             # Autenticação Firebase
 │   ├── useFirebase.ts         # Instâncias Firebase (app, auth, db, storage)
-│   ├── useFirebaseStorage.ts  # Upload de imagens
+│   ├── useCloudinaryStorage.ts # Upload de imagens (Cloudinary)
 │   ├── useHomePublicData.ts   # Dados da home (Firestore + cache)
 │   ├── usePageData.ts         # CRUD genérico Firestore
 │   ├── usePageEditor.ts       # Lógica do editor (forms, save, dirty state)
@@ -241,12 +241,12 @@ Vue Components → npm run generate → HTML Files → Firebase Hosting
 - ✅ Design responsivo mobile-first (breakpoints 768px / 480px)
 - ✅ Animações on-scroll com IntersectionObserver
 - ✅ **Painel Admin** — edição de conteúdo em tempo real (Firebase Auth + Firestore)
-- ✅ **Upload de imagens** com compressão automática (Firebase Storage)
+- ✅ **Upload de imagens** com compressão automática (Cloudinary)
 - ✅ **Cores/gradientes customizáveis** nos botões via AdminColorPicker
 - ✅ **Internacionalização** (pt-BR, en, es) com vue-i18n
 - ✅ **SSG + SPA híbrido** — páginas públicas pré-renderizadas, admin client-side
 - ✅ **Deploy automatizado** Firebase Hosting
-- ✅ ESLint + Prettier configurados
+- ✅ ESLint configurado (lint + formatação)
 
 ### Planejadas
 
@@ -261,7 +261,7 @@ Painel para edição de conteúdo da home em tempo real, acessível em `/admin`.
 
 - **Autenticação**: Firebase Authentication (email/password)
 - **Dados**: Firestore — cada seção da home é um documento separado
-- **Imagens**: Firebase Storage com compressão automática antes do upload
+- **Imagens**: Cloudinary com compressão automática antes do upload
 - **Editors**: Um editor por seção (Hero, Missão, Programas, Depoimentos, Parceiros, Contato, CTA, SEO)
 - **Cores**: AdminColorPicker permite escolher gradientes e cores dos botões visualmente
 - **Proteção**: Middleware `admin.global.ts` protege todas as rotas `/admin/*`
@@ -301,7 +301,6 @@ Extensões recomendadas:
 - **Volar** (Vue Language Features) - **Obrigatório**
 - **TypeScript Vue Plugin** - **Obrigatório**
 - **ESLint** - Recomendado
-- **Prettier** - Recomendado
 
 > **Atenção**: Desinstale **Vetur** (conflita com Volar)
 

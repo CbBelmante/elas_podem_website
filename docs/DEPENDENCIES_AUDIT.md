@@ -108,15 +108,6 @@
 - **Uso:** Linter JavaScript/TypeScript
 - **Motivo:** Essencial para evitar bugs
 
-#### `prettier: ^3.8.1`
-- **Status:** ✅ Excelente
-- **Uso:** Formatador de código
-- **Motivo:** Padronização de estilo
-
-#### `@vue/eslint-config-prettier: ^10.2.0`
-- **Status:** ✅ Excelente
-- **Uso:** Integração ESLint + Prettier
-- **Motivo:** Evita conflitos entre linter e formatter
 
 #### `vue-tsc: ^3.2.5`
 - **Status:** ✅ Excelente

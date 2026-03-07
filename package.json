@@ -13,8 +13,8 @@
     "cleanViteCache": "rm -rf .nuxt .output .vite node_modules/.vite node_modules/.cache",
     "lint": "eslint .",
     "lintFix": "eslint . --fix",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
+    "format": "eslint . --fix",
+    "format:check": "eslint . --max-warnings 0",
     "deploy": "npm run generate && npx firebase-tools deploy --only hosting",
     "deployPreview": "npm run generate && npx serve .output/public",
     "seedAdmin": "npx tsx --no-deprecation scripts/seedAdmin.ts",
@@ -34,10 +34,8 @@
   "devDependencies": {
     "@inquirer/prompts": "^8.2.1",
     "@nuxt/eslint": "^1.13.0",
-    "@vue/eslint-config-prettier": "^10.2.0",
     "eslint": "^9.39.2",
     "firebase-admin": "^13.6.1",
-    "prettier": "^3.8.1",
     "vue-tsc": "^3.2.5"
   }
 }

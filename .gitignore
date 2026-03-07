@@ -38,7 +38,6 @@ logs
 !.env.example
 package-lock.json
 settings.json
-.claude
 .history
 .vite
 
@@ -50,13 +49,13 @@ serviceAccountKey.json
 .flowforge/logs/
 .flowforge/cache/
 TASK_REPORT_*.md
-Claude.md
-CLAUDE.md
+# Claude Code (local por dev)
+.claude/settings.local.json
+
 *.flowforge.tmp
 .task-times.json
 .flowforge/*
 commands/
-.claude/*
 documentation/ffdocs
 documentation/development/
 run_ff_command.sh
