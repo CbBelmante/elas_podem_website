@@ -49,11 +49,12 @@ function expandDotKeys(obj: Record<string, unknown>): Record<string, unknown> {
     let current = result;
 
     for (let i = 0; i < parts.length - 1; i++) {
-      if (!(parts[i] in current)) current[parts[i]] = {};
-      current = current[parts[i]] as Record<string, unknown>;
+      const key = parts[i]!;
+      if (!(key in current)) current[key] = {};
+      current = current[key] as Record<string, unknown>;
     }
 
-    current[parts[parts.length - 1]] = value;
+    current[parts[parts.length - 1]!] = value;
   }
 
   return result;

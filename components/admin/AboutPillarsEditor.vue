@@ -6,6 +6,7 @@
  * Section fields (badge, title) + array CRUD + drag + icon + color.
  */
 
+import type { PropType } from 'vue';
 import { CBButton, CBInput, CBLabel, CBTextarea } from '@cb/components';
 import draggable from 'vuedraggable';
 import { ABOUT_PILLARS_CONFIG } from '@definitions/validationConfigs';
@@ -18,11 +19,12 @@ import type { IAboutPillarsEditable, IAboutPillarEditable } from '@appTypes/admi
 
 // ============== PROPS ==============
 
-interface Props {
-  forms: { editable: IAboutPillarsEditable };
-}
-
-const props = defineProps<Props>();
+const props = defineProps({
+  forms: {
+    type: Object as PropType<{ editable: IAboutPillarsEditable }>,
+    required: true,
+  },
+});
 
 // ============== EMITS ==============
 

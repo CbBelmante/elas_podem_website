@@ -19,13 +19,15 @@ import {
 
 // ============== PROPS ==============
 
-interface Props {
-  modelValue: string;
-  label?: string;
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  label: '',
+const props = defineProps({
+  modelValue: {
+    type: String,
+    required: true,
+  },
+  label: {
+    type: String,
+    default: '',
+  },
 });
 
 // ============== EMITS ==============

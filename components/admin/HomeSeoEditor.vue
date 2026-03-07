@@ -7,6 +7,7 @@
  * Tem readonly pareado (og config).
  */
 
+import type { PropType } from 'vue';
 import { CBButton, CBIcon, CBInput, CBLabel, CBTextarea } from '@cb/components';
 import draggable from 'vuedraggable';
 import AdminImageUploader from '@components/admin/AdminImageUploader.vue';
@@ -16,11 +17,12 @@ import type { ISeoEditable, ISeoReadonly } from '@appTypes/admin';
 
 // ============== PROPS ==============
 
-interface Props {
-  forms: { editable: ISeoEditable; readonly: ISeoReadonly };
-}
-
-const props = defineProps<Props>();
+const props = defineProps({
+  forms: {
+    type: Object as PropType<{ editable: ISeoEditable; readonly: ISeoReadonly }>,
+    required: true,
+  },
+});
 
 // ============== EMITS ==============
 
@@ -181,7 +183,7 @@ function updateKeyword(index: number, value: string): void {
 }
 
 .seoEditor__charCount--warn {
-  color: var(--color-coral, #ee4a55);
+  color: var(--color-coral);
 }
 
 .seoEditor__section {

@@ -78,7 +78,7 @@ export function separateAboutTimelineData(data: IAboutTimelineSection): {
     data: data as unknown as Record<string, unknown>,
     fields: SECTION_FIELDS.aboutTimeline,
     sectionDefaults: ABOUT_TIMELINE_SECTION_DEFAULTS,
-  }) as { editable: IAboutTimelineEditable };
+  }) as unknown as { editable: IAboutTimelineEditable };
 }
 
 export function combineAboutTimelineData(editable: IAboutTimelineEditable): IAboutTimelineSection {
@@ -108,7 +108,7 @@ export function separateAboutTeamData(data: IAboutTeamSection): {
     data: data as unknown as Record<string, unknown>,
     fields: SECTION_FIELDS.aboutTeam,
     sectionDefaults: ABOUT_TEAM_SECTION_DEFAULTS,
-  }) as { editable: IAboutTeamEditable };
+  }) as unknown as { editable: IAboutTeamEditable };
 }
 
 export function combineAboutTeamData(editable: IAboutTeamEditable): IAboutTeamSection {
@@ -138,7 +138,7 @@ export function separateAboutPillarsData(data: IAboutPillarsSection): {
     data: data as unknown as Record<string, unknown>,
     fields: SECTION_FIELDS.aboutPillars,
     sectionDefaults: ABOUT_PILLARS_SECTION_DEFAULTS,
-  }) as { editable: IAboutPillarsEditable };
+  }) as unknown as { editable: IAboutPillarsEditable };
 }
 
 export function combineAboutPillarsData(editable: IAboutPillarsEditable): IAboutPillarsSection {

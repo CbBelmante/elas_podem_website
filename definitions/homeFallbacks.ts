@@ -24,6 +24,9 @@ export const HOME_FALLBACK: IHomePageData = {
       btnHistoryVariant: 'outline',
       heroImage: 'https://picsum.photos/1920/1080?random=1',
       heroImageOpacity: 100,
+      logo: '',
+      logoAlt: '',
+      logoSize: 200,
       stats: [
         { icon: 'luc-award', number: '000', label: 'Lorem Ipsum' },
         { icon: 'luc-megaphone', number: '0a', label: 'Lorem Dolor' },

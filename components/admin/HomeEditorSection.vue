@@ -7,21 +7,41 @@
  * Usa CBCard com header slot para manter padrao cbcomponents.
  */
 
+import type { PropType } from 'vue';
 import { CBBadge, CBButton, CBCard, CBIcon, CBLabel } from '@cb/components';
 
 // ============== PROPS ==============
 
-interface Props {
-  title: string;
-  icon: string;
-  sectionName: string;
-  expanded: boolean;
-  errors: string[];
-  isSaving: boolean;
-  hasChanges: boolean;
-}
-
-defineProps<Props>();
+defineProps({
+  title: {
+    type: String,
+    required: true,
+  },
+  icon: {
+    type: String,
+    required: true,
+  },
+  sectionName: {
+    type: String,
+    required: true,
+  },
+  expanded: {
+    type: Boolean,
+    required: true,
+  },
+  errors: {
+    type: Array as PropType<string[]>,
+    required: true,
+  },
+  isSaving: {
+    type: Boolean,
+    required: true,
+  },
+  hasChanges: {
+    type: Boolean,
+    required: true,
+  },
+});
 
 // ============== EMITS ==============
 

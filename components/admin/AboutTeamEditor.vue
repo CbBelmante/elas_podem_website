@@ -6,6 +6,7 @@
  * Section fields (badge, title, subtitle) + array CRUD + drag + image upload.
  */
 
+import type { PropType } from 'vue';
 import { CBButton, CBInput, CBLabel, CBTextarea } from '@cb/components';
 import draggable from 'vuedraggable';
 import { ABOUT_TEAM_CONFIG } from '@definitions/validationConfigs';
@@ -17,11 +18,12 @@ import type { IAboutTeamEditable, IAboutTeamMemberEditable } from '@appTypes/adm
 
 // ============== PROPS ==============
 
-interface Props {
-  forms: { editable: IAboutTeamEditable };
-}
-
-const props = defineProps<Props>();
+const props = defineProps({
+  forms: {
+    type: Object as PropType<{ editable: IAboutTeamEditable }>,
+    required: true,
+  },
+});
 
 // ============== EMITS ==============
 

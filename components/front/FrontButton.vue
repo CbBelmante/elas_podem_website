@@ -6,6 +6,7 @@
  * Props nao declaradas sao repassadas ao CBButton via $attrs.
  */
 
+import type { PropType } from 'vue';
 import { computed } from 'vue';
 import { CBButton } from '@cb/components';
 import { resolveColorValue, isGradientValue } from '@utils/colorResolver';
@@ -15,11 +16,20 @@ defineOptions({ inheritAttrs: false });
 
 // ============== PROPS ==============
 
-const props = defineProps<{
-  label: string;
-  themeColor: string;
-  variant: ButtonVariant;
-}>();
+const props = defineProps({
+  label: {
+    type: String,
+    required: true,
+  },
+  themeColor: {
+    type: String,
+    required: true,
+  },
+  variant: {
+    type: String as PropType<ButtonVariant>,
+    required: true,
+  },
+});
 
 // ============== COMPUTED ==============
 

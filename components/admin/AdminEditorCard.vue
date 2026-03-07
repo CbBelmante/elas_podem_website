@@ -11,13 +11,15 @@ import { CBButton, CBCard, CBIcon, CBLabel } from '@cb/components';
 
 // ============== PROPS ==============
 
-interface Props {
-  title: string;
-  disabled?: boolean;
-}
-
-withDefaults(defineProps<Props>(), {
-  disabled: false,
+defineProps({
+  title: {
+    type: String,
+    required: true,
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 // ============== EMITS ==============

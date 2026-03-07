@@ -122,7 +122,7 @@ export function useAuth() {
       const querySnapshot = await getDocs(q);
 
       if (!querySnapshot.empty) {
-        const userDoc = querySnapshot.docs[0];
+        const userDoc = querySnapshot.docs[0]!;
         return { ...userDoc.data(), id: userDoc.id } as IUserData;
       }
 

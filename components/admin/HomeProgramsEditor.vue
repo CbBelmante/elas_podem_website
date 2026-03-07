@@ -6,6 +6,7 @@
  * Array CRUD + drag-and-drop com readonly pareado.
  */
 
+import type { PropType } from 'vue';
 import { CBButton, CBInput, CBLabel, CBTextarea } from '@cb/components';
 import draggable from 'vuedraggable';
 import { PROGRAMS_CONFIG } from '@definitions/validationConfigs';
@@ -25,11 +26,12 @@ import type {
 
 // ============== PROPS ==============
 
-interface Props {
-  forms: { editable: IProgramsEditable; readonly: IProgramsReadonly };
-}
-
-const props = defineProps<Props>();
+const props = defineProps({
+  forms: {
+    type: Object as PropType<{ editable: IProgramsEditable; readonly: IProgramsReadonly }>,
+    required: true,
+  },
+});
 
 // ============== EMITS ==============
 
@@ -50,8 +52,8 @@ function addProgram(): void {
   const editable: Record<string, unknown> = {};
   const readonly: Record<string, unknown> = {};
   for (const [key, mode] of Object.entries(SECTION_FIELDS.programs.items)) {
-    if (mode === 'editable') editable[key] = (newItem as Record<string, unknown>)[key];
-    else readonly[key] = (newItem as Record<string, unknown>)[key];
+    if (mode === 'editable') editable[key] = (newItem as unknown as Record<string, unknown>)[key];
+    else readonly[key] = (newItem as unknown as Record<string, unknown>)[key];
   }
   props.forms.editable.items.push(editable as unknown as IProgramEditable);
   props.forms.readonly.items.push(readonly as unknown as IProgramReadonly);
@@ -69,7 +71,7 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
   const { oldIndex, newIndex } = evt;
   if (oldIndex == null || newIndex == null || oldIndex === newIndex) return;
   const [item] = props.forms.readonly.items.splice(oldIndex, 1);
-  props.forms.readonly.items.splice(newIndex, 0, item);
+  props.forms.readonly.items.splice(newIndex, 0, item!);
   emit('changed');
 }
 </script>

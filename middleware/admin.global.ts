@@ -6,7 +6,7 @@
  * Nao protege a propria pagina de login.
  */
 
-export default defineNuxtRouteMiddleware(async (to) => {
+export default defineNuxtRouteMiddleware(async (to: { path: string }) => {
   // Nao protege a pagina de login
   if (to.path === '/admin/login') {
     return;

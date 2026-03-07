@@ -95,7 +95,7 @@ export function createNewHeroStat(): IHeroStat {
 
 export function separateMissionData(data: IHomePageData['content']['mission']) {
   // Normaliza dados antigos do Firestore (text1/text2 → paragraphs)
-  const raw = data as Record<string, unknown>;
+  const raw = data as unknown as Record<string, unknown>;
   if (!raw.paragraphs && (raw.text1 || raw.text2)) {
     raw.paragraphs = [raw.text1, raw.text2].filter(Boolean);
   }
@@ -126,7 +126,7 @@ export function separateProgramsData(data: IProgramsSection): {
     data: data as unknown as Record<string, unknown>,
     fields: SECTION_FIELDS.programs,
     sectionDefaults: PROGRAMS_SECTION_DEFAULTS,
-  }) as { editable: IProgramsEditable; readonly: IProgramsReadonly };
+  }) as unknown as { editable: IProgramsEditable; readonly: IProgramsReadonly };
 }
 
 export function combineProgramsData(
@@ -164,7 +164,7 @@ export function separateTestimonialsData(data: ITestimonialsSection): {
     data: normalized as unknown as Record<string, unknown>,
     fields: SECTION_FIELDS.testimonials,
     sectionDefaults: TESTIMONIALS_SECTION_DEFAULTS,
-  }) as { editable: ITestimonialsEditable };
+  }) as unknown as { editable: ITestimonialsEditable };
 }
 
 export function combineTestimonialsData(editable: ITestimonialsEditable): ITestimonialsSection {
@@ -208,7 +208,7 @@ export function separateSupportersData(data: ISupportersSection): {
     data: raw,
     fields: SECTION_FIELDS.supporters,
     sectionDefaults: SUPPORTERS_SECTION_DEFAULTS,
-  }) as { editable: ISupportersEditable; readonly: ISupportersReadonly };
+  }) as unknown as { editable: ISupportersEditable; readonly: ISupportersReadonly };
 }
 
 export function combineSupportersData(
@@ -242,7 +242,7 @@ export function separateContactData(data: IContactSection): {
     data: data as unknown as Record<string, unknown>,
     fields: SECTION_FIELDS.contact,
     sectionDefaults: CONTACT_DEFAULTS,
-  }) as { editable: IContactEditable; readonly: IContactReadonly };
+  }) as unknown as { editable: IContactEditable; readonly: IContactReadonly };
 }
 
 export function combineContactData(

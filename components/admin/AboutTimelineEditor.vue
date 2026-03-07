@@ -6,6 +6,7 @@
  * Section fields (badge, title) + array CRUD + drag-and-drop.
  */
 
+import type { PropType } from 'vue';
 import { CBButton, CBInput, CBLabel, CBTextarea } from '@cb/components';
 import draggable from 'vuedraggable';
 import { ABOUT_TIMELINE_CONFIG } from '@definitions/validationConfigs';
@@ -18,11 +19,12 @@ import type { IAboutTimelineEditable, IAboutTimelineItemEditable } from '@appTyp
 
 // ============== PROPS ==============
 
-interface Props {
-  forms: { editable: IAboutTimelineEditable };
-}
-
-const props = defineProps<Props>();
+const props = defineProps({
+  forms: {
+    type: Object as PropType<{ editable: IAboutTimelineEditable }>,
+    required: true,
+  },
+});
 
 // ============== EMITS ==============
 

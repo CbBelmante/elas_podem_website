@@ -41,6 +41,9 @@ export interface IHeroSection {
   btnHistoryVariant: ButtonVariant;
   heroImage: string; // Firebase Storage URL — imagem de fundo do hero (opaca)
   heroImageOpacity: number; // 0-100 (%) — opacidade da imagem de fundo
+  logo: string; // Firebase Storage URL — logo/imagem dentro do blob visual
+  logoAlt: string; // alt text para acessibilidade
+  logoSize: number; // altura do logo em px (controlado por slider)
   stats: IHeroStat[];
 }
 

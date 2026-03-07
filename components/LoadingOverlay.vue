@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * LoadingOverlay — Tela de carregamento fullscreen.
+ * 🧩 LoadingOverlay — Tela de carregamento fullscreen.
  *
  * Exibe logo com pulse + spinner enquanto dados carregam.
  * Fade-out suave ao desaparecer.
@@ -8,11 +8,14 @@
 
 import { CBImage } from '@cb/components';
 
-interface Props {
-  visible: boolean;
-}
+// ============== PROPS ==============
 
-defineProps<Props>();
+defineProps({
+  visible: {
+    type: Boolean,
+    required: true,
+  },
+});
 </script>
 
 <template>

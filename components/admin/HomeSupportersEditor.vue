@@ -7,6 +7,7 @@
  * Tem readonly pareado (color).
  */
 
+import type { PropType } from 'vue';
 import { CBButton, CBInput, CBLabel, CBSlider } from '@cb/components';
 import draggable from 'vuedraggable';
 import AdminEditorCard from '@components/admin/AdminEditorCard.vue';
@@ -25,11 +26,12 @@ import type {
 
 // ============== PROPS ==============
 
-interface Props {
-  forms: { editable: ISupportersEditable; readonly: ISupportersReadonly };
-}
-
-const props = defineProps<Props>();
+const props = defineProps({
+  forms: {
+    type: Object as PropType<{ editable: ISupportersEditable; readonly: ISupportersReadonly }>,
+    required: true,
+  },
+});
 
 // ============== EMITS ==============
 
@@ -51,8 +53,8 @@ function addSupporter(): void {
   const editable: Record<string, unknown> = {};
   const readonly: Record<string, unknown> = {};
   for (const [key, mode] of Object.entries(SECTION_FIELDS.supporters.items)) {
-    if (mode === 'editable') editable[key] = (newItem as Record<string, unknown>)[key];
-    else readonly[key] = (newItem as Record<string, unknown>)[key];
+    if (mode === 'editable') editable[key] = (newItem as unknown as Record<string, unknown>)[key];
+    else readonly[key] = (newItem as unknown as Record<string, unknown>)[key];
   }
   props.forms.editable.items.push(editable as unknown as ISupporterEditable);
   props.forms.readonly.items.push(readonly as unknown as ISupporterReadonly);
@@ -70,7 +72,7 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
   const { oldIndex, newIndex } = evt;
   if (oldIndex == null || newIndex == null || oldIndex === newIndex) return;
   const [item] = props.forms.readonly.items.splice(oldIndex, 1);
-  props.forms.readonly.items.splice(newIndex, 0, item);
+  props.forms.readonly.items.splice(newIndex, 0, item!);
   emit('changed');
 }
 </script>
@@ -209,28 +211,13 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
           />
 
           <!-- Preview do tamanho real -->
-          <div class="supportersEditor__preview">
-            <CBLabel
-              :text="$t('admin.supporters.preview')"
-              size="xs"
-              class="supportersEditor__previewLabel"
-            />
-            <div class="supportersEditor__previewBox">
-              <img
-                v-if="element.image"
-                :src="element.image"
-                :alt="element.imageAlt || element.name"
-                :style="{ height: `${element.logoSize}px`, width: 'auto', objectFit: 'contain' }"
-              />
-              <CBLabel
-                v-else
-                :text="element.name || '—'"
-                size="lg"
-                weight="bold"
-                :style="{ height: `${element.logoSize}px`, lineHeight: `${element.logoSize}px` }"
-              />
-            </div>
-          </div>
+          <AdminLogoPreview
+            :image="element.image"
+            :alt="element.imageAlt"
+            :name="element.name"
+            :size="element.logoSize"
+            :label="$t('admin.supporters.preview')"
+          />
         </AdminEditorCard>
       </template>
     </draggable>
@@ -277,27 +264,6 @@ function onDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.75rem;
-}
-
-.supportersEditor__preview {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.supportersEditor__previewLabel {
-  color: var(--text-tertiary);
-}
-
-.supportersEditor__previewBox {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.75rem;
-  border: 1px dashed var(--border-light);
-  border-radius: 8px;
-  background: var(--bg-subtle);
-  min-height: 60px;
 }
 
 .supportersEditor__ghost {

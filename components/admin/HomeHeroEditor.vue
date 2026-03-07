@@ -6,7 +6,8 @@
  * Campos de texto + stats array com CRUD e drag-and-drop.
  */
 
-import { CBButton, CBInput, CBLabel, CBTextarea } from '@cb/components';
+import type { PropType } from 'vue';
+import { CBButton, CBInput, CBLabel, CBSlider, CBTextarea } from '@cb/components';
 import draggable from 'vuedraggable';
 import AdminEditorCard from '@components/admin/AdminEditorCard.vue';
 import AdminColorPicker from '@components/admin/AdminColorPicker.vue';
@@ -20,11 +21,12 @@ import type { IHeroEditable, IHeroStat } from '@appTypes/admin';
 
 // ============== PROPS ==============
 
-interface Props {
-  forms: { editable: IHeroEditable };
-}
-
-const props = defineProps<Props>();
+const props = defineProps({
+  forms: {
+    type: Object as PropType<{ editable: IHeroEditable }>,
+    required: true,
+  },
+});
 
 // ============== EMITS ==============
 
@@ -129,6 +131,44 @@ function removeStat(index: number): void {
       @update:model-value="emit('changed')"
       @update:opacity="emit('changed')"
       @uploaded="emit('uploaded', $event)"
+    />
+
+    <!-- Logo do circulo -->
+    <AdminImageUploader
+      v-model="forms.editable.logo"
+      category="heroLogo"
+      :label="$t('admin.hero.logo')"
+      @update:model-value="emit('changed')"
+      @uploaded="emit('uploaded', $event)"
+    />
+
+    <CBInput
+      v-model="forms.editable.logoAlt"
+      :label="$t('admin.hero.logoAlt')"
+      @update:model-value="emit('changed')"
+    />
+
+    <CBSlider
+      :model-value="forms.editable.logoSize"
+      :min="HERO_CONFIG.logoSize.min"
+      :max="HERO_CONFIG.logoSize.max"
+      :step="2"
+      :label="$t('admin.hero.logoSize')"
+      thumb-label="always"
+      color="primary"
+      @update:model-value="
+        forms.editable.logoSize = $event;
+        emit('changed');
+      "
+    />
+
+    <!-- Preview do tamanho real -->
+    <AdminLogoPreview
+      v-if="forms.editable.logo"
+      :image="forms.editable.logo"
+      :alt="forms.editable.logoAlt"
+      :size="forms.editable.logoSize"
+      :label="$t('admin.hero.logoPreview')"
     />
 
     <!-- Stats array -->

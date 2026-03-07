@@ -1,4 +1,10 @@
 <script setup lang="ts">
+/**
+ * 🧩 AppFooter — Rodape global do site.
+ *
+ * Exibe logo, links institucionais, eixos, valores, contato e redes sociais.
+ */
+
 import { CBImage, CBLabel, CBIcon } from '@cb/components';
 </script>
 

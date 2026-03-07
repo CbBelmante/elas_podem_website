@@ -39,6 +39,8 @@ export const HERO_CONFIG = {
   },
   /** Min/max de stats no hero */
   stats: { min: 1, max: 6 },
+  /** Limites do slider de tamanho do logo (px) */
+  logoSize: { min: 48, max: 350 },
 } as const;
 
 // ============================================================
@@ -292,6 +294,8 @@ export const IMAGE_UPLOAD_CONFIG = {
 export const COMPRESSION_SETTINGS = {
   /** Imagem de fundo do hero (grande, fullwidth) */
   hero: { enabled: true, quality: 0.8, maxWidth: 1920, maxHeight: 1080 },
+  /** Logo/imagem dentro do blob do hero */
+  heroLogo: { enabled: true, quality: 0.8, maxWidth: 400, maxHeight: 400 },
   /** Imagem da secao Missao */
   mission: { enabled: true, quality: 0.8, maxWidth: 800, maxHeight: 600 },
   /** Logos de apoiadores */

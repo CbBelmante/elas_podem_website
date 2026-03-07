@@ -1,4 +1,10 @@
 <script setup lang="ts">
+/**
+ * 🧩 LanguageSwitcher — Botoes de troca de idioma.
+ *
+ * Exibe locales disponiveis (excluindo o ativo) como botoes outline.
+ */
+
 import { computed } from 'vue';
 import { CBButton } from '@cb/components';
 import { useI18n } from 'vue-i18n';

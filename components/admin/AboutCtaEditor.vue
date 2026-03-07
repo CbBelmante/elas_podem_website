@@ -6,6 +6,7 @@
  * Campos de texto + cor/variante para cada botão.
  */
 
+import type { PropType } from 'vue';
 import { CBInput, CBTextarea } from '@cb/components';
 import AdminColorPicker from '@components/admin/AdminColorPicker.vue';
 import AdminButtonVariantSelect from '@components/admin/AdminButtonVariantSelect.vue';
@@ -15,11 +16,12 @@ import type { IAboutCtaEditable } from '@appTypes/admin';
 
 // ============== PROPS ==============
 
-interface Props {
-  forms: { editable: IAboutCtaEditable };
-}
-
-defineProps<Props>();
+defineProps({
+  forms: {
+    type: Object as PropType<{ editable: IAboutCtaEditable }>,
+    required: true,
+  },
+});
 
 // ============== EMITS ==============
 

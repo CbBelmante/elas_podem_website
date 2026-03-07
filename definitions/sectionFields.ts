@@ -46,6 +46,9 @@ export const SECTION_FIELDS = {
     btnHistoryVariant: 'editable',
     heroImage: 'editable',
     heroImageOpacity: 'editable',
+    logo: 'editable',
+    logoAlt: 'editable',
+    logoSize: 'editable',
     stats: 'editable',
   },
 

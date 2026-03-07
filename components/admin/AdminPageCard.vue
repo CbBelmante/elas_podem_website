@@ -1,32 +1,52 @@
-<!--
-  AdminPageCard — Card reutilizavel para paginas do dashboard admin.
-
-  Exibe titulo, descricao, icone com cor, status (editor/data),
-  botao de edicao com permissao, e blob organico decorativo.
-
-  Padrao visual alinhado com a home publica (Fraunces, cores quentes,
-  blobs organicos, botao pill com shine).
--->
-
 <script setup lang="ts">
+/**
+ * 🧩 AdminPageCard — Card reutilizavel para paginas do dashboard admin.
+ *
+ * Exibe titulo, descricao, icone com cor, status (editor/data),
+ * botao de edicao com permissao, e blob organico decorativo.
+ *
+ * Padrao visual alinhado com a home publica (Fraunces, cores quentes,
+ * blobs organicos, botao pill com shine).
+ */
+
+import type { PropType } from 'vue';
 import { CBBadge, CBButton, CBCard, CBIcon, CBLabel } from '@cb/components';
 
-interface Props {
-  title: string;
-  description: string;
-  icon: string;
-  color?: string;
-  editUrl: string;
-  canEdit?: boolean;
-  lastEditorName?: string | null;
-  lastEditDate?: string | null;
-}
+// ============== PROPS ==============
 
-const props = withDefaults(defineProps<Props>(), {
-  color: 'wine-rose',
-  canEdit: false,
-  lastEditorName: null,
-  lastEditDate: null,
+const props = defineProps({
+  title: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  icon: {
+    type: String,
+    required: true,
+  },
+  color: {
+    type: String,
+    default: 'wine-rose',
+  },
+  editUrl: {
+    type: String,
+    required: true,
+  },
+  canEdit: {
+    type: Boolean,
+    default: false,
+  },
+  lastEditorName: {
+    type: String as PropType<string | null>,
+    default: null,
+  },
+  lastEditDate: {
+    type: String as PropType<string | null>,
+    default: null,
+  },
 });
 
 // ============== COMPUTED ==============

@@ -31,6 +31,7 @@ export type {
 
 // ---- Home: Camada 1 (Section Data / Firestore) ----
 export type {
+  ButtonVariant,
   IHeroStat,
   IHeroSection,
   IMissionSection,

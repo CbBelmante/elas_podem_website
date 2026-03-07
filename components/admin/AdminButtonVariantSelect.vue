@@ -11,13 +11,15 @@ import { BUTTON_VARIANT_OPTIONS } from '@definitions/themeOptions';
 
 // ============== PROPS ==============
 
-interface Props {
-  modelValue: string;
-  label?: string;
-}
-
-withDefaults(defineProps<Props>(), {
-  label: '',
+defineProps({
+  modelValue: {
+    type: String,
+    required: true,
+  },
+  label: {
+    type: String,
+    default: '',
+  },
 });
 
 // ============== EMITS ==============

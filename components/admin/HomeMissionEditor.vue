@@ -6,6 +6,7 @@
  * Campos de texto + upload de imagem.
  */
 
+import type { PropType } from 'vue';
 import { CBInput } from '@cb/components';
 import AdminColorPicker from '@components/admin/AdminColorPicker.vue';
 import AdminButtonVariantSelect from '@components/admin/AdminButtonVariantSelect.vue';
@@ -17,11 +18,12 @@ import type { IMissionEditable } from '@appTypes/admin';
 
 // ============== PROPS ==============
 
-interface Props {
-  forms: { editable: IMissionEditable };
-}
-
-defineProps<Props>();
+defineProps({
+  forms: {
+    type: Object as PropType<{ editable: IMissionEditable }>,
+    required: true,
+  },
+});
 
 // ============== EMITS ==============
 

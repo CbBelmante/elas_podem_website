@@ -126,7 +126,7 @@ function validateArrayItems(
   const errors: string[] = [];
 
   for (let i = 0; i < items.length; i++) {
-    const itemResult = validateFields(items[i], validationRules, `${sectionLabel} #${i + 1}`);
+    const itemResult = validateFields(items[i]!, validationRules, `${sectionLabel} #${i + 1}`);
     if (!itemResult.isValid) {
       errors.push(...itemResult.errors);
     }

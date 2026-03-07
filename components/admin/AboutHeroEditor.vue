@@ -6,6 +6,7 @@
  * Campos flat: badge, title, description.
  */
 
+import type { PropType } from 'vue';
 import { CBInput, CBTextarea } from '@cb/components';
 import { ABOUT_HERO_CONFIG } from '@definitions/validationConfigs';
 import { createValidationRules } from '@utils/validationRules';
@@ -13,11 +14,12 @@ import type { IAboutHeroEditable } from '@appTypes/admin';
 
 // ============== PROPS ==============
 
-interface Props {
-  forms: { editable: IAboutHeroEditable };
-}
-
-defineProps<Props>();
+defineProps({
+  forms: {
+    type: Object as PropType<{ editable: IAboutHeroEditable }>,
+    required: true,
+  },
+});
 
 // ============== EMITS ==============
 

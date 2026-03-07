@@ -21,6 +21,9 @@ export const HERO_DEFAULTS = {
   btnHistoryVariant: 'outline',
   heroImage: '',
   heroImageOpacity: 100,
+  logo: '',
+  logoAlt: '',
+  logoSize: 200,
   stats: [
     { icon: 'luc-award', number: '2025', label: 'Sede Propria' },
     { icon: 'luc-megaphone', number: '5a', label: 'Conferencia Nacional' },
@@ -66,7 +69,7 @@ export const PROGRAM_ITEM_DEFAULTS = {
   icon: 'luc-star',
   color: 'magenta',
   link: 'Saiba Mais',
-  tags: [] as readonly string[],
+  tags: [] as string[],
   tagColor: 'magenta',
 } as const;
 

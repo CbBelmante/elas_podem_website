@@ -8,6 +8,7 @@
  * Sem readonly pareado (tudo editavel).
  */
 
+import type { PropType } from 'vue';
 import { CBButton, CBInput, CBLabel, CBSlider, CBSwitch, CBTextarea } from '@cb/components';
 import draggable from 'vuedraggable';
 import AdminEditorCard from '@components/admin/AdminEditorCard.vue';
@@ -19,11 +20,12 @@ import type { ITestimonialEditable, ITestimonialsEditable } from '@appTypes/admi
 
 // ============== PROPS ==============
 
-interface Props {
-  forms: { editable: ITestimonialsEditable };
-}
-
-const props = defineProps<Props>();
+const props = defineProps({
+  forms: {
+    type: Object as PropType<{ editable: ITestimonialsEditable }>,
+    required: true,
+  },
+});
 
 // ============== EMITS ==============
 

@@ -7,6 +7,7 @@
  * + formSubjects array (CRUD + drag, strings simples).
  */
 
+import type { PropType } from 'vue';
 import { CBButton, CBInput, CBLabel, CBTextarea } from '@cb/components';
 import draggable from 'vuedraggable';
 import { CONTACT_CONFIG } from '@definitions/validationConfigs';
@@ -25,11 +26,12 @@ import type {
 
 // ============== PROPS ==============
 
-interface Props {
-  forms: { editable: IContactEditable; readonly: IContactReadonly };
-}
-
-const props = defineProps<Props>();
+const props = defineProps({
+  forms: {
+    type: Object as PropType<{ editable: IContactEditable; readonly: IContactReadonly }>,
+    required: true,
+  },
+});
 
 // ============== EMITS ==============
 
@@ -49,8 +51,8 @@ function addMethod(): void {
   const editable: Record<string, unknown> = {};
   const readonly: Record<string, unknown> = {};
   for (const [key, mode] of Object.entries(SECTION_FIELDS.contact.methods)) {
-    if (mode === 'editable') editable[key] = (newItem as Record<string, unknown>)[key];
-    else readonly[key] = (newItem as Record<string, unknown>)[key];
+    if (mode === 'editable') editable[key] = (newItem as unknown as Record<string, unknown>)[key];
+    else readonly[key] = (newItem as unknown as Record<string, unknown>)[key];
   }
   props.forms.editable.methods.push(editable as unknown as IContactMethodEditable);
   props.forms.readonly.methods.push(readonly as unknown as IContactMethodReadonly);
@@ -68,7 +70,7 @@ function onMethodsDragEnd(evt: { oldIndex?: number; newIndex?: number }): void {
   const { oldIndex, newIndex } = evt;
   if (oldIndex == null || newIndex == null || oldIndex === newIndex) return;
   const [item] = props.forms.readonly.methods.splice(oldIndex, 1);
-  props.forms.readonly.methods.splice(newIndex, 0, item);
+  props.forms.readonly.methods.splice(newIndex, 0, item!);
   emit('changed');
 }
 

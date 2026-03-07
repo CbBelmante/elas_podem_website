@@ -6,6 +6,7 @@
  * Array CRUD + drag-and-drop.
  */
 
+import type { PropType } from 'vue';
 import { CBButton, CBInput, CBLabel } from '@cb/components';
 import draggable from 'vuedraggable';
 import AdminColorPicker from '@components/admin/AdminColorPicker.vue';
@@ -17,11 +18,12 @@ import type { IValueEditable } from '@appTypes/admin';
 
 // ============== PROPS ==============
 
-interface Props {
-  forms: { editable: IValueEditable[] };
-}
-
-const props = defineProps<Props>();
+const props = defineProps({
+  forms: {
+    type: Object as PropType<{ editable: IValueEditable[] }>,
+    required: true,
+  },
+});
 
 // ============== EMITS ==============
 

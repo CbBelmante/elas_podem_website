@@ -55,7 +55,7 @@ const formSubject = ref<string | undefined>(undefined);
 const formMessage = ref('');
 
 const subjectItems = computed(() =>
-  contact.value.formSubjects.map((s) => ({ value: s, label: s }))
+  contact.value.formSubjects.map((s: string) => ({ value: s, label: s }))
 );
 
 // ============== TESTIMONIALS CAROUSEL ==============
@@ -171,7 +171,17 @@ watch(status, async () => {
           </div>
 
           <div class="heroVisual animateOnScroll">
-            <div class="blobShape"></div>
+            <div class="blobShape">
+              <CBImage
+                v-if="hero.logo"
+                :src="hero.logo"
+                :alt="hero.logoAlt || 'Logo'"
+                :height="hero.logoSize"
+                size="auto"
+                fit="contain"
+                class="blobLogo"
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -909,6 +919,7 @@ watch(status, async () => {
 }
 
 .blobShape {
+  position: relative;
   width: 400px;
   height: 400px;
   background: linear-gradient(
@@ -920,6 +931,15 @@ watch(status, async () => {
   );
   animation: blobMorph 8s ease-in-out infinite;
   box-shadow: 22px 22px 0px var(--color-nude-warm);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.blobLogo {
+  z-index: 1;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
 }
 
 /* ============================================

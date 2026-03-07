@@ -8,6 +8,7 @@
  * Use `unavailableModes` para esconder abas que nao fazem sentido no contexto.
  */
 
+import type { PropType } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { CBIcon, CBLabel } from '@cb/components';
 import { THEME_COLOR_OPTIONS, THEME_GRADIENT_OPTIONS } from '@definitions/themeOptions';
@@ -17,15 +18,19 @@ import { parseColorValue, resolveColorValue } from '@utils/colorResolver';
 
 type PickerMode = 'colors' | 'gradients' | 'custom';
 
-interface Props {
-  modelValue: string;
-  label?: string;
-  unavailableModes?: PickerMode[];
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  label: '',
-  unavailableModes: () => [],
+const props = defineProps({
+  modelValue: {
+    type: String,
+    required: true,
+  },
+  label: {
+    type: String,
+    default: '',
+  },
+  unavailableModes: {
+    type: Array as PropType<PickerMode[]>,
+    default: () => [],
+  },
 });
 
 const { t } = useI18n();
@@ -61,7 +66,7 @@ function safeTab(desired: PickerMode): PickerMode {
 // Sincronizar aba ativa e custom fields com o modelValue
 watch(
   () => props.modelValue,
-  (val) => {
+  (val: string) => {
     const parsed = parseColorValue(val);
     if (parsed.type === 'custom') {
       activeTab.value = safeTab('custom');

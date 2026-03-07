@@ -49,18 +49,15 @@ function mergeWithFallback(firestore: Record<string, unknown>): IAboutPageData {
         ...((content.hero as IAboutPageData['content']['hero']) ?? fb.content.hero),
       },
       timeline: {
-        ...ABOUT_TIMELINE_SECTION_DEFAULTS,
-        items: [],
+        ...{ ...ABOUT_TIMELINE_SECTION_DEFAULTS, items: [] as IAboutPageData['content']['timeline']['items'] },
         ...((content.timeline as IAboutPageData['content']['timeline']) ?? fb.content.timeline),
       },
       team: {
-        ...ABOUT_TEAM_SECTION_DEFAULTS,
-        items: [],
+        ...{ ...ABOUT_TEAM_SECTION_DEFAULTS, items: [] as IAboutPageData['content']['team']['items'] },
         ...((content.team as IAboutPageData['content']['team']) ?? fb.content.team),
       },
       pillars: {
-        ...ABOUT_PILLARS_SECTION_DEFAULTS,
-        items: [],
+        ...{ ...ABOUT_PILLARS_SECTION_DEFAULTS, items: [] as IAboutPageData['content']['pillars']['items'] },
         ...((content.pillars as IAboutPageData['content']['pillars']) ?? fb.content.pillars),
       },
       cta: {

@@ -14,10 +14,16 @@ defineOptions({ inheritAttrs: false });
 
 // ============== PROPS ==============
 
-const props = defineProps<{
-  content: string;
-  themeColor: string;
-}>();
+const props = defineProps({
+  content: {
+    type: String,
+    required: true,
+  },
+  themeColor: {
+    type: String,
+    required: true,
+  },
+});
 
 // ============== COMPUTED ==============
 
