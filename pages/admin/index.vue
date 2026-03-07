@@ -23,7 +23,7 @@ definePageMeta({
 
 const { permissions, userData } = useAuth();
 const { originalData, isLoading, loadPageData } = useHomePageData();
-const { originalData: aboutOriginalData, isLoading: aboutIsLoading, loadPageData: loadAboutPageData } = useAboutPageData();
+const { originalData: aboutOriginalData, loadPageData: loadAboutPageData } = useAboutPageData();
 
 // ============== COMPUTED ==============
 

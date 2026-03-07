@@ -58,77 +58,79 @@ const handleLogout = async (): Promise<void> => {
 </script>
 
 <template>
-  <!-- Loading enquanto auth resolve (evita flash do dashboard sem login) -->
-  <LoadingOverlay :visible="!isReady" />
+  <div>
+    <!-- Loading enquanto auth resolve (evita flash do dashboard sem login) -->
+    <LoadingOverlay :visible="!isReady" />
 
-  <div v-if="isReady" class="adminLayout">
-    <CBSidebar
-      :items="sidebarItems"
-      :app-name="$t('admin.layout.appName')"
-      :app-subtitle="$t('admin.layout.appSubtitle')"
-      :collapsed="isCollapsed"
-      placement="in-flow"
-      location="left"
-      bg-color="var(--glass-bg)"
-      :blur="20"
-      :expand-on-border-click="true"
-      @update:collapsed="isCollapsed = $event"
-    >
-      <template #logo="{ isCollapsed: collapsed }">
-        <div class="adminLayout__logo">
-          <CBIcon icon="luc-heart" :size="collapsed ? 18 : 16" color="var(--color-wine-rose)" />
-        </div>
-      </template>
-
-      <template #footer="{ isCollapsed: collapsed }">
-        <div class="adminLayout__footer">
-          <!-- User info -->
-          <div class="adminLayout__user" :class="{ 'adminLayout__user--collapsed': collapsed }">
-            <CBIcon icon="luc-user" :size="16" color="var(--text-secondary)" />
-            <template v-if="!collapsed">
-              <div class="adminLayout__userInfo">
-                <span class="adminLayout__userName">{{ userName }}</span>
-                <CBBadge
-                  v-if="roleDisplayName"
-                  :content="roleDisplayName"
-                  variant="outline"
-                  size="xs"
-                />
-              </div>
-            </template>
+    <div v-if="isReady" class="adminLayout">
+      <CBSidebar
+        :items="sidebarItems"
+        :app-name="$t('admin.layout.appName')"
+        :app-subtitle="$t('admin.layout.appSubtitle')"
+        :collapsed="isCollapsed"
+        placement="in-flow"
+        location="left"
+        bg-color="var(--glass-bg)"
+        :blur="20"
+        :expand-on-border-click="true"
+        @update:collapsed="isCollapsed = $event"
+      >
+        <template #logo="{ isCollapsed: collapsed }">
+          <div class="adminLayout__logo">
+            <CBIcon icon="luc-heart" :size="collapsed ? 18 : 16" color="var(--color-wine-rose)" />
           </div>
+        </template>
 
-          <!-- Logout -->
-          <button
-            class="adminLayout__logoutBtn"
-            :class="{ 'adminLayout__logoutBtn--collapsed': collapsed }"
-            @click="handleLogout"
-          >
-            <CBIcon icon="luc-log-out" :size="16" />
-            <span v-if="!collapsed">{{ $t('admin.layout.logout') }}</span>
-          </button>
+        <template #footer="{ isCollapsed: collapsed }">
+          <div class="adminLayout__footer">
+            <!-- User info -->
+            <div class="adminLayout__user" :class="{ 'adminLayout__user--collapsed': collapsed }">
+              <CBIcon icon="luc-user" :size="16" color="var(--text-secondary)" />
+              <template v-if="!collapsed">
+                <div class="adminLayout__userInfo">
+                  <span class="adminLayout__userName">{{ userName }}</span>
+                  <CBBadge
+                    v-if="roleDisplayName"
+                    :content="roleDisplayName"
+                    variant="outline"
+                    size="xs"
+                  />
+                </div>
+              </template>
+            </div>
+
+            <!-- Logout -->
+            <button
+              class="adminLayout__logoutBtn"
+              :class="{ 'adminLayout__logoutBtn--collapsed': collapsed }"
+              @click="handleLogout"
+            >
+              <CBIcon icon="luc-log-out" :size="16" />
+              <span v-if="!collapsed">{{ $t('admin.layout.logout') }}</span>
+            </button>
+          </div>
+        </template>
+      </CBSidebar>
+
+      <main class="adminLayout__main">
+        <!-- Glows decorativos -->
+        <div class="adminLayout__glow adminLayout__glow--1" />
+        <div class="adminLayout__glow adminLayout__glow--2" />
+        <div class="adminLayout__glow adminLayout__glow--3" />
+        <div class="adminLayout__glow adminLayout__glow--4" />
+
+        <!-- Dots decorativos (como na home) -->
+        <div class="adminLayout__dot adminLayout__dot--1" />
+        <div class="adminLayout__dot adminLayout__dot--2" />
+        <div class="adminLayout__dot adminLayout__dot--3" />
+        <div class="adminLayout__dot adminLayout__dot--4" />
+        <div class="adminLayout__dot adminLayout__dot--5" />
+
+        <div class="adminLayout__content">
+          <slot />
         </div>
-      </template>
-    </CBSidebar>
-
-    <main class="adminLayout__main">
-      <!-- Glows decorativos -->
-      <div class="adminLayout__glow adminLayout__glow--1" />
-      <div class="adminLayout__glow adminLayout__glow--2" />
-      <div class="adminLayout__glow adminLayout__glow--3" />
-      <div class="adminLayout__glow adminLayout__glow--4" />
-
-      <!-- Dots decorativos (como na home) -->
-      <div class="adminLayout__dot adminLayout__dot--1" />
-      <div class="adminLayout__dot adminLayout__dot--2" />
-      <div class="adminLayout__dot adminLayout__dot--3" />
-      <div class="adminLayout__dot adminLayout__dot--4" />
-      <div class="adminLayout__dot adminLayout__dot--5" />
-
-      <div class="adminLayout__content">
-        <slot />
-      </div>
-    </main>
+      </main>
+    </div>
   </div>
 </template>
 
