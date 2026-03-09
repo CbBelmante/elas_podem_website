@@ -14,18 +14,19 @@
   pointer-events: none;
 }
 
+/* !important necessário: classes globais vs CBLabel scoped (.cbLabel[data-v-xxx]) */
 .sectionTitle {
   font-family: var(--font-heading) !important;
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
-  font-weight: 900;
-  line-height: 1.15;
+  font-size: clamp(1.75rem, 4vw, 2.5rem) !important;
+  font-weight: 900 !important;
+  line-height: 1.15 !important;
   letter-spacing: -0.02em;
   margin-bottom: 1rem;
 }
 
 .sectionSubtitle {
   max-width: 560px;
-  line-height: 1.65;
+  line-height: 1.65 !important;
 }
 
 .sectionContainer {
@@ -61,13 +62,13 @@
 
 .ctaTitle {
   font-family: var(--font-heading) !important;
-  font-size: clamp(2rem, 4.5vw, 3.2rem);
-  font-weight: 900;
+  font-size: clamp(2rem, 4.5vw, 3.2rem) !important;
+  font-weight: 900 !important;
   margin-bottom: 16px;
 }
 
 .ctaSubtitle {
-  line-height: 1.65;
+  line-height: 1.65 !important;
   margin-bottom: 36px;
 }
 
@@ -101,16 +102,16 @@
    ============================================ */
 @media (max-width: 768px) {
   .sectionTitle {
-    font-size: clamp(1.5rem, 3.5vw, 2rem);
+    font-size: clamp(1.5rem, 3.5vw, 2rem) !important;
   }
 
   .ctaTitle {
-    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-size: clamp(1.6rem, 4vw, 2.4rem) !important;
   }
 
   .sectionSubtitle,
   .ctaSubtitle {
-    font-size: 0.93rem;
+    font-size: 0.93rem !important;
   }
 
   .ctaActions {
