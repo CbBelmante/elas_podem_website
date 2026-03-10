@@ -5,8 +5,9 @@
  * Dados dinâmicos via useAboutPublicData (Firestore → cache → fallback).
  */
 
-import { onMounted } from 'vue';
-import { CBCard, CBIcon, CBImage, CBLabel } from '@cb/components';
+import { computed, onMounted } from 'vue';
+import { CBCard, CBIcon, CBImage, CBLabel, CBTimeline } from '@cb/components';
+import type { CBTimelineItem } from '@cb/components';
 import FrontBadge from '@components/front/FrontBadge.vue';
 import FrontButton from '@components/front/FrontButton.vue';
 import { resolveColorValue } from '@utils/colorResolver';
@@ -14,6 +15,21 @@ import { resolveColorValue } from '@utils/colorResolver';
 // ============== FIREBASE DATA ==============
 
 const { hero, timeline, team, pillars, cta, seo } = useAboutPublicData();
+
+// ============== TIMELINE ITEMS ==============
+
+const timelineItems = computed<CBTimelineItem[]>(() =>
+  timeline.value.items.map((item, index) => ({
+    id: `timeline-${index}`,
+    timestamp: `${item.year}-01-01`,
+    type: 'custom',
+    title: item.title,
+    description: item.description,
+    icon: item.icon,
+    color: resolveColorValue(item.color),
+    metadata: { year: item.year },
+  }))
+);
 
 // ============== SEO ==============
 
@@ -102,19 +118,17 @@ onMounted(() => {
           />
         </div>
 
-        <div class="timelineTrack">
-          <div class="timelineLine"></div>
-          <div v-for="item in timeline.items" :key="item.year" class="timelineItem animateOnScroll">
-            <div class="timelineIcon" :style="{ background: resolveColorValue(item.color) }">
-              <CBIcon :icon="item.icon" size="1.25rem" color="var(--color-white)" />
-            </div>
-            <div class="timelineContent">
-              <CBLabel :text="item.year" size="sm" weight="bold" class="timelineYear" />
-              <CBLabel :text="item.title" tag="h3" weight="bold" class="timelineTitle" />
-              <CBLabel :text="item.description" size="sm" color="secondary" />
-            </div>
-          </div>
-        </div>
+        <CBTimeline
+          :items="timelineItems"
+          truncate-line="both"
+          icon-size="sm"
+          :timestamp-formatter="() => ''"
+          class="timelineTrack"
+        >
+          <template #item-before-title="{ item }">
+            <CBLabel :text="(item.metadata?.year as string)" size="sm" weight="bold" class="timelineYear" />
+          </template>
+        </CBTimeline>
       </div>
     </section>
 
@@ -330,60 +344,14 @@ onMounted(() => {
 }
 
 .timelineTrack {
-  position: relative;
   max-width: 800px;
   margin: 0 auto;
-}
-
-.timelineLine {
-  position: absolute;
-  left: 23px;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: rgba(var(--color-wine-rgb), 0.1);
-}
-
-.timelineItem {
-  position: relative;
-  display: flex;
-  gap: 20px;
-  align-items: flex-start;
-  padding-left: 68px;
-  padding-bottom: 40px;
-}
-
-.timelineItem:last-child {
-  padding-bottom: 0;
-}
-
-.timelineIcon {
-  flex-shrink: 0;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  left: 0;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.timelineContent {
-  flex: 1;
 }
 
 .timelineYear {
   color: var(--color-magenta);
   letter-spacing: 0.5px;
-  margin-bottom: 4px;
-}
-
-.timelineTitle {
-  font-family: var(--font-heading);
-  font-size: 1.15rem;
-  margin-bottom: 6px;
+  margin-bottom: -2px;
 }
 
 /* ============================================

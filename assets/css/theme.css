@@ -191,6 +191,10 @@
   /* Focus ring global — todos os componentes herdam via var(--cb-border-focus) */
   --cb-border-focus: rgba(var(--color-magenta-rgb), 0.5);
 
+  /* Timeline */
+  --cb-timeline-line-color: rgba(var(--color-wine-rgb), 0.1);
+  --cb-timeline-item-hover-bg: transparent;
+
   /* Carousel Indicators */
   --cb-carousel-indicator-bg: rgba(var(--color-magenta-rgb), 0.25);
   --cb-carousel-indicator-bg-active: var(--color-magenta);
