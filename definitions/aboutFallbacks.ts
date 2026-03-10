@@ -131,21 +131,21 @@ export const ABOUT_FALLBACK: IAboutPageData = {
           title: 'Nossa Missão',
           description:
             'Promover o debate sobre os papéis sociais de gênero e ampliar a participação das mulheres (cis e trans) em espaços públicos e privados, fortalecendo a representatividade feminina e os direitos humanos em todo o país.',
-          color: 'magenta',
+          color: 'coral',
         },
         {
           icon: 'luc-eye',
           title: 'Nossa Visão',
           description:
             'Uma sociedade mais justa, plural e democrática, onde todas as mulheres ocupam espaços de decisão e têm sua dignidade respeitada.',
-          color: 'wine-rose',
+          color: 'purple-accent',
         },
         {
           icon: 'luc-scale',
           title: 'Nossos Valores',
           description:
             'Equidade, Liberdade, Sororidade e Respeito à Dignidade Humana.',
-          color: 'olive',
+          color: 'orange',
         },
       ],
     },

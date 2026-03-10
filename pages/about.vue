@@ -138,14 +138,17 @@ onMounted(() => {
         <div class="sectionHeader animateOnScroll">
           <FrontBadge
             :content="pillars.badge"
-            theme-color="wine-mid"
-            variant="outline"
+            theme-color="coral-light"
+            variant="solid"
             :icon-size="14"
             weight="bold"
             size="xs"
             class="sectionBadge"
           />
-          <CBLabel :text="pillars.title" tag="h2" weight="black" class="sectionTitle" />
+          <CBLabel
+            :text="pillars.title" tag="h2"
+            weight="black" color="var(--color-white)"
+            class="sectionTitle" />
         </div>
 
         <div class="pillarsGrid">
@@ -153,8 +156,11 @@ onMounted(() => {
             <div class="pillarIcon" :style="{ background: resolveColorValue(pillar.color) }">
               <CBIcon :icon="pillar.icon" size="1.75rem" color="var(--color-white)" />
             </div>
-            <CBLabel :text="pillar.title" tag="h3" weight="bold" class="pillarTitle" />
-            <CBLabel :text="pillar.description" size="sm" color="secondary" class="pillarText" />
+            <CBLabel
+              :text="pillar.title" tag="h3"
+              weight="bold" color="var(--color-white)"
+              class="pillarTitle" />
+            <CBLabel :text="pillar.description" size="sm" color="rgba(255, 255, 255, 0.7)" class="pillarText" />
           </div>
         </div>
       </div>
@@ -194,7 +200,7 @@ onMounted(() => {
             variant="outlined"
             :rounded="20"
             hover
-            bg-color="var(--bg-white)"
+            bg-color="var(--bg-light)"
             border-color="rgba(var(--color-wine-rgb), 0.06)"
             :border-width="1"
             class="teamCard animateOnScroll"
@@ -412,7 +418,8 @@ onMounted(() => {
    ============================================ */
 .pillarsSection {
   padding: 100px 7%;
-  background: var(--bg-light);
+  background: var(--color-purple-night);
+  color: var(--color-white);
 }
 
 .pillarsGrid {
@@ -422,11 +429,11 @@ onMounted(() => {
 }
 
 .pillarCard {
-  background: var(--bg-white);
+  background: rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-card);
   padding: 40px 28px;
   text-align: center;
-  border: 1px solid rgba(var(--color-wine-rgb), 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   transition: all var(--transition-smooth);
 }
 
