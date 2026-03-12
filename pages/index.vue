@@ -99,575 +99,578 @@ watch(status, async () => {
   <div>
     <ClientOnly>
       <LoadingOverlay :visible="status !== 'success'" />
-    </ClientOnly>
+      <div class="pageWrapper">
+        <!-- ════════ HERO ════════ -->
+        <section
+          class="heroSection"
+          :style="{
+            '--hero-image-opacity': hero.heroImageOpacity / 100,
+          }"
+        >
+          <CBImage
+            :src="hero.heroImage || 'https://picsum.photos/1920/1080?random=1'"
+            alt="Imagem de fundo do hero"
+            size="auto"
+            fit="cover"
+            class="heroBgImage"
+          />
+          <div class="dotDecoration dot1"></div>
+          <div class="dotDecoration dot2"></div>
+          <div class="dotDecoration dot3"></div>
+          <div class="dotDecoration dot4"></div>
+          <div class="dotDecoration dot5"></div>
+          <div class="dotDecoration dot6"></div>
+          <div class="dotDecoration dot7"></div>
 
-    <div class="pageWrapper">
-      <!-- ════════ HERO ════════ -->
-      <section
-        class="heroSection"
-        :style="{
-          '--hero-image-opacity': hero.heroImageOpacity / 100,
-        }"
-      >
-        <CBImage
-          :src="hero.heroImage || 'https://picsum.photos/1920/1080?random=1'"
-          alt="Imagem de fundo do hero"
-          size="auto"
-          fit="cover"
-          class="heroBgImage"
-        />
-        <div class="dotDecoration dot1"></div>
-        <div class="dotDecoration dot2"></div>
-        <div class="dotDecoration dot3"></div>
-        <div class="dotDecoration dot4"></div>
-        <div class="dotDecoration dot5"></div>
-        <div class="dotDecoration dot6"></div>
-        <div class="dotDecoration dot7"></div>
+          <div class="heroContainer">
+            <div class="heroContent animateOnScroll">
+              <FrontBadge
+                :content="hero.badge"
+                theme-color="wine-mid"
+                variant="outline"
+                :icon-size="14"
+                weight="bold"
+                size="xs"
+                class="heroBadge"
+              />
 
-        <div class="heroContainer">
-          <div class="heroContent animateOnScroll">
-            <FrontBadge
-              :content="hero.badge"
-              theme-color="wine-mid"
-              variant="outline"
-              :icon-size="14"
-              weight="bold"
-              size="xs"
-              class="heroBadge"
-            />
+              <CBLabel :text="hero.title" tag="h1" weight="black" class="heroTitle animateOnScroll" />
 
-            <CBLabel :text="hero.title" tag="h1" weight="black" class="heroTitle animateOnScroll" />
-
-            <CBLabel
-              :text="hero.description"
-              size="lg"
-              color="secondary"
-              class="heroDescription animateOnScroll"
-            />
-
-            <div class="heroActions animateOnScroll">
-              <FrontButton
-                :label="hero.btnDonate"
-                :theme-color="hero.btnDonateColor"
-                :variant="hero.btnDonateVariant"
+              <CBLabel
+                :text="hero.description"
                 size="lg"
-                :rounded="50"
-                prepend-icon="luc-heart"
-                shine
-                glow
-                class="btnHero"
+                color="secondary"
+                class="heroDescription animateOnScroll"
+              />
+
+              <div class="heroActions animateOnScroll">
+                <FrontButton
+                  :label="hero.btnDonate"
+                  :theme-color="hero.btnDonateColor"
+                  :variant="hero.btnDonateVariant"
+                  size="lg"
+                  :rounded="50"
+                  prepend-icon="luc-heart"
+                  shine
+                  glow
+                  class="btnHero"
+                />
+
+                <FrontButton
+                  :label="hero.btnHistory"
+                  :theme-color="hero.btnHistoryColor"
+                  :variant="hero.btnHistoryVariant"
+                  size="lg"
+                  :rounded="50"
+                  append-icon="luc-arrow-right"
+                  class="btnHeroSecondary"
+                />
+              </div>
+            </div>
+
+            <div class="heroVisual animateOnScroll">
+              <div class="blobShape">
+                <CBImage
+                  v-if="hero.logo"
+                  :src="hero.logo"
+                  :alt="hero.logoAlt || 'Logo'"
+                  :height="hero.logoSize"
+                  size="auto"
+                  fit="contain"
+                  class="blobLogo"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ════════ STATS BAR ════════ -->
+        <section class="statsBar">
+          <div v-for="(stat, i) in hero.stats" :key="i" class="statItem">
+            <CBLabel :text="stat.number" tag="span" weight="black" class="statNumber" />
+            <CBLabel :text="stat.label" tag="span" size="xs" class="statLabel" />
+          </div>
+        </section>
+
+        <!-- ════════ MISSION ════════ -->
+        <section class="missionSection">
+          <div class="missionContainer">
+            <div class="missionContent animateOnScroll">
+              <FrontBadge
+                :content="mission.badge"
+                theme-color="wine-mid"
+                variant="outline"
+                :icon-size="14"
+                weight="bold"
+                size="xs"
+                class="sectionBadge"
+              />
+
+              <CBLabel :text="mission.title" tag="h2" weight="black" class="sectionTitle" />
+
+              <CBLabel
+                v-for="(para, idx) in mission.paragraphs"
+                :key="idx"
+                :text="para"
+                size="md"
+                color="secondary"
+                class="missionText"
               />
 
               <FrontButton
-                :label="hero.btnHistory"
-                :theme-color="hero.btnHistoryColor"
-                :variant="hero.btnHistoryVariant"
+                :label="mission.btnText"
+                :theme-color="mission.btnColor"
+                :variant="mission.btnVariant"
                 size="lg"
                 :rounded="50"
                 append-icon="luc-arrow-right"
-                class="btnHeroSecondary"
+                class="btnMission"
               />
             </div>
-          </div>
 
-          <div class="heroVisual animateOnScroll">
-            <div class="blobShape">
+            <div class="missionVisual animateOnScroll">
+              <div class="missionDot mDot1"></div>
+              <div class="missionDot mDot2"></div>
+              <div class="missionDot mDot3"></div>
               <CBImage
-                v-if="hero.logo"
-                :src="hero.logo"
-                :alt="hero.logoAlt || 'Logo'"
-                :height="hero.logoSize"
+                :src="mission.image || 'https://picsum.photos/600/500?random=42'"
+                :alt="mission.imageAlt"
                 size="auto"
-                fit="contain"
-                class="blobLogo"
+                fit="cover"
+                :rounded="20"
+                class="missionImage"
+                :style="{ opacity: mission.imageOpacity / 100 }"
               />
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <!-- ════════ STATS BAR ════════ -->
-      <section class="statsBar">
-        <div v-for="(stat, i) in hero.stats" :key="i" class="statItem">
-          <CBLabel :text="stat.number" tag="span" weight="black" class="statNumber" />
-          <CBLabel :text="stat.label" tag="span" size="xs" class="statLabel" />
-        </div>
-      </section>
+        <!-- ════════ PROGRAMS ════════ -->
+        <section class="programsSection">
+          <div class="programsContainer">
+            <div class="programsHeader animateOnScroll">
+              <FrontBadge
+                :content="programs.badge"
+                theme-color="nude-warm"
+                variant="outline"
+                :icon-size="14"
+                weight="bold"
+                size="xs"
+                class="sectionBadge"
+              />
 
-      <!-- ════════ MISSION ════════ -->
-      <section class="missionSection">
-        <div class="missionContainer">
-          <div class="missionContent animateOnScroll">
-            <FrontBadge
-              :content="mission.badge"
-              theme-color="wine-mid"
-              variant="outline"
-              :icon-size="14"
-              weight="bold"
-              size="xs"
-              class="sectionBadge"
-            />
+              <CBLabel
+                :text="programs.title"
+                tag="h2"
+                weight="black"
+                :color="'var(--color-white)'"
+                class="sectionTitle"
+              />
 
-            <CBLabel :text="mission.title" tag="h2" weight="black" class="sectionTitle" />
+              <CBLabel
+                v-if="programs.subtitle"
+                :text="programs.subtitle"
+                size="md"
+                :color="'var(--color-nude-warm)'"
+                class="programsSubtitle"
+              />
+            </div>
 
-            <CBLabel
-              v-for="(para, idx) in mission.paragraphs"
-              :key="idx"
-              :text="para"
-              size="md"
-              color="secondary"
-              class="missionText"
-            />
-
-            <FrontButton
-              :label="mission.btnText"
-              :theme-color="mission.btnColor"
-              :variant="mission.btnVariant"
-              size="lg"
-              :rounded="50"
-              append-icon="luc-arrow-right"
-              class="btnMission"
-            />
-          </div>
-
-          <div class="missionVisual animateOnScroll">
-            <div class="missionDot mDot1"></div>
-            <div class="missionDot mDot2"></div>
-            <div class="missionDot mDot3"></div>
-            <CBImage
-              :src="mission.image || 'https://picsum.photos/600/500?random=42'"
-              :alt="mission.imageAlt"
-              size="auto"
-              fit="cover"
-              :rounded="20"
-              class="missionImage"
-              :style="{ opacity: mission.imageOpacity / 100 }"
-            />
-          </div>
-        </div>
-      </section>
-
-      <!-- ════════ PROGRAMS ════════ -->
-      <section class="programsSection">
-        <div class="programsContainer">
-          <div class="programsHeader animateOnScroll">
-            <FrontBadge
-              :content="programs.badge"
-              theme-color="nude-warm"
-              variant="outline"
-              :icon-size="14"
-              weight="bold"
-              size="xs"
-              class="sectionBadge"
-            />
-
-            <CBLabel
-              :text="programs.title"
-              tag="h2"
-              weight="black"
-              :color="'var(--color-white)'"
-              class="sectionTitle"
-            />
-
-            <CBLabel
-              v-if="programs.subtitle"
-              :text="programs.subtitle"
-              size="md"
-              :color="'var(--color-nude-warm)'"
-              class="programsSubtitle"
-            />
-          </div>
-
-          <div class="programsGrid">
-            <CBCard
-              v-for="program in programs.items"
-              :key="program.title"
-              variant="outlined"
-              :rounded="24"
-              hover
-              bg-color="var(--bg-white)"
-              border-color="rgba(var(--color-wine-rgb), 0.06)"
-              :border-width="1"
-              class="programCard animateOnScroll"
-              :style="{ '--program-color': resolveColorValue(program.color) }"
-            >
-              <div class="programBody">
-                <div class="programIconWrapper">
-                  <CBIcon :icon="program.icon" size="1.5rem" />
-                </div>
-                <CBLabel
-                  :text="program.title"
-                  tag="h3"
-                  size="lg"
-                  weight="black"
-                  class="programTitle"
-                />
-                <CBLabel
-                  :text="program.description"
-                  size="sm"
-                  color="secondary"
-                  class="programDescription"
-                />
-                <div v-if="program.tags?.length" class="programTags">
-                  <FrontBadge
-                    v-for="(tag, tagIdx) in program.tags"
-                    :key="tagIdx"
-                    :content="tag"
-                    :theme-color="program.tagColor || program.color"
-                    variant="solid"
-                    size="xs"
-                    weight="semibold"
-                    :rounded="20"
-                  />
-                </div>
-                <div class="programFooter">
-                  <CBLabel
-                    :text="program.link"
-                    tag="span"
-                    size="sm"
-                    weight="bold"
-                    dense
-                    class="programCardLink"
-                  />
-                  <CBIcon
-                    icon="luc-arrow-right"
-                    size="1rem"
-                    :color="resolveColorValue(program.color)"
-                    class="programLinkIcon"
-                  />
-                </div>
-              </div>
-            </CBCard>
-          </div>
-        </div>
-      </section>
-
-      <!-- ════════ TESTIMONIALS ════════ -->
-      <section class="testimonialSection">
-        <div class="testimonialContainer animateOnScroll">
-          <CBCarousel
-            v-model="testimonialIndex"
-            :total="testimonials.items.length"
-            :autoplay="testimonials.autoplay"
-            :autoplay-interval="testimonials.autoplayInterval"
-            transition-type="horizontal"
-            :show-navigation="false"
-            pause-on-hover
-            class="testimonialCarousel"
-          >
-            <template #slide="{ index }">
-              <div class="testimonialCard">
-                <div class="testimonialCardGlow"></div>
-                <div class="testimonialQuoteIcon">&ldquo;</div>
-                <blockquote class="testimonialQuote">
-                  {{ testimonials.items[index].quote }}
-                </blockquote>
-                <div
-                  v-if="
-                    testimonials.items[index].initials ||
-                      testimonials.items[index].image ||
-                      testimonials.items[index].name ||
-                      testimonials.items[index].role
-                  "
-                  class="testimonialAuthor"
-                >
-                  <CBImage
-                    v-if="testimonials.items[index].image"
-                    :src="testimonials.items[index].image"
-                    :alt="testimonials.items[index].imageAlt || testimonials.items[index].name"
-                    :width="60"
-                    :height="60"
-                    fit="cover"
-                    :rounded="999"
-                    class="testimonialAuthorPhoto"
-                  />
-                  <div
-                    v-else-if="testimonials.items[index].initials"
-                    class="testimonialAuthorAvatar"
-                  >
-                    {{ testimonials.items[index].initials }}
-                  </div>
-                  <div
-                    v-if="testimonials.items[index].name || testimonials.items[index].role"
-                    class="testimonialAuthorInfo"
-                  >
-                    <CBLabel
-                      v-if="testimonials.items[index].name"
-                      :text="testimonials.items[index].name"
-                      tag="span"
-                      weight="semibold"
-                      dense
-                      class="testimonialAuthorName"
-                    />
-                    <CBLabel
-                      v-if="testimonials.items[index].role"
-                      :text="testimonials.items[index].role"
-                      tag="span"
-                      size="sm"
-                      color="secondary"
-                      dense
-                      class="testimonialAuthorRole"
-                    />
-                  </div>
-                </div>
-              </div>
-            </template>
-          </CBCarousel>
-        </div>
-      </section>
-
-      <!-- ════════ SUPPORTERS ════════ -->
-      <section class="supportersSection">
-        <div class="supportersContainer">
-          <div class="supportersHeader animateOnScroll">
-            <FrontBadge
-              :content="supporters.badge"
-              theme-color="wine-mid"
-              variant="outline"
-              :icon-size="14"
-              weight="bold"
-              size="xs"
-              class="sectionBadge"
-            />
-
-            <CBLabel :text="supporters.title" tag="h2" weight="black" class="sectionTitle" />
-
-            <CBLabel
-              v-if="supporters.subtitle"
-              :text="supporters.subtitle"
-              size="md"
-              color="secondary"
-              class="supportersSubtitle"
-            />
-          </div>
-
-          <CBMarquee
-            :gap="0"
-            :speed="supporters.marqueeSpeed"
-            :no-repeat="supporters.items.length < 4"
-            slow-on-hover
-            :slow-on-hover-rate="0.2"
-            :fade-size="100"
-            class="supportersMarquee animateOnScroll"
-          >
-            <template v-for="supporter in supporters.items" :key="supporter.name">
-              <a
-                :href="supporter.url || undefined"
-                :target="supporter.url ? '_blank' : undefined"
-                :rel="supporter.url ? 'noopener noreferrer' : undefined"
-                class="supporterItem"
-              >
-                <CBImage
-                  v-if="supporter.image"
-                  :src="supporter.image"
-                  :alt="supporter.imageAlt || supporter.name"
-                  size="auto"
-                  :height="supporter.logoSize"
-                  fit="contain"
-                  class="supporterLogo"
-                />
-                <CBLabel
-                  v-else
-                  :text="supporter.name"
-                  size="lg"
-                  weight="bold"
-                  class="supporterName"
-                />
-              </a>
-              <span class="supporterDivider">·</span>
-            </template>
-          </CBMarquee>
-        </div>
-      </section>
-
-      <!-- ════════ VALUES STRIP ════════ -->
-      <section class="valuesStrip">
-        <div
-          v-for="value in values"
-          :key="value.title"
-          class="valueItem"
-          :style="{ background: resolveColorValue(value.color) }"
-        >
-          <CBLabel :text="value.title" tag="h3" weight="black" class="valueTitle" />
-          <CBLabel :text="value.subtitle" tag="p" size="sm" class="valueSubtitle" />
-        </div>
-      </section>
-
-      <!-- ════════ CONTACT ════════ -->
-      <section class="contactSection">
-        <div class="contactContainer">
-          <div class="contactInfo animateOnScroll">
-            <FrontBadge
-              :content="contact.badge"
-              theme-color="wine-mid"
-              variant="outline"
-              :icon-size="14"
-              weight="bold"
-              size="xs"
-              class="sectionBadge"
-            />
-
-            <CBLabel :text="contact.title" tag="h2" weight="black" class="sectionTitle" />
-
-            <CBLabel
-              :text="contact.description"
-              size="md"
-              color="secondary"
-              class="contactDescription"
-            />
-
-            <div class="contactMethods">
+            <div class="programsGrid">
               <CBCard
-                v-for="method in contact.methods"
-                :key="method.label"
+                v-for="program in programs.items"
+                :key="program.title"
                 variant="outlined"
-                :rounded="16"
+                :rounded="24"
                 hover
                 bg-color="var(--bg-white)"
-                border-color="rgba(var(--color-wine-rgb), 0.04)"
-                class="contactMethodCard"
+                border-color="rgba(var(--color-wine-rgb), 0.06)"
+                :border-width="1"
+                class="programCard animateOnScroll"
+                :style="{ '--program-color': resolveColorValue(program.color) }"
               >
-                <div class="contactMethodInner">
-                  <div class="contactMethodIconWrapper" :style="colorVars(method.color)">
-                    <CBIcon :icon="method.icon" size="1.5rem" color="var(--bg-white)" />
+                <div class="programBody">
+                  <div class="programIconWrapper">
+                    <CBIcon :icon="program.icon" size="1.5rem" />
                   </div>
-                  <div class="contactMethodContent">
-                    <CBLabel
-                      :text="method.label"
-                      tag="span"
+                  <CBLabel
+                    :text="program.title"
+                    tag="h3"
+                    size="lg"
+                    weight="black"
+                    class="programTitle"
+                  />
+                  <CBLabel
+                    :text="program.description"
+                    size="sm"
+                    color="secondary"
+                    class="programDescription"
+                  />
+                  <div v-if="program.tags?.length" class="programTags">
+                    <FrontBadge
+                      v-for="(tag, tagIdx) in program.tags"
+                      :key="tagIdx"
+                      :content="tag"
+                      :theme-color="program.tagColor || program.color"
+                      variant="solid"
                       size="xs"
-                      color="tertiary"
+                      weight="semibold"
+                      :rounded="20"
+                    />
+                  </div>
+                  <div class="programFooter">
+                    <CBLabel
+                      :text="program.link"
+                      tag="span"
+                      size="sm"
                       weight="bold"
                       dense
-                      class="contactMethodLabel"
+                      class="programCardLink"
                     />
-                    <CBLabel
-                      :text="method.value"
-                      tag="span"
-                      size="md"
-                      weight="semibold"
-                      dense
-                      class="contactMethodValue"
+                    <CBIcon
+                      icon="luc-arrow-right"
+                      size="1rem"
+                      :color="resolveColorValue(program.color)"
+                      class="programLinkIcon"
                     />
                   </div>
-                  <CBIcon
-                    icon="luc-arrow-up-right"
-                    size="1.25rem"
-                    color="var(--text-tertiary)"
-                    class="contactMethodArrow"
-                  />
                 </div>
               </CBCard>
             </div>
           </div>
+        </section>
 
-          <div class="contactFormWrapper animateOnScroll">
-            <CBCard
-              variant="outlined"
-              :rounded="24"
-              bg-color="var(--bg-white)"
-              border-color="var(--border-light)"
-              class="contactFormCard"
+        <!-- ════════ TESTIMONIALS ════════ -->
+        <section class="testimonialSection">
+          <div class="testimonialContainer animateOnScroll">
+            <CBCarousel
+              v-model="testimonialIndex"
+              :total="testimonials.items.length"
+              :autoplay="testimonials.autoplay"
+              :autoplay-interval="testimonials.autoplayInterval"
+              transition-type="horizontal"
+              :show-navigation="false"
+              pause-on-hover
+              class="testimonialCarousel"
             >
-              <form class="contactForm">
-                <CBInput
-                  v-model="formName"
-                  name="contact-name"
-                  :label="$t('contact.form.name.label')"
-                  :placeholder="$t('contact.form.name.placeholder')"
-                  :rounded="12"
-                  prepend-icon="luc-user"
-                  required
-                />
-
-                <CBInput
-                  v-model="formEmail"
-                  name="contact-email"
-                  type="email"
-                  :label="$t('contact.form.email.label')"
-                  :placeholder="$t('contact.form.email.placeholder')"
-                  :rounded="12"
-                  prepend-icon="luc-mail"
-                  required
-                />
-
-                <CBSelect
-                  v-model="formSubject"
-                  name="contact-subject"
-                  :items="subjectItems"
-                  :label="$t('contact.form.subject.label')"
-                  :placeholder="$t('contact.form.subject.placeholder')"
-                  :rounded="12"
-                />
-
-                <CBTextarea
-                  v-model="formMessage"
-                  name="contact-message"
-                  :label="$t('contact.form.message.label')"
-                  :placeholder="$t('contact.form.message.placeholder')"
-                  :rows="5"
-                  :rounded="12"
-                  required
-                />
-
-                <CBButton
-                  :label="$t('contact.form.btnSubmit')"
-                  type="submit"
-                  size="lg"
-                  :bg-gradient="'var(--gradient-primary)'"
-                  :rounded="50"
-                  append-icon="luc-arrow-right"
-                  shine
-                  block
-                  class="btnFormSubmit"
-                />
-              </form>
-            </CBCard>
+              <template #slide="{ index }">
+                <div class="testimonialCard">
+                  <div class="testimonialCardGlow"></div>
+                  <div class="testimonialQuoteIcon">&ldquo;</div>
+                  <blockquote class="testimonialQuote">
+                    {{ testimonials.items[index].quote }}
+                  </blockquote>
+                  <div
+                    v-if="
+                      testimonials.items[index].initials ||
+                        testimonials.items[index].image ||
+                        testimonials.items[index].name ||
+                        testimonials.items[index].role
+                    "
+                    class="testimonialAuthor"
+                  >
+                    <CBImage
+                      v-if="testimonials.items[index].image"
+                      :src="testimonials.items[index].image"
+                      :alt="testimonials.items[index].imageAlt || testimonials.items[index].name"
+                      :width="60"
+                      :height="60"
+                      fit="cover"
+                      :rounded="999"
+                      class="testimonialAuthorPhoto"
+                    />
+                    <div
+                      v-else-if="testimonials.items[index].initials"
+                      class="testimonialAuthorAvatar"
+                    >
+                      {{ testimonials.items[index].initials }}
+                    </div>
+                    <div
+                      v-if="testimonials.items[index].name || testimonials.items[index].role"
+                      class="testimonialAuthorInfo"
+                    >
+                      <CBLabel
+                        v-if="testimonials.items[index].name"
+                        :text="testimonials.items[index].name"
+                        tag="span"
+                        weight="semibold"
+                        dense
+                        class="testimonialAuthorName"
+                      />
+                      <CBLabel
+                        v-if="testimonials.items[index].role"
+                        :text="testimonials.items[index].role"
+                        tag="span"
+                        size="sm"
+                        color="secondary"
+                        dense
+                        class="testimonialAuthorRole"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </template>
+            </CBCarousel>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <!-- ════════ CTA ════════ -->
-      <section class="ctaSection">
-        <div class="ctaDecorCircle"></div>
-        <div class="ctaContainer animateOnScroll">
-          <CBLabel
-            :text="cta.title"
-            tag="h2"
-            weight="black"
-            :color="'var(--color-white)'"
-            class="ctaTitle"
-          />
-          <CBLabel
-            :text="cta.subtitle"
-            size="lg"
-            :color="'var(--color-nude-warm)'"
-            class="ctaSubtitle"
-          />
-          <div class="ctaActions">
-            <FrontButton
-              :label="cta.btnDonate"
-              :theme-color="cta.btnDonateColor"
-              :variant="cta.btnDonateVariant"
-              size="lg"
-              :rounded="50"
-              prepend-icon="luc-heart"
-              class="btnCtaWhite"
-            />
+        <!-- ════════ SUPPORTERS ════════ -->
+        <section class="supportersSection">
+          <div class="supportersContainer">
+            <div class="supportersHeader animateOnScroll">
+              <FrontBadge
+                :content="supporters.badge"
+                theme-color="wine-mid"
+                variant="outline"
+                :icon-size="14"
+                weight="bold"
+                size="xs"
+                class="sectionBadge"
+              />
 
-            <FrontButton
-              :label="cta.btnProjects"
-              :theme-color="cta.btnProjectsColor"
-              :variant="cta.btnProjectsVariant"
-              size="lg"
-              :rounded="50"
-              append-icon="luc-arrow-right"
-              class="btnCtaOutline"
-            />
+              <CBLabel :text="supporters.title" tag="h2" weight="black" class="sectionTitle" />
+
+              <CBLabel
+                v-if="supporters.subtitle"
+                :text="supporters.subtitle"
+                size="md"
+                color="secondary"
+                class="supportersSubtitle"
+              />
+            </div>
+
+            <CBMarquee
+              :gap="0"
+              :speed="supporters.marqueeSpeed"
+              :no-repeat="supporters.items.length < 4"
+              slow-on-hover
+              :slow-on-hover-rate="0.2"
+              :fade-size="100"
+              class="supportersMarquee animateOnScroll"
+            >
+              <template v-for="supporter in supporters.items" :key="supporter.name">
+                <a
+                  :href="supporter.url || undefined"
+                  :target="supporter.url ? '_blank' : undefined"
+                  :rel="supporter.url ? 'noopener noreferrer' : undefined"
+                  class="supporterItem"
+                >
+                  <CBImage
+                    v-if="supporter.image"
+                    :src="supporter.image"
+                    :alt="supporter.imageAlt || supporter.name"
+                    size="auto"
+                    :height="supporter.logoSize"
+                    fit="contain"
+                    class="supporterLogo"
+                  />
+                  <CBLabel
+                    v-else
+                    :text="supporter.name"
+                    size="lg"
+                    weight="bold"
+                    class="supporterName"
+                  />
+                </a>
+                <span class="supporterDivider">·</span>
+              </template>
+            </CBMarquee>
           </div>
-        </div>
-      </section>
-    </div>
+        </section>
+
+        <!-- ════════ VALUES STRIP ════════ -->
+        <section class="valuesStrip">
+          <div
+            v-for="value in values"
+            :key="value.title"
+            class="valueItem"
+            :style="{ background: resolveColorValue(value.color) }"
+          >
+            <CBLabel :text="value.title" tag="h3" weight="black" class="valueTitle" />
+            <CBLabel :text="value.subtitle" tag="p" size="sm" class="valueSubtitle" />
+          </div>
+        </section>
+
+        <!-- ════════ CONTACT ════════ -->
+        <section class="contactSection">
+          <div class="contactContainer">
+            <div class="contactInfo animateOnScroll">
+              <FrontBadge
+                :content="contact.badge"
+                theme-color="wine-mid"
+                variant="outline"
+                :icon-size="14"
+                weight="bold"
+                size="xs"
+                class="sectionBadge"
+              />
+
+              <CBLabel :text="contact.title" tag="h2" weight="black" class="sectionTitle" />
+
+              <CBLabel
+                :text="contact.description"
+                size="md"
+                color="secondary"
+                class="contactDescription"
+              />
+
+              <div class="contactMethods">
+                <CBCard
+                  v-for="method in contact.methods"
+                  :key="method.label"
+                  variant="outlined"
+                  :rounded="16"
+                  hover
+                  bg-color="var(--bg-white)"
+                  border-color="rgba(var(--color-wine-rgb), 0.04)"
+                  class="contactMethodCard"
+                >
+                  <div class="contactMethodInner">
+                    <div class="contactMethodIconWrapper" :style="colorVars(method.color)">
+                      <CBIcon :icon="method.icon" size="1.5rem" color="var(--bg-white)" />
+                    </div>
+                    <div class="contactMethodContent">
+                      <CBLabel
+                        :text="method.label"
+                        tag="span"
+                        size="xs"
+                        color="tertiary"
+                        weight="bold"
+                        dense
+                        class="contactMethodLabel"
+                      />
+                      <CBLabel
+                        :text="method.value"
+                        tag="span"
+                        size="md"
+                        weight="semibold"
+                        dense
+                        class="contactMethodValue"
+                      />
+                    </div>
+                    <CBIcon
+                      icon="luc-arrow-up-right"
+                      size="1.25rem"
+                      color="var(--text-tertiary)"
+                      class="contactMethodArrow"
+                    />
+                  </div>
+                </CBCard>
+              </div>
+            </div>
+
+            <div class="contactFormWrapper animateOnScroll">
+              <CBCard
+                variant="outlined"
+                :rounded="24"
+                bg-color="var(--bg-white)"
+                border-color="var(--border-light)"
+                class="contactFormCard"
+              >
+                <form class="contactForm">
+                  <CBInput
+                    v-model="formName"
+                    name="contact-name"
+                    :label="$t('contact.form.name.label')"
+                    :placeholder="$t('contact.form.name.placeholder')"
+                    :rounded="12"
+                    prepend-icon="luc-user"
+                    required
+                  />
+
+                  <CBInput
+                    v-model="formEmail"
+                    name="contact-email"
+                    type="email"
+                    :label="$t('contact.form.email.label')"
+                    :placeholder="$t('contact.form.email.placeholder')"
+                    :rounded="12"
+                    prepend-icon="luc-mail"
+                    required
+                  />
+
+                  <CBSelect
+                    v-model="formSubject"
+                    name="contact-subject"
+                    :items="subjectItems"
+                    :label="$t('contact.form.subject.label')"
+                    :placeholder="$t('contact.form.subject.placeholder')"
+                    :rounded="12"
+                  />
+
+                  <CBTextarea
+                    v-model="formMessage"
+                    name="contact-message"
+                    :label="$t('contact.form.message.label')"
+                    :placeholder="$t('contact.form.message.placeholder')"
+                    :rows="5"
+                    :rounded="12"
+                    required
+                  />
+
+                  <CBButton
+                    :label="$t('contact.form.btnSubmit')"
+                    type="submit"
+                    size="lg"
+                    :bg-gradient="'var(--gradient-primary)'"
+                    :rounded="50"
+                    append-icon="luc-arrow-right"
+                    shine
+                    block
+                    class="btnFormSubmit"
+                  />
+                </form>
+              </CBCard>
+            </div>
+          </div>
+        </section>
+
+        <!-- ════════ CTA ════════ -->
+        <section class="ctaSection">
+          <div class="ctaDecorCircle"></div>
+          <div class="ctaContainer animateOnScroll">
+            <CBLabel
+              :text="cta.title"
+              tag="h2"
+              weight="black"
+              :color="'var(--color-white)'"
+              class="ctaTitle"
+            />
+            <CBLabel
+              :text="cta.subtitle"
+              size="lg"
+              :color="'var(--color-nude-warm)'"
+              class="ctaSubtitle"
+            />
+            <div class="ctaActions">
+              <FrontButton
+                :label="cta.btnDonate"
+                :theme-color="cta.btnDonateColor"
+                :variant="cta.btnDonateVariant"
+                size="lg"
+                :rounded="50"
+                prepend-icon="luc-heart"
+                class="btnCtaWhite"
+              />
+
+              <FrontButton
+                :label="cta.btnProjects"
+                :theme-color="cta.btnProjectsColor"
+                :variant="cta.btnProjectsVariant"
+                size="lg"
+                :rounded="50"
+                append-icon="luc-arrow-right"
+                class="btnCtaOutline"
+              />
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <template #fallback>
+        <LoadingOverlay :visible="true" />
+      </template>
+    </ClientOnly>
   </div>
 </template>
 

@@ -14,7 +14,7 @@ import { resolveColorValue } from '@utils/colorResolver';
 
 // ============== FIREBASE DATA ==============
 
-const { hero, timeline, team, pillars, cta, seo } = useAboutPublicData();
+const { hero, timeline, team, pillars, cta, seo, status } = useAboutPublicData();
 
 // ============== TIMELINE ITEMS ==============
 
@@ -72,203 +72,212 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="pageWrapper">
-    <!-- ════════ HERO ════════ -->
-    <section class="heroSection">
-      <div class="heroContainer animateOnScroll">
-        <FrontBadge
-          :content="hero.badge"
-          theme-color="wine-mid"
-          variant="outline"
-          :icon-size="14"
-          weight="bold"
-          size="xs"
-          class="sectionBadge"
-        />
+  <div>
+    <ClientOnly>
+      <LoadingOverlay :visible="status !== 'success'" />
+      <div class="pageWrapper">
+        <!-- ════════ HERO ════════ -->
+        <section class="heroSection">
+          <div class="heroContainer animateOnScroll">
+            <FrontBadge
+              :content="hero.badge"
+              theme-color="wine-mid"
+              variant="outline"
+              :icon-size="14"
+              weight="bold"
+              size="xs"
+              class="sectionBadge"
+            />
 
-        <CBLabel :text="hero.title" tag="h1" weight="black" class="heroTitle" />
+            <CBLabel :text="hero.title" tag="h1" weight="black" class="heroTitle" />
 
-        <CBLabel
-          :text="hero.description"
-          size="lg"
-          color="secondary"
-          class="heroDescription"
-        />
-      </div>
-    </section>
-
-    <!-- ════════ TIMELINE ════════ -->
-    <section class="timelineSection">
-      <div class="sectionContainer">
-        <div class="sectionHeader animateOnScroll">
-          <FrontBadge
-            :content="timeline.badge"
-            theme-color="wine-mid"
-            variant="outline"
-            :icon-size="14"
-            weight="bold"
-            size="xs"
-            class="sectionBadge"
-          />
-          <CBLabel
-            :text="timeline.title"
-            tag="h2"
-            weight="black"
-            class="sectionTitle"
-          />
-        </div>
-
-        <CBTimeline
-          :items="timelineItems"
-          truncate-line="both"
-          icon-size="sm"
-          :timestamp-formatter="() => ''"
-          class="timelineTrack"
-        >
-          <template #item-before-title="{ item }">
-            <CBLabel :text="(item.metadata?.year as string)" size="sm" weight="bold" class="timelineYear" />
-          </template>
-        </CBTimeline>
-      </div>
-    </section>
-
-    <!-- ════════ PILLARS (Missao/Visao/Valores) ════════ -->
-    <section class="pillarsSection">
-      <div class="sectionContainer">
-        <div class="sectionHeader animateOnScroll">
-          <FrontBadge
-            :content="pillars.badge"
-            theme-color="coral-light"
-            variant="solid"
-            :icon-size="14"
-            weight="bold"
-            size="xs"
-            class="sectionBadge"
-          />
-          <CBLabel
-            :text="pillars.title" tag="h2"
-            weight="black" color="var(--color-white)"
-            class="sectionTitle" />
-        </div>
-
-        <div class="pillarsGrid">
-          <div v-for="pillar in pillars.items" :key="pillar.title" class="pillarCard animateOnScroll">
-            <div class="pillarIcon" :style="{ background: resolveColorValue(pillar.color) }">
-              <CBIcon :icon="pillar.icon" size="1.75rem" color="var(--color-white)" />
-            </div>
             <CBLabel
-              :text="pillar.title" tag="h3"
-              weight="bold" color="var(--color-white)"
-              class="pillarTitle" />
-            <CBLabel :text="pillar.description" size="sm" color="rgba(255, 255, 255, 0.7)" class="pillarText" />
+              :text="hero.description"
+              size="lg"
+              color="secondary"
+              class="heroDescription"
+            />
           </div>
-        </div>
-      </div>
-    </section>
+        </section>
 
-    <!-- ════════ TEAM ════════ -->
-    <section class="teamSection">
-      <div class="sectionContainer">
-        <div class="sectionHeader animateOnScroll">
-          <FrontBadge
-            :content="team.badge"
-            theme-color="wine-mid"
-            variant="outline"
-            :icon-size="14"
-            weight="bold"
-            size="xs"
-            class="sectionBadge"
-          />
-          <CBLabel
-            :text="team.title"
-            tag="h2"
-            weight="black"
-            class="sectionTitle"
-          />
-          <CBLabel
-            :text="team.subtitle"
-            size="md"
-            color="secondary"
-            class="sectionSubtitle"
-          />
-        </div>
-
-        <div class="teamGrid">
-          <CBCard
-            v-for="member in team.items"
-            :key="member.name"
-            variant="outlined"
-            :rounded="20"
-            hover
-            bg-color="var(--bg-light)"
-            border-color="rgba(var(--color-wine-rgb), 0.06)"
-            :border-width="1"
-            class="teamCard animateOnScroll"
-          >
-            <div class="teamCardInner">
-              <div v-if="member.image" class="teamAvatar">
-                <CBImage
-                  :src="member.image"
-                  :alt="member.name"
-                  size="auto"
-                  :height="100"
-                  :width="100"
-                  fit="cover"
-                  :rounded="50"
-                />
-              </div>
-              <div v-else class="teamAvatarPlaceholder">
-                <CBLabel :text="member.initials" size="xl" weight="black" />
-              </div>
-
-              <CBLabel :text="member.name" tag="h3" weight="bold" class="teamName" />
-              <CBLabel :text="member.role" size="sm" weight="semibold" class="teamRole" />
-              <CBLabel :text="member.bio" size="sm" color="secondary" class="teamBio" />
+        <!-- ════════ TIMELINE ════════ -->
+        <section class="timelineSection">
+          <div class="sectionContainer">
+            <div class="sectionHeader animateOnScroll">
+              <FrontBadge
+                :content="timeline.badge"
+                theme-color="wine-mid"
+                variant="outline"
+                :icon-size="14"
+                weight="bold"
+                size="xs"
+                class="sectionBadge"
+              />
+              <CBLabel
+                :text="timeline.title"
+                tag="h2"
+                weight="black"
+                class="sectionTitle"
+              />
             </div>
-          </CBCard>
-        </div>
-      </div>
-    </section>
 
-    <!-- ════════ CTA ════════ -->
-    <section class="ctaSection">
-      <div class="ctaDecorCircle"></div>
-      <div class="ctaContainer animateOnScroll">
-        <CBLabel
-          :text="cta.title"
-          tag="h2"
-          weight="black"
-          :color="'var(--color-white)'"
-          class="ctaTitle"
-        />
-        <CBLabel
-          :text="cta.subtitle"
-          size="lg"
-          :color="'var(--color-nude-warm)'"
-          class="ctaSubtitle"
-        />
-        <div class="ctaActions">
-          <FrontButton
-            :label="cta.btnDonate"
-            :theme-color="cta.btnDonateColor"
-            :variant="cta.btnDonateVariant"
-            size="lg"
-            :rounded="50"
-            prepend-icon="luc-heart"
-            class="btnCtaWhite"
-          />
-          <FrontButton
-            :label="cta.btnContact"
-            :theme-color="cta.btnContactColor"
-            :variant="cta.btnContactVariant"
-            size="lg"
-            :rounded="50"
-            append-icon="luc-arrow-right"
-            class="btnCtaOutline"
-          />
-        </div>
+            <CBTimeline
+              :items="timelineItems"
+              truncate-line="both"
+              icon-size="sm"
+              :timestamp-formatter="() => ''"
+              class="timelineTrack"
+            >
+              <template #item-before-title="{ item }">
+                <CBLabel :text="(item.metadata?.year as string)" size="sm" weight="bold" class="timelineYear" />
+              </template>
+            </CBTimeline>
+          </div>
+        </section>
+
+        <!-- ════════ PILLARS (Missao/Visao/Valores) ════════ -->
+        <section class="pillarsSection">
+          <div class="sectionContainer">
+            <div class="sectionHeader animateOnScroll">
+              <FrontBadge
+                :content="pillars.badge"
+                theme-color="coral-light"
+                variant="solid"
+                :icon-size="14"
+                weight="bold"
+                size="xs"
+                class="sectionBadge"
+              />
+              <CBLabel
+                :text="pillars.title" tag="h2"
+                weight="black" color="var(--color-white)"
+                class="sectionTitle" />
+            </div>
+
+            <div class="pillarsGrid">
+              <div v-for="pillar in pillars.items" :key="pillar.title" class="pillarCard animateOnScroll">
+                <div class="pillarIcon" :style="{ background: resolveColorValue(pillar.color) }">
+                  <CBIcon :icon="pillar.icon" size="1.75rem" color="var(--color-white)" />
+                </div>
+                <CBLabel
+                  :text="pillar.title" tag="h3"
+                  weight="bold" color="var(--color-white)"
+                  class="pillarTitle" />
+                <CBLabel :text="pillar.description" size="sm" color="rgba(255, 255, 255, 0.7)" class="pillarText" />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ════════ TEAM ════════ -->
+        <section class="teamSection">
+          <div class="sectionContainer">
+            <div class="sectionHeader animateOnScroll">
+              <FrontBadge
+                :content="team.badge"
+                theme-color="wine-mid"
+                variant="outline"
+                :icon-size="14"
+                weight="bold"
+                size="xs"
+                class="sectionBadge"
+              />
+              <CBLabel
+                :text="team.title"
+                tag="h2"
+                weight="black"
+                class="sectionTitle"
+              />
+              <CBLabel
+                :text="team.subtitle"
+                size="md"
+                color="secondary"
+                class="sectionSubtitle"
+              />
+            </div>
+
+            <div class="teamGrid">
+              <CBCard
+                v-for="member in team.items"
+                :key="member.name"
+                variant="outlined"
+                :rounded="20"
+                hover
+                bg-color="var(--bg-light)"
+                border-color="rgba(var(--color-wine-rgb), 0.06)"
+                :border-width="1"
+                class="teamCard animateOnScroll"
+              >
+                <div class="teamCardInner">
+                  <div v-if="member.image" class="teamAvatar">
+                    <CBImage
+                      :src="member.image"
+                      :alt="member.name"
+                      size="auto"
+                      :height="100"
+                      :width="100"
+                      fit="cover"
+                      :rounded="50"
+                    />
+                  </div>
+                  <div v-else class="teamAvatarPlaceholder">
+                    <CBLabel :text="member.initials" size="xl" weight="black" />
+                  </div>
+
+                  <CBLabel :text="member.name" tag="h3" weight="bold" class="teamName" />
+                  <CBLabel :text="member.role" size="sm" weight="semibold" class="teamRole" />
+                  <CBLabel :text="member.bio" size="sm" color="secondary" class="teamBio" />
+                </div>
+              </CBCard>
+            </div>
+          </div>
+        </section>
+
+        <!-- ════════ CTA ════════ -->
+        <section class="ctaSection">
+          <div class="ctaDecorCircle"></div>
+          <div class="ctaContainer animateOnScroll">
+            <CBLabel
+              :text="cta.title"
+              tag="h2"
+              weight="black"
+              :color="'var(--color-white)'"
+              class="ctaTitle"
+            />
+            <CBLabel
+              :text="cta.subtitle"
+              size="lg"
+              :color="'var(--color-nude-warm)'"
+              class="ctaSubtitle"
+            />
+            <div class="ctaActions">
+              <FrontButton
+                :label="cta.btnDonate"
+                :theme-color="cta.btnDonateColor"
+                :variant="cta.btnDonateVariant"
+                size="lg"
+                :rounded="50"
+                prepend-icon="luc-heart"
+                class="btnCtaWhite"
+              />
+              <FrontButton
+                :label="cta.btnContact"
+                :theme-color="cta.btnContactColor"
+                :variant="cta.btnContactVariant"
+                size="lg"
+                :rounded="50"
+                append-icon="luc-arrow-right"
+                class="btnCtaOutline"
+              />
+            </div>
+          </div>
+        </section>
       </div>
-    </section>
+
+      <template #fallback>
+        <LoadingOverlay :visible="true" />
+      </template>
+    </ClientOnly>
   </div>
 </template>
 

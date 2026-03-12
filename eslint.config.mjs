@@ -1,5 +1,6 @@
 // @ts-check
 import withNuxt from './.nuxt/eslint.config.mjs';
+import stylistic from '@stylistic/eslint-plugin';
 
 export default withNuxt(
   // 1. GLOBAL IGNORES - Must be in separate object at TOP (ESLint v9+ requirement)
@@ -17,9 +18,15 @@ export default withNuxt(
   },
   // 2. RULES CONFIGURATION
   {
+    plugins: {
+      '@stylistic': stylistic,
+    },
     rules: {
+      // Estilo — @stylistic/semi cobre JS + TS (type aliases, interfaces, etc.)
+      'semi': 'off',
+      '@stylistic/semi': ['error', 'always'],
       '@typescript-eslint/no-explicit-any': 'off',
-      'no-unused-vars': ['error', { varsIgnorePattern: '^_|^ctx$', args: 'none' }],
+      'no-unused-vars': ['error', { varsIgnorePattern: '^_|^ctx$|^props$', args: 'none' }],
       'typescript-eslint/no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': 'off',
 
